@@ -1,6 +1,6 @@
 **K12 试卷解析、批改与错题练习：技术选型及分步执行计划**
 
-制定日期：2026-10-11。当前仓库仅包含规划文档和 Git 元数据。本文件是实施设计，尚未初始化应用或调用真实模型。
+制定日期：2026-10-11。应用仍处于规划阶段，已建立依赖清单并安装本地开发依赖，尚未初始化 Web/Worker 或调用真实模型。当前 Ubuntu 环境使用本机已有 Node.js 24 / pnpm 11；安装结果见 [当前电脑依赖安装记录](./local-dependencies.zh-CN.md)。
 
 已经明确的需求：使用 Next.js 构建全栈网站；服务国内教师、学生及其他快速改卷使用者；首版支持 PDF、JPG/JPEG 和 PNG 图片，用户将 Word 导出或打印为 PDF 后上传；每个 AI 业务步骤是一轮可使用工具、多次模型调用的 Agent 任务；后台允许配置多个模型供应商，每个供应商有独立 API Base URL 和 API Key；可以接入国外模型。
 
@@ -12,12 +12,12 @@
 
 **1. 推荐架构与技术栈**
 
-采用模块化单体代码库，包含 Web 和 Worker 两个运行入口。本地开发在 Windows 上直接运行两个进程，并连接本机 PostgreSQL；部署时由 Docker Compose 统一运行。Next.js 负责页面、登录、API、文件上传与任务提交；Worker 消费 pg-boss 队列，执行 PDF/图片标准化、Agent 管线和定时调度；PostgreSQL 保存业务数据和持久化任务，本地磁盘保存上传原件和处理结果。Web 与 Worker 共享同一存储根目录；PDF 渲染通过受限子进程执行。
+采用模块化单体代码库，包含 Web 和 Worker 两个运行入口。当前本地开发环境为 Ubuntu，工程初始化后直接运行两个进程，并连接项目本地 PostgreSQL；部署时由 Docker Compose 统一运行。Next.js 负责页面、登录、API、文件上传与任务提交；Worker 消费 pg-boss 队列，执行 PDF/图片标准化、Agent 管线和定时调度；PostgreSQL 保存业务数据和持久化任务，本地磁盘保存上传原件和处理结果。Web 与 Worker 共享同一存储根目录；PDF 渲染通过受限子进程执行。
 
 | 层次 | 选型 | 用途及决策理由 |
 | --- | --- | --- |
 | 全栈应用 | Next.js 16.x、App Router、React、TypeScript | 页面和业务 API 统一开发；长任务提交后返回任务 ID |
-| 运行环境 | Node.js 22 LTS、pnpm 10.x | 本地直接运行，部署镜像使用同一 Node 主版本；Web/Worker 共享服务端模块 |
+| 运行环境 | Node.js 24 LTS、pnpm 11.x | 使用本机现有版本，部署镜像使用同一 Node 主版本；Web/Worker 共享服务端模块 |
 | UI | Tailwind CSS、shadcn/ui | 响应式工作台、文件上传、表格、对话框、审核界面 |
 | 客户端数据 | TanStack Query、React Hook Form、Zod | 任务轮询、筛选、表单与数据验证 |
 | 公式与试卷预览 | MathJax、PDF.js | LaTeX 公式和原始 PDF 对照；保存结构化内容而非仅保存截图 |
@@ -32,9 +32,9 @@
 | 部署 | Docker Compose、单台国内云服务器 | Web/Worker/数据库/反向代理统一部署；文件目录挂载到服务器磁盘持久化 |
 | 监测 | 结构化日志、OpenTelemetry、错误监测 | 任务耗时、模型调用、token、失败率和单位成本；学生内容及密钥脱敏 |
 
-核实当日 npm 稳定版本为 Next.js 16.4.0、AI SDK 7.0.137；实现时重新核对安全更新，锁定确切依赖和 lockfile，不依赖浮动 latest。此处采用主要版本作为计划基线。
+当前已安装 Next.js 16.4.0、AI SDK 7.0.137；全部直接依赖以确切版本写入 package.json，完整依赖树由 pnpm-lock.yaml 锁定。工程初始化沿用现有清单；升级时重新核对安全更新和兼容性。
 
-Prisma CLI、Client 和 PostgreSQL 适配器统一锁定到同一 7.x 版本，当前核实可用的配套版本为 7.10.0；不用不同大版本的 CLI/Client 混装。当前本机 Node.js 22.23.2 和 pnpm 10.11.1 满足计划要求，部署镜像使用同一 Node 主版本与项目固定的 pnpm 版本。新镜像和本机后续补丁更新分别测试。
+Prisma CLI、Client 和 PostgreSQL 适配器统一锁定到同一 7.x 版本，当前已安装的配套版本为 7.10.0；不用不同大版本的 CLI/Client 混装。当前本机 Node.js 24.19.0 和 pnpm 11.21.0 已通过依赖检查，部署镜像使用同一 Node 主版本与项目固定的 pnpm 版本。新镜像和本机后续补丁更新分别测试。
 
 Next.js 官方支持 Node.js/Docker 自托管。Docker Compose 仅作为部署方式，本地开发及本地数据库安装不依赖 Docker。生产环境使用持续运行的容器；Worker 不需要另一台服务器或另一套部署流程。[Next.js 自托管文档](https://nextjs.org/docs/app/guides/self-hosting)、[Docker Compose 用途](https://docs.docker.com/compose/intro/features-uses/)
 
@@ -44,9 +44,11 @@ pg-boss 是 Node.js 库，复用 PostgreSQL 提供任务持久化、重试、并
 
 首版任务并发建议从 1–2 开始评测；密集 PDF 渲染单独限制并发并用子进程执行。本地开发中 Web 和 Worker 为两个进程；部署中为两个容器，可分别限制资源和重启。Worker 退出时停止领取新任务，给已运行任务有限的收尾时间；中断任务依据队列超时、重试规则和业务检查点恢复。所有 Worker 停止期间没有任务执行，定时统计根据最后成功时间补算。
 
-本地交付包括 pnpm dev、pnpm dev:worker、pnpm dev:all 三个启动脚本、依赖检查命令和环境配置示例；本机安装 PostgreSQL、Poppler 和 Python 工具。Worker 显式加载与 Web 对应的开发环境变量，子进程可执行文件使用可配置路径。使用 shell:false 的参数数组调用 PDF 工具，兼容 Windows 空格路径。依赖清单及安装步骤见 docs/development-setup.zh-CN.md；这些脚本和配置将在工程初始化阶段创建。
+本地依赖准备已完成：使用本机 Node 24.19.0、pnpm 11.21.0 和 Python 3.14.4；PostgreSQL 18.6 安装到 .tools/postgresql，数据位于 .local/postgresql/data，通过 pnpm run db:start/db:stop/db:status 管理，不依赖系统服务。Poppler 和中文字体使用现有系统安装，SymPy 安装到 .venv。已提供 pnpm run doctor、scripts/env.sh 和 .env.example；本机 .env 保存项目数据库连接串及随机密钥。安装结果和使用方法见 [本地开发说明](./development-setup.zh-CN.md)。
 
-部署交付包括 Dockerfile 的 Web/Worker 构建目标、compose.yaml、健康检查、一次性迁移入口、文件挂载和操作说明。Worker 镜像封装 Poppler、所需字体和受限 Python 工具；Web 镜像只保留网页运行依赖。部署服务器只需要 Docker Engine 与 Compose 插件，依赖由镜像管理。首次配置后通过 docker compose up -d --build 启动，发布镜像后可通过 docker compose pull 和 docker compose up -d 更新。
+工程初始化阶段继续提供 pnpm run dev、pnpm run dev:worker、pnpm run dev:all 三个应用启动脚本。Worker 显式加载与 Web 对应的开发环境变量，子进程可执行文件使用可配置路径。使用 shell:false 的参数数组调用 PDF 工具，并保留 Windows 空格路径兼容性。pnpm 11 自带 doctor 命令，执行项目检查时必须使用 pnpm run doctor。
+
+部署交付包括 Dockerfile 的 Web/Worker 构建目标、compose.yaml、健康检查、一次性迁移入口、文件挂载和操作说明。Web/Worker 镜像使用 Node 24，构建使用 pnpm 11.21.0 和现有锁文件。Worker 镜像封装 Poppler、所需字体和受限 Python 工具；Web 镜像只保留网页运行依赖。部署服务器只需要 Docker Engine 与 Compose 插件，依赖由镜像管理；开发机的 .tools、.local 和 .venv 不直接复制到镜像。首次配置后通过 docker compose up -d --build 启动，发布镜像后可通过 docker compose pull 和 docker compose up -d 更新。
 
 Compose 服务依赖使用数据库健康检查和一次性迁移完成条件，应用连接保留有限重试。重启策略处理进程退出，健康检查用于监测。PostgreSQL 使用持久化卷；上传与处理结果保存到宿主机目录，并以相同容器路径挂载给 Web/Worker。数据库端口不公开，页面入口通过反向代理提供 HTTPS。域名、模型供应商、备份和密钥需要实际配置。[Compose 启动顺序](https://docs.docker.com/compose/how-tos/startup-order/)
 
@@ -229,7 +231,7 @@ AI 推题每次建议生成 3–5 道，指定目标知识点、年级、难度�
 
 阶段 0 验收：确定干净模板与原始作答的分离规则、默认评分政策、异常状态；得到各候选模型在同一批数据上的质量、p50/p95 耗时与成本。产物是可重复运行的评测脚本、标注约定及业务 schema。
 
-阶段 1：初始化 Next.js 应用、独立 Worker 入口与 pnpm；配置本机 PostgreSQL、Python 虚拟环境及文档工具路径，实现 dev/dev:worker/dev:all 和依赖检查脚本。建立数据库迁移、Better Auth、个人/教师工作空间与服务端授权。实现供应商、模型和任务路由后台，完成密钥加密、模型能力测试、配置版本与调用记录。集成 pg-boss、Worker 消费和 Cron，确认本地可重试任务闭环，再准备生产 Dockerfile/Compose。
+阶段 1：在已有 package.json、pnpm-lock.yaml、PostgreSQL、Python 虚拟环境和工具配置上初始化 Next.js 应用及独立 Worker 入口，使用 Node 24 / pnpm 11，实现 dev/dev:worker/dev:all；沿用并按实际功能扩展现有依赖检查脚本。建立数据库迁移、Better Auth、个人/教师工作空间与服务端授权。实现供应商、模型和任务路由后台，完成密钥加密、模型能力测试、配置版本与调用记录。集成 pg-boss、Worker 消费和 Cron，确认本地可重试任务闭环，再准备生产 Dockerfile/Compose。
 
 阶段 1 验收：本地不运行 Docker 即可启动 Web/Worker/本机数据库并处理示例任务；后台可配置两个不同 Base URL/API Key 的供应商和切换模型，密钥不泄漏，能力与权限检查通过。构建不消费任务，Worker 重启后按规则恢复；生产 Compose 配置纳入后续部署验证。
 
@@ -287,7 +289,17 @@ AI 推题每次建议生成 3–5 道，指定目标知识点、年级、难度�
 
 **9. 工程结构与里程碑**
 
+当前已有依赖清单、锁文件、Python 工具依赖、环境示例及数据库/依赖检查脚本。下图为目标工程结构；src、worker、prisma、部署配置和评测目录在后续阶段实现。
+
 ```text
+package.json            已有：固定项目依赖、包管理器版本与可用脚本
+pnpm-lock.yaml          已有：完整 Node.js 依赖锁文件
+pnpm-workspace.yaml     已有：pnpm 11 安装脚本许可及缓存配置
+requirements.txt        已有：SymPy / mpmath 工具依赖
+scripts/
+  env.sh                已有：本地工具路径、动态库与浏览器目录
+  postgres.sh           已有：项目本地数据库启动/停止/状态
+  doctor.mjs            已有：项目依赖与工具可用性检查
 src/
   app/                  Next.js 页面、Route Handlers、业务入口
   instrumentation.ts    Next.js 监测初始化，不消费任务
@@ -306,7 +318,7 @@ worker/
   index.ts              独立任务消费入口，复用 src/server 模块
 Dockerfile              Web/Worker 多阶段构建目标
 compose.yaml            Web、Worker、PostgreSQL、迁移及反向代理服务
-.env.example            本地数据库、主密钥、文件根目录与工具路径示例
+.env.example            已有：本地数据库、主密钥、文件根目录与工具路径示例
 storage/                本地开发用户文件目录，Git/构建忽略；部署时挂载宿主机
 tools/
   math/                 受限 SymPy 工具

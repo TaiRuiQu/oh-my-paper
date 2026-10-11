@@ -1,0 +1,15 @@
+node_modules/
+.tools/
+.local/
+.venv/
+.next/
+coverage/
+playwright-report/
+test-results/
+.env
+.env.*
+!.env.example
+storage/
+tmp/
+*.log
+__pycache__/
