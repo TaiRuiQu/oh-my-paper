@@ -1,6 +1,6 @@
 # 本地开发依赖与部署环境说明
 
-更新日期：2026-10-11。当前开发机为 Ubuntu 26.04 LTS / x86_64，使用本机已有的 Node.js 24.19.0、pnpm 11.21.0 和 Python 3.14.4。项目依赖已安装，Web、Worker 和数据库业务 schema 尚未初始化。安装过程和验证结果见 [当前电脑依赖安装记录](./local-dependencies.zh-CN.md)。
+更新日期：2026-10-11。当前开发机为 Ubuntu 26.04 LTS / x86_64，使用本机已有的 Node.js 24.19.0、pnpm 11.21.0 和 Python 3.14.4。Web、Worker、认证/工作空间 schema 与初始迁移现已初始化；本次范围见 [工程底座说明](./framework.zh-CN.md)。依赖安装历史见 [当前电脑依赖安装记录](./local-dependencies.zh-CN.md)。
 
 本地直接运行 Node.js Web、Node.js Worker 和 PostgreSQL；部署服务器使用 Docker Compose。首版所有用户文件保存在本地磁盘，Web 与 Worker 共用文件根目录。PostgreSQL 用于业务数据和 pg-boss 任务队列；本地文件存储不替代数据库。
 
@@ -52,7 +52,7 @@ pnpm install --frozen-lockfile
 | 样式 | tailwindcss、@tailwindcss/postcss、postcss |
 | 代码检查 | eslint、eslint-config-next |
 
-Prisma CLI、Client 和 PostgreSQL 适配器统一为 7.10.0。Prisma 7 的 PostgreSQL 连接采用驱动适配器，配合 pg 使用；schema、迁移及 Client 生成在工程初始化阶段完成。
+Prisma CLI、Client 和 PostgreSQL 适配器统一为 7.10.0。Prisma 7 的 PostgreSQL 连接采用驱动适配器，配合 pg 使用；schema、迁移及 Client 生成已实现。另新增 server-only@0.0.1 约束服务端模块，当前直接依赖数量以 package.json 和 doctor 输出为准。
 
 TypeScript 5.9.3 和 ESLint 9.39.5 满足现有 Next.js 配套插件的 peer dependency 要求。ESLint 9 的 npm 元数据已标记不再受支持，后续升级须同时核对插件对 ESLint 10 的支持。准确安装版本以 package.json 为准。
 
@@ -92,7 +92,7 @@ pip3 --python .venv install pip
 
 ## 本地配置与可用命令
 
-已创建数据库 oh_my_paper 和同名非超级用户。本地 PostgreSQL 仅监听 127.0.0.1:5432，Web 和 Worker 将连接同一个数据库。pg-boss 管理自己的队列 schema；业务 schema 由后续 Prisma 迁移管理。
+已创建数据库 oh_my_paper 和同名非超级用户。本地 PostgreSQL 仅监听 127.0.0.1:5432，Web 和 Worker 连接同一个数据库。pg-boss 管理自己的队列 schema；认证与工作空间 schema 由 Prisma 迁移管理。
 
 [.env.example](../.env.example) 已提供；本机 .env 已配置数据库连接串和随机应用密钥，权限为 600，并被 Git 忽略。当前电脑继续使用已有 .env；新环境根据示例生成各自配置，不复用本机密钥。
 
@@ -130,15 +130,22 @@ pnpm run doctor
 
 项目检查命令必须带 run：pnpm 11 自带 pnpm doctor 命令，用于检查包管理器本身。项目 doctor 已验证 39 个直接依赖及主要工具，检查数据库连接前须先启动 PostgreSQL。
 
-以下应用脚本将在工程初始化时提供，目前尚不可用：
+以下应用脚本现已可用：
 
-| 计划命令 | 用途 |
+| 命令 | 用途 |
 | --- | --- |
 | pnpm run dev | 启动 Next.js 开发服务器 |
 | pnpm run dev:worker | 启动带文件监测的 Worker 开发进程 |
 | pnpm run dev:all | 同时启动 Web 和 Worker；先启动 PostgreSQL |
 
-工程初始化沿用现有依赖清单，补齐页面、Worker、配置和数据库迁移。Worker 显式加载与 Web 对应的开发环境变量；两个进程使用同一个 STORAGE_ROOT。跨平台路径使用 Node path 模块处理，子进程以 shell:false 和参数数组调用工具。
+初始化或更新底座后运行：
+
+```bash
+pnpm run db:setup
+pnpm run dev:all
+```
+
+打开 http://localhost:3000 创建账号。`db:setup` 启动数据库、生成 Prisma Client 并应用已有迁移，不重置数据库。工程沿用现有依赖清单，补齐页面、Worker、配置和数据库迁移。Worker 显式加载与 Web 对应的开发环境变量；两个进程使用同一个 STORAGE_ROOT。跨平台路径使用 Node path 模块处理，后续子进程工具须以 shell:false 和参数数组调用。
 
 ## 部署环境依赖与文件持久化
 

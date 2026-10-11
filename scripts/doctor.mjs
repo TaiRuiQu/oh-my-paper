@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { loadEnvironment } from './load-env.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 process.chdir(root);
-if (existsSync('.env')) process.loadEnvFile('.env');
+loadEnvironment();
 const pgBin = resolve(root, '.tools/postgresql/usr/lib/postgresql/18/bin');
 const toolEnv = {
   ...process.env,
@@ -78,4 +79,21 @@ await check('PostgreSQL 连接', async () => {
     await client.end();
   }
 });
+await check('工程配置 / Prisma / 认证表 / 存储目录', () => run(process.execPath, [
+  '--conditions=react-server', '--import', 'tsx', '-e',
+  `(async () => {
+    const { loadEnvironment } = await import('./scripts/load-env.mjs');
+    loadEnvironment();
+    const { getEnv } = await import('./src/server/config/env.ts');
+    const { getDb, disconnectDatabase } = await import('./src/server/db/client.ts');
+    const { initializeStorage } = await import('./src/server/storage/index.ts');
+    getEnv();
+    try {
+      await getDb().user.count();
+      await getDb().workspace.count();
+      await initializeStorage();
+      console.log('环境校验、Prisma 查询与文件目录检查通过');
+    } finally { await disconnectDatabase(); }
+  })().catch(() => { console.error('底座验证失败，请先生成 Client 并应用迁移'); process.exitCode = 1; });`,
+]));
 process.exitCode = failures ? 1 : 0;

@@ -30,6 +30,7 @@
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-hook-form": "7.89.0",
+    "server-only": "0.0.1",
     "sharp": "0.35.5",
     "zod": "4.6.5"
   },
@@ -55,6 +56,22 @@
     "doctor": "node scripts/doctor.mjs",
     "db:start": "bash scripts/postgres.sh start",
     "db:stop": "bash scripts/postgres.sh stop",
-    "db:status": "bash scripts/postgres.sh status"
+    "db:status": "bash scripts/postgres.sh status",
+    "dev": "next dev",
+    "dev:worker": "node --conditions=react-server --import tsx --watch worker/index.ts",
+    "dev:all": "concurrently --kill-others --names web,worker \"pnpm run dev\" \"pnpm run dev:worker\"",
+    "build": "pnpm run db:generate && next build --webpack",
+    "start": "next start",
+    "start:worker": "node --conditions=react-server --import tsx worker/index.ts --production",
+    "lint": "eslint .",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "test:integration": "node --conditions=react-server --import tsx scripts/test-integration.ts",
+    "test:queue": "node --conditions=react-server --import tsx scripts/test-queue.ts",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "db:setup": "pnpm run db:start && pnpm run db:generate && pnpm run db:deploy"
   }
 }
