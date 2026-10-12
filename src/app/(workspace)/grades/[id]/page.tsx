@@ -11,5 +11,5 @@ export default async function GradeReportPage({ params }: { params: Promise<{ id
   try { task = await ownedGradeTask(user.id, (await params).id); }
   catch (error) { if (error instanceof AccessError && error.status === 404) notFound(); throw error; }
   const result = gradeTaskResult(task);
-  return <GradeReport initialData={{ task: gradeTaskSummary(task), result, mathImages: result ? await renderMathText(result.questions.flatMap((q) => [q.questionText, q.studentAnswer, q.expectedAnswer, q.feedback])) : {} }} />;
+  return <GradeReport initialData={{ task: gradeTaskSummary(task), result, canReview: task.examTask.userId === user.id, mathImages: result ? await renderMathText(result.questions.flatMap((q) => [q.questionText, q.studentAnswer, q.expectedAnswer, q.feedback])) : {} }} />;
 }

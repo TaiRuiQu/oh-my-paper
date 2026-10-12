@@ -16,6 +16,7 @@ export function taskLabel(task: ExamTaskSummary) {
 }
 
 export function ExamWorkbench({ initialTasks, model, isAdmin }: { initialTasks: ExamTaskSummary[]; model: string | null; isAdmin: boolean }) {
+  const [mode, setMode] = useState("quick");
   const [files, setFiles] = useState<File[]>([]);
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -49,7 +50,7 @@ export function ExamWorkbench({ initialTasks, model, isAdmin }: { initialTasks: 
     try {
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest(); uploadRequest.current = xhr;
-        xhr.open("POST", "/api/exams"); xhr.responseType = "json"; xhr.timeout = 300_000;
+        xhr.open("POST", `/api/exams?mode=${mode}`); xhr.responseType = "json"; xhr.timeout = 300_000;
         xhr.upload.onprogress = (event) => { if (event.lengthComputable) setPercent(Math.round(event.loaded / event.total * 100)); };
         xhr.onload = () => xhr.status === 202 ? resolve() : reject(new Error(xhr.response?.error ?? "上传失败，请重新提交。"));
         xhr.onerror = () => reject(new Error("网络连接失败，请检查网络后重试。"));
@@ -65,9 +66,10 @@ export function ExamWorkbench({ initialTasks, model, isAdmin }: { initialTasks: 
 
   return <>
     <section className="upload-section" aria-labelledby="upload-heading">
-      <div className="section-heading"><h2 id="upload-heading">上传一份试卷</h2>{model && <span className="hint model-caption">识别模型：{model}</span>}</div>
-      {!model && <div className="setup-note"><p>配置识别模型后即可上传试卷。</p>{isAdmin ? <Link href="/admin/ai">前往 AI 提供商设置</Link> : <p className="hint">请联系管理员完成 AI 配置。</p>}</div>}
+      <div className="section-heading"><h2 id="upload-heading">上传试卷</h2></div>
+      {!model && <div className="setup-note"><p>试卷处理服务尚未准备好。</p>{isAdmin ? <Link href="/admin/ai">前往服务设置</Link> : <p className="hint">请联系管理员开启服务。</p>}</div>}
       <form onSubmit={upload}>
+        <fieldset className="upload-mode" disabled={uploading}><legend className="sr-only">你想做什么？</legend><label><input type="radio" name="mode" value="quick" checked={mode === "quick"} onChange={() => setMode("quick")} />批改已作答试卷</label><label><input type="radio" name="mode" value="parse" checked={mode === "parse"} onChange={() => setMode("parse")} />整理空白试卷</label></fieldset>
         <div className={`upload-dropzone${dragging ? " is-dragging" : ""}`} onDragOver={(event) => { event.preventDefault(); if (!uploading && model) setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={(event) => {
           event.preventDefault(); setDragging(false); if (!uploading && model) addFiles(Array.from(event.dataTransfer.files));
         }}>
@@ -75,13 +77,13 @@ export function ExamWorkbench({ initialTasks, model, isAdmin }: { initialTasks: 
           <input ref={input} id="exam-files" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple disabled={uploading || !model} onChange={(event) => {
             addFiles(Array.from(event.target.files ?? [])); event.target.value = "";
           }} />
-          <p className="hint">多张照片请按页码顺序添加，将合并为一份试卷。最多 20 个文件、50 页、总计 100 MB。</p>
+          <p className="hint">多张照片按页码顺序添加。Word 文档请先导出为 PDF。</p>
         </div>
         {!!files.length && <ol className="upload-files">{files.map((file, index) => <li key={`${file.name}-${file.lastModified}-${file.size}`}>
           <div className="file-info"><span>{file.name}</span><small className="muted">{(file.size / 1024 / 1024).toFixed(1)} MB</small></div>
           <div className="inline-actions"><button type="button" className="text-button" disabled={uploading || index === 0} aria-label={`上移 ${file.name}`} onClick={() => move(index, -1)}>上移</button><button type="button" className="text-button" disabled={uploading || index === files.length - 1} aria-label={`下移 ${file.name}`} onClick={() => move(index, 1)}>下移</button><button type="button" className="text-button" disabled={uploading} aria-label={`移除 ${file.name}`} onClick={() => setFiles((old) => old.filter((_, i) => i !== index))}>移除</button></div>
         </li>)}</ol>}
-        <div className="upload-actions"><button type="submit" className="button" disabled={!model || !files.length || uploading}>{uploading ? (percent === 100 ? "正在提交…" : `正在上传 ${percent}%`) : "开始识别"}</button>
+        <div className="upload-actions"><button type="submit" className="button" disabled={!model || !files.length || uploading}>{uploading ? (percent === 100 ? "正在提交…" : `正在上传 ${percent}%`) : mode === "quick" ? "开始批改" : "开始识别"}</button>
           {uploading ? <button type="button" className="text-button" onClick={() => uploadRequest.current?.abort()}>取消上传</button> : <p className="hint">提交后可离开页面，稍后回来查看结果。</p>}</div>
         {error && <p className="form-error" role="alert">{error}</p>}
       </form>
@@ -91,7 +93,7 @@ export function ExamWorkbench({ initialTasks, model, isAdmin }: { initialTasks: 
       {tasks.error && <p className="form-error" role="alert">进度暂时无法更新，请刷新列表重试。</p>}
       {!tasks.data.tasks.length && <p className="history-empty muted">还没有试卷。上传第一份试卷，识别结果会保存在这里。</p>}
       <div className="exam-list">{tasks.data.tasks.map((task) => <Link className="exam-row" href={`/exams/${task.id}`} key={task.id}>
-        <div><h3>{task.name}</h3><p className="hint">{new Date(task.createdAt).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" })} · {task.model}</p></div>
+        <div><h3>{task.name}</h3><p className="hint">{new Date(task.createdAt).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" })}</p></div>
         <span className={`task-status${task.status === "FAILED" ? " danger" : ""}`}>{taskLabel(task)}</span>
       </Link>)}</div>
       {tasks.data.tasks.length === 50 && <p className="hint">显示最近 50 份试卷。</p>}

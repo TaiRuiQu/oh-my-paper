@@ -88,9 +88,84 @@ model ExamTask {
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   gradeTasks       GradeTask[]
+  autoGrade        Boolean        @default(false)
+  studentId        String?
+  student          StudentProfile? @relation(fields: [studentId], references: [id], onDelete: SetNull)
+  batchId          String?
+  batch            GradeBatch?     @relation(fields: [batchId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt])
   @@map("exam_tasks")
+}
+
+model WorkerHeartbeat {
+  id        String   @id
+  updatedAt DateTime @default(now())
+  @@map("worker_heartbeats")
+}
+
+model Classroom {
+  id        String @id @default(uuid())
+  ownerId   String
+  name      String
+  students  StudentProfile[]
+  batches   GradeBatch[]
+  createdAt DateTime @default(now())
+  @@index([ownerId])
+  @@map("classrooms")
+}
+
+model StudentProfile {
+  id          String @id @default(uuid())
+  classroomId String
+  classroom   Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+  name        String
+  number      String
+  accountId   String?
+  exams       ExamTask[]
+  @@unique([classroomId, number])
+  @@index([accountId])
+  @@map("student_profiles")
+}
+
+model GradeBatch {
+  id          String @id @default(uuid())
+  classroomId String
+  classroom   Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+  name        String
+  exams       ExamTask[]
+  createdAt   DateTime @default(now())
+  @@map("grade_batches")
+}
+
+model LearningTag {
+  id        String @id @default(uuid())
+  userId    String
+  entryKey  String
+  topicId   String
+  @@unique([userId, entryKey])
+  @@map("learning_tags")
+}
+
+model PracticeSession {
+  id          String @id @default(uuid())
+  userId      String
+  gradeTaskId String
+  questionId  String
+  entryKey    String
+  mode        String
+  status      ExamTaskStatus @default(QUEUED)
+  jobId       String @unique
+  attempt     String?
+  input       Json
+  content     Json?
+  answers     Json?
+  result      Json?
+  error       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  @@index([userId, createdAt])
+  @@map("practice_sessions")
 }
 
 model GradeTask {

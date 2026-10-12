@@ -1,0 +1,82 @@
+services:
+  db:
+    image: postgres:18.6-bookworm
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-paper}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a database password}
+      POSTGRES_DB: ${POSTGRES_DB:-oh_my_paper}
+    volumes:
+      - postgres:/var/lib/postgresql
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  migrate:
+    build:
+      context: .
+      target: worker
+    env_file: .env
+    environment: &app-env
+      DATABASE_URL: ${DEPLOY_DATABASE_URL:?Set postgresql URL using db as the host}
+      STORAGE_ROOT: /data/storage
+      TEMP_ROOT: /data/tmp
+    command: [node, node_modules/prisma/build/index.js, migrate, deploy]
+    depends_on:
+      db:
+        condition: service_healthy
+  web:
+    build:
+      context: .
+      target: web
+    env_file: .env
+    environment: *app-env
+    volumes:
+      - ./storage:/data/storage
+      - ./tmp:/data/tmp
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+  worker:
+    build:
+      context: .
+      target: worker
+    env_file: .env
+    environment: *app-env
+    volumes:
+      - ./storage:/data/storage
+      - ./tmp:/data/tmp
+    restart: unless-stopped
+    stop_grace_period: 40s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: [CMD, node, --conditions=react-server, --import, tsx, scripts/worker-health.ts]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+  proxy:
+    image: caddy:2.10.2
+    ports: ["80:80", "443:443"]
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set a domain pointing at this server}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    depends_on:
+      web:
+        condition: service_healthy
+volumes:
+  postgres:
+  caddy_data:
+  caddy_config:

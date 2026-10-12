@@ -81,6 +81,18 @@ async function main() {
     assert.equal(test.status, 200, "vision connection test");
     const invalid = new FormData(); invalid.append("files", new Blob(["invalid"], { type: "image/png" }), "fake.png");
     assert.equal((await request("/api/exams", admin.cookie, { method: "POST", body: invalid })).status, 422);
+    const brokenUpload = new FormData();
+    brokenUpload.append("files", new Blob(["%PDF-1.7\nDeliberately broken test fixture\n%%EOF"], { type: "application/pdf" }), "broken-first.pdf");
+    const brokenResponse = await request("/api/exams", admin.cookie, { method: "POST", body: brokenUpload });
+    assert.equal(brokenResponse.status, 202);
+    const brokenId = (await brokenResponse.json()).task.id; tasks.push(brokenId);
+    let brokenStatus = "";
+    for (let i = 0; i < 30; i++) {
+      brokenStatus = (await (await request(`/api/exams/${brokenId}`, admin.cookie)).json()).task.status;
+      if (brokenStatus === "FAILED") break;
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    assert.equal(brokenStatus, "FAILED", "the first task fails without stopping its consumer");
     const image = await createTestExamImage(); await writeFile(join(temporary, "synthetic-exam.png"), image, { mode: 0o600 });
     const upload = new FormData(); upload.append("files", new Blob([new Uint8Array(image)], { type: "image/png" }), "合成数学试卷.png");
     const submitted = await request("/api/exams", admin.cookie, { method: "POST", body: upload }); assert.equal(submitted.status, 202);
@@ -100,6 +112,7 @@ async function main() {
     assert.equal((await request(`/api/exams/${task.id}/files/exam.json`, other.cookie)).status, 404);
     assert.equal((await request(`/api/exams/${task.id}/files/checkpoints/1.json`, admin.cookie)).status, 404);
     assert.equal((await request(`/api/exams/${task.id}/files/exam.md`, admin.cookie)).status, 200);
+    assert.equal((await request(`/api/exams/${task.id}/files/exam.html`, admin.cookie)).status, 200);
     assert.equal((await request(`/api/exams/${task.id}/files/${result.exam.pages[0].key}`, admin.cookie)).status, 200);
     const report = JSON.stringify({ live, taskId: task.id, userId: admin.id, providerId, users, providers, tasks, previousProviderId: previous?.providerId ?? null,
       questions: result.exam.questions.length, status: result.exam.verification.status, usage: result.exam.verification.usage }, null, 2);

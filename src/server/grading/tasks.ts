@@ -15,6 +15,7 @@ import { createProviderExamModel } from "@/server/ai/providers";
 import { ownedExamTask, taskDirectory, taskResult } from "@/server/exams/tasks";
 import { getJobProducer } from "@/server/jobs/client";
 import { enqueueInTransaction } from "@/server/jobs/transaction";
+import { requireWorker } from "@/server/jobs/health";
 import { gradeExam } from "./service";
 import { GRADING_PROMPT_VERSION } from "./prompts";
 import { applyGradeReview } from "./score";
@@ -30,7 +31,7 @@ async function reconcile(task: GradeTask) {
   if (!["QUEUED", "RUNNING"].includes(task.status)) return task;
   try {
     const job = await (await getJobProducer()).getJobById(GRADING_QUEUE, task.jobId);
-    if (!job || ["failed", "cancelled"].includes(job.state)) {
+    if (!job || ["failed", "cancelled", "completed"].includes(job.state)) {
       await getDb().gradeTask.updateMany({ where: { id: task.id, jobId: task.jobId, status: { in: ["QUEUED", "RUNNING"] } },
         data: { status: "FAILED", error: "后台批改已中断，请重新提交批改。", phase: "failed" } });
       return getDb().gradeTask.findUniqueOrThrow({ where: { id: task.id } });
@@ -45,9 +46,9 @@ export async function listGradeTasks(userId: string, examTaskId: string) {
 }
 export async function ownedGradeTask(userId: string, id: string) {
   if (!z.uuid().safeParse(id).success) throw new AccessError(404, "批改记录不存在。");
-  const task = await getDb().gradeTask.findFirst({ where: { id, examTask: { userId } } });
+  const task = await getDb().gradeTask.findFirst({ where: { id, examTask: { OR: [{ userId }, { student: { accountId: userId } }] } }, include: { examTask: { select: { userId: true } } } });
   if (!task) throw new AccessError(404, "批改记录不存在或无权访问。");
-  return reconcile(task);
+  return { ...await reconcile(task), examTask: task.examTask };
 }
 export function gradeTaskResult(task: GradeTask): GradeResult | null {
   if (!task.result) return null;
@@ -61,6 +62,7 @@ export function gradeTaskResult(task: GradeTask): GradeResult | null {
 }
 
 export async function createGradeTask(userId: string, examTaskId: string, submissions: GradeSubmission[]) {
+  await requireWorker();
   const task = await ownedExamTask(userId, examTaskId);
   const exam = await taskResult(task);
   if (!exam || !task.outputKey) throw new RequestError(409, "请等待试卷识别完成后再批改。");

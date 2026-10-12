@@ -4,6 +4,7 @@ import { getEnv } from "@/server/config/env";
 import { logEvent } from "@/server/logger";
 import { FRAMEWORK_PING_QUEUE, pingJobSchema, type PingJob } from "@/contracts/jobs";
 import { EXAM_PARSE_QUEUE } from "@/contracts/exam-tasks";
+import { PRACTICE_QUEUE } from "@/contracts/learning";
 import { GRADING_QUEUE } from "@/contracts/grading";
 
 export function createJobClient(worker = false) {
@@ -21,6 +22,7 @@ export function createJobClient(worker = false) {
 export async function initializeQueues(boss: PgBoss) {
   await boss.createQueue(FRAMEWORK_PING_QUEUE, { retryLimit: 3, retryDelay: 2, retryBackoff: true, expireInSeconds: 60 });
   await boss.createQueue(EXAM_PARSE_QUEUE, { retryLimit: 2, retryDelay: 10, expireInSeconds: 43200, heartbeatSeconds: 60 });
+  await boss.createQueue(PRACTICE_QUEUE, { retryLimit: 2, retryDelay: 10, expireInSeconds: 900, heartbeatSeconds: 60 });
   await boss.createQueue(GRADING_QUEUE, { retryLimit: 2, retryDelay: 10, expireInSeconds: 43200, heartbeatSeconds: 60 });
 }
 

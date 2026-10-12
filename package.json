@@ -57,9 +57,10 @@
     "db:start": "bash scripts/postgres.sh start",
     "db:stop": "bash scripts/postgres.sh stop",
     "db:status": "bash scripts/postgres.sh status",
-    "dev": "next dev",
+    "dev": "pnpm run dev:all",
+    "dev:web": "next dev",
     "dev:worker": "node --conditions=react-server --import tsx --watch worker/index.ts",
-    "dev:all": "concurrently --kill-others --names web,worker \"pnpm run dev\" \"pnpm run dev:worker\"",
+    "dev:all": "concurrently --kill-others --names web,worker \"pnpm run dev:web\" \"pnpm run dev:worker\"",
     "build": "pnpm run db:generate && next build --webpack",
     "start": "next start",
     "start:worker": "node --conditions=react-server --import tsx worker/index.ts --production",
@@ -76,6 +77,7 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "db:setup": "pnpm run db:start && pnpm run db:generate && pnpm run db:deploy"
+    "db:setup": "pnpm run db:start && pnpm run db:generate && pnpm run db:deploy",
+    "test:learning-web": "node --conditions=react-server --import tsx scripts/test-learning-web.ts"
   }
 }

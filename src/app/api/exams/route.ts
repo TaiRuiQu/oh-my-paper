@@ -14,6 +14,6 @@ export async function POST(request: Request) {
   try {
     const { user } = await requireSession(request.headers);
     requireSameOrigin(request);
-    return Response.json({ task: await createExamTask(request, user.id) }, { status: 202 });
+    return Response.json({ task: await createExamTask(request, user.id, { autoGrade: new URL(request.url).searchParams.get("mode") === "quick" }) }, { status: 202 });
   } catch (error) { return errorResponse(error); }
 }

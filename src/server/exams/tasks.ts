@@ -16,13 +16,14 @@ import { createProviderExamModel } from "@/server/ai/providers";
 import { getJobProducer } from "@/server/jobs/client";
 import { enqueueInTransaction } from "@/server/jobs/transaction";
 import { receiveExamUpload } from "./uploads";
+import { requireWorker } from "@/server/jobs/health";
 import { parseExam } from "./parser";
 
 export const examJobSchema = z.object({ taskId: z.uuid() });
 
 export function taskSummary(task: ExamTask): ExamTaskSummary {
   return { id: task.id, name: task.name, status: task.status, page: task.page, totalPages: task.totalPages,
-    phase: task.phase, error: task.error, model: task.model, createdAt: task.createdAt.toISOString() };
+    phase: task.phase, error: task.error, outputKey: task.outputKey, model: task.model, createdAt: task.createdAt.toISOString() };
 }
 
 export async function listExamTasks(userId: string) {
@@ -34,7 +35,7 @@ async function reconcileTask(task: ExamTask) {
   if (!["QUEUED", "RUNNING"].includes(task.status)) return task;
   try {
     const job = await (await getJobProducer()).getJobById(EXAM_PARSE_QUEUE, task.jobId);
-    if (!job || ["failed", "cancelled"].includes(job.state)) {
+    if (!job || ["failed", "cancelled", "completed"].includes(job.state)) {
       await getDb().examTask.updateMany({ where: { id: task.id, jobId: task.jobId, status: { in: ["QUEUED", "RUNNING"] } },
         data: { status: "FAILED", phase: "failed", error: "后台任务已中断，请重新识别。" } });
       return await getDb().examTask.findUniqueOrThrow({ where: { id: task.id } });
@@ -60,7 +61,8 @@ export async function taskResult(task: ExamTask): Promise<DigitalExam | null> {
   return JSON.parse(await readFile(join(taskDirectory(task.id), task.outputKey, "exam.json"), "utf8")) as DigitalExam;
 }
 
-export async function createExamTask(request: Request, userId: string) {
+export async function createExamTask(request: Request, userId: string, options: { autoGrade?: boolean; studentId?: string; batchId?: string } = {}) {
+  await requireWorker();
   const provider = await getActiveProvider();
   const boss = await getJobProducer();
   const id = randomUUID(), jobId = randomUUID();
@@ -71,10 +73,10 @@ export async function createExamTask(request: Request, userId: string) {
       // Serialize submissions per user, so concurrent requests cannot bypass the cap.
       await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
       const active = await tx.examTask.count({ where: { userId, status: { in: ["QUEUED", "RUNNING"] } } });
-      if (active >= 3) throw new RequestError(429, "你已有 3 份试卷正在识别，请等待完成后再上传。");
+      if (active >= (options.batchId ? 100 : 3)) throw new RequestError(429, "你已有 3 份试卷正在识别，请等待完成后再上传。");
       const task = await tx.examTask.create({ data: { id, jobId, userId, name: uploaded[0].name,
         inputFiles: uploaded.map((_, index) => `inputs/${index + 1}.upload`),
-        providerSnapshot: provider, model: provider.model } });
+        providerSnapshot: provider, model: provider.model, ...options } });
       await enqueueInTransaction(tx, boss, EXAM_PARSE_QUEUE, { taskId: id }, jobId);
       return task;
     });
@@ -87,6 +89,7 @@ export async function createExamTask(request: Request, userId: string) {
 
 export async function retryExamTask(userId: string, id: string) {
   await ownedExamTask(userId, id);
+  await requireWorker();
   const provider = await getActiveProvider();
   const boss = await getJobProducer();
   const jobId = randomUUID();
@@ -111,19 +114,20 @@ export async function processExamTask(id: string, jobId: string, signal: AbortSi
     data: { status: "RUNNING", attempt, phase: "preparing", page: 0, totalPages: 0, error: null } });
   if (!claimed.count) return;
   const where = { id, jobId, attempt, status: "RUNNING" as const };
+  const taskSignal = AbortSignal.any([signal, AbortSignal.timeout(30 * 60_000)]);
   try {
     const provider = providerSchema.extend({ encryptedApiKey: z.string().min(1) }).parse(task.providerSnapshot);
     const model = createProviderExamModel(provider, decryptApiKey(provider.encryptedApiKey));
     const directory = taskDirectory(id);
     await mkdir(directory, { recursive: true, mode: 0o700 });
     const exam = await parseExam({ files: task.inputFiles.map((key) => join(directory, key)),
-      outputDir: join(directory, attempt), model, signal, promptPreset: provider.promptPreset,
+      outputDir: join(directory, attempt), model, signal: taskSignal, promptPreset: provider.promptPreset,
       onProgress: async ({ page, total, phase }) => {
         await getDb().examTask.updateMany({ where, data: { page, totalPages: total, phase } });
       } });
     const failed = exam.pages.every((page) => page.status === "failed");
     await getDb().examTask.updateMany({ where, data: { status: failed ? "FAILED" : "COMPLETED", outputKey: attempt,
-      phase: "done", error: failed ? "未能识别任何页面。请让管理员检查接口、模型的图片能力和 API key，或上传更清晰的试卷后重试。" : null } });
+      phase: failed ? "failed" : "done", error: failed ? "未能识别任何页面。请让管理员检查接口、模型的图片能力和 API key，或上传更清晰的试卷后重试。" : null } });
   } catch (error) {
     // An interrupted worker leaves the claim for pg-boss to replay after expiry.
     if (signal.aborted) throw new Error("Exam worker interrupted.");

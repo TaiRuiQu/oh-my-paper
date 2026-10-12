@@ -7,7 +7,7 @@ export class AccessError extends Error {
 }
 
 export class RequestError extends Error {
-  constructor(public readonly status: 400 | 409 | 413 | 422 | 429, message: string) { super(message); }
+  constructor(public readonly status: 400 | 409 | 413 | 422 | 429 | 503, message: string) { super(message); }
 }
 
 export function errorResponse(error: unknown) {

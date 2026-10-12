@@ -5,7 +5,7 @@ import { join, resolve } from "node:path";
 import sharp from "sharp";
 import { z } from "zod";
 import { pageLayoutSchema, parsedPageSchema, verifiedPageSchema, type ContentBlock, type DigitalExam, type ParsedPage, type SourceRegion } from "@/contracts/exams";
-import { createDeepSeekExamModel, type ExamModel, type StructuredRequest } from "@/server/ai/deepseek";
+import { ExamModelCallError, createDeepSeekExamModel, type ExamModel, type StructuredRequest } from "@/server/ai/deepseek";
 import { appendParsedPage, finalizeExam } from "./assemble";
 import { DEFAULT_LIMITS, ensureEmptyOutput, pageContent, prepareDocuments, rotatePage, type DocumentLimits, type PageImage } from "./documents";
 import { exportExamMarkdown } from "./export";
@@ -43,7 +43,18 @@ export async function parseExam(options: ParseExamOptions): Promise<DigitalExam>
   const generate = async <T>(request: StructuredRequest<T>) => {
     options.signal?.throwIfAborted();
     exam.verification.usage.calls++;
-    const result = await model.generate({ ...(options.promptPreset ? applyPromptPreset(options.promptPreset, request) : request), signal: options.signal });
+    let result;
+    try { result = await model.generate({ ...(options.promptPreset ? applyPromptPreset(options.promptPreset, request) : request), signal: options.signal }); }
+    catch (error) {
+      if (error instanceof ExamModelCallError) {
+        exam.verification.usage.calls += error.usage.calls - 1;
+        exam.verification.usage.inputTokens += error.usage.inputTokens;
+        exam.verification.usage.outputTokens += error.usage.outputTokens;
+        exam.verification.usage.cachedInputTokens = (exam.verification.usage.cachedInputTokens ?? 0) + error.usage.cachedInputTokens;
+        exam.verification.usage.cacheWriteTokens = (exam.verification.usage.cacheWriteTokens ?? 0) + error.usage.cacheWriteTokens;
+      }
+      throw error;
+    }
     exam.verification.usage.calls += (result.calls ?? 1) - 1;
     exam.verification.usage.inputTokens += result.inputTokens;
     exam.verification.usage.outputTokens += result.outputTokens;

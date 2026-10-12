@@ -13,7 +13,7 @@ export async function GET(request: Request, context: Context) {
     const task = await ownedGradeTask(user.id, (await context.params).id);
     const result = gradeTaskResult(task);
     const mathImages = result ? await renderMathText(result.questions.flatMap((q) => [q.questionText, q.studentAnswer, q.expectedAnswer, q.feedback])) : {};
-    return Response.json({ task: gradeTaskSummary(task), result, mathImages }, { headers: { "Cache-Control": "no-store" } });
+    return Response.json({ task: gradeTaskSummary(task), result, canReview: task.examTask.userId === user.id, mathImages }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) { return errorResponse(error); }
 }
 export async function PATCH(request: Request, context: Context) {

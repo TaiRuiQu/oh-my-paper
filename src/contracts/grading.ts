@@ -44,4 +44,4 @@ export const gradeReviewSchema = z.object({ questionId: z.string().min(1).max(10
 export type GradeReviewInput = z.infer<typeof gradeReviewSchema>;
 export type GradeTaskSummary = { id: string; examTaskId: string; status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED";
   progress: number; total: number; phase: string; error: string | null; model: string; createdAt: string; examOutputKey: string };
-export type GradeTaskDetail = { task: GradeTaskSummary; result: GradeResult | null; mathImages?: Record<string, string> };
+export type GradeTaskDetail = { task: GradeTaskSummary; result: GradeResult | null; mathImages?: Record<string, string>; canReview?: boolean };

@@ -1,3 +1,4 @@
+import { printableExam } from "@/server/exams/print";
 import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { join } from "node:path";
@@ -15,6 +16,9 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     const exam = await taskResult(task);
     const key = path.join("/");
     if (!exam || !task.outputKey) throw new AccessError(404, "识别结果尚未生成。");
+    if (key === "exam.html") return new Response(await printableExam(exam, join(taskDirectory(id), task.outputKey)), { headers: {
+      "Content-Type": "text/html; charset=utf-8", "Content-Disposition": 'attachment; filename="exam.html"', "Cache-Control": "private, no-store", "Content-Security-Policy": "default-src 'none'; img-src data:; style-src 'unsafe-inline'; sandbox", "X-Content-Type-Options": "nosniff",
+    } });
     const allowed = new Set(["exam.json", "exam.md", "verification.json", ...exam.pages.map((p) => p.key),
       ...exam.assets.flatMap((a) => [a.evidenceKey, ...(a.cleanKey ? [a.cleanKey] : [])]), ...exam.sourceFiles.map((f) => f.key)]);
     if (path.some((part) => !part || part === "." || part === ".." || /[\\\x00]/.test(part)) || !allowed.has(key)) {
