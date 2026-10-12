@@ -19,11 +19,24 @@ export async function continueQuickGrade(id?: string) {
       )
     ORDER BY e."createdAt" ASC LIMIT 50
   `;
-  const tasks = await getDb().examTask.findMany({ where: { id: { in: pending.map((t) => t.id) } } });
+  const tasks = await getDb().examTask.findMany({
+    where: { id: { in: pending.map((t) => t.id) } },
+  });
   for (const task of tasks) {
     const exam = await taskResult(task);
-    if (!exam?.questions.length || exam.questions.some((q) => !q.solution?.sufficient || !q.solution.answer.trim())) continue;
-    try { await createGradeTask(task.userId, task.id, defaultSubmissions(exam).slice(0, MAX_GRADING_QUESTIONS)); }
-    catch { /* An unavailable service leaves the handoff pending for the next sweep. */ }
+    if (
+      !exam?.questions.length ||
+      exam.questions.some((q) => !q.solution?.sufficient || !q.solution.answer.trim())
+    )
+      continue;
+    try {
+      await createGradeTask(
+        task.userId,
+        task.id,
+        defaultSubmissions(exam).slice(0, MAX_GRADING_QUESTIONS),
+      );
+    } catch {
+      /* An unavailable service leaves the handoff pending for the next sweep. */
+    }
   }
 }

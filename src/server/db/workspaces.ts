@@ -21,7 +21,12 @@ export async function ensurePersonalWorkspace(user: { id: string; name: string }
         return workspace;
       });
     } catch (error) {
-      if (!(error instanceof Prisma.PrismaClientKnownRequestError) || error.code !== "P2002" || attempt === 2) throw error;
+      if (
+        !(error instanceof Prisma.PrismaClientKnownRequestError) ||
+        error.code !== "P2002" ||
+        attempt === 2
+      )
+        throw error;
     }
   }
   throw new Error("Workspace initialization failed.");

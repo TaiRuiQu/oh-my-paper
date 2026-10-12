@@ -18,15 +18,24 @@ export function QuestionEditor({
     question.solution?.selectedOptions.join(", ") ?? "",
   );
   const [answer, setAnswer] = useState(question.solution?.answer ?? "");
-  const [explanation, setExplanation] = useState(
-    question.solution?.explanation ?? "",
-  );
+  const [explanation, setExplanation] = useState(question.solution?.explanation ?? "");
   const [rubric, setRubric] = useState(question.solution?.rubric ?? "");
-  const [blockText, setBlockText] = useState(() => question.blocks.map((b) => b.type === "text" ? b.text : b.type === "math" ? b.latex : ""));
-  const [units, setUnits] = useState(() => (question.answerTargets ?? []).map((target) => {
-    const existing = question.solution?.units?.find((u) => u.targetKey === target.key);
-    return existing ?? { targetKey: target.key, answer: "", explanation: "", selectedOptions: [] as string[] };
-  }));
+  const [blockText, setBlockText] = useState(() =>
+    question.blocks.map((b) => (b.type === "text" ? b.text : b.type === "math" ? b.latex : "")),
+  );
+  const [units, setUnits] = useState(() =>
+    (question.answerTargets ?? []).map((target) => {
+      const existing = question.solution?.units?.find((u) => u.targetKey === target.key);
+      return (
+        existing ?? {
+          targetKey: target.key,
+          answer: "",
+          explanation: "",
+          selectedOptions: [] as string[],
+        }
+      );
+    }),
+  );
   const [points, setPoints] = useState(String(question.points ?? ""));
   const [confirmed, setConfirmed] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -47,15 +56,29 @@ export function QuestionEditor({
             answer,
             explanation,
             rubric,
-            selectedOptions: selectedOptions
-              .split(/[,，、\s]+/)
-              .filter(Boolean),
-            units: units.length === 1 ? [{ ...units[0], answer, explanation,
-              selectedOptions: selectedOptions.split(/[,，、\s]+/).filter(Boolean) }] : units,
-            sufficient: !!answer.trim() && (units.length <= 1 || units.every((u) => u.answer.trim())),
+            selectedOptions: selectedOptions.split(/[,，、\s]+/).filter(Boolean),
+            units:
+              units.length === 1
+                ? [
+                    {
+                      ...units[0],
+                      answer,
+                      explanation,
+                      selectedOptions: selectedOptions.split(/[,，、\s]+/).filter(Boolean),
+                    },
+                  ]
+                : units,
+            sufficient:
+              !!answer.trim() && (units.length <= 1 || units.every((u) => u.answer.trim())),
             issues: answer.trim() ? [] : ["标准答案未填写。"],
           },
-          blocks: question.blocks.map((b, index) => b.type === "text" ? { ...b, text: blockText[index] } : b.type === "math" ? { ...b, latex: blockText[index] } : b),
+          blocks: question.blocks.map((b, index) =>
+            b.type === "text"
+              ? { ...b, text: blockText[index] }
+              : b.type === "math"
+                ? { ...b, latex: blockText[index] }
+                : b,
+          ),
         }),
       });
       await onSaved();
@@ -70,19 +93,31 @@ export function QuestionEditor({
       <summary>编辑题目与标准答案</summary>
       <form onSubmit={submit}>
         <fieldset disabled={busy}>
-          {question.blocks.map((block, index) => block.type === "figure" || block.type === "table" ? (
-            <p className="hint" key={index}>{block.type === "figure" ? `配图：${block.caption}` : "表格"}（保留原有位置）</p>
-          ) : <div className="field" key={index}>
-            <label htmlFor={`edit-${question.id}-${index}`}>{block.type === "math" ? "公式" : "题干"}</label>
-            <Textarea
-              id={`edit-${question.id}-${index}`}
-              rows={4}
-              required
-              maxLength={12000}
-              value={blockText[index]}
-              onChange={(e) => setBlockText((old) => old.map((value, i) => i === index ? e.target.value : value))}
-            />
-          </div>)}
+          {question.blocks.map((block, index) =>
+            block.type === "figure" || block.type === "table" ? (
+              <p className="hint" key={index}>
+                {block.type === "figure" ? `配图：${block.caption}` : "表格"}（保留原有位置）
+              </p>
+            ) : (
+              <div className="field" key={index}>
+                <label htmlFor={`edit-${question.id}-${index}`}>
+                  {block.type === "math" ? "公式" : "题干"}
+                </label>
+                <Textarea
+                  id={`edit-${question.id}-${index}`}
+                  rows={4}
+                  required
+                  maxLength={12000}
+                  value={blockText[index]}
+                  onChange={(e) =>
+                    setBlockText((old) =>
+                      old.map((value, i) => (i === index ? e.target.value : value)),
+                    )
+                  }
+                />
+              </div>
+            ),
+          )}
           <div className="field">
             <label htmlFor={`points-${question.id}`}>本题满分</label>
             <input
@@ -106,9 +141,7 @@ export function QuestionEditor({
             />
           </div>
           <div className="field">
-            <label htmlFor={`selected-options-${question.id}`}>
-              正确选项（选择题）
-            </label>
+            <label htmlFor={`selected-options-${question.id}`}>正确选项（选择题）</label>
             <input
               id={`selected-options-${question.id}`}
               value={selectedOptions}
@@ -136,18 +169,43 @@ export function QuestionEditor({
               onChange={(e) => setRubric(e.target.value)}
             />
           </div>
-          {units.length > 1 && units.map((unit, index) => {
-            const target = question.answerTargets![index];
-            const label = `${target.parentLabel ?? ""}${target.partLabel ?? ""}${target.blankIndex ? ` 第 ${target.blankIndex} 空` : ""}`.trim() || `第 ${index + 1} 小问`;
-            return <div className="field" key={unit.targetKey}>
-              <label htmlFor={`unit-answer-${question.id}-${index}`}>{label}的正确答案</label>
-              <Textarea id={`unit-answer-${question.id}-${index}`} rows={2} maxLength={12000} value={unit.answer}
-                onChange={(event) => setUnits((old) => old.map((u, i) => i === index ? { ...u, answer: event.target.value } : u))} />
-              <label htmlFor={`unit-explanation-${question.id}-${index}`}>{label}的解析</label>
-              <Textarea id={`unit-explanation-${question.id}-${index}`} rows={2} maxLength={16000} value={unit.explanation}
-                onChange={(event) => setUnits((old) => old.map((u, i) => i === index ? { ...u, explanation: event.target.value } : u))} />
-            </div>;
-          })}
+          {units.length > 1 &&
+            units.map((unit, index) => {
+              const target = question.answerTargets![index];
+              const label =
+                `${target.parentLabel ?? ""}${target.partLabel ?? ""}${target.blankIndex ? ` 第 ${target.blankIndex} 空` : ""}`.trim() ||
+                `第 ${index + 1} 小问`;
+              return (
+                <div className="field" key={unit.targetKey}>
+                  <label htmlFor={`unit-answer-${question.id}-${index}`}>{label}的正确答案</label>
+                  <Textarea
+                    id={`unit-answer-${question.id}-${index}`}
+                    rows={2}
+                    maxLength={12000}
+                    value={unit.answer}
+                    onChange={(event) =>
+                      setUnits((old) =>
+                        old.map((u, i) => (i === index ? { ...u, answer: event.target.value } : u)),
+                      )
+                    }
+                  />
+                  <label htmlFor={`unit-explanation-${question.id}-${index}`}>{label}的解析</label>
+                  <Textarea
+                    id={`unit-explanation-${question.id}-${index}`}
+                    rows={2}
+                    maxLength={16000}
+                    value={unit.explanation}
+                    onChange={(event) =>
+                      setUnits((old) =>
+                        old.map((u, i) =>
+                          i === index ? { ...u, explanation: event.target.value } : u,
+                        ),
+                      )
+                    }
+                  />
+                </div>
+              );
+            })}
           <label className="checkbox-field">
             <input
               type="checkbox"
@@ -156,9 +214,7 @@ export function QuestionEditor({
             />
             已对照原图核对题干、选项与小题
           </label>
-          <button className="button secondary">
-            {busy ? "保存中…" : "保存修正"}
-          </button>
+          <button className="button secondary">{busy ? "保存中…" : "保存修正"}</button>
         </fieldset>
         {error && (
           <p className="form-error" role="alert">

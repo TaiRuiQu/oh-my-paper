@@ -1,5 +1,7 @@
 # AI module boundary
 
-`providers.ts` builds configurable Responses, Chat Completions, Anthropic and Google adapters. `settings.ts` stores administrator-managed profiles and task defaults. Credentials are AES-256-GCM encrypted, omitted from client responses, and snapshotted for submitted jobs. The existing `deepseek.ts` CLI adapter remains available. All adapters validate output, cap calls, support cancellation and repair malformed JSON at most once.
+`providers.ts` builds configurable Responses, Chat Completions, Anthropic and Google adapters. Credentials are encrypted, omitted from client responses and snapshotted at submission. Provider concurrency limits apply to recognition, solutions and grading.
 
-Each of the six pipeline stages can select its own provider/model configuration. Prompt presets retain common evidence rules in a stable prefix followed by the current stage and schema; Anthropic marks the end of that stage/schema system block for caching. API-reported cache read/write token usage is retained. See [stage configuration and prompts](../../../docs/ai-providers-and-prompts.md).
+`agent.ts` runs recognition with AI SDK `ToolLoopAgent`. The SDK owns tool choice and iteration. Actual public messages and tool lifecycle events are persisted; private reasoning and provider exceptions are excluded. The SDK generate method avoids gateway stream interruptions; tool lifecycle callbacks still update the activity feed live.
+
+`deepseek.ts` retains structured generation for the existing solutions/grading services. Recognition uses the dedicated agent method and native Markdown/LaTeX tool schemas. Admin settings select `recognition`, `solution` and `grading`; legacy stage keys remain readable for snapshots and defaults.

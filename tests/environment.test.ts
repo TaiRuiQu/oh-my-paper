@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-afterEach(() => { vi.unstubAllEnvs(); vi.resetModules(); });
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.resetModules();
+});
 
 describe("server configuration", () => {
   it("reports invalid variable names without exposing secrets", async () => {
@@ -8,7 +11,9 @@ describe("server configuration", () => {
     vi.stubEnv("BETTER_AUTH_SECRET", "secret");
     const { getEnv } = await import("@/server/config/env");
     expect(getEnv).toThrow(/DATABASE_URL/);
-    try { getEnv(); } catch (error) {
+    try {
+      getEnv();
+    } catch (error) {
       expect(String(error)).not.toContain("secret-database-value");
     }
   });

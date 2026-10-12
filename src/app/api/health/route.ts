@@ -10,6 +10,9 @@ export async function GET() {
     await getDb().user.count();
     return Response.json({ status: "ok", database: "ready" }, { headers });
   } catch {
-    return Response.json({ status: "unavailable", database: "unavailable" }, { status: 503, headers });
+    return Response.json(
+      { status: "unavailable", database: "unavailable" },
+      { status: 503, headers },
+    );
   }
 }

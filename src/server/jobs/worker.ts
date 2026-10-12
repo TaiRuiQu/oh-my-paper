@@ -18,40 +18,76 @@ export async function startWorker() {
   try {
     await boss.start({ attempts: 5 });
     await initializeQueues(boss);
-    await boss.work(PRACTICE_QUEUE, { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 }, async (jobs) => {
-      for (const job of jobs) await processPractice(examJobSchema.parse(job.data).taskId, job.id, job.signal);
-    });
-    await boss.work(GRADING_QUEUE, { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 }, async (jobs) => {
-      for (const job of jobs) await processGradeTask(gradingJobSchema.parse(job.data).taskId, job.id, job.signal);
-    });
-    await boss.work(EXAM_PARSE_QUEUE, { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 }, async (jobs) => {
-      for (const job of jobs) {
-        const { taskId } = examJobSchema.parse(job.data);
-        await processExamTask(taskId, job.id, job.signal);
-        await continueQuickGrade(taskId);
-      }
-    });
-    await boss.work(FRAMEWORK_PING_QUEUE, { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 }, async (jobs) => {
-      for (const job of jobs) {
-        pingJobSchema.parse(job.data);
-        logEvent("queue.ping.completed", { queue: FRAMEWORK_PING_QUEUE, jobId: job.id });
-      }
-      return { ok: true };
-    });
+    await boss.work(
+      PRACTICE_QUEUE,
+      { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 },
+      async (jobs) => {
+        for (const job of jobs)
+          await processPractice(examJobSchema.parse(job.data).taskId, job.id, job.signal);
+      },
+    );
+    await boss.work(
+      GRADING_QUEUE,
+      { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 },
+      async (jobs) => {
+        for (const job of jobs)
+          await processGradeTask(gradingJobSchema.parse(job.data).taskId, job.id, job.signal);
+      },
+    );
+    await boss.work(
+      EXAM_PARSE_QUEUE,
+      { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 },
+      async (jobs) => {
+        for (const job of jobs) {
+          const { taskId } = examJobSchema.parse(job.data);
+          await processExamTask(taskId, job.id, job.signal);
+          await continueQuickGrade(taskId);
+        }
+      },
+    );
+    await boss.work(
+      FRAMEWORK_PING_QUEUE,
+      { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 },
+      async (jobs) => {
+        for (const job of jobs) {
+          pingJobSchema.parse(job.data);
+          logEvent("queue.ping.completed", { queue: FRAMEWORK_PING_QUEUE, jobId: job.id });
+        }
+        return { ok: true };
+      },
+    );
     // Exercise scheduling without creating business jobs or invoking models.
-    await boss.schedule(FRAMEWORK_PING_QUEUE, "*/15 * * * *", { message: "scheduled-ping" }, { tz: "UTC" });
+    await boss.schedule(
+      FRAMEWORK_PING_QUEUE,
+      "*/15 * * * *",
+      { message: "scheduled-ping" },
+      { tz: "UTC" },
+    );
     const id = randomUUID();
-    const beat = () => getDb().workerHeartbeat.upsert({ where: { id }, create: { id }, update: { updatedAt: new Date() } });
+    const beat = () =>
+      getDb().workerHeartbeat.upsert({
+        where: { id },
+        create: { id },
+        update: { updatedAt: new Date() },
+      });
     await beat();
     await continueQuickGrade();
-    const timer = setInterval(() => void beat().catch(() => logEvent("worker.heartbeat.failed")), 10_000);
+    const timer = setInterval(
+      () => void beat().catch(() => logEvent("worker.heartbeat.failed")),
+      10_000,
+    );
     timer.unref();
-    const sweep = setInterval(() => void continueQuickGrade().catch(() => logEvent("pipeline.sweep.failed")), 30_000);
+    const sweep = setInterval(
+      () => void continueQuickGrade().catch(() => logEvent("pipeline.sweep.failed")),
+      30_000,
+    );
     sweep.unref();
     boss.once("stopped", () => {
       clearInterval(timer);
       clearInterval(sweep);
-      void getDb().workerHeartbeat.deleteMany({ where: { id } }).catch(() => undefined);
+      void getDb()
+        .workerHeartbeat.deleteMany({ where: { id } })
+        .catch(() => undefined);
     });
     return boss;
   } catch {

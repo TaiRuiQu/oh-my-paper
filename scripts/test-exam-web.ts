@@ -5,6 +5,7 @@ import { mkdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
 import { loadEnvironment } from "./load-env.mjs";
+import { recognitionFixtureResponse } from "./fixtures/recognition-response";
 
 loadEnvironment();
 const live = process.argv.includes("--live");
@@ -33,6 +34,9 @@ async function main() {
   });
   const previousGrading = await getDb().aiSetting.findUnique({
     where: { id: "grading" },
+  });
+  const previousAgentSettings = await getDb().aiSetting.findMany({
+    where: { id: { in: ["recognition", "solution"] } },
   });
   const region = { page: 1, x: 0.06, y: 0.2, width: 0.8, height: 0.16 };
   const sample = {
@@ -73,6 +77,7 @@ async function main() {
     let body = "";
     for await (const chunk of req) body += chunk;
     const input = JSON.parse(body);
+    if (recognitionFixtureResponse(input, res, calls)) return;
     const name = input.text?.format?.name;
     calls.push(name);
     const output =
@@ -86,7 +91,8 @@ async function main() {
                 subject: sample.subject,
                 grade: null,
                 instructions: [],
-                totalQuestions: 1, totalPoints: 5,
+                totalQuestions: 1,
+                totalPoints: 5,
                 pages: [{ page: 1, documentType: "question_paper" }],
                 sections: [{ title: "一、计算与选择题", points: 5 }],
                 questions: [
@@ -94,47 +100,109 @@ async function main() {
                     number: "1",
                     section: "一、计算与选择题",
                     points: 5,
-                    pages: [1], pointsOrigin: "printed", pointsReason: "printed",
+                    pages: [1],
+                    pointsOrigin: "printed",
+                    pointsReason: "printed",
                   },
                 ],
                 findings: [],
               }
             : name === "exam_question_bounds"
               ? { regions: [region], figures: [], findings: [] }
-            : name === "exam_question_transcription"
-              ? { type: "fill_blank", blocks: sample.questions[0].blocks, options: [], parts: [], answerTargets: [{ key:"main",partLabel:null,parentLabel:null,blankIndex:1 }], findings: [] }
-            : name === "exam_answer_layout"
-              ? { pages:[{page:1,documentType:"answer_sheet"}],responses:[{id:"a1",questionNumber:"1",section:"一、计算与选择题",regions:[region]}],findings:[] }
-            : name === "exam_answer_transcription"
-              ? { responses:[{sourceId:"a1",questionNumber:"1",section:"一、计算与选择题",partLabel:null,blocks:[{type:"text",text:"4"},{type:"figure",caption:"手写作答证据",region,contaminated:true}],blank:false,unreadable:false}],findings:[] }
-            : name === "exam_solution"
-              ? {
-                  answer: "5",
-                  selectedOptions: [],
-                  explanation: "2+3=5。",
-                  rubric: "结果为5得5分，其他结果0分。",
-                  sufficient: true,
-                  issues: [],
-                  units: [{ targetKey:"main",answer:"5",selectedOptions:[],explanation:"2+3=5。" }],
-                }
-              : name === "exam_grade_question"
+              : name === "exam_question_transcription"
                 ? {
-                    matchedSourceIds:["a1"],studentAnswer:"4",studentAnswerBlocks:[{type:"text",text:"4"},{type:"figure",caption:"手写作答证据",region,contaminated:true,assetId:"figure-1"}],answerStatus:"answered",
-                    verdict: "incorrect",
-                    score: 0,
-                    feedback: "2+3=5，学生作答4错误。",
-                    criteria: [
-                      {
-                        description: "计算结果",
-                        maxPoints: 5,
-                        awardedPoints: 0,
-                        explanation: "正确结果为5",
-                      },
+                    type: "fill_blank",
+                    blocks: sample.questions[0].blocks,
+                    options: [],
+                    parts: [],
+                    answerTargets: [
+                      { key: "main", partLabel: null, parentLabel: null, blankIndex: 1 },
                     ],
-                    needsReview: false,
-                    issues: [],
+                    findings: [],
                   }
-                : sample;
+                : name === "exam_answer_layout"
+                  ? {
+                      pages: [{ page: 1, documentType: "answer_sheet" }],
+                      responses: [
+                        {
+                          id: "a1",
+                          questionNumber: "1",
+                          section: "一、计算与选择题",
+                          regions: [region],
+                        },
+                      ],
+                      findings: [],
+                    }
+                  : name === "exam_answer_transcription"
+                    ? {
+                        responses: [
+                          {
+                            sourceId: "a1",
+                            questionNumber: "1",
+                            section: "一、计算与选择题",
+                            partLabel: null,
+                            blocks: [
+                              { type: "text", text: "4" },
+                              {
+                                type: "figure",
+                                caption: "手写作答证据",
+                                region,
+                                contaminated: true,
+                              },
+                            ],
+                            blank: false,
+                            unreadable: false,
+                          },
+                        ],
+                        findings: [],
+                      }
+                    : name === "exam_solution"
+                      ? {
+                          answer: "5",
+                          selectedOptions: [],
+                          explanation: "2+3=5。",
+                          rubric: "结果为5得5分，其他结果0分。",
+                          sufficient: true,
+                          issues: [],
+                          units: [
+                            {
+                              targetKey: "main",
+                              answer: "5",
+                              selectedOptions: [],
+                              explanation: "2+3=5。",
+                            },
+                          ],
+                        }
+                      : name === "exam_grade_question"
+                        ? {
+                            matchedSourceIds: ["a1"],
+                            studentAnswer: "4",
+                            studentAnswerBlocks: [
+                              { type: "text", text: "4" },
+                              {
+                                type: "figure",
+                                caption: "手写作答证据",
+                                region,
+                                contaminated: true,
+                                assetId: "figure-1",
+                              },
+                            ],
+                            answerStatus: "answered",
+                            verdict: "incorrect",
+                            score: 0,
+                            feedback: "2+3=5，学生作答4错误。",
+                            criteria: [
+                              {
+                                description: "计算结果",
+                                maxPoints: 5,
+                                awardedPoints: 0,
+                                explanation: "正确结果为5",
+                              },
+                            ],
+                            needsReview: false,
+                            issues: [],
+                          }
+                        : sample;
     res.setHeader("content-type", "application/json");
     res.end(
       JSON.stringify({
@@ -210,17 +278,12 @@ async function main() {
   try {
     const admin = await account("识别功能测试管理员"),
       other = await account("隔离测试用户");
-    assert.equal(
-      (await request("/api/admin/ai/providers", admin.cookie)).status,
-      403,
-    );
+    assert.equal((await request("/api/admin/ai/providers", admin.cookie)).status, 403);
     await getDb().user.update({
       where: { id: admin.id },
       data: { role: "ADMIN" },
     });
-    const apiKey = live
-      ? process.env.DEEPSEEK_API_KEY
-      : "fixture-secret-api-key";
+    const apiKey = live ? process.env.DEEPSEEK_API_KEY : "fixture-secret-api-key";
     assert.ok(apiKey && !apiKey.startsWith("REPLACE_"), "live key configured");
     const input = {
       name: live ? "DeepSeek 实测（临时）" : "测试提供商（临时）",
@@ -256,9 +319,7 @@ async function main() {
     });
     assert.notEqual(stored.encryptedApiKey, apiKey);
     assert.equal(stored.maxConcurrency, 2, "provider concurrency persisted");
-    const listing = await (
-      await request("/api/admin/ai/providers", admin.cookie)
-    ).text();
+    const listing = await (await request("/api/admin/ai/providers", admin.cookie)).text();
     assert.ok(
       JSON.parse(listing).providers.some(
         (p: { id: string; maxConcurrency: number }) =>
@@ -296,35 +357,39 @@ async function main() {
     );
     assert.equal(
       (
-        await request(
-          `/api/admin/ai/providers/${providerId}/activate`,
-          admin.cookie,
-          { method: "POST", headers: { Origin: "https://evil.test" } },
-        )
+        await request(`/api/admin/ai/providers/${providerId}/activate`, admin.cookie, {
+          method: "POST",
+          headers: { Origin: "https://evil.test" },
+        })
       ).status,
       403,
     );
     assert.equal(
       (
-        await request(
-          `/api/admin/ai/providers/${providerId}/activate`,
-          admin.cookie,
-          { method: "POST" },
-        )
+        await request(`/api/admin/ai/providers/${providerId}/activate`, admin.cookie, {
+          method: "POST",
+        })
       ).status,
       200,
     );
+    for (const purpose of ["recognition", "solution"]) {
+      assert.equal(
+        (
+          await request(`/api/admin/ai/providers/${providerId}/activate`, admin.cookie, {
+            method: "POST",
+            ...json({ purpose }),
+          })
+        ).status,
+        200,
+      );
+    }
     const test = await request("/api/admin/ai/test", admin.cookie, {
       method: "POST",
       ...json({ ...input, apiKey: "", id: providerId }),
     });
     assert.equal(test.status, 200, "vision connection test");
     const invalid = new FormData();
-    invalid.append(
-      "files",
-      new Blob(["invalid"], { type: "image/png" }),
-      "fake.png",
-    );
+    invalid.append("files", new Blob(["invalid"], { type: "image/png" }), "fake.png");
     assert.equal(
       (
         await request("/api/exams", admin.cookie, {
@@ -351,17 +416,12 @@ async function main() {
     tasks.push(brokenId);
     let brokenStatus = "";
     for (let i = 0; i < 30; i++) {
-      brokenStatus = (
-        await (await request(`/api/exams/${brokenId}`, admin.cookie)).json()
-      ).task.status;
+      brokenStatus = (await (await request(`/api/exams/${brokenId}`, admin.cookie)).json()).task
+        .status;
       if (brokenStatus === "FAILED") break;
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
-    assert.equal(
-      brokenStatus,
-      "FAILED",
-      "the first task fails without stopping its consumer",
-    );
+    assert.equal(brokenStatus, "FAILED", "the first task fails without stopping its consumer");
     const image = await createTestExamImage();
     await writeFile(join(temporary, "synthetic-exam.png"), image, {
       mode: 0o600,
@@ -379,22 +439,14 @@ async function main() {
     assert.equal(submitted.status, 202);
     const { task } = await submitted.json();
     tasks.push(task.id);
-    const snapshot = (
-      await getDb().examTask.findUniqueOrThrow({ where: { id: task.id } })
-    ).providerSnapshot as { maxConcurrency: number; providerId: string };
-    assert.equal(
-      snapshot.maxConcurrency,
-      2,
-      "task retains provider concurrency snapshot",
-    );
+    const snapshot = (await getDb().examTask.findUniqueOrThrow({ where: { id: task.id } }))
+      .providerSnapshot as { maxConcurrency: number; providerId: string };
+    assert.equal(snapshot.maxConcurrency, 2, "task retains provider concurrency snapshot");
     assert.equal(snapshot.providerId, providerId);
     console.log(
       `Submitted ${live ? "live DeepSeek" : "fixture"} exam; checking persistent worker progress.`,
     );
-    assert.equal(
-      (await request(`/api/exams/${task.id}`, other.cookie)).status,
-      404,
-    );
+    assert.equal((await request(`/api/exams/${task.id}`, other.cookie)).status, 404);
     assert.equal(
       (
         await request(`/api/exams/${task.id}/retry`, other.cookie, {
@@ -417,44 +469,57 @@ async function main() {
       if (["COMPLETED", "FAILED"].includes(result.task.status)) break;
       await new Promise((resolve) => setTimeout(resolve, 2500));
     }
-    assert.equal(
-      result?.task.status,
-      "COMPLETED",
-      "background parsing completes",
-    );
+    assert.equal(result?.task.status, "COMPLETED", "background parsing completes");
     assert.ok(result.exam.questions.length > 0);
-    assert.ok(result.exam.verification.promptVersion.includes("crop-agents"));
+    assert.ok(result.exam.verification.promptVersion.includes("recognition-agent"));
+    const activity = await (await request(`/api/exams/${task.id}/activity`, admin.cookie)).json();
+    assert.ok(
+      activity.events.some(
+        (e: { type: string; tool?: string }) => e.type === "tool_call" && e.tool === "read_pages",
+      ),
+    );
+    assert.ok(
+      activity.events.some(
+        (e: { type: string; data?: { accepted?: boolean } }) =>
+          e.type === "tool_result" && e.data?.accepted === false,
+      ),
+      "agent sees and corrects validation errors",
+    );
+    assert.equal((await request(`/api/exams/${task.id}/activity`, other.cookie)).status, 404);
+    const imageEvent = activity.events.find(
+      (e: { data?: { images?: string[] } }) => e.data?.images?.length,
+    );
+    const key = imageEvent.data.images[0];
+    const preview = `/api/exams/${task.id}/activity/images/${key.startsWith("pages/") ? `page-${key.slice(6)}` : key.slice(6)}?attempt=${activity.attempt}`;
+    assert.equal((await request(preview, admin.cookie)).status, 200);
+    assert.equal((await request(preview, other.cookie)).status, 404);
     assert.equal(
-      (await request(`/api/exams/${task.id}/files/exam.json`, other.cookie))
-        .status,
+      (await request(`/api/exams/${task.id}/files/recognition.json`, admin.cookie)).status,
+      200,
+    );
+    const delta = await (
+      await request(
+        `/api/exams/${task.id}/activity?attempt=${activity.attempt}&after=${activity.cursor}`,
+        admin.cookie,
+      )
+    ).json();
+    assert.equal(delta.events.length, 0, "cursor replay does not duplicate events");
+    assert.equal(
+      (await request(`/api/exams/${task.id}/files/exam.json`, other.cookie)).status,
       404,
     );
     assert.equal(
-      (
-        await request(
-          `/api/exams/${task.id}/files/checkpoints/1.json`,
-          admin.cookie,
-        )
-      ).status,
+      (await request(`/api/exams/${task.id}/files/checkpoints/1.json`, admin.cookie)).status,
       404,
     );
+    assert.equal((await request(`/api/exams/${task.id}/files/exam.md`, admin.cookie)).status, 200);
     assert.equal(
-      (await request(`/api/exams/${task.id}/files/exam.md`, admin.cookie))
-        .status,
+      (await request(`/api/exams/${task.id}/files/exam.html`, admin.cookie)).status,
       200,
     );
     assert.equal(
-      (await request(`/api/exams/${task.id}/files/exam.html`, admin.cookie))
+      (await request(`/api/exams/${task.id}/files/${result.exam.pages[0].key}`, admin.cookie))
         .status,
-      200,
-    );
-    assert.equal(
-      (
-        await request(
-          `/api/exams/${task.id}/files/${result.exam.pages[0].key}`,
-          admin.cookie,
-        )
-      ).status,
       200,
     );
 
@@ -514,7 +579,9 @@ async function main() {
             answer: "6",
             selectedOptions: [],
             explanation: "测试后续修正",
-            units: [{targetKey:"main",answer:"6",selectedOptions:[],explanation:"测试后续修正"}],
+            units: [
+              { targetKey: "main", answer: "6", selectedOptions: [], explanation: "测试后续修正" },
+            ],
             rubric: "结果为6得5分",
             sufficient: true,
             issues: [],
@@ -587,30 +654,40 @@ async function main() {
         .flatMap((b) => b.exams)
         .find((e) => e.id === studentTask.id);
       assert.equal(graded?.status, "批改完成");
-      const grade = await (
-        await request(`/api/grades/${graded!.gradeId}`, admin.cookie)
-      ).json();
+      const grade = await (await request(`/api/grades/${graded!.gradeId}`, admin.cookie)).json();
       assert.equal(
         grade.result.questions[0].expectedAnswer,
         "5",
         "batch reuses frozen template even after teacher changes it to 6",
       );
-      const studentEvidence = await (await request(`/api/exams/${studentTask.id}`,admin.cookie)).json();
-      assert.equal(grade.result.questions[0].score, 0, JSON.stringify({ reasons:grade.result.questions[0].reviewReasons,failed:grade.result.questions[0].failed,answer:grade.result.questions[0].studentAnswerBlocks,sources:studentEvidence.exam.answerDocument?.responses }));
-      const answerImage = grade.result.questions[0].studentAnswerBlocks.find((b: {type:string}) => b.type === "figure");
-      assert.ok(answerImage?.assetId,"grading preserves non-text answer assets");
-      const evidenceURL = `/api/grades/${graded!.gradeId}/evidence?region=${encodeURIComponent(JSON.stringify(answerImage.region))}&assetId=${answerImage.assetId}`;
-      assert.equal((await request(evidenceURL,admin.cookie)).status,200);
-      assert.equal((await request(evidenceURL,other.cookie)).status,404);
-      assert.equal((await request(`/api/grades/${graded!.gradeId}/download?format=html`,admin.cookie)).status,200);
-
+      const studentEvidence = await (
+        await request(`/api/exams/${studentTask.id}`, admin.cookie)
+      ).json();
       assert.equal(
-        grade.result.usage.calls,
-        1,
-        "grading only assesses, never re-solves",
+        grade.result.questions[0].score,
+        0,
+        JSON.stringify({
+          reasons: grade.result.questions[0].reviewReasons,
+          failed: grade.result.questions[0].failed,
+          answer: grade.result.questions[0].studentAnswerBlocks,
+          sources: studentEvidence.exam.answerDocument?.responses,
+        }),
       );
-      assert.ok(calls.slice(before).includes("exam_answer_layout"));
-      assert.ok(calls.slice(before).includes("exam_answer_transcription"));
+      const answerImage = grade.result.questions[0].studentAnswerBlocks.find(
+        (b: { type: string }) => b.type === "figure",
+      );
+      assert.ok(answerImage?.assetId, "grading preserves non-text answer assets");
+      const evidenceURL = `/api/grades/${graded!.gradeId}/evidence?region=${encodeURIComponent(JSON.stringify(answerImage.region))}&assetId=${answerImage.assetId}`;
+      assert.equal((await request(evidenceURL, admin.cookie)).status, 200);
+      assert.equal((await request(evidenceURL, other.cookie)).status, 404);
+      assert.equal(
+        (await request(`/api/grades/${graded!.gradeId}/download?format=html`, admin.cookie)).status,
+        200,
+      );
+
+      assert.equal(grade.result.usage.calls, 1, "grading only assesses, never re-solves");
+      assert.ok(calls.slice(before).includes("save_annotations"));
+      assert.ok(calls.slice(before).includes("finish"));
       assert.ok(
         !calls.slice(before).includes("exam_inventory") &&
           !calls.slice(before).includes("exam_solution"),
@@ -618,10 +695,7 @@ async function main() {
       const studentExam = await (
         await request(`/api/exams/${studentTask.id}`, admin.cookie)
       ).json();
-      assert.equal(
-        studentExam.exam.template.outputKey,
-        batch.templateOutputKey,
-      );
+      assert.equal(studentExam.exam.template.outputKey, batch.templateOutputKey);
       assert.equal(
         (
           await request(
@@ -640,13 +714,9 @@ async function main() {
         ).status,
         404,
       );
-      const learning = await (
-        await request("/api/learning", admin.cookie)
-      ).json();
+      const learning = await (await request("/api/learning", admin.cookie)).json();
       assert.ok(
-        learning.entries.some(
-          (e: { studentName?: string }) => e.studentName === "合成学生",
-        ),
+        learning.entries.some((e: { studentName?: string }) => e.studentName === "合成学生"),
       );
       console.log(
         "Teacher workflow passed: template binding, answer cards, frozen answers, grading reuse, authenticated crops, stale edit prevention and student learning.",
@@ -654,8 +724,15 @@ async function main() {
     }
     if (!live) {
       const body = new FormData();
-      body.append("files", new Blob([new Uint8Array(image)], { type: "image/png" }), "不预生成答案.png");
-      const created = await request("/api/exams?generateAnswers=false", admin.cookie, { method: "POST", body });
+      body.append(
+        "files",
+        new Blob([new Uint8Array(image)], { type: "image/png" }),
+        "不预生成答案.png",
+      );
+      const created = await request("/api/exams?generateAnswers=false", admin.cookie, {
+        method: "POST",
+        body,
+      });
       assert.equal(created.status, 202);
       const noAnswerId = (await created.json()).task.id;
       tasks.push(noAnswerId);
@@ -672,24 +749,66 @@ async function main() {
       const beforeSolve = await waitExam();
       assert.equal(beforeSolve.task.generateAnswers, false);
       assert.equal(beforeSolve.exam.questions[0].solution, undefined);
-      assert.equal((await request(`/api/exams/${noAnswerId}/grades`, admin.cookie, {method:"POST",...json({submissions:[{
-        questionId:beforeSolve.exam.questions[0].id,answer:"4",referenceAnswer:"",rubric:"",maxPoints:5,
-      }]})})).status,409,"missing standards block grading before a task is enqueued");
-      assert.equal((await request(`/api/exams/${noAnswerId}`,admin.cookie,{method:"PATCH",...json({
-        outputKey:beforeSolve.task.outputKey,questionId:beforeSolve.exam.questions[0].id,
-        blocks:[{type:"text",text:"计算：2 + 3 + 0 = ____。"}],points:5,confirmed:true,
-      })})).status,200);
+      assert.equal(
+        (
+          await request(`/api/exams/${noAnswerId}/grades`, admin.cookie, {
+            method: "POST",
+            ...json({
+              submissions: [
+                {
+                  questionId: beforeSolve.exam.questions[0].id,
+                  answer: "4",
+                  referenceAnswer: "",
+                  rubric: "",
+                  maxPoints: 5,
+                },
+              ],
+            }),
+          })
+        ).status,
+        409,
+        "missing standards block grading before a task is enqueued",
+      );
+      assert.equal(
+        (
+          await request(`/api/exams/${noAnswerId}`, admin.cookie, {
+            method: "PATCH",
+            ...json({
+              outputKey: beforeSolve.task.outputKey,
+              questionId: beforeSolve.exam.questions[0].id,
+              blocks: [{ type: "text", text: "计算：2 + 3 + 0 = ____。" }],
+              points: 5,
+              confirmed: true,
+            }),
+          })
+        ).status,
+        200,
+      );
       const edited = await waitExam();
       const callsBefore = calls.length;
-      assert.equal((await request(`/api/exams/${noAnswerId}/solutions`,other.cookie,{method:"POST"})).status,404);
-      assert.equal((await request(`/api/exams/${noAnswerId}/solutions`,admin.cookie,{method:"POST"})).status,202);
+      assert.equal(
+        (await request(`/api/exams/${noAnswerId}/solutions`, other.cookie, { method: "POST" }))
+          .status,
+        404,
+      );
+      assert.equal(
+        (await request(`/api/exams/${noAnswerId}/solutions`, admin.cookie, { method: "POST" }))
+          .status,
+        202,
+      );
       const solved = await waitExam();
-      assert.notEqual(solved.task.outputKey,edited.task.outputKey);
-      assert.equal(solved.exam.questions[0].blocks[0].text,"计算：2 + 3 + 0 = ____。");
-      assert.equal(solved.exam.questions[0].solution.answer,"5");
-      assert.equal(solved.exam.questions[0].solution.sufficient,true);
-      assert.deepEqual(calls.slice(callsBefore),["exam_solution"],"saved edits are solved without re-reading the upload");
-      console.log("Optional standards passed: disabled generation, grading prerequisite, saved-edit preservation and solution-only queue.");
+      assert.notEqual(solved.task.outputKey, edited.task.outputKey);
+      assert.equal(solved.exam.questions[0].blocks[0].text, "计算：2 + 3 + 0 = ____。");
+      assert.equal(solved.exam.questions[0].solution.answer, "5");
+      assert.equal(solved.exam.questions[0].solution.sufficient, true);
+      assert.deepEqual(
+        calls.slice(callsBefore),
+        ["exam_solution"],
+        "saved edits are solved without re-reading the upload",
+      );
+      console.log(
+        "Optional standards passed: disabled generation, grading prerequisite, saved-edit preservation and solution-only queue.",
+      );
     }
     const report = JSON.stringify(
       {
@@ -703,6 +822,7 @@ async function main() {
         classrooms,
         previousGradingProviderId: previousGrading?.providerId ?? null,
         previousProviderId: previous?.providerId ?? null,
+        previousAgentSettings,
         questions: result.exam.questions.length,
         status: result.exam.verification.status,
         usage: result.exam.verification.usage,
@@ -728,11 +848,9 @@ async function main() {
         sameSite: "Lax",
       };
     });
-    await writeFile(
-      join(temporary, "admin-state.json"),
-      JSON.stringify({ cookies, origins: [] }),
-      { mode: 0o600 },
-    );
+    await writeFile(join(temporary, "admin-state.json"), JSON.stringify({ cookies, origins: [] }), {
+      mode: 0o600,
+    });
     console.log(
       JSON.stringify({
         passed: true,
@@ -744,12 +862,20 @@ async function main() {
     );
     if (keep) {
       retained = true;
-      console.log(
-        "Browser fixtures retained. Run with --cleanup after browser verification.",
-      );
+      console.log("Browser fixtures retained. Run with --cleanup after browser verification.");
     }
   } finally {
     if (!retained) {
+      for (const id of ["recognition", "solution"]) {
+        const previous = previousAgentSettings.find((s) => s.id === id);
+        if (previous)
+          await getDb().aiSetting.upsert({
+            where: { id },
+            create: previous,
+            update: { providerId: previous.providerId },
+          });
+        else await getDb().aiSetting.deleteMany({ where: { id } });
+      }
       await getDb().aiSetting.upsert({
         where: { id: "exam" },
         create: { id: "exam", providerId: previous?.providerId ?? null },
@@ -766,11 +892,7 @@ async function main() {
       await getDb().classroom.deleteMany({ where: { id: { in: classrooms } } });
       await getDb().aiProvider.deleteMany({ where: { id: { in: providers } } });
       await getDb().user.deleteMany({ where: { id: { in: users } } });
-      await Promise.all(
-        tasks.map((id) =>
-          rm(taskDirectory(id), { recursive: true, force: true }),
-        ),
-      );
+      await Promise.all(tasks.map((id) => rm(taskDirectory(id), { recursive: true, force: true })));
       await rm(join(temporary, "admin-state.json"), { force: true });
     }
     await new Promise<void>((resolve) => server.close(() => resolve()));
@@ -784,10 +906,18 @@ async function cleanup() {
   const { getStoragePaths } = await import("../src/server/config/env");
   const { taskDirectory } = await import("../src/server/exams/tasks");
   const temporary = join(getStoragePaths().temp, "exam-web-test");
-  const report = JSON.parse(
-    await readFile(join(temporary, "report.json"), "utf8"),
-  );
+  const report = JSON.parse(await readFile(join(temporary, "report.json"), "utf8"));
   try {
+    for (const id of ["recognition", "solution"]) {
+      const previous = report.previousAgentSettings?.find((s: { id: string }) => s.id === id);
+      if (previous)
+        await getDb().aiSetting.updateMany({
+          where: { id, providerId: { in: report.providers } },
+          data: { providerId: previous.providerId },
+        });
+      else
+        await getDb().aiSetting.deleteMany({ where: { id, providerId: { in: report.providers } } });
+    }
     await getDb().aiSetting.updateMany({
       where: { id: "exam", providerId: { in: report.providers } },
       data: { providerId: report.previousProviderId },
@@ -804,9 +934,7 @@ async function cleanup() {
     });
     await getDb().user.deleteMany({ where: { id: { in: report.users } } });
     await Promise.all(
-      report.tasks.map((id: string) =>
-        rm(taskDirectory(id), { recursive: true, force: true }),
-      ),
+      report.tasks.map((id: string) => rm(taskDirectory(id), { recursive: true, force: true })),
     );
     await rm(join(temporary, "admin-state.json"), { force: true });
     console.log("Browser test fixtures cleaned up.");
@@ -816,17 +944,15 @@ async function cleanup() {
 }
 
 if (process.argv[1]?.endsWith("test-exam-web.ts"))
-  (process.argv.includes("--cleanup") ? cleanup() : main()).catch(
-    (error: unknown) => {
-      const message =
-        error instanceof assert.AssertionError
-          ? `Exam web assertion failed: ${error.message}`
-          : "Exam web test failed; inspect server health and worker status.";
-      console.error(
-        process.env.DEEPSEEK_API_KEY
-          ? message.replaceAll(process.env.DEEPSEEK_API_KEY, "[redacted]")
-          : message,
-      );
-      process.exitCode = 1;
-    },
-  );
+  (process.argv.includes("--cleanup") ? cleanup() : main()).catch((error: unknown) => {
+    const message =
+      error instanceof assert.AssertionError
+        ? `Exam web assertion failed: ${error.message}`
+        : "Exam web test failed; inspect server health and worker status.";
+    console.error(
+      process.env.DEEPSEEK_API_KEY
+        ? message.replaceAll(process.env.DEEPSEEK_API_KEY, "[redacted]")
+        : message,
+    );
+    process.exitCode = 1;
+  });

@@ -64,9 +64,7 @@ export function WorkspaceShell({
     [mobileOpen, setMobileOpen] = useState(false);
   const active = pathname.startsWith("/classes")
     ? "/classes"
-    : pathname.startsWith("/grading") ||
-        pathname.startsWith("/grades") ||
-        /\/grade$/.test(pathname)
+    : pathname.startsWith("/grading") || pathname.startsWith("/grades") || /\/grade$/.test(pathname)
       ? "/grading"
       : pathname.startsWith("/analysis") ||
           pathname.startsWith("/wrong-questions") ||
@@ -78,11 +76,7 @@ export function WorkspaceShell({
   const title = navigation.find((n) => n.href === active)?.label ?? "服务设置";
   const sidebarContent = (mobile = false) => (
     <>
-      <Link
-        href="/dashboard"
-        className="oa-brand"
-        onClick={() => setMobileOpen(false)}
-      >
+      <Link href="/dashboard" className="oa-brand" onClick={() => setMobileOpen(false)}>
         <BookOpen size={23} aria-hidden="true" />
         <span>
           Oh My Paper<small>教学工作台</small>
@@ -140,12 +134,7 @@ export function WorkspaceShell({
           <header className="oa-topbar">
             <div className="oa-breadcrumb">
               <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="mobile-menu"
-                  aria-label="打开导航"
-                >
+                <Button variant="ghost" size="icon" className="mobile-menu" aria-label="打开导航">
                   <Menu />
                 </Button>
               </SheetTrigger>

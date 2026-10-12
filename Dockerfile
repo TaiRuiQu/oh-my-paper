@@ -17,7 +17,8 @@ CMD ["node", "server.js"]
 
 FROM node:24.19.0-bookworm-slim AS worker
 WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends poppler-utils fonts-noto-cjk tesseract-ocr tesseract-ocr-osd python3 python3-sympy ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends poppler-utils fonts-noto-cjk tesseract-ocr tesseract-ocr-osd tesseract-ocr-chi-sim python3 python3-sympy python3-pil python3-opencv ca-certificates && rm -rf /var/lib/apt/lists/*
+ENV PYTHON_PATH=/usr/bin/python3
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/src ./src
 COPY --from=build --chown=node:node /app/worker ./worker

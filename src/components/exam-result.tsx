@@ -1,19 +1,15 @@
 "use client";
-/* Image dimensions come from authenticated original scans and saved crops. */
-/* eslint-disable @next/next/no-img-element */
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { MarkdownText } from "./markdown-text";
-import { QuestionEditor } from "./question-editor";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { useState, type ReactNode } from "react";
-import type { GradeTaskSummary } from "@/contracts/grading";
-import type { ContentBlock } from "@/contracts/exams";
-import type { ExamTaskDetail, ExamTaskSummary } from "@/contracts/exam-tasks";
-import { apiRequest } from "@/lib/http-client";
-import { findFigureAsset, regionsEqual } from "@/lib/figure-assets";
+import { useState } from "react";
+import type { ExamTaskSummary } from "@/contracts/exam-tasks";
+import { RecognitionActivityFeed } from "./recognition-activity";
+
+import { useExamResult } from "./exams/use-exam-result";
+import { createExamContentRenderer } from "./exams/content-renderer";
+import { ExamEvidence } from "./exams/exam-evidence";
+import { ExamQuestionDetails } from "./exams/exam-question-details";
 
 const statusText = {
   verified: "识别完成",
@@ -27,6 +23,7 @@ const annotationLabels = {
   rubric: "评分标准",
 };
 const phaseText: Record<string, string> = {
+  recognizing: "识别 Agent 正在检查文件并自主调用工具，操作记录显示在下方。",
   inventory: "正在结合全卷识别大题、小题和分值。",
   localization: "正在逐题定位整题与非文字材料。",
   transcription: "正在将整题切片转成文字，并插入材料图片。",
@@ -45,157 +42,28 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [page, setPage] = useState(1);
   const [tab, setTab] = useState<"questions" | "annotations">("questions");
-  const [retrying, setRetrying] = useState(false);
-  const [actionError, setActionError] = useState("");
-  const data = useQuery({
-    queryKey: ["exam", initialTask.id],
-    queryFn: () => apiRequest<ExamTaskDetail>(`/api/exams/${initialTask.id}`),
-    refetchInterval: (query) =>
-      !query.state.data ||
-      ["QUEUED", "RUNNING"].includes(query.state.data.task.status)
-        ? 2500
-        : false,
-  });
-  const task = data.data?.task ?? initialTask;
-  const exam = data.data?.exam;
-  const grades = useQuery({
-    queryKey: ["grade-history", task.id],
-    queryFn: () =>
-      apiRequest<{ tasks: GradeTaskSummary[] }>(`/api/exams/${task.id}/grades`),
-    enabled: task.status === "COMPLETED" && !!task.autoGrade,
-    refetchInterval: (query) =>
-      !query.state.data?.tasks.length ||
-      query.state.data.tasks.some((t) =>
-        ["QUEUED", "RUNNING"].includes(t.status),
-      )
-        ? 2500
-        : false,
-  });
-  const automaticGrade = grades.data?.tasks[0];
-
-  const images = data.data?.mathImages ?? {};
-  const fileURL = (key: string) =>
-    `/api/exams/${task.id}/files/${key.split("/").map(encodeURIComponent).join("/")}`;
-
-  async function cancel() {
-    setActionError("");
-    try {
-      await apiRequest(`/api/exams/${task.id}/cancel`, { method: "POST" });
-      await data.refetch();
-    } catch (e) {
-      setActionError(e instanceof Error ? e.message : "取消未成功，请重试。");
-    }
-  }
-  async function retry() {
-    setRetrying(true);
-    setActionError("");
-    try {
-      await apiRequest(`/api/exams/${task.id}/retry`, { method: "POST" });
-      await data.refetch();
-    } catch (error) {
-      setActionError(
-        error instanceof Error ? error.message : "提交失败，请重试。",
-      );
-    } finally {
-      setRetrying(false);
-    }
-  }
-  async function generateSolutions() {
-    setRetrying(true); setActionError("");
-    try {
-      await apiRequest(`/api/exams/${task.id}/solutions`, { method: "POST" });
-      await data.refetch();
-    } catch (error) { setActionError(error instanceof Error ? error.message : "答案生成未能提交，请重试。"); }
-    finally { setRetrying(false); }
-  }
-  function math(latex: string) {
-    // SVGs are displayed in the browser's isolated image context, never inserted as HTML.
-    return typeof images[latex] === "string" ? (
-      <img className="math-image" src={images[latex]} alt={latex} />
-    ) : (
-      <code className="math-fallback">{latex}</code>
-    );
-  }
-  function textWithMath(text: string) {
-    const pieces: ReactNode[] = [];
-    let cursor = 0;
-    for (const match of text.matchAll(/\$\$([\s\S]+?)\$\$|\$([^$\n]+)\$/g)) {
-      pieces.push(
-        text.slice(cursor, match.index),
-        <span key={match.index}>{math(match[1] ?? match[2])}</span>,
-      );
-      cursor = match.index + match[0].length;
-    }
-    pieces.push(text.slice(cursor));
-    return pieces;
-  }
-  function blocks(content: ContentBlock[], keyPrefix: string) {
-    return content.map((block, index) => {
-      const key = `${keyPrefix}-${index}`;
-      if (block.type === "text")
-        return <MarkdownText key={key} text={block.text} images={images} />;
-      if (block.type === "math")
-        return (
-          <div className="math-block" key={key}>
-            {math(block.latex)}
-          </div>
-        );
-      if (block.type === "table")
-        return (
-          <div className="table-scroll" key={key}>
-            <table>
-              <caption className="sr-only">试卷表格</caption>
-              <tbody>
-                {block.rows.map((row, i) => (
-                  <tr key={i}>
-                    {row.map((cell, j) => (
-                      <td key={j}>{textWithMath(cell)}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-      const asset = findFigureAsset(exam?.assets ?? [], block);
-      return (
-        <figure className="exam-figure" key={key}>
-          {asset?.cleanKey ? (
-            <>
-              <img
-                src={fileURL(asset.cleanKey)}
-                alt={block.caption}
-                loading="lazy"
-              />
-            </>
-          ) : (
-            <p className="review-note">
-              配图需核对，请查看原图
-              {asset && (
-                <>
-                  或
-                  <Link href={fileURL(asset.evidenceKey)} target="_blank">
-                    查看图形证据
-                  </Link>
-                </>
-              )}
-              。
-            </p>
-          )}
-          <figcaption>{block.caption}</figcaption>
-        </figure>
-      );
-    });
-  }
-  const currentPage =
-    exam?.pages.find((item) => item.page === page) ?? exam?.pages[0];
+  const {
+    data,
+    task,
+    exam,
+    automaticGrade,
+    images,
+    fileURL,
+    retrying,
+    actionError,
+    cancel,
+    retry,
+    generateSolutions,
+  } = useExamResult(initialTask);
+  const renderer = createExamContentRenderer({ images, assets: exam?.assets ?? [], fileURL });
+  const { blocks, textWithMath } = renderer;
+  const currentPage = exam?.pages.find((item) => item.page === page) ?? exam?.pages[0];
   const selectedPage = currentPage?.page ?? page;
   const questions =
     exam?.questions.filter((question) =>
       question.regions.some((region) => region.page === selectedPage),
     ) ?? [];
-  const activeQuestion =
-    questions.find((q) => q.id === selectedQuestion) ?? questions[0];
+  const activeQuestion = questions.find((q) => q.id === selectedQuestion) ?? questions[0];
   const visibleQuestions = activeQuestion ? [activeQuestion] : questions;
   const materials =
     exam?.materials.filter(
@@ -231,16 +99,10 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
         </p>
       )}
       {["QUEUED", "RUNNING"].includes(task.status) && (
-        <section
-          className="recognition-progress"
-          aria-labelledby="progress-heading"
-          role="status"
-        >
-          <h2 id="progress-heading">
-            {task.status === "QUEUED" ? "等待识别" : "正在识别试卷"}
-          </h2>
+        <section className="recognition-progress" aria-labelledby="progress-heading" role="status">
+          <h2 id="progress-heading">{task.status === "QUEUED" ? "等待识别" : "正在识别试卷"}</h2>
           <p>{phaseText[task.phase] ?? "正在处理试卷。"}</p>
-          {task.totalPages > 0 && (
+          {task.totalPages > 0 && task.phase !== "recognizing" && (
             <>
               <progress
                 max={task.totalPages}
@@ -259,9 +121,7 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
               </p>
             </>
           )}
-          <p className="hint">
-            多页试卷可能需要几分钟。你可以离开页面，后台会继续处理。
-          </p>
+          <p className="hint">多页试卷可能需要几分钟。你可以离开页面，后台会继续处理。</p>
           {task.status === "QUEUED" && (
             <p className="hint">若长时间没有开始，请联系管理员检查处理服务。</p>
           )}
@@ -271,17 +131,10 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
         </section>
       )}
       {task.status === "FAILED" && (
-        <section
-          className="recognition-progress"
-          aria-labelledby="failure-heading"
-        >
+        <section className="recognition-progress" aria-labelledby="failure-heading">
           <h2 id="failure-heading">识别未完成</h2>
           <p className="form-error">{task.error}</p>
-          <button
-            className="button"
-            disabled={retrying}
-            onClick={() => void retry()}
-          >
+          <button className="button" disabled={retrying} onClick={() => void retry()}>
             {retrying ? "正在提交…" : "重新识别"}
           </button>
           <p className="hint">请确认文件清晰、完整，再重新提交。</p>
@@ -292,6 +145,7 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
           正在加载识别结果…
         </p>
       )}
+      <RecognitionActivityFeed task={task} />
       {exam && (
         <>
           {task.autoGrade && (
@@ -306,26 +160,30 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
                         : "正在批改作答"}
                   </strong>
                   <Link href={`/grades/${automaticGrade.id}`}>
-                    {automaticGrade.status === "COMPLETED"
-                      ? "查看逐题报告与得分"
-                      : "查看批改进度"}
+                    {automaticGrade.status === "COMPLETED" ? "查看逐题报告与得分" : "查看批改进度"}
                   </Link>
                 </>
               ) : (
-                <span>{exam.questions.some((q) => !q.solution?.sufficient) ? "标准答案尚未完整，请补充或生成答案后再批改。" : "识别完成，正在准备批改任务。"}</span>
+                <span>
+                  {exam.questions.some((q) => !q.solution?.sufficient)
+                    ? "标准答案尚未完整，请补充或生成答案后再批改。"
+                    : "识别完成，正在准备批改任务。"}
+                </span>
               )}
             </div>
           )}
           <div className="result-toolbar">
             <div>
               <strong>{statusText[exam.verification.status]}</strong>
-              <p className="hint">
-                逐题对照原卷与切片，标准答案将用于后续批改。
-              </p>
+              <p className="hint">逐题对照原卷与切片，标准答案将用于后续批改。</p>
             </div>
             <div className="inline-actions">
               {exam.questions.some((q) => !q.solution?.sufficient) && (
-                <Button variant="outline" disabled={retrying} onClick={() => void generateSolutions()}>
+                <Button
+                  variant="outline"
+                  disabled={retrying}
+                  onClick={() => void generateSolutions()}
+                >
                   {retrying ? "正在提交…" : "补生成标准答案"}
                 </Button>
               )}
@@ -335,13 +193,21 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
                 </Link>
               )}
               {!!exam.questions.length && !task.autoGrade && (
-                <Link className="button secondary" href={`/grading?templateId=${encodeURIComponent(task.id)}`}>
+                <Link
+                  className="button secondary"
+                  href={`/grading?templateId=${encodeURIComponent(task.id)}`}
+                >
                   上传本题套的作答
                 </Link>
               )}
               <details className="technical-download">
                 <summary>更多下载</summary>
                 <a href={`${fileURL("exam.json")}?download`}>结构化数据</a>
+                {exam.pipeline?.version.startsWith("recognition-agent") && (
+                  <a href={`${fileURL("recognition.json")}?download`}>
+                    Agent 原始结果（Markdown JSON）
+                  </a>
+                )}
                 <br />
                 <a href={`${fileURL("exam.md")}?download`}>文本与公式</a>
               </details>
@@ -349,20 +215,13 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
           </div>
           {!!exam.verification.findings.length && (
             <details className="review-findings">
-              <summary>
-                {exam.verification.findings.length} 条待核对提示
-              </summary>
+              <summary>{exam.verification.findings.length} 条待核对提示</summary>
               <ul>
                 {exam.verification.findings.map((finding, index) => (
                   <li key={index}>
-                    <button
-                      className="text-button"
-                      onClick={() => setPage(finding.page)}
-                    >
+                    <button className="text-button" onClick={() => setPage(finding.page)}>
                       第 {finding.page} 页
-                      {finding.questionNumber
-                        ? ` · 第 ${finding.questionNumber} 题`
-                        : ""}
+                      {finding.questionNumber ? ` · 第 ${finding.questionNumber} 题` : ""}
                     </button>
                     <p>
                       {finding.severity === "error"
@@ -384,17 +243,12 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
               >
                 {exam.pages.map((page) => (
                   <option key={page.page} value={page.page}>
-                    第 {page.page} 页
-                    {page.status === "failed" ? "（识别失败）" : ""}
+                    第 {page.page} 页{page.status === "failed" ? "（识别失败）" : ""}
                   </option>
                 ))}
               </select>
             </label>
-            <div
-              className="inline-actions"
-              role="group"
-              aria-label="识别内容类型"
-            >
+            <div className="inline-actions" role="group" aria-label="识别内容类型">
               <button
                 className={`tab-button${tab === "questions" ? " is-active" : ""}`}
                 aria-pressed={tab === "questions"}
@@ -412,7 +266,7 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
             </div>
           </div>
           {tab === "questions" && !!questions.length && (
-            <div className="question-index" aria-label="选择题目">
+            <div className="question-index" role="group" aria-label="选择题目">
               {questions.map((q) => (
                 <Button
                   variant={activeQuestion?.id === q.id ? "default" : "outline"}
@@ -426,156 +280,20 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
             </div>
           )}
           <div className="exam-comparison">
-            <section className="source-panel" aria-labelledby="source-heading">
-              <div className="section-heading">
-                <h2 id="source-heading">原图 · 第 {selectedPage} 页</h2>
-                {currentPage && (
-                  <a
-                    href={fileURL(currentPage.key)}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    放大查看
-                  </a>
-                )}
-              </div>
-              {currentPage && (
-                <div className="source-canvas">
-                  <img
-                    className="source-image"
-                    src={fileURL(currentPage.key)}
-                    alt={`试卷第 ${selectedPage} 页原图`}
-                  />
-                  {tab === "questions" &&
-                    questions.flatMap((q) =>
-                      q.regions
-                        .filter((r) => r.page === selectedPage)
-                        .map((r, index) => (
-                          <button
-                            key={`${q.id}-${index}`}
-                            className={`question-box${activeQuestion?.id === q.id ? " selected" : ""}`}
-                            style={{
-                              left: `${r.x * 100}%`,
-                              top: `${r.y * 100}%`,
-                              width: `${r.width * 100}%`,
-                              height: `${r.height * 100}%`,
-                            }}
-                            onClick={() => setSelectedQuestion(q.id)}
-                            aria-label={`查看第 ${q.number} 题切片`}
-                            aria-pressed={activeQuestion?.id === q.id}
-                          >
-                            <span>第 {q.number} 题</span>
-                          </button>
-                        )),
-                    )}
-                  {tab === "questions" &&
-                    activeQuestion &&
-                    exam.assets
-                      .filter(
-                        (a) =>
-                          visibleQuestions.some((q) =>
-                            [
-                              ...q.blocks,
-                              ...q.options.flatMap((o) => o.blocks),
-                              ...q.parts.flatMap((p) => p.blocks),
-                              ...materials.flatMap((m) => m.blocks),
-                            ].some(
-                              (b) =>
-                                b.type === "figure" &&
-                                regionsEqual(b.region, a.region),
-                            ),
-                          ) && a.region.page === selectedPage,
-                      )
-                      .map((asset) => (
-                        <span
-                          key={asset.id}
-                          className="figure-box"
-                          style={{
-                            left: `${asset.region.x * 100}%`,
-                            top: `${asset.region.y * 100}%`,
-                            width: `${asset.region.width * 100}%`,
-                            height: `${asset.region.height * 100}%`,
-                          }}
-                        >
-                          <span>材料图</span>
-                        </span>
-                      ))}
-                </div>
-              )}
-            </section>
-            <section className="slice-panel" aria-labelledby="slice-heading">
-              <h2 id="slice-heading">
-                题目切片
-                {activeQuestion ? ` · 第 ${activeQuestion.number} 题` : ""}
-              </h2>
-              <p className="hint">保留完整题目范围，可与原卷对照。</p>
-              {activeQuestion?.crops?.length ? (
-                activeQuestion.crops.map((crop, index) => (
-                  <figure className="question-slice" key={crop.key}>
-                    <img
-                      src={fileURL(crop.key)}
-                      alt={`第 ${activeQuestion.number} 题第 ${index + 1} 个切片`}
-                    />
-                    <figcaption>
-                      第 {crop.region.page} 页 ·{" "}
-                      <a
-                        href={fileURL(crop.key)}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        查看切片
-                      </a>
-                    </figcaption>
-                  </figure>
-                ))
-              ) : (
-                <p className="setup-note muted">
-                  {activeQuestion
-                    ? "当前存稿未保存切片，可重新识别生成。"
-                    : "请选择含题目的页面。"}
-                </p>
-              )}
-              {activeQuestion && (
-                <div className="slice-materials">
-                  <h3>材料与题图</h3>
-                  {exam.assets
-                    .filter((a) =>
-                      [
-                        ...activeQuestion.blocks,
-                        ...activeQuestion.options.flatMap((o) => o.blocks),
-                        ...activeQuestion.parts.flatMap((p) => p.blocks),
-                        ...materials.flatMap((m) => m.blocks),
-                      ].some(
-                        (b) =>
-                          b.type === "figure" &&
-                          regionsEqual(b.region, a.region),
-                      ),
-                    )
-                    .map((asset) => (
-                      <figure className="exam-figure" key={asset.id}>
-                        <img
-                          src={fileURL(asset.evidenceKey)}
-                          alt={asset.caption}
-                          loading="lazy"
-                        />
-                        <figcaption>
-                          {asset.caption} ·{" "}
-                          <a href={fileURL(asset.evidenceKey)} download>
-                            保存图片
-                          </a>
-                        </figcaption>
-                      </figure>
-                    ))}
-                </div>
-              )}
-            </section>
-            <section
-              className="transcription-panel"
-              aria-labelledby="transcription-heading"
-            >
-              <h2 id="transcription-heading">
-                {tab === "questions" ? "识别内容" : "作答与批注"}
-              </h2>
+            <ExamEvidence
+              exam={exam}
+              currentPage={currentPage}
+              selectedPage={selectedPage}
+              tab={tab}
+              questions={questions}
+              activeQuestion={activeQuestion}
+              visibleQuestions={visibleQuestions}
+              materials={materials}
+              fileURL={fileURL}
+              onSelectQuestion={setSelectedQuestion}
+            />
+            <section className="transcription-panel" aria-labelledby="transcription-heading">
+              <h2 id="transcription-heading">{tab === "questions" ? "识别内容" : "作答与批注"}</h2>
               {tab === "questions" ? (
                 <>
                   {selectedPage === 1 && !!exam.instructions.length && (
@@ -592,120 +310,14 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
                     </article>
                   ))}
                   {visibleQuestions.map((question) => (
-                    <article className="exam-question" key={question.id}>
-                      <div className="section-heading">
-                        <h3>
-                          {question.section && (
-                            <span className="muted">{question.section} · </span>
-                          )}
-                          第 {question.number} 题
-                          {question.points !== null && (
-                            <span className="hint">
-                              （{question.points} 分）
-                              {question.pointsOrigin === "inferred" && <span className="hint"> · 推测分值</span>}
-                            </span>
-                          )}
-                        </h3>
-                        {question.status === "needs_review" && (
-                          <span className="status-tag warning">需核对</span>
-                        )}
-                      </div>
-                      {blocks(question.blocks, question.id)}
-                      {question.options.map((option) => (
-                        <div className="exam-option" key={option.label}>
-                          <strong>{option.label}.</strong>
-                          <div>
-                            {blocks(
-                              option.blocks,
-                              `${question.id}-${option.label}`,
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                      {question.parts.map((part, index) => (
-                        <div className="exam-part" key={index}>
-                          <strong>
-                            {part.parentLabel ? `${part.parentLabel} ` : ""}
-                            {part.label}
-                          </strong>
-                          {blocks(part.blocks, `${question.id}-part-${index}`)}
-                        </div>
-                      ))}
-                      {question.regions.length > 1 && (
-                        <p className="hint">
-                          本题涉及第{" "}
-                          {[
-                            ...new Set(question.regions.map((r) => r.page)),
-                          ].join("、")}{" "}
-                          页，请结合原图核对。
-                        </p>
-                      )}
-                      <section className="solution-panel">
-                        <div className="section-heading">
-                          <h3>标准答案与解析</h3>
-                          <Badge variant="secondary">
-                            {question.solution?.sufficient
-                              ? question.solution.origin === "teacher"
-                                ? "参考答案已保存"
-                                : "已保存"
-                              : "待补充"}
-                          </Badge>
-                        </div>
-                        {question.solution?.sufficient ? (
-                          <>
-                            <div className="solution-answer">
-                              <strong>
-                                标准答案
-                                {question.solution.selectedOptions.length
-                                  ? ` · ${question.solution.selectedOptions.join("、")}`
-                                  : ""}
-                              </strong>
-                              <MarkdownText
-                                text={question.solution.answer}
-                                images={images}
-                              />
-                            </div>
-                            <h4>解题解析</h4>
-                            <MarkdownText
-                              text={question.solution.explanation}
-                              images={images}
-                            />
-                            {(question.solution.units?.length ?? 0) > 1 && (
-                              <details>
-                                <summary>逐小问与填空答案</summary>
-                                {question.solution.units!.map((unit) => {
-                                  const target = question.answerTargets?.find((t) => t.key === unit.targetKey);
-                                  const label = target ? `${target.parentLabel ?? ""}${target.partLabel ?? ""}${target.blankIndex ? ` 第 ${target.blankIndex} 空` : ""}` : unit.targetKey;
-                                  return <div className="exam-part" key={unit.targetKey}><strong>{label || unit.targetKey}</strong>
-                                    <MarkdownText text={unit.answer} images={images} /><MarkdownText text={unit.explanation} images={images} />
-                                  </div>;
-                                })}
-                              </details>
-                            )}
-                            <details>
-                              <summary>评分标准</summary>
-                              <MarkdownText
-                                text={question.solution.rubric}
-                                images={images}
-                              />
-                            </details>
-                          </>
-                        ) : (
-                          <p className="hint">
-                            本题尚无可复用的标准答案，请通过下方编辑补充。
-                          </p>
-                        )}
-                      </section>
-                      {task.outputKey && (
-                        <QuestionEditor
-                          key={`${question.id}-${task.outputKey}`}
-                          question={question}
-                          examId={task.id}
-                          outputKey={task.outputKey}
-                          onSaved={() => data.refetch()}
-                        />
-                      )}
-                    </article>
+                    <ExamQuestionDetails
+                      key={question.id}
+                      question={question}
+                      task={task}
+                      renderer={renderer}
+                      images={images}
+                      onSaved={() => data.refetch()}
+                    />
                   ))}
                   {!questions.length && !materials.length && (
                     <p className="setup-note muted">
@@ -718,29 +330,20 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
                   <p className="hint">下载的试卷仅包含题目和材料。</p>
                   {exam.annotations
                     .filter((annotation) =>
-                      annotation.regions.some(
-                        (region) => region.page === selectedPage,
-                      ),
+                      annotation.regions.some((region) => region.page === selectedPage),
                     )
                     .map((annotation, index) => (
                       <article className="exam-question" key={index}>
                         <h3>
                           {annotationLabels[annotation.kind]}
-                          {annotation.questionNumber &&
-                            ` · 第 ${annotation.questionNumber} 题`}
+                          {annotation.questionNumber && ` · 第 ${annotation.questionNumber} 题`}
                         </h3>
                         {blocks(annotation.blocks, `annotation-${index}`)}
                       </article>
                     ))}
                   {!exam.annotations.some((annotation) =>
-                    annotation.regions.some(
-                      (region) => region.page === selectedPage,
-                    ),
-                  ) && (
-                    <p className="setup-note muted">
-                      本页没有识别到作答或批注。
-                    </p>
-                  )}
+                    annotation.regions.some((region) => region.page === selectedPage),
+                  ) && <p className="setup-note muted">本页没有识别到作答或批注。</p>}
                 </>
               )}
             </section>
@@ -760,18 +363,12 @@ export function ExamResult({ initialTask }: { initialTask: ExamTaskSummary }) {
                   </ul>
                 </div>
               ))}
-            <a href={`${fileURL("verification.json")}?download`}>
-              下载核对记录
-            </a>
+            <a href={`${fileURL("verification.json")}?download`}>下载核对记录</a>
           </details>
           <details className="verification-details">
             <summary>重新识别这份试卷</summary>
             <p className="hint">重新识别后，这里会展示新的结果。</p>
-            <button
-              className="button secondary"
-              disabled={retrying}
-              onClick={() => void retry()}
-            >
+            <button className="button secondary" disabled={retrying} onClick={() => void retry()}>
               {retrying ? "正在提交…" : "重新识别"}
             </button>
           </details>

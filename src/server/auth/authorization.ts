@@ -4,7 +4,11 @@ import { requireSession } from "./session";
 import { AccessError } from "@/server/http/errors";
 import type { WorkspaceRole } from "@/generated/prisma/client";
 
-export async function requireWorkspaceAccess(requestHeaders: Headers, workspaceId: string, roles?: WorkspaceRole[]) {
+export async function requireWorkspaceAccess(
+  requestHeaders: Headers,
+  workspaceId: string,
+  roles?: WorkspaceRole[],
+) {
   const session = await requireSession(requestHeaders);
   const member = await getDb().workspaceMember.findUnique({
     where: { workspaceId_userId: { workspaceId, userId: session.user.id } },
@@ -18,7 +22,10 @@ export async function requireWorkspaceAccess(requestHeaders: Headers, workspaceI
 export async function requireAdmin(requestHeaders: Headers) {
   const session = await requireSession(requestHeaders);
   // Read the current database role rather than trusting client input or cached user fields.
-  const user = await getDb().user.findUnique({ where: { id: session.user.id }, select: { role: true } });
+  const user = await getDb().user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true },
+  });
   if (user?.role !== "ADMIN") throw new AccessError(403, "需要管理员权限。");
   return session;
 }

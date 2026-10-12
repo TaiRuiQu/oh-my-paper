@@ -10,5 +10,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     requireSameOrigin(request);
     await retryExamTask(user.id, (await context.params).id);
     return Response.json({ ok: true }, { status: 202 });
-  } catch (error) { return errorResponse(error); }
+  } catch (error) {
+    return errorResponse(error);
+  }
 }

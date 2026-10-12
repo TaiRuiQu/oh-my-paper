@@ -64,21 +64,31 @@ export const providerSnapshotSchema = providerSchema.extend({
 export type ProviderSnapshot = z.infer<typeof providerSnapshotSchema>;
 
 export const AI_STAGES = {
-  inventory: "题目识别",
-  localization: "精细定位",
-  transcription: "题目文本化",
+  recognition: "试卷识别 Agent",
   solution: "标准答案",
-  answer_extraction: "作答解析",
   grading: "逐题批改",
 } as const;
-export const aiStageSchema = z.enum(["inventory", "localization", "transcription", "solution", "answer_extraction", "grading"]);
+// Legacy names remain readable in queued snapshots, but no longer prescribe recognition stages.
+export const aiStageSchema = z.enum([
+  "recognition",
+  "inventory",
+  "localization",
+  "transcription",
+  "solution",
+  "answer_extraction",
+  "grading",
+]);
 export type AiStage = z.infer<typeof aiStageSchema>;
 export const pipelineSnapshotSchema = providerSnapshotSchema.extend({
   stages: z.partialRecord(aiStageSchema, providerSnapshotSchema).default({}),
-  workflow: z.object({
-    generateAnswers: z.boolean().default(true),
-    template: z.object({ taskId: z.uuid(), outputKey: z.uuid() }).optional(),
-    solveOnly: z.boolean().default(false), sourceOutputKey: z.uuid().optional(),
-  }).default({ generateAnswers: true, solveOnly: false }),
+  workflow: z
+    .object({
+      generateAnswers: z.boolean().default(true),
+      template: z.object({ taskId: z.uuid(), outputKey: z.uuid() }).optional(),
+      solveOnly: z.boolean().default(false),
+      sourceOutputKey: z.uuid().optional(),
+      recognitionDraftAttempt: z.uuid().optional(),
+    })
+    .default({ generateAnswers: true, solveOnly: false }),
 });
 export type PipelineSnapshot = z.infer<typeof pipelineSnapshotSchema>;

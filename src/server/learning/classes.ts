@@ -1,50 +1,21 @@
 import "server-only";
-import { z } from "zod";
+import type { BatchInput, StudentInput, ClassOverview } from "@/contracts/classes";
 import { getDb } from "@/server/db/client";
 import { AccessError, RequestError } from "@/server/http/errors";
-import {
-  createExamTask,
-  ownedExamTask,
-  taskResult,
-} from "@/server/exams/tasks";
+import { createExamTask, ownedExamTask, taskResult } from "@/server/exams/tasks";
 import { gradeTaskResult } from "@/server/grading/tasks";
-export const batchInputSchema = z.object({
-  classroomId: z.uuid(),
-  name: z.string().trim().min(1).max(80),
-  templateId: z.uuid(),
-});
-export async function createBatch(
-  userId: string,
-  data: z.infer<typeof batchInputSchema>,
-) {
+export async function createBatch(userId: string, data: BatchInput) {
   await ownedClass(userId, data.classroomId);
   const task = await ownedExamTask(userId, data.templateId),
     exam = await taskResult(task);
-  if (
-    task.autoGrade ||
-    task.batchId ||
-    !exam?.questions.length ||
-    !task.outputKey
-  )
+  if (task.autoGrade || task.batchId || !exam?.questions.length || !task.outputKey)
     throw new RequestError(422, "请选择解析完成的空白题套。");
   if (exam.questions.some((q) => !q.solution?.sufficient))
-    throw new RequestError(
-      422,
-      "题套尚有题目未完成解题，请补充标准答案后再创建批次。",
-    );
+    throw new RequestError(422, "题套尚有题目未完成解题，请补充标准答案后再创建批次。");
   return getDb().gradeBatch.create({
     data: { ...data, templateOutputKey: task.outputKey },
   });
 }
-export const classInputSchema = z.object({
-  name: z.string().trim().min(1).max(80),
-});
-export const studentInputSchema = z.object({
-  classroomId: z.uuid(),
-  name: z.string().trim().min(1).max(80),
-  number: z.string().trim().min(1).max(40),
-  email: z.union([z.email(), z.literal("")]).default(""),
-});
 export async function ownedClass(userId: string, id: string) {
   const c = await getDb().classroom.findFirst({
     where: { id, ownerId: userId },
@@ -52,7 +23,7 @@ export async function ownedClass(userId: string, id: string) {
   if (!c) throw new AccessError(404, "班级不存在或无权访问。");
   return c;
 }
-export async function classOverview(userId: string) {
+export async function classOverview(userId: string): Promise<ClassOverview> {
   const classes = await getDb().classroom.findMany({
     where: { ownerId: userId },
     include: {
@@ -114,10 +85,7 @@ export async function classOverview(userId: string) {
     })),
   }));
 }
-export async function addStudent(
-  userId: string,
-  data: z.infer<typeof studentInputSchema>,
-) {
+export async function addStudent(userId: string, data: StudentInput) {
   await ownedClass(userId, data.classroomId);
   const account = data.email
     ? await getDb().user.findUnique({
@@ -125,10 +93,7 @@ export async function addStudent(
       })
     : null;
   if (data.email && !account)
-    throw new RequestError(
-      422,
-      "该邮箱尚未注册，请让学生先创建账号，或暂不关联邮箱。",
-    );
+    throw new RequestError(422, "该邮箱尚未注册，请让学生先创建账号，或暂不关联邮箱。");
   if (
     await getDb().studentProfile.findUnique({
       where: {

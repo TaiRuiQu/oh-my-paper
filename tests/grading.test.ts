@@ -8,10 +8,7 @@ import {
 import type { ExamModel, StructuredRequest } from "@/server/ai/deepseek";
 import { ExamModelCallError } from "@/server/ai/deepseek";
 import { gradeExam } from "@/server/grading/service";
-import {
-  calculateTotals,
-  scoreIssues,
-} from "@/server/grading/score";
+import { calculateTotals, scoreIssues } from "@/server/grading/score";
 import { defaultSubmissions } from "@/lib/grading-defaults";
 
 function exam(count = 2): DigitalExam {
@@ -192,9 +189,7 @@ describe("grading safety and score aggregation", () => {
       promptPreset: "openai",
     });
     expect(requests).toHaveLength(0);
-    expect(
-      result.questions.every((q) => q.score === null && q.needsReview),
-    ).toBe(true);
+    expect(result.questions.every((q) => q.score === null && q.needsReview)).toBe(true);
   });
   it("handles explicitly blank responses without model calls or invented marks", async () => {
     const paper = exam(),
@@ -329,15 +324,10 @@ describe("grading safety and score aggregation", () => {
         5,
       ),
     ).toHaveLength(2);
-    expect(
-      scoreIssues(
-        { ...assessmentSchema.parse(assessment(5)), score: 3 },
-        5,
-      ).join(),
-    ).toContain("判定");
-    expect(
-      assessmentSchema.safeParse({ ...assessment(0), score: -1 }).success,
-    ).toBe(false);
+    expect(scoreIssues({ ...assessmentSchema.parse(assessment(5)), score: 3 }, 5).join()).toContain(
+      "判定",
+    );
+    expect(assessmentSchema.safeParse({ ...assessment(0), score: -1 }).success).toBe(false);
   });
   it("supports rubric-grounded partial credit", async () => {
     const paper = exam(1),
@@ -372,10 +362,7 @@ describe("grading safety and score aggregation", () => {
   });
   it("preserves failed questions while scoring independent later questions", async () => {
     const paper = exam();
-    const { model } = scripted([
-      new Error("SECRET_PROVIDER_KEY"),
-      assessment(5),
-    ]);
+    const { model } = scripted([new Error("SECRET_PROVIDER_KEY"), assessment(5)]);
     const result = await gradeExam({
       exam: paper,
       submissions: inputs(paper),
@@ -507,88 +494,368 @@ describe("grading safety and score aggregation", () => {
       reviewHistory: [],
     };
     expect(
-      calculateTotals([
-        base,
-        { ...base, questionId: "two", maxPoints: 0.2, score: 0.2 },
-      ]).awardedPoints,
+      calculateTotals([base, { ...base, questionId: "two", maxPoints: 0.2, score: 0.2 }])
+        .awardedPoints,
     ).toBe(0.3);
   });
 });
 
 describe("whole answer document agents", () => {
-  it.each([true,false])("requires scoring evidence for every blank: complete=%s", async (complete) => {
-    const paper=exam(1);
-    paper.questions[0].answerTargets=[1,2].map((blankIndex)=>({key:`blank-${blankIndex}`,blankIndex,partLabel:null,parentLabel:null}));
-    const output=assessment(5);
-    const {model}=scripted([{...output,criteria:complete ? [1,2].map((index)=>({description:`第${index}空`,targetKey:`blank-${index}`,maxPoints:2.5,awardedPoints:2.5,explanation:"按固定参考答案核对"}))
-      : [{...output.criteria[0],targetKey:"blank-1"}]}]);
-    const result=await gradeExam({exam:paper,submissions:inputs(paper),model,promptPreset:"openai"});
-    expect(result.questions[0].score).toBe(complete?5:null);
-  });
+  it.each([true, false])(
+    "requires scoring evidence for every blank: complete=%s",
+    async (complete) => {
+      const paper = exam(1);
+      paper.questions[0].answerTargets = [1, 2].map((blankIndex) => ({
+        key: `blank-${blankIndex}`,
+        blankIndex,
+        partLabel: null,
+        parentLabel: null,
+      }));
+      const output = assessment(5);
+      const { model } = scripted([
+        {
+          ...output,
+          criteria: complete
+            ? [1, 2].map((index) => ({
+                description: `第${index}空`,
+                targetKey: `blank-${index}`,
+                maxPoints: 2.5,
+                awardedPoints: 2.5,
+                explanation: "按固定参考答案核对",
+              }))
+            : [{ ...output.criteria[0], targetKey: "blank-1" }],
+        },
+      ]);
+      const result = await gradeExam({
+        exam: paper,
+        submissions: inputs(paper),
+        model,
+        promptPreset: "openai",
+      });
+      expect(result.questions[0].score).toBe(complete ? 5 : null);
+    },
+  );
   it("does not promote incomplete reference fragments to a usable saved standard", () => {
-    const paper=exam(1);
-    paper.questions[0].solution={answer:"仅第一空：5",selectedOptions:[],explanation:"",rubric:"",sufficient:false,issues:["遗漏其他空"],model:"fixture",origin:"teacher"};
-    paper.annotations=[{questionNumber:"1",section:"计算题",partLabel:"(1)",kind:"reference_answer",blocks:[{type:"text",text:"5"}],regions:paper.questions[0].regions}];
+    const paper = exam(1);
+    paper.questions[0].solution = {
+      answer: "仅第一空：5",
+      selectedOptions: [],
+      explanation: "",
+      rubric: "",
+      sufficient: false,
+      issues: ["遗漏其他空"],
+      model: "fixture",
+      origin: "teacher",
+    };
+    paper.annotations = [
+      {
+        questionNumber: "1",
+        section: "计算题",
+        partLabel: "(1)",
+        kind: "reference_answer",
+        blocks: [{ type: "text", text: "5" }],
+        regions: paper.questions[0].regions,
+      },
+    ];
     expect(defaultSubmissions(paper)[0].referenceAnswer).toBe("");
   });
   it("gives every question all responses and permits identifying work despite a wrong extraction hint", async () => {
     const paper = exam();
-    paper.answerDocument = { complete:true,findings:[],crops:[],responses:[
-      { sourceId:"s1",questionNumber:"2",section:"计算题",partLabel:null,blocks:[{type:"text",text:"FIRST_RESPONSE_5"}],blank:false,unreadable:false,regions:paper.questions[0].regions },
-      { sourceId:"s2",questionNumber:null,section:"",partLabel:null,blocks:[{type:"text",text:"SECOND_RESPONSE_4"}],blank:false,unreadable:false,regions:paper.questions[1].regions },
-    ] };
-    const {model,requests} = scripted([
-      {...assessment(5),matchedSourceIds:["s1"],studentAnswer:"5",studentAnswerBlocks:[{type:"text",text:"5"}],answerStatus:"answered"},
-      {...assessment(0),matchedSourceIds:["s2"],studentAnswer:"4",studentAnswerBlocks:[{type:"text",text:"4"}],answerStatus:"answered"},
+    paper.answerDocument = {
+      complete: true,
+      findings: [],
+      crops: [],
+      responses: [
+        {
+          sourceId: "s1",
+          questionNumber: "2",
+          section: "计算题",
+          partLabel: null,
+          blocks: [{ type: "text", text: "FIRST_RESPONSE_5" }],
+          blank: false,
+          unreadable: false,
+          regions: paper.questions[0].regions,
+        },
+        {
+          sourceId: "s2",
+          questionNumber: null,
+          section: "",
+          partLabel: null,
+          blocks: [{ type: "text", text: "SECOND_RESPONSE_4" }],
+          blank: false,
+          unreadable: false,
+          regions: paper.questions[1].regions,
+        },
+      ],
+    };
+    const { model, requests } = scripted([
+      {
+        ...assessment(5),
+        matchedSourceIds: ["s1"],
+        studentAnswer: "5",
+        studentAnswerBlocks: [{ type: "text", text: "5" }],
+        answerStatus: "answered",
+      },
+      {
+        ...assessment(0),
+        matchedSourceIds: ["s2"],
+        studentAnswer: "4",
+        studentAnswerBlocks: [{ type: "text", text: "4" }],
+        answerStatus: "answered",
+      },
     ]);
-    const result = await gradeExam({exam:paper,submissions:inputs(paper),model,promptPreset:"openai"});
-    for(const request of requests) { expect(request.agent).toBe(true); const data=JSON.stringify(request.content);expect(data).toContain("FIRST_RESPONSE_5");expect(data).toContain("SECOND_RESPONSE_4"); }
-    expect(result.questions.map((q)=>q.studentAnswer)).toEqual(["5","4"]);expect(result.totals.awardedPoints).toBe(5);
+    const result = await gradeExam({
+      exam: paper,
+      submissions: inputs(paper),
+      model,
+      promptPreset: "openai",
+    });
+    for (const request of requests) {
+      expect(request.agent).toBe(true);
+      const data = JSON.stringify(request.content);
+      expect(data).toContain("FIRST_RESPONSE_5");
+      expect(data).toContain("SECOND_RESPONSE_4");
+    }
+    expect(result.questions.map((q) => q.studentAnswer)).toEqual(["5", "4"]);
+    expect(result.totals.awardedPoints).toBe(5);
     expect(result.questions[0].matchedSourceIds).toEqual(["s1"]);
   });
-  it.each(["invented", "not_blank", "incomplete"])("withholds zero scores for %s blank evidence", async (kind) => {
-    const paper=exam(1);paper.answerDocument={complete:kind!=="incomplete",findings:[],crops:[],responses:[
-      {sourceId:"s1",questionNumber:"1",section:"计算题",partLabel:null,blocks:[],blank:kind!=="not_blank",unreadable:false,regions:paper.questions[0].regions},
-    ]};
-    const {model}=scripted([{...assessment(0),verdict:"unanswered",matchedSourceIds:[kind==="invented"?"invalid":"s1"],studentAnswer:"",studentAnswerBlocks:[],answerStatus:"unanswered"}]);
-    const result=await gradeExam({exam:paper,submissions:inputs(paper),model,promptPreset:"openai"});
-    expect(result.questions[0].score).toBeNull();expect(result.questions[0].needsReview).toBe(true);
-  });
+  it.each(["invented", "not_blank", "incomplete"])(
+    "withholds zero scores for %s blank evidence",
+    async (kind) => {
+      const paper = exam(1);
+      paper.answerDocument = {
+        complete: kind !== "incomplete",
+        findings: [],
+        crops: [],
+        responses: [
+          {
+            sourceId: "s1",
+            questionNumber: "1",
+            section: "计算题",
+            partLabel: null,
+            blocks: [],
+            blank: kind !== "not_blank",
+            unreadable: false,
+            regions: paper.questions[0].regions,
+          },
+        ],
+      };
+      const { model } = scripted([
+        {
+          ...assessment(0),
+          verdict: "unanswered",
+          matchedSourceIds: [kind === "invented" ? "invalid" : "s1"],
+          studentAnswer: "",
+          studentAnswerBlocks: [],
+          answerStatus: "unanswered",
+        },
+      ]);
+      const result = await gradeExam({
+        exam: paper,
+        submissions: inputs(paper),
+        model,
+        promptPreset: "openai",
+      });
+      expect(result.questions[0].score).toBeNull();
+      expect(result.questions[0].needsReview).toBe(true);
+    },
+  );
   it("preserves non-text answer images as ordered evidence and supplies them to each grader", async () => {
-    const paper=exam(1),region=paper.questions[0].regions[0];
-    const figure={type:"figure" as const,caption:"手绘证明图",region,contaminated:true};
-    paper.assets=[{id:"figure-1",region,caption:figure.caption,contaminated:true,evidenceKey:"figures/figure-1.png",cleanKey:null}];
-    paper.answerDocument={complete:true,findings:[],crops:[],responses:[{sourceId:"s1",questionNumber:"1",section:"计算题",partLabel:null,blocks:[{type:"text",text:"如图"},figure],blank:false,unreadable:false,regions:[region]}]};
-    const {model,requests}=scripted([{...assessment(5),matchedSourceIds:["s1"],studentAnswer:"如图",studentAnswerBlocks:[{type:"text",text:"如图"},figure],answerStatus:"answered"}]);
-    const result=await gradeExam({exam:paper,submissions:inputs(paper),model,promptPreset:"openai",loadAnswerFigure:async()=>new Uint8Array([1,2])});
-    expect(requests[0].content).toEqual(expect.arrayContaining([expect.objectContaining({type:"file",mediaType:"image/png"})]));
-    expect(result.questions[0].studentAnswerBlocks?.[1]).toEqual(figure);expect(result.questions[0].score).toBe(5);
+    const paper = exam(1),
+      region = paper.questions[0].regions[0];
+    const figure = { type: "figure" as const, caption: "手绘证明图", region, contaminated: true };
+    paper.assets = [
+      {
+        id: "figure-1",
+        region,
+        caption: figure.caption,
+        contaminated: true,
+        evidenceKey: "figures/figure-1.png",
+        cleanKey: null,
+      },
+    ];
+    paper.answerDocument = {
+      complete: true,
+      findings: [],
+      crops: [],
+      responses: [
+        {
+          sourceId: "s1",
+          questionNumber: "1",
+          section: "计算题",
+          partLabel: null,
+          blocks: [{ type: "text", text: "如图" }, figure],
+          blank: false,
+          unreadable: false,
+          regions: [region],
+        },
+      ],
+    };
+    const { model, requests } = scripted([
+      {
+        ...assessment(5),
+        matchedSourceIds: ["s1"],
+        studentAnswer: "如图",
+        studentAnswerBlocks: [{ type: "text", text: "如图" }, figure],
+        answerStatus: "answered",
+      },
+    ]);
+    const result = await gradeExam({
+      exam: paper,
+      submissions: inputs(paper),
+      model,
+      promptPreset: "openai",
+      loadAnswerFigure: async () => new Uint8Array([1, 2]),
+    });
+    expect(requests[0].content).toEqual(
+      expect.arrayContaining([expect.objectContaining({ type: "file", mediaType: "image/png" })]),
+    );
+    expect(result.questions[0].studentAnswerBlocks?.[1]).toEqual(figure);
+    expect(result.questions[0].score).toBe(5);
   });
   it("keeps a student diagram distinct from a clean template figure at the same coordinates", async () => {
-    const paper=exam(1),region=paper.questions[0].regions[0];
-    const clean={type:"figure" as const,caption:"原题图",region,contaminated:false};
-    const student={type:"figure" as const,caption:"学生补画",region,contaminated:true,assetId:"figure-2"};
+    const paper = exam(1),
+      region = paper.questions[0].regions[0];
+    const clean = { type: "figure" as const, caption: "原题图", region, contaminated: false };
+    const student = {
+      type: "figure" as const,
+      caption: "学生补画",
+      region,
+      contaminated: true,
+      assetId: "figure-2",
+    };
     paper.questions[0].blocks.push(clean);
-    paper.assets=[{id:"figure-1",region,caption:"原题图",contaminated:false,evidenceKey:"figures/figure-1.png",cleanKey:"figures/figure-1.png"},
-      {id:"figure-2",region,caption:"学生补画",contaminated:true,evidenceKey:"figures/figure-2.png",cleanKey:null,role:"student_answer"}];
-    paper.answerDocument={complete:true,findings:[],crops:[],responses:[{sourceId:"s1",questionNumber:"1",section:"计算题",partLabel:null,
-      blocks:[student],blank:false,unreadable:false,regions:[region]}]};
-    const {model,requests}=scripted([{...assessment(5),matchedSourceIds:["s1"],studentAnswer:"[图]",studentAnswerBlocks:[student],answerStatus:"answered"}]);
-    const result=await gradeExam({exam:paper,submissions:inputs(paper),model,promptPreset:"openai",
-      loadFigure:async(asset)=>{expect(asset.id).toBe("figure-1");return new Uint8Array([1]);},
-      loadAnswerFigure:async(asset)=>{expect(asset.id).toBe("figure-2");return new Uint8Array([2]);}});
-    expect(result.questions[0].score).toBe(5);expect(requests[0].content).toEqual(expect.arrayContaining([
-      expect.objectContaining({type:"file",data:new Uint8Array([1])}),expect.objectContaining({type:"file",data:new Uint8Array([2])})]));
+    paper.assets = [
+      {
+        id: "figure-1",
+        region,
+        caption: "原题图",
+        contaminated: false,
+        evidenceKey: "figures/figure-1.png",
+        cleanKey: "figures/figure-1.png",
+      },
+      {
+        id: "figure-2",
+        region,
+        caption: "学生补画",
+        contaminated: true,
+        evidenceKey: "figures/figure-2.png",
+        cleanKey: null,
+        role: "student_answer",
+      },
+    ];
+    paper.answerDocument = {
+      complete: true,
+      findings: [],
+      crops: [],
+      responses: [
+        {
+          sourceId: "s1",
+          questionNumber: "1",
+          section: "计算题",
+          partLabel: null,
+          blocks: [student],
+          blank: false,
+          unreadable: false,
+          regions: [region],
+        },
+      ],
+    };
+    const { model, requests } = scripted([
+      {
+        ...assessment(5),
+        matchedSourceIds: ["s1"],
+        studentAnswer: "[图]",
+        studentAnswerBlocks: [student],
+        answerStatus: "answered",
+      },
+    ]);
+    const result = await gradeExam({
+      exam: paper,
+      submissions: inputs(paper),
+      model,
+      promptPreset: "openai",
+      loadFigure: async (asset) => {
+        expect(asset.id).toBe("figure-1");
+        return new Uint8Array([1]);
+      },
+      loadAnswerFigure: async (asset) => {
+        expect(asset.id).toBe("figure-2");
+        return new Uint8Array([2]);
+      },
+    });
+    expect(result.questions[0].score).toBe(5);
+    expect(requests[0].content).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: "file", data: new Uint8Array([1]) }),
+        expect.objectContaining({ type: "file", data: new Uint8Array([2]) }),
+      ]),
+    );
   });
   it("matches source regions after database JSON reorders their fields", async () => {
-    const paper=exam(1),region=paper.questions[0].regions[0];
-    const reordered={height:region.height,width:region.width,y:region.y,x:region.x,page:region.page};
-    const source={type:"figure" as const,caption:"作答",region:reordered,contaminated:true,assetId:"figure-1"};
-    const returned={...source,region};
-    paper.assets=[{id:"figure-1",region:reordered,caption:"作答",contaminated:true,cleanKey:null,evidenceKey:"figures/figure-1.png",role:"student_answer"}];
-    paper.answerDocument={complete:true,crops:[],findings:[],responses:[{sourceId:"s1",questionNumber:"1",section:"计算题",partLabel:null,blocks:[source],unreadable:false,blank:false,regions:[reordered]}]};
-    const {model}=scripted([{...assessment(5),matchedSourceIds:["s1"],studentAnswer:"[图]",studentAnswerBlocks:[returned],answerStatus:"answered"}]);
-    const result=await gradeExam({exam:paper,submissions:inputs(paper),model,promptPreset:"openai",loadAnswerFigure:async()=>new Uint8Array([1])});
-    expect(result.questions[0].score).toBe(5);expect(result.questions[0].reviewReasons).toHaveLength(0);
+    const paper = exam(1),
+      region = paper.questions[0].regions[0];
+    const reordered = {
+      height: region.height,
+      width: region.width,
+      y: region.y,
+      x: region.x,
+      page: region.page,
+    };
+    const source = {
+      type: "figure" as const,
+      caption: "作答",
+      region: reordered,
+      contaminated: true,
+      assetId: "figure-1",
+    };
+    const returned = { ...source, region };
+    paper.assets = [
+      {
+        id: "figure-1",
+        region: reordered,
+        caption: "作答",
+        contaminated: true,
+        cleanKey: null,
+        evidenceKey: "figures/figure-1.png",
+        role: "student_answer",
+      },
+    ];
+    paper.answerDocument = {
+      complete: true,
+      crops: [],
+      findings: [],
+      responses: [
+        {
+          sourceId: "s1",
+          questionNumber: "1",
+          section: "计算题",
+          partLabel: null,
+          blocks: [source],
+          unreadable: false,
+          blank: false,
+          regions: [reordered],
+        },
+      ],
+    };
+    const { model } = scripted([
+      {
+        ...assessment(5),
+        matchedSourceIds: ["s1"],
+        studentAnswer: "[图]",
+        studentAnswerBlocks: [returned],
+        answerStatus: "answered",
+      },
+    ]);
+    const result = await gradeExam({
+      exam: paper,
+      submissions: inputs(paper),
+      model,
+      promptPreset: "openai",
+      loadAnswerFigure: async () => new Uint8Array([1]),
+    });
+    expect(result.questions[0].score).toBe(5);
+    expect(result.questions[0].reviewReasons).toHaveLength(0);
   });
 });

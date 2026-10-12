@@ -24,5 +24,16 @@ export function SignOutButton() {
     }
   }
 
-  return <div className="sign-out"><button className="button secondary" onClick={signOut} disabled={pending}>{pending ? "正在退出…" : "退出登录"}</button>{error && <p role="alert" className="field-error">退出失败，请重试。</p>}</div>;
+  return (
+    <div className="sign-out">
+      <button className="button secondary" onClick={signOut} disabled={pending}>
+        {pending ? "正在退出…" : "退出登录"}
+      </button>
+      {error && (
+        <p role="alert" className="field-error">
+          退出失败，请重试。
+        </p>
+      )}
+    </div>
+  );
 }

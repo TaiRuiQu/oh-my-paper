@@ -24,7 +24,8 @@ export async function connectDatabase(attempts = 5) {
       await getDb().$queryRaw`SELECT 1`;
       return;
     } catch {
-      if (attempt === attempts) throw new Error("Database unavailable; check PostgreSQL and DATABASE_URL.");
+      if (attempt === attempts)
+        throw new Error("Database unavailable; check PostgreSQL and DATABASE_URL.");
       await new Promise((resolve) => setTimeout(resolve, attempt * 500));
     }
   }

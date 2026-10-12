@@ -7,26 +7,59 @@ const cache = new Map<string, string>();
 // MathJax has shared internal state; serialize conversions across requests.
 let pending: Promise<unknown> = Promise.resolve();
 export async function renderExamMath(exam: DigitalExam): Promise<Record<string, string>> {
-  const blocks: ContentBlock[] = [...exam.questions.flatMap((q) => [...q.blocks, ...q.options.flatMap((o) => o.blocks), ...q.parts.flatMap((p) => p.blocks)]),
-    ...exam.questions.flatMap(q => q.solution ? [q.solution.answer, q.solution.explanation, q.solution.rubric].map(text => ({ type: "text" as const, text })) : []),
-    ...exam.materials.flatMap((m) => m.blocks), ...exam.annotations.flatMap((a) => a.blocks)];
+  const blocks: ContentBlock[] = [
+    ...exam.questions.flatMap((q) => [
+      ...q.blocks,
+      ...q.options.flatMap((o) => o.blocks),
+      ...q.parts.flatMap((p) => p.blocks),
+    ]),
+    ...exam.questions.flatMap((q) =>
+      q.solution
+        ? [q.solution.answer, q.solution.explanation, q.solution.rubric].map((text) => ({
+            type: "text" as const,
+            text,
+          }))
+        : [],
+    ),
+    ...exam.materials.flatMap((m) => m.blocks),
+    ...exam.annotations.flatMap((a) => a.blocks),
+  ];
   return renderMathBlocks(blocks);
 }
 
-export function renderMathText(texts: string[]) { return renderMathBlocks(texts.map((text) => ({ type: "text", text }))); }
+export function renderMathText(texts: string[]) {
+  return renderMathBlocks(texts.map((text) => ({ type: "text", text })));
+}
 
 async function renderMathBlocks(blocks: ContentBlock[]): Promise<Record<string, string>> {
-  const latex = new Set(blocks.flatMap((block) => block.type === "math" ? [block.latex] : block.type === "text"
-    ? Array.from(block.text.matchAll(/\$\$([\s\S]+?)\$\$|\$([^$\n]+)\$/g), (match) => match[1] ?? match[2]) : []));
+  const latex = new Set(
+    blocks.flatMap((block) =>
+      block.type === "math"
+        ? [block.latex]
+        : block.type === "text"
+          ? Array.from(
+              block.text.matchAll(/\$\$([\s\S]+?)\$\$|\$([^$\n]+)\$/g),
+              (match) => match[1] ?? match[2],
+            )
+          : [],
+    ),
+  );
   const result: Record<string, string> = Object.create(null);
   const work = pending.then(async () => {
     if (!latex.size) return;
-    ready ??= MathJax.init({ loader: { load: ["input/tex", "output/svg"] },
+    ready ??= MathJax.init({
+      loader: { load: ["input/tex", "output/svg"] },
       tex: { packages: ["base", "ams"], maxBuffer: 10000, maxMacros: 1000 },
       // MathJax 4 otherwise splits inline math into several sibling SVGs.
       // A data-URL image must contain the entire expression in one SVG.
-      svg: { fontCache: "none", linebreaks: { inline: false } } });
-    try { await ready; } catch { ready = undefined; return; }
+      svg: { fontCache: "none", linebreaks: { inline: false } },
+    });
+    try {
+      await ready;
+    } catch {
+      ready = undefined;
+      return;
+    }
     for (const formula of [...latex].slice(0, 500)) {
       if (formula.length > 10000) continue;
       try {
@@ -37,7 +70,9 @@ async function renderMathBlocks(blocks: ContentBlock[]): Promise<Record<string, 
           cache.set(formula, `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`);
         }
         result[formula] = cache.get(formula)!;
-      } catch { /* Preserve the original LaTeX as a readable fallback. */ }
+      } catch {
+        /* Preserve the original LaTeX as a readable fallback. */
+      }
     }
   });
   pending = work.catch(() => undefined);

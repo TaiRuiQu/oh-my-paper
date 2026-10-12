@@ -38,7 +38,9 @@ async function main() {
     const result = await waitForCompletion(retryQueue, retryId);
     assert.equal(result.retryCount, 1);
     assert.equal(attempts, 2);
-    console.log("Queue passed: separate Worker consumed a persistent job and a failed task retried successfully.");
+    console.log(
+      "Queue passed: separate Worker consumed a persistent job and a failed task retried successfully.",
+    );
   } finally {
     if (createdRetryQueue) {
       await producer.offWork(retryQueue);
@@ -48,4 +50,7 @@ async function main() {
   }
 }
 
-main().catch(() => { console.error("Queue test failed. Ensure PostgreSQL and the separate Worker are running."); process.exitCode = 1; });
+main().catch(() => {
+  console.error("Queue test failed. Ensure PostgreSQL and the separate Worker are running.");
+  process.exitCode = 1;
+});

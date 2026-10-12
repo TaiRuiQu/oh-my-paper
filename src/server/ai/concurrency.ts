@@ -15,11 +15,7 @@ export class ProviderConcurrencyLimiter {
   private active = new Set<WaitingRequest>();
   private waiting: WaitingRequest[] = [];
 
-  async run<T>(
-    limit: number,
-    operation: () => Promise<T>,
-    signal?: AbortSignal,
-  ): Promise<T> {
+  async run<T>(limit: number, operation: () => Promise<T>, signal?: AbortSignal): Promise<T> {
     aiConcurrencySchema.parse(limit);
     signal?.throwIfAborted();
     const release = await new Promise<() => void>((grant, reject) => {
@@ -52,10 +48,7 @@ export class ProviderConcurrencyLimiter {
   private drain() {
     while (this.waiting.length) {
       const ticket = this.waiting[0];
-      const limit = Math.min(
-        ticket.limit,
-        ...Array.from(this.active, (item) => item.limit),
-      );
+      const limit = Math.min(ticket.limit, ...Array.from(this.active, (item) => item.limit));
       if (this.active.size >= limit) return;
       this.waiting.shift();
       ticket.signal?.removeEventListener("abort", ticket.abort);

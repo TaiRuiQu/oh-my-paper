@@ -14,9 +14,7 @@ export default async function Page() {
     <>
       <div className="workspace-heading">
         <h1>学情分析</h1>
-        <p className="intro">
-          查看班级作答情况，整理错题，并通过 AI 推荐的相似题巩固练习。
-        </p>
+        <p className="intro">查看班级作答情况，整理错题，并通过 AI 推荐的相似题巩固练习。</p>
       </div>
       {!!classes.length && (
         <section className="class-analysis">
@@ -41,15 +39,12 @@ export default async function Page() {
                     <td>{c.batches.length}</td>
                     <td>
                       {
-                        c.batches
-                          .flatMap((b) => b.exams)
-                          .filter((e) => e.status === "批改完成").length
+                        c.batches.flatMap((b) => b.exams).filter((e) => e.status === "批改完成")
+                          .length
                       }
                     </td>
                     <td>
-                      {c.batches
-                        .flatMap((b) => b.exams)
-                        .reduce((n, e) => n + (e.pending ?? 0), 0)}
+                      {c.batches.flatMap((b) => b.exams).reduce((n, e) => n + (e.pending ?? 0), 0)}
                     </td>
                     <td>
                       <Link href="/grading?mode=batch">查看批改报告</Link>

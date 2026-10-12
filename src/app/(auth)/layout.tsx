@@ -4,5 +4,9 @@ import { getSession } from "@/server/auth/session";
 
 export default async function AuthLayout({ children }: { children: React.ReactNode }) {
   if (await getSession(await headers())) redirect("/dashboard");
-  return <main id="main" className="auth-page">{children}</main>;
+  return (
+    <main id="main" className="auth-page">
+      {children}
+    </main>
+  );
 }

@@ -35,6 +35,8 @@ async function main() {
 }
 
 main().catch(() => {
-  console.error("Worker startup failed. Check environment, database migrations, and storage permissions.");
+  console.error(
+    "Worker startup failed. Check environment, database migrations, and storage permissions.",
+  );
   process.exit(1);
 });

@@ -5,7 +5,10 @@ import { z } from "zod";
 const schema = z.object({
   DATABASE_URL: z.url().refine((url) => /^(postgres|postgresql):/.test(url)),
   BETTER_AUTH_URL: z.url(),
-  BETTER_AUTH_SECRET: z.string().min(32).refine((value) => !value.startsWith("REPLACE_")),
+  BETTER_AUTH_SECRET: z
+    .string()
+    .min(32)
+    .refine((value) => !value.startsWith("REPLACE_")),
   STORAGE_ROOT: z.string().min(1).default("./storage"),
   TEMP_ROOT: z.string().min(1).default("./tmp"),
   WORKER_CONCURRENCY: z.coerce.number().int().min(1).max(16).default(2),
@@ -28,5 +31,8 @@ export function getEnv() {
 
 export function getStoragePaths() {
   const env = getEnv();
-  return { storage: resolve(process.cwd(), env.STORAGE_ROOT), temp: resolve(process.cwd(), env.TEMP_ROOT) };
+  return {
+    storage: resolve(process.cwd(), env.STORAGE_ROOT),
+    temp: resolve(process.cwd(), env.TEMP_ROOT),
+  };
 }

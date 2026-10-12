@@ -13,11 +13,30 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     const { user } = await requireSession(request.headers);
     const task = await ownedGradeTask(user.id, (await context.params).id);
     const input = task.input as unknown as { exam: DigitalExam };
-    const region = sourceRegionSchema.parse(JSON.parse(new URL(request.url).searchParams.get("region") ?? "null"));
+    const region = sourceRegionSchema.parse(
+      JSON.parse(new URL(request.url).searchParams.get("region") ?? "null"),
+    );
     const assetId = new URL(request.url).searchParams.get("assetId") ?? undefined;
-    const asset = findFigureAsset(input.exam.assets, { type:"figure",caption:"",contaminated:true,region,assetId });
-    if (!asset || !/^figures\/figure-\d+\.png$/.test(asset.evidenceKey)) throw new AccessError(404, "作答图片不存在。");
-    const bytes = await readFile(join(taskDirectory(task.examTaskId), task.examOutputKey, asset.evidenceKey));
-    return new Response(bytes, { headers: { "Content-Type": "image/png", "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff" } });
-  } catch (error) { return errorResponse(error); }
+    const asset = findFigureAsset(input.exam.assets, {
+      type: "figure",
+      caption: "",
+      contaminated: true,
+      region,
+      assetId,
+    });
+    if (!asset || !/^figures\/figure-\d+\.png$/.test(asset.evidenceKey))
+      throw new AccessError(404, "作答图片不存在。");
+    const bytes = await readFile(
+      join(taskDirectory(task.examTaskId), task.examOutputKey, asset.evidenceKey),
+    );
+    return new Response(bytes, {
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "private, no-store",
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
+  } catch (error) {
+    return errorResponse(error);
+  }
 }

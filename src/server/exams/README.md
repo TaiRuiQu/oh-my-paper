@@ -1,30 +1,28 @@
-# 试卷解析
+# 试卷识别 Agent
 
-`parseExam` 在 worker/CLI 中执行，上传 HTTP 请求只保存文件并入队。流程不依赖 `docs` 下的计划。
+`recognition-agent.ts` 负责会话、草稿和工具提交。`recognition/` 将提示词、领域类型、图像查看工具、证据图输出、校验和产物组装分别保存；文件职责与开发检查见 [代码组织说明](../../../docs/code-organization.md)。
 
-1. 将全部正向页面交给 inventory 模型：返回唯一的题目清单、总题数、分值来源与相关页码。答案页和答题卡的编号不能成为题目。
-2. 每题独立请求 localization 模型：只定位整题片段，以及表格、图形、图片等材料；跨页/跨栏保留多个有序框。
-3. 先裁切整题，再交给 transcription Agent。它只拥有这些裁切图和受限的 `inspect_crop` 工具。正文通过材料 ID 引用定位阶段的图片，服务端验证每个图片 ID 恰好插入一次。
-4. 有印刷参考答案时独立提取并优先整理。用户启用生成时，solution 模型只收到电子题目和干净材料图片；每个小问、每个空须有对应答案与解析。未启用且没有参考答案时不请求求解。
-5. 已保存题套可通过 solutions 接口入队补生成答案，使用保存的编辑版本，复用裁切图，不重新解析原件。
+`parseExam` 在 Worker/CLI 中准备 PDF 或图片页面后，交由 AI SDK 7 `ToolLoopAgent` 自主识别。HTTP 上传只负责保存和入队。没有 inventory → localization → transcription 的固定模型流程。
 
-作答上传可以绑定固定题套版本，也可以先解析完整作答卷建立题套。答案解析分为全卷证据定位和裁切图电子化；`answerDocument` 保留所有有序作答、未确定归属的片段、非文字图片、空白状态及原图区域。解析过程不接收标准答案。
+Agent 使用 `read_saved`、`read_pages`、`inspect_image`、`read_text`、`rotate_page`、`save_document`、`save_questions`、`revise_question`、`save_annotations`、`review_questions`、`review_annotations` 和 `finish`。它自行决定工具顺序、批量大小、放大范围和纠错方式。图像工具调用受限的 Python Pillow/OpenCV 操作，不能执行模型生成的任意程序、读取其他任务或访问网络。
 
-六个阶段可分别配置提供商、模型、提示词预设和并发数。提供商配置与题套版本在入队时冻结；原有 `exam`/`grading` 配置作为未单独配置阶段的默认值。
+原生输出是 `recognition.json`：JSON 中的题干、选项、小问、材料和批注使用 Markdown 与 LaTeX，配图使用标准 Markdown 图片引用及独立的来源区域。程序在既有编辑器/批改边界将它适配为 `DigitalExam`；模型不输出 text/math 类型分段。整题、配图和作答裁切图由程序依据通过校验的坐标保存。
 
-兼容接口未开启结构化输出时，每次请求同时在提示词中带上当前阶段的 JSON Schema，避免接口忽略 Schema 参数。定位材料的 ID 由程序生成；图像匹配比较坐标数值和资产 ID，不依赖 JSON 字段顺序，避免数据库 JSONB 重排后丢失证据。
+`finish` 检查所有页面已查看、分类覆盖、真实题目与答案页分离、题号/排序、材料引用、选项、作答目标和区域。错误作为工具结果返回给同一 Agent 修正。仅参考答案的文档允许零题，并要求保留答案记录。固定题套只提供题号/板块，不向识别 Agent 暴露标准答案。
 
-检查点包含 inventory、每题 bounds/transcription、参考答案与完整 answer-document。输出包含整题裁切图、材料图、作答图和 JSON/Markdown。坐标始终基于正向整页；裁切工具仅能访问授权的片段。推测分值保留来源和依据，无法辨认的内容保留待核对状态。
+`agent.jsonl` 持久保存实际公开消息、工具输入、工具结果与耗时，不保存私有推理、API key 或原始提供商异常。网页按游标增量读取；授权预览在完成前即可访问。记录按执行 attempt 隔离，取消或失败后保留。失败重试或 Worker 重放可恢复同一原件哈希对应的已保存草稿，Agent 使用 read_saved/review_questions 自主复查和修正，禁止将另一份文件的草稿套用到本次上传。SDK 步数上限、每步超时和 Worker 的总体超时约束运行；模型调用使用 SDK 的非流式 generate，工具生命周期回调实时更新网页；请求失败由 SDK 重试，已完成工具结果保留在对话中。
 
-校验失败会在原有证据范围内最多纠正一次；持续失败保留题目身份和证据，不编造正文。模型只输出被代码块包裹的合法 JSON 时，仅解包后验证，不改写文字/公式。
-
-验证命令：
+识别模型由 `recognition` 配置选择；兼容已有 `inventory`/`exam` 默认值。旧阶段快照仍可读取。可选标准答案生成继续调用独立 `solution` 服务；逐题批改保持现有实现。
 
 ```sh
 pnpm test
 pnpm typecheck
 pnpm test:exam-web
-pnpm eval:exams --configured --no-answers --only math,biology,chinese
+pnpm eval:exams --configured --no-answers --student-answers
 ```
 
-真实样例检查验证结构和证据覆盖，不代表已测得逐字转录或解题准确率。
+真实样例报告区分结构/证据覆盖与人工逐字准确率，见 [样例验证](../../../docs/exam-parsing-validation.md)。
+
+长文档使用 SDK `prepareStep` 管理当前上下文：较早的工具图片只保留文本/坐标，Agent 可以按需再次查看原件；完整工具记录和源图预览不被删除。单次输出预算最多 8,000 token，题目保存每批最多 4 道；这约束资源占用，不指定工具顺序。SDK 请求重试用尽后可从同一已完成工具对话进行一次恢复，最终仍必须通过 `finish`。
+
+每页元数据声明实际存在的作答、参考答案和批注类型；`finish` 要求对应页存在独立记录，防止仅描述笔迹而遗漏内容。图像材料必须包含在题目、共享材料或作答的完整来源区域内。模型选择任意工具，只有通过校验的 `finish` 才算完成。

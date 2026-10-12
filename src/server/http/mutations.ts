@@ -9,7 +9,12 @@ export function requireSameOrigin(request: Request) {
   }
 }
 
-export async function readJSON<T>(request: Request, schema: z.ZodType<T>, maxBytes = 16_384, allowEmpty = false): Promise<T> {
+export async function readJSON<T>(
+  request: Request,
+  schema: z.ZodType<T>,
+  maxBytes = 16_384,
+  allowEmpty = false,
+): Promise<T> {
   if (!request.body) {
     if (allowEmpty) return schema.parse({});
     throw new RequestError(400, "请求内容不能为空。");
@@ -22,14 +27,23 @@ export async function readJSON<T>(request: Request, schema: z.ZodType<T>, maxByt
       const { done, value } = await reader.read();
       if (done) break;
       size += value.byteLength;
-      if (size > maxBytes) { await reader.cancel(); throw new RequestError(413, "请求内容过大，请减少内容后重试。"); }
+      if (size > maxBytes) {
+        await reader.cancel();
+        throw new RequestError(413, "请求内容过大，请减少内容后重试。");
+      }
       chunks.push(value);
     }
     let data: unknown;
-    try { data = !size && allowEmpty ? {} : JSON.parse(Buffer.concat(chunks).toString("utf8")); }
-    catch { throw new RequestError(400, "请求内容必须是 JSON。"); }
+    try {
+      data = !size && allowEmpty ? {} : JSON.parse(Buffer.concat(chunks).toString("utf8"));
+    } catch {
+      throw new RequestError(400, "请求内容必须是 JSON。");
+    }
     const result = schema.safeParse(data);
-    if (!result.success) throw new RequestError(400, result.error.issues[0]?.message ?? "配置内容无效。");
+    if (!result.success)
+      throw new RequestError(400, result.error.issues[0]?.message ?? "配置内容无效。");
     return result.data;
-  } finally { reader.releaseLock(); }
+  } finally {
+    reader.releaseLock();
+  }
 }

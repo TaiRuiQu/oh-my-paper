@@ -24,16 +24,16 @@ Worker 显式加载环境变量，外部进程变量优先，然后依次读取 
 
 业务 API 在服务端检查会话、归属或成员关系。未登录返回 `401`，无法访问的资源通常返回 `404`，管理员权限不足返回 `403`。原件、裁切图、历史批改证据和下载同样通过授权接口访问。
 
-| 路径 | 职责 |
-| --- | --- |
-| `/login`、`/register` | 登录与注册 |
-| `/dashboard` | 题套上传与试卷列表 |
-| `/classes` | 班级、学生与批次 |
-| `/exams/:id` | 题套详情与编辑 |
-| `/grading` | 选择题套上传作答，或直接上传完整作答卷 |
-| `/analysis`、`/wrong-questions` | 学情汇总与错题练习 |
-| `/admin/ai` | 提供商与六阶段模型配置 |
-| `/api/health` | 数据库就绪检查 |
+| 路径                            | 职责                                   |
+| ------------------------------- | -------------------------------------- |
+| `/login`、`/register`           | 登录与注册                             |
+| `/dashboard`                    | 题套上传与试卷列表                     |
+| `/classes`                      | 班级、学生与批次                       |
+| `/exams/:id`                    | 题套详情与编辑                         |
+| `/grading`                      | 选择题套上传作答，或直接上传完整作答卷 |
+| `/analysis`、`/wrong-questions` | 学情汇总与错题练习                     |
+| `/admin/ai`                     | 提供商与六阶段模型配置                 |
+| `/api/health`                   | 数据库就绪检查                         |
 
 ## 队列与恢复
 
@@ -49,17 +49,17 @@ Worker 收到 SIGINT/SIGTERM 后停止领取任务，最多给运行任务 30 �
 
 Worker 启动时验证 `STORAGE_ROOT` 与 `TEMP_ROOT` 可读写。上传校验文件类型、大小和数量；私有文件以相对 key 保存，通过授权接口读取或下载。当前文件接口返回完整文件，没有实现 HTTP Range。Web 和 Worker 必须挂载同一存储根目录。
 
-| 目录 | 职责 |
-| --- | --- |
-| `src/app`、`src/components` | 页面、API 与界面组件 |
-| `src/contracts` | Zod 数据与任务契约 |
-| `src/server/auth`、`src/server/db` | 认证、授权及数据库访问 |
-| `src/server/ai` | 提供商适配、凭据、阶段设置、Agent 运行及请求调度 |
-| `src/server/exams` | 标准化、全卷识别、逐题定位、文本化、参考答案和作答文档 |
-| `src/server/grading` | 完整作答匹配、逐题评分、汇总、报告与人工修分 |
-| `src/server/jobs`、`src/server/pipeline` | 队列、心跳及自动批改交接 |
-| `src/server/learning` | 班级、错题、练习与学生授权 |
-| `src/server/storage` | 存储目录初始化 |
-| `worker`、`prisma` | 独立执行入口、数据结构与迁移 |
+| 目录                                     | 职责                                                   |
+| ---------------------------------------- | ------------------------------------------------------ |
+| `src/app`、`src/components`              | 页面、API 与界面组件                                   |
+| `src/contracts`                          | Zod 数据与任务契约                                     |
+| `src/server/auth`、`src/server/db`       | 认证、授权及数据库访问                                 |
+| `src/server/ai`                          | 提供商适配、凭据、阶段设置、Agent 运行及请求调度       |
+| `src/server/exams`                       | 标准化、全卷识别、逐题定位、文本化、参考答案和作答文档 |
+| `src/server/grading`                     | 完整作答匹配、逐题评分、汇总、报告与人工修分           |
+| `src/server/jobs`、`src/server/pipeline` | 队列、心跳及自动批改交接                               |
+| `src/server/learning`                    | 班级、错题、练习与学生授权                             |
+| `src/server/storage`                     | 存储目录初始化                                         |
+| `worker`、`prisma`                       | 独立执行入口、数据结构与迁移                           |
 
 AI 算法边界见 [试卷与批改流程](paper-workflow.zh-CN.md)，容器和联合备份操作见 [部署说明](deployment.zh-CN.md)。

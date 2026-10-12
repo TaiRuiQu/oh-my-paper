@@ -10,8 +10,15 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
   try {
     await requireAdmin(request.headers);
     requireSameOrigin(request);
-    const input = await readJSON(request, z.object({ purpose: z.union([z.literal("exam"), aiStageSchema]).default("exam") }), 16_384, true);
+    const input = await readJSON(
+      request,
+      z.object({ purpose: z.union([z.literal("exam"), aiStageSchema]).default("exam") }),
+      16_384,
+      true,
+    );
     await activateProvider((await context.params).id, input.purpose);
     return Response.json({ ok: true });
-  } catch (error) { return errorResponse(error); }
+  } catch (error) {
+    return errorResponse(error);
+  }
 }

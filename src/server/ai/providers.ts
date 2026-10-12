@@ -56,24 +56,19 @@ export function createProviderExamModel(
   const key =
     config.providerId ??
     createHash("sha256")
-      .update(
-        JSON.stringify([
-          settings.name,
-          settings.apiType,
-          settings.baseURL,
-          apiKey,
-        ]),
-      )
+      .update(JSON.stringify([settings.name, settings.apiType, settings.baseURL, apiKey]))
       .digest("hex");
   const limiter = providerConcurrencyLimiter(key);
   return {
     name: structured.name,
     maxConcurrency: settings.maxConcurrency,
-    generate: (request) =>
+    runRecognitionAgent: (request) =>
       limiter.run(
         settings.maxConcurrency,
-        () => structured.generate(request),
+        () => structured.runRecognitionAgent!(request),
         request.signal,
       ),
+    generate: (request) =>
+      limiter.run(settings.maxConcurrency, () => structured.generate(request), request.signal),
   };
 }

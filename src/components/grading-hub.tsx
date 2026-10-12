@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ExamWorkbench } from "./exam-workbench";
 import { Classes } from "./classes";
 import type { ExamTaskSummary } from "@/contracts/exam-tasks";
-import type { classOverview } from "@/server/learning/classes";
+import type { ClassOverview } from "@/contracts/classes";
 import { FilePenLine, Users } from "lucide-react";
 export function GradingHub({
   tasks,
@@ -14,7 +14,7 @@ export function GradingHub({
   templateTaskId,
 }: {
   tasks: ExamTaskSummary[];
-  classes: Awaited<ReturnType<typeof classOverview>>;
+  classes: ClassOverview;
   model: string | null;
   isAdmin: boolean;
   defaultMode: string;
@@ -24,9 +24,7 @@ export function GradingHub({
     <>
       <div className="workspace-heading">
         <h1>批改板块</h1>
-        <p className="intro">
-          识别学生作答，依据已保存的标准答案判分，并保留逐题批改报告。
-        </p>
+        <p className="intro">识别学生作答，依据已保存的标准答案判分，并保留逐题批改报告。</p>
       </div>
       <Tabs defaultValue={defaultMode} className="grading-hub">
         <TabsList>

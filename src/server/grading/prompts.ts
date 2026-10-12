@@ -14,14 +14,23 @@ Synthetic grading-format example, not the current student's work: {"verdict":"in
 
 export function gradingPromptPrefix(preset: PromptPresetId) {
   if (preset === "anthropic") return `<assessment_policy>\n${RULES}\n</assessment_policy>\n`;
-  if (preset === "kimi") return `# 固定批改规则\n你是中文试卷批改专家。复用题套已保存的参考答案，评分有据可查。\n${RULES}\n`;
-  if (preset === "deepseek") return `# 固定评分规则与 JSON 契约\n忠实使用题目、参考答案和评分标准，只输出完整 JSON。\n${RULES}\n`;
-  if (preset === "gemini") return `# Assessment role, evidence boundaries and constraints\n${RULES}\n`;
+  if (preset === "kimi")
+    return `# 固定批改规则\n你是中文试卷批改专家。复用题套已保存的参考答案，评分有据可查。\n${RULES}\n`;
+  if (preset === "deepseek")
+    return `# 固定评分规则与 JSON 契约\n忠实使用题目、参考答案和评分标准，只输出完整 JSON。\n${RULES}\n`;
+  if (preset === "gemini")
+    return `# Assessment role, evidence boundaries and constraints\n${RULES}\n`;
   return `# Identity and assessment policy\n${RULES}\n`;
 }
 
-export function gradingRequest<T>(preset: PromptPresetId, request: StructuredRequest<T>): StructuredRequest<T> {
+export function gradingRequest<T>(
+  preset: PromptPresetId,
+  request: StructuredRequest<T>,
+): StructuredRequest<T> {
   const cachePrefix = gradingPromptPrefix(preset);
-  const stage = preset === "anthropic" ? `<current_stage>${request.system}</current_stage>` : `# Current stage\n${request.system}`;
+  const stage =
+    preset === "anthropic"
+      ? `<current_stage>${request.system}</current_stage>`
+      : `# Current stage\n${request.system}`;
   return { ...request, cachePrefix, system: cachePrefix + stage };
 }
