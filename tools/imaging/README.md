@@ -1,3 +1,3 @@
 # Imaging tools
 
-Reserved for optional image correction. Regular image operations will use Sharp; PDF processing will use the configured Poppler executable paths.
+Exam normalization is implemented in `src/server/exams/documents.ts`: Poppler renders PDFs and supplies text hints, while Sharp rotates, scales, tiles and crops images. Configure `PDFINFO_PATH`, `PDFTOPPM_PATH` and `PDFTOTEXT_PATH` as needed. Perspective correction and reconstruction of contaminated diagrams are not implemented.

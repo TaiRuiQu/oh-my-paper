@@ -31,8 +31,90 @@ model User {
   accounts      Account[]
   workspaces    Workspace[]
   memberships   WorkspaceMember[]
+  examTasks     ExamTask[]
 
   @@map("users")
+}
+
+model AiProvider {
+  id                String   @id @default(uuid())
+  name              String
+  apiType           String
+  baseURL           String
+  model             String
+  promptPreset      String   @default("openai")
+  encryptedApiKey   String
+  structuredOutputs Boolean  @default(false)
+  maxOutputTokens   Int      @default(16000)
+  timeoutSeconds    Int      @default(240)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  settings          AiSetting[]
+
+  @@map("ai_providers")
+}
+
+model AiSetting {
+  id         String      @id
+  providerId String?
+  provider   AiProvider? @relation(fields: [providerId], references: [id], onDelete: SetNull)
+
+  @@map("ai_settings")
+}
+
+enum ExamTaskStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model ExamTask {
+  id               String         @id @default(uuid())
+  userId           String
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name             String
+  status           ExamTaskStatus @default(QUEUED)
+  inputFiles       String[]
+  providerSnapshot Json
+  model            String
+  jobId            String         @unique
+  attempt          String?
+  outputKey        String?
+  page             Int            @default(0)
+  totalPages       Int            @default(0)
+  phase            String         @default("queued")
+  error            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  gradeTasks       GradeTask[]
+
+  @@index([userId, createdAt])
+  @@map("exam_tasks")
+}
+
+model GradeTask {
+  id               String         @id @default(uuid())
+  examTaskId       String
+  examTask         ExamTask       @relation(fields: [examTaskId], references: [id], onDelete: Cascade)
+  examOutputKey    String
+  status           ExamTaskStatus @default(QUEUED)
+  input            Json
+  providerSnapshot Json
+  model            String
+  promptVersion    String
+  jobId            String         @unique
+  attempt          String?
+  progress         Int            @default(0)
+  total            Int
+  phase            String         @default("queued")
+  result           Json?
+  error            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([examTaskId, createdAt])
+  @@map("grade_tasks")
 }
 
 model Session {

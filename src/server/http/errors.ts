@@ -6,8 +6,12 @@ export class AccessError extends Error {
   }
 }
 
+export class RequestError extends Error {
+  constructor(public readonly status: 400 | 409 | 413 | 422 | 429, message: string) { super(message); }
+}
+
 export function errorResponse(error: unknown) {
-  if (error instanceof AccessError) {
+  if (error instanceof AccessError || error instanceof RequestError) {
     return Response.json({ error: error.message }, { status: error.status, headers: { "Cache-Control": "no-store" } });
   }
   // Never send database URLs, SQL, user content, or provider credentials to the client.

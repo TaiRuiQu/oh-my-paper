@@ -16,3 +16,4 @@ __pycache__/
 src/generated/
 *.tsbuildinfo
 .impeccable/mocks/
+.impeccable/review/

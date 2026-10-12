@@ -1,6 +1,14 @@
 # Oh My Paper
 
-K12 试卷解析、批改与错题练习。当前交付工程底座：Next.js App Router、Better Auth、Prisma/PostgreSQL、独立 pg-boss Worker、个人工作空间及服务端授权。试卷和 AI 业务模块暂留边界，等待样本和规则。
+K12 试卷解析、批改与错题练习。已实现工程与账号底座，以及基于真实样本的试卷解析模块：支持 PDF、扫描图和照片，提取题干、选项、子题、材料与题图，分离作答/参考答案，并调用 DeepSeek 独立复核。
+
+登录后在工作台上传试卷，查看后台进度、对照原图核对内容并下载 Markdown / JSON。管理员在 `/admin/ai` 配置多个 AI 提供商、接口类型、base URL、加密密钥、自定义模型和五套系统提示词预设。详细说明与官方提示词/缓存依据见 [AI 配置指南](docs/ai-providers-and-prompts.md)。
+
+识别结果可进入 AI 批改，补充作答、参考答案、评分标准和分值。模型逐评分点给出评语；缺少参考答案时先独立求解与核对，生成的建议经人工确认后计入总分。详见 [批改流程与测试](docs/ai-grading.md)。
+
+本次 Web 集成的自动测试、真实 API 用量与浏览器验证记录见[集成验证](docs/ai-web-validation.md)。
+
+配置 `.env` 中的 `DEEPSEEK_API_KEY` 后运行 `pnpm parse:exam "examples/数学_仅试题.pdf"`。结果位于忽略 Git 的 `storage/exam-parses/`。运行 `pnpm eval:exams` 可对六份真实样本进行解析、模型复核与结构检查。完整接口、依赖、输出和限制见 [试卷解析模块](src/server/exams/README.md)。
 
 ## 本地启动
 
@@ -42,7 +50,9 @@ pnpm run test:queue
 | `src/server/db` | Prisma 单例、连接重试、工作空间数据访问 |
 | `src/server/jobs` | 入队连接、基础设施任务、消费者及定时任务 |
 | `src/server/storage` | Web/Worker 共用存储目录初始化 |
-| `src/server/ai`, `pipeline`, `grading`, `curriculum` | 待实现的业务模块 |
+| `src/server/exams` / `src/server/ai` | 试卷标准化、视觉结构化解析、DeepSeek Responses 接入与独立复核 |
+| `src/server/grading` | 独立求解、参考答案复核、逐题批改、程序汇总和人工核对 |
+| `src/server/pipeline`, `curriculum` | 待实现的业务模块 |
 | `worker` | 独立 Worker 进程、环境加载及有限时间内退出 |
 | `prisma` | 数据结构与版本化 SQL 迁移 |
 | `tools` / `evals` | 待实现的受限工具与评测资料 |
