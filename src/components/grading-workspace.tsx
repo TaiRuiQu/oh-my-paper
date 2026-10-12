@@ -40,7 +40,7 @@ export function GradingWorkspace({ examTaskId, title, model, questions, initialS
     } catch (e) { setError(e instanceof Error ? e.message : "参考答案未能导入，请重试。"); }
     finally { setBusy(false); }
   }
-  function update(id: string, value: Partial<GradeSubmission>) { setAnswers((old) => old.map((answer) => answer.questionId === id ? { ...answer, ...value } : answer)); }
+  function update(id: string, value: Partial<GradeSubmission>) { setAnswers((old) => old.map((answer) => answer.questionId === id ? { ...answer, ...value, ...(value.answer !== undefined || value.unreadable !== undefined ? { answerEdited: true } : {}) } : answer)); }
   function toggle(id: string, checked: boolean) {
     if (checked && selected.size >= MAX_GRADING_QUESTIONS) { setError(`每次最多批改 ${MAX_GRADING_QUESTIONS} 道题，请先取消其他题目。`); return; }
     setSelected((old) => { const next = new Set(old); if (checked) next.add(id); else next.delete(id); return next; }); setError("");
@@ -61,10 +61,10 @@ export function GradingWorkspace({ examTaskId, title, model, questions, initialS
     <div className="workspace-heading"><h1>批改试卷</h1><p className="intro">{title} · {questions.length} 道题</p></div>
     <section className="grading-setup" aria-labelledby="grading-setup-heading">
       <h2 id="grading-setup-heading">核对作答</h2><p className="intro">已填入识别到的作答。你可以修改作答、补充参考答案和分值；留空的作答按未作答处理。</p>
-      <p className="hint">没有参考答案时，AI 会独立求解并核对，再给出需要人工确认的评分建议。每次最多批改 {MAX_GRADING_QUESTIONS} 道题。</p>
+      <p className="hint">批改会复用题套中已保存的标准答案；答案缺失时，请先补充。每次最多批改 {MAX_GRADING_QUESTIONS} 道题。</p>
       {!model && <p className="form-error">批改服务尚未准备好，请联系管理员。</p>}
       {active && <p className="setup-note">本卷正在批改。<Link href={`/grades/${active.id}`}>查看进度</Link></p>}
-      <details className="advanced-settings"><summary>导入参考答案文件</summary><p className="hint">先在“我的试卷”上传答案文件并选择“整理空白试卷”，识别完成后在这里导入。</p><label>已识别的文件 <select value={referenceTask} onChange={(e) => setReferenceTask(e.target.value)}><option value="">选择参考答案文件</option>{sources.data?.tasks.filter((t) => t.id !== examTaskId && t.status === "COMPLETED").map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}</select></label><button className="button secondary" type="button" disabled={busy || !referenceTask || !!active} onClick={() => void importReference()}>导入并核对</button>{importNote && <p className="hint" role="status">{importNote}</p>}</details>
+      <details className="advanced-settings"><summary>导入参考答案文件</summary><p className="hint">先在“试卷板块”上传答案文件并选择“整理空白试卷”，识别完成后在这里导入。</p><label>已识别的文件 <select value={referenceTask} onChange={(e) => setReferenceTask(e.target.value)}><option value="">选择参考答案文件</option>{sources.data?.tasks.filter((t) => t.id !== examTaskId && t.status === "COMPLETED").map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}</select></label><button className="button secondary" type="button" disabled={busy || !referenceTask || !!active} onClick={() => void importReference()}>导入并核对</button>{importNote && <p className="hint" role="status">{importNote}</p>}</details>
       <form onSubmit={submit}>
         <div className="grading-submit-row"><div><strong>已选择 {selected.size} 道题</strong></div><button className="button" disabled={busy || !model || !selected.size || !!active}>{busy ? "正在提交…" : "开始批改"}</button></div>
         {error && <p className="form-error" role="alert">{error}</p>}
@@ -80,7 +80,7 @@ export function GradingWorkspace({ examTaskId, title, model, questions, initialS
                 <div className="grading-input-fields">
                   <div className="field"><label htmlFor={`${id}-answer`}>学生作答</label><textarea id={`${id}-answer`} rows={3} maxLength={12000} value={answer.answer} onChange={(e) => update(question.id, { answer: e.target.value })} placeholder="留空按未作答处理" /></div>
                   <label className="checkbox-field"><input type="checkbox" checked={answer.unreadable} onChange={(e) => update(question.id, { unreadable: e.target.checked })} />作答无法辨认，暂不判分</label>
-                  <div className="field"><label htmlFor={`${id}-reference`}>参考答案（可选）</label><textarea id={`${id}-reference`} rows={3} maxLength={12000} value={answer.referenceAnswer} onChange={(e) => update(question.id, { referenceAnswer: e.target.value })} placeholder="填写已核对的参考答案；留空由 AI 独立求解" /></div>
+                  <div className="field"><label htmlFor={`${id}-reference`}>参考答案（可选）</label><textarea id={`${id}-reference`} rows={3} maxLength={12000} value={answer.referenceAnswer} onChange={(e) => update(question.id, { referenceAnswer: e.target.value })} placeholder="填写已核对的参考答案；留空时复用题套标准答案" /></div>
                   <div className="grading-input-pair"><div className="field"><label htmlFor={`${id}-points`}>本题满分</label><input id={`${id}-points`} type="number" min={0} max={1000} step="0.01" value={answer.maxPoints ?? ""} onChange={(e) => update(question.id, { maxPoints: e.target.value === "" ? null : Number(e.target.value) })} placeholder="分值未知时留空" /></div>
                     <p className="hint">未设置满分时，可查看评语，分数需人工核对。</p></div>
                   <div className="field"><label htmlFor={`${id}-rubric`}>评分标准（可选）</label><textarea id={`${id}-rubric`} rows={2} maxLength={6000} value={answer.rubric} onChange={(e) => update(question.id, { rubric: e.target.value })} placeholder="例如各小题分值、步骤分、可接受的解法" /></div>

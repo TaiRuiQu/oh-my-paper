@@ -81,8 +81,8 @@ async function main() {
     const provisionalId = (await provisionalRequest.json()).task.id as string; gradeIds.push(provisionalId);
     const provisional = await wait(provisionalId);
     assert.equal(provisional.result!.questions[0].referenceOrigin, "model");
-    assert.equal(provisional.result!.questions[0].needsReview, true); assert.equal(provisional.result!.questions[0].score, null);
-    assert.equal(provisional.result!.questions[0].suggestedScore, 0); assert.equal(provisional.result!.totals.gradedMaxPoints, 0);
+    assert.equal(provisional.result!.questions[0].needsReview, false); assert.equal(provisional.result!.questions[0].score, 0);
+    assert.equal(provisional.result!.questions[0].suggestedScore, 0); assert.equal(provisional.result!.totals.gradedMaxPoints, 5);
     const confirmation = { questionId: submissions[0].questionId, score: 0, maxPoints: 5, note: "已独立确认2+3=5，学生作答4不正确。" };
     assert.equal((await request(`/api/grades/${provisionalId}`, adminCookie, { method: "PATCH", ...json(confirmation) })).status, 200);
     const confirmed = await (await request(`/api/grades/${provisionalId}`)).json();

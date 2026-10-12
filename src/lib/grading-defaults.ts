@@ -19,7 +19,7 @@ export function defaultSubmissions(exam: DigitalExam): GradeSubmission[] {
     const content = (kind: "student_answer" | "reference_answer" | "rubric") => annotations.filter((a) => a.kind === kind)
       .map((a) => `${a.partLabel ? `${a.partLabel} ` : ""}${blocksToText(a.blocks)}`).join("\n");
     const answer = content("student_answer");
-    return { questionId: question.id, answer, referenceAnswer: content("reference_answer"), rubric: content("rubric"),
-      maxPoints: question.points, unreadable: /\[unreadable\]/i.test(answer), questionConfirmed: false };
+    return { questionId: question.id, answer, referenceAnswer: question.solution?.sufficient ? question.solution.answer : "", rubric: question.solution?.sufficient ? question.solution.rubric : content("rubric"),
+      maxPoints: question.points, unreadable: /\[unreadable\]/i.test(answer), questionConfirmed: false, answerEdited: false };
   });
 }

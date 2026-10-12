@@ -2,6 +2,7 @@ import "server-only";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { DigitalExam, ContentBlock } from "@/contracts/exams";
+import { findFigureAsset } from "@/lib/figure-assets";
 import { renderExamMath } from "./math";
 export const escapePrintText = (text:string) => text.replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]!));
 export async function printableExam(exam:DigitalExam,directory:string) {
@@ -20,7 +21,7 @@ export async function printableExam(exam:DigitalExam,directory:string) {
     if(b.type==="text")return `<p>${text(b.text).replace(/\n/g,"<br>")}</p>`;
     if(b.type==="math")return math[b.latex]?`<p><img class="formula" src="${math[b.latex]}" alt="${escapePrintText(b.latex)}"></p>`:`<p>${escapePrintText(b.latex)}</p>`;
     if(b.type==="table")return `<table>${b.rows.map((row)=>`<tr>${row.map((c)=>`<td>${escapePrintText(c)}</td>`).join("")}</tr>`).join("")}</table>`;
-    const asset=exam.assets.find((a)=>JSON.stringify(a.region)===JSON.stringify(b.region));
+    const asset=findFigureAsset(exam.assets,b,"question");
     if(!asset?.cleanKey||!/^figures\/figure-\d+\.png$/.test(asset.cleanKey))return `<p>配图待核对：${escapePrintText(b.caption)}</p>`;
     const bytes=await readFile(join(directory,asset.cleanKey));return `<figure><img src="data:image/png;base64,${bytes.toString("base64")}" alt="${escapePrintText(b.caption)}"><figcaption>${escapePrintText(b.caption)}</figcaption></figure>`;
   }))).join("");

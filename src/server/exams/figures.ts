@@ -62,7 +62,7 @@ Never create replacement imagery and never transcribe answers into captions.`,
   return changes;
 }
 
-async function coordinateGrid(page: PageImage) {
+export async function coordinateGrid(page: PageImage) {
   const font = Math.max(18, Math.round(Math.min(page.width, page.height) / 65));
   let svg = `<svg width="${page.width}" height="${page.height}">`;
   for (let i = 1; i < 20; i++) {

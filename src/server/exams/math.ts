@@ -8,6 +8,7 @@ const cache = new Map<string, string>();
 let pending: Promise<unknown> = Promise.resolve();
 export async function renderExamMath(exam: DigitalExam): Promise<Record<string, string>> {
   const blocks: ContentBlock[] = [...exam.questions.flatMap((q) => [...q.blocks, ...q.options.flatMap((o) => o.blocks), ...q.parts.flatMap((p) => p.blocks)]),
+    ...exam.questions.flatMap(q => q.solution ? [q.solution.answer, q.solution.explanation, q.solution.rubric].map(text => ({ type: "text" as const, text })) : []),
     ...exam.materials.flatMap((m) => m.blocks), ...exam.annotations.flatMap((a) => a.blocks)];
   return renderMathBlocks(blocks);
 }

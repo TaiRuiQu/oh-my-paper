@@ -16,7 +16,7 @@ export async function POST(request: Request, context: Context) {
   try {
     const { user } = await requireSession(request.headers);
     requireSameOrigin(request);
-    const input = await readJSON(request, gradeRequestSchema, 1024 * 1024);
+    const input = await readJSON(request, gradeRequestSchema, 32 * 1024 * 1024);
     const task = await createGradeTask(user.id, (await context.params).id, input.submissions);
     return Response.json({ task }, { status: 202 });
   } catch (error) { return errorResponse(error); }

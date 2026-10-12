@@ -1,4 +1,5 @@
 import "server-only";
+import { regionsEqual } from "@/lib/figure-assets";
 import { blocksToText } from "@/lib/grading-defaults";
 import { publicPracticeQuestions } from "./serialization";
 import { randomUUID } from "node:crypto";
@@ -15,7 +16,7 @@ import { requireWorker } from "@/server/jobs/health";
 import { enqueueInTransaction } from "@/server/jobs/transaction";
 import { getJobProducer } from "@/server/jobs/client";
 import { getActiveProvider } from "@/server/ai/settings";
-import { providerSchema } from "@/contracts/ai-providers";
+import { type ProviderSnapshot } from "@/contracts/ai-providers";
 import { decryptApiKey } from "@/server/ai/credentials";
 import { createProviderExamModel } from "@/server/ai/providers";
 import { taskDirectory, createExamTask, ownedExamTask, taskResult } from "@/server/exams/tasks";
@@ -24,7 +25,7 @@ import { learningOverview } from "./service";
 import { AccessError, RequestError } from "@/server/http/errors";
 
 const json = (v: unknown) => JSON.parse(JSON.stringify(v)) as Prisma.InputJsonValue;
-type PracticeInput = { exam: DigitalExam; submissions: GradeSubmission[]; provider: z.infer<typeof providerSchema> & { encryptedApiKey: string }; outputKey: string; examTaskId: string; difficulty: string; topicId: string; sourceStem: string; handwritingTaskId?: string };
+type PracticeInput = { exam: DigitalExam; submissions: GradeSubmission[]; provider: ProviderSnapshot; outputKey: string; examTaskId: string; difficulty: string; topicId: string; sourceStem: string; handwritingTaskId?: string };
 
 export async function createPractice(userId: string, request: z.infer<typeof practiceCreateSchema>) {
   const entry = (await learningOverview(userId)).entries.find((e) => e.key === request.entryKey);
@@ -38,7 +39,7 @@ export async function createPractice(userId: string, request: z.infer<typeof pra
   if (needsGeneration) await requireWorker();
   const materialRefs = original.exam.materials.filter((m) => question.materialRefs.includes(m.key));
   const figureRegions = [...question.blocks, ...question.options.flatMap((o) => o.blocks), ...question.parts.flatMap((p) => p.blocks), ...materialRefs.flatMap((m) => m.blocks)].filter((b) => b.type === "figure").map((b) => b.region);
-  const relevantAssets = original.exam.assets.filter((a) => figureRegions.some((r) => JSON.stringify(r) === JSON.stringify(a.region)));
+  const relevantAssets = original.exam.assets.filter((a) => a.role !== "student_answer" && figureRegions.some((r) => regionsEqual(r,a.region)));
   const content = { questions: [{ id: question.id, stem: [...original.exam.materials.filter((m) => question.materialRefs.includes(m.key)).map((m) => blocksToText(m.blocks)), entry.stem].join("\n\n"), answer: result.expectedAnswer, explanation: result.feedback,
     rubric: result.rubric, maxPoints: result.maxPoints ?? 1, topicId: entry.topicId ?? "other" }] };
   const id = randomUUID(), jobId = randomUUID();

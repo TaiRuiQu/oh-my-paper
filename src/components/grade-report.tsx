@@ -6,6 +6,7 @@ import { useState, type FormEvent } from "react";
 import { gradeReviewSchema, type GradeQuestionResult, type GradeTaskDetail } from "@/contracts/grading";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { MathText } from "./math-text";
+import type { ContentBlock } from "@/contracts/exams";
 
 const verdicts = { correct: "正确", partial: "部分正确", incorrect: "错误", unanswered: "未作答", needs_review: "待核对" };
 const phases: Record<string, string> = { queued: "等待后台开始批改", preparing: "正在准备批改资料", solving: "正在独立求解参考答案", verifying_reference: "正在独立核对参考答案", grading: "正在逐评分点批改", saved: "当前题已保存", done: "批改完成" };
@@ -37,6 +38,16 @@ export function GradeReport({ initialData }: { initialData: GradeTaskDetail }) {
     refetchInterval: (query) => ["QUEUED", "RUNNING"].includes(query.state.data?.task.status ?? "QUEUED") ? 2500 : false });
   const { task, result } = query.data;
   const images = query.data.mathImages ?? {};
+  function answerBlock(block: ContentBlock, index: number) {
+    if (block.type === "figure") return <figure key={index} className="exam-figure">
+      {/* Images are served from this grading report's fixed source version. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={`/api/grades/${task.id}/evidence?region=${encodeURIComponent(JSON.stringify(block.region))}${block.assetId ? `&assetId=${encodeURIComponent(block.assetId)}` : ""}`} alt={block.caption} />
+      <figcaption>{block.caption}</figcaption>
+    </figure>;
+    const text = block.type === "text" ? block.text : block.type === "math" ? `$${block.latex}$` : block.rows.map((r) => r.join(" | ")).join("\n");
+    return <p key={index} className="exam-text"><MathText text={text} images={images} /></p>;
+  }
   const [cancelError,setCancelError] = useState("");
   async function cancel() { try { await apiRequest(`/api/grades/${task.id}/cancel`,{method:"POST"}); await query.refetch(); } catch(e) { setCancelError(e instanceof Error ? e.message : "取消未成功，请重试。"); } }
   const running = ["QUEUED", "RUNNING"].includes(task.status);
@@ -55,7 +66,7 @@ export function GradeReport({ initialData }: { initialData: GradeTaskDetail }) {
         <div className="section-heading"><h2>{question.section} · 第 {question.number} 题</h2><div className="inline-actions"><a href={`/api/grades/${task.id}/source/${question.sourcePage}`} target="_blank" rel="noreferrer">查看原图</a><span className={`status-tag${question.needsReview ? " warning" : ""}`}>{question.review ? "已人工核对" : question.needsReview ? "待核对" : verdicts[question.verdict]}</span></div></div>
         <p className="question-preview exam-text"><MathText text={question.questionText} images={images} /></p>
         <div className="grade-score-line"><strong>{question.needsReview ? `建议得分：${question.suggestedScore ?? "暂未判分"}` : `计入得分：${question.score ?? "暂未判分"}`}{question.maxPoints !== null && ` / ${question.maxPoints} 分`}</strong><span className="hint">判定：{verdicts[question.verdict]}</span></div>
-        <dl className="grade-answer-comparison"><div><dt>学生作答</dt><dd className="exam-text"><MathText text={question.studentAnswer || "未作答"} images={images} /></dd></div><div><dt>{question.referenceOrigin === "supplied" ? "已提供参考答案" : question.referenceOrigin === "model" ? "AI 推导参考答案" : "参考答案"}</dt><dd className="exam-text"><MathText text={question.expectedAnswer || "未生成"} images={images} /></dd></div></dl>
+        <dl className="grade-answer-comparison"><div><dt>学生作答</dt><dd className="exam-text">{question.studentAnswerBlocks?.length ? question.studentAnswerBlocks.map(answerBlock) : <MathText text={question.studentAnswer || (question.verdict === "unanswered" ? "未作答" : "作答证据待核对")} images={images} />}</dd></div><div><dt>{question.referenceOrigin === "supplied" ? "已提供参考答案" : question.referenceOrigin === "model" ? "AI 推导参考答案" : "参考答案"}</dt><dd className="exam-text"><MathText text={question.expectedAnswer || "未生成"} images={images} /></dd></div></dl>
         <p className="exam-text grade-feedback"><MathText text={question.feedback} images={images} /></p>
         {question.needsReview && <ul className="grade-review-reasons">{question.reviewReasons.map((reason, index) => <li key={index}>{reason}</li>)}</ul>}
         {!!question.criteria.length && <details className="grade-criteria"><summary>查看评分依据</summary><div className="table-scroll"><table><caption className="sr-only">第 {question.number} 题评分点</caption><thead><tr><th scope="col">评分点</th><th scope="col">建议分数</th><th scope="col">依据</th></tr></thead><tbody>{question.criteria.map((criterion, index) => <tr key={index}><td>{criterion.description}</td><td>{criterion.awardedPoints} / {criterion.maxPoints}</td><td>{criterion.explanation}</td></tr>)}</tbody></table></div></details>}

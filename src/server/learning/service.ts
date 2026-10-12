@@ -10,7 +10,7 @@ import { gradeResultSchema } from "@/contracts/grading";
 export async function learningOverview(userId: string): Promise<LearningOverview> {
   // Use only the latest completed report for each source version. Changes to a
   // teacher's score therefore remove obsolete errors without duplicate counters.
-  const grades = await getDb().gradeTask.findMany({ where: { status: "COMPLETED", examTask: { OR: [{ userId, studentId: null }, { student: { accountId: userId } }] } }, include: { examTask: true }, orderBy: { createdAt: "desc" }, take: 500 });
+  const grades = await getDb().gradeTask.findMany({ where: { status: "COMPLETED", examTask: { OR: [{ userId }, { student: { accountId: userId } }] } }, include: { examTask: { include: { student: { select: { name: true, classroomId: true } } } } }, orderBy: { createdAt: "desc" }, take: 500 });
   const [tags, sessions] = await Promise.all([getDb().learningTag.findMany({ where: { userId } }), getDb().practiceSession.findMany({ where: { userId, result: { not: Prisma.DbNull } }, orderBy: { updatedAt: "asc" } })]);
   const seen = new Set<string>(); let pending = 0;
   const entries: LearningOverview["entries"] = [];
@@ -27,7 +27,7 @@ export async function learningOverview(userId: string): Promise<LearningOverview
         const r = gradeResultSchema.safeParse(s.result);
         return r.success && r.data.questions.every((i) => !i.needsReview && !i.failed && i.score !== null) ? [{ correct: r.data.questions.every((i) => i.score === i.maxPoints) }] : [];
       });
-      entries.push({ key, gradeTaskId: grade.id, questionId: q.questionId, examTaskId: grade.examTaskId, title: grade.examTask.name, number: q.number, stem: q.questionText, subject: (grade.input as unknown as { exam: { subject: string | null } }).exam.subject ?? "其他", topicId: tags.find((t) => t.entryKey === key)?.topicId ?? null,
+      entries.push({ key, gradeTaskId: grade.id, questionId: q.questionId, examTaskId: grade.examTaskId, title: grade.examTask.name, studentName: grade.examTask.student?.name ?? null, classroomId: grade.examTask.student?.classroomId ?? null, number: q.number, stem: q.questionText, subject: (grade.input as unknown as { exam: { subject: string | null } }).exam.subject ?? "其他", topicId: tags.find((t) => t.entryKey === key)?.topicId ?? null,
         verdict: q.score === 0 ? q.verdict === "unanswered" ? "未作答" : "错误" : "部分正确", feedback: q.feedback, lastErrorAt: grade.createdAt.toISOString(), attempts: attempts.length, correctAttempts: attempts.filter((a) => a.correct).length, mastered: mastery(attempts) });
     }
   }

@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { z } from "zod";
 import { GRADING_QUEUE, gradeRequestSchema, gradeResultSchema, type GradeSubmission, type GradeReviewInput, type GradeTaskSummary, type GradeResult } from "@/contracts/grading";
-import { providerSchema } from "@/contracts/ai-providers";
+import { providerSnapshotSchema } from "@/contracts/ai-providers";
 import type { DigitalExam } from "@/contracts/exams";
 import type { GradeTask, Prisma } from "@/generated/prisma/client";
 import { getDb } from "@/server/db/client";
@@ -20,6 +20,7 @@ import { gradeExam } from "./service";
 import { GRADING_PROMPT_VERSION } from "./prompts";
 import { applyGradeReview } from "./score";
 import { questionToText } from "@/lib/grading-defaults";
+import { cropTools } from "@/server/exams/evidence";
 
 export const gradingJobSchema = z.object({ taskId: z.uuid() });
 const asJSON = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
@@ -56,7 +57,8 @@ export function gradeTaskResult(task: GradeTask): GradeResult | null {
   const input = task.input as unknown as { exam: DigitalExam };
   result.questions = result.questions.map((item) => {
     const question = input.exam.questions.find((q) => q.id === item.questionId);
-    return question ? { ...item, questionText: item.questionText || questionToText(question), sourcePage: question.regions[0].page } : item;
+    return question ? { ...item, questionText: item.questionText || questionToText(question),
+      sourcePage: item.matchedSourceIds?.length ? item.sourcePage : question.regions[0].page } : item;
   });
   return result;
 }
@@ -69,6 +71,8 @@ export async function createGradeTask(userId: string, examTaskId: string, submis
   const input = gradeRequestSchema.parse({ submissions });
   const ids = input.submissions.map((s) => s.questionId);
   if (new Set(ids).size !== ids.length || ids.some((id) => !exam.questions.some((q) => q.id === id))) throw new RequestError(400, "批改题目重复或不属于当前试卷。");
+  if (input.submissions.some((s) => !s.referenceAnswer.trim() && !exam.questions.some((q) => q.id === s.questionId && q.solution?.sufficient && q.solution.answer.trim())))
+    throw new RequestError(409, "标准答案尚未完整，请先补充或生成所选题目的标准答案，再提交批改。");
   const provider = await getActiveProvider("grading"), boss = await getJobProducer();
   const id = randomUUID(), jobId = randomUUID();
   return getDb().$transaction(async (tx) => {
@@ -76,7 +80,7 @@ export async function createGradeTask(userId: string, examTaskId: string, submis
     const current = await tx.examTask.findFirst({ where: { id: examTaskId, userId, status: "COMPLETED", outputKey: task.outputKey } });
     if (!current) throw new RequestError(409, "试卷识别结果已改变，请刷新页面后重新提交。");
     if (await tx.gradeTask.count({ where: { examTaskId, status: { in: ["QUEUED", "RUNNING"] } } })) throw new RequestError(409, "这份试卷已有批改任务，请等待完成。");
-    if (await tx.gradeTask.count({ where: { examTask: { userId }, status: { in: ["QUEUED", "RUNNING"] } } }) >= 3) throw new RequestError(429, "已有 3 个批改任务，请等待完成后再提交。");
+    if (await tx.gradeTask.count({ where: { examTask: { userId }, status: { in: ["QUEUED", "RUNNING"] } } }) >= (task.batchId ? 100 : 3)) throw new RequestError(429, "当前批改任务较多，请等待完成后再提交。");
     const grade = await tx.gradeTask.create({ data: { id, jobId, examTaskId, examOutputKey: task.outputKey!,
       input: asJSON({ exam, submissions: input.submissions }), providerSnapshot: provider, model: provider.model,
       promptVersion: `${GRADING_PROMPT_VERSION}/${provider.promptPreset}`, total: submissions.length } });
@@ -109,15 +113,28 @@ export async function processGradeTask(id: string, jobId: string, signal: AbortS
   if (!claimed.count) return;
   const where = { id, jobId, attempt, status: "RUNNING" as const };
   try {
-    const provider = providerSchema.extend({ encryptedApiKey: z.string() }).parse(task.providerSnapshot);
+    const provider = providerSnapshotSchema.parse(task.providerSnapshot);
     const input = task.input as unknown as { exam: DigitalExam; submissions: GradeSubmission[] };
     const model = createProviderExamModel(provider, decryptApiKey(provider.encryptedApiKey));
+    const promptVersion = `${GRADING_PROMPT_VERSION}/${provider.promptPreset}`;
+    const checkpoint = gradeTaskResult(task);
+    // A resumed task from the previous policy starts a fresh report; do not mix
+    // provisional-reference checkpoints with the saved-reference policy.
+    await getDb().gradeTask.updateMany({ where, data: { promptVersion } });
     const result = await gradeExam({ exam: input.exam, submissions: gradeRequestSchema.parse(input).submissions,
-      promptPreset: provider.promptPreset, model, signal: AbortSignal.any([signal, AbortSignal.timeout(2 * 60 * 60 * 1000)]), initialResult: gradeTaskResult(task) ?? undefined,
+      promptPreset: provider.promptPreset, model, signal: AbortSignal.any([signal, AbortSignal.timeout(2 * 60 * 60 * 1000)]), initialResult: checkpoint?.promptVersion === promptVersion ? checkpoint : undefined,
       loadFigure: async (asset) => {
         if (!asset.cleanKey || !/^figures\/figure-\d+\.png$/.test(asset.cleanKey)) throw new Error("Invalid grading figure.");
         return readFile(join(taskDirectory(task.examTaskId), task.examOutputKey, asset.cleanKey));
       },
+      loadAnswerFigure: async (asset) => {
+        if (!/^figures\/figure-\d+\.png$/.test(asset.evidenceKey)) throw new Error("Invalid answer figure.");
+        return readFile(join(taskDirectory(task.examTaskId), task.examOutputKey, asset.evidenceKey));
+      },
+      answerTools: cropTools((input.exam.answerDocument?.crops ?? []).map(({ key, region }) => {
+        if (!/^answers\/response-\d+-\d+\.png$/.test(key)) throw new Error("Invalid answer crop.");
+        return { key, region, path: join(taskDirectory(task.examTaskId), task.examOutputKey, key) };
+      })),
       onProgress: async (progress, _total, phase, result) => {
         await getDb().gradeTask.updateMany({ where, data: { progress, phase, result: asJSON(result) } });
       } });

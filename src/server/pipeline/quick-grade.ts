@@ -3,6 +3,7 @@ import { getDb } from "@/server/db/client";
 import { taskResult } from "@/server/exams/tasks";
 import { createGradeTask } from "@/server/grading/tasks";
 import { defaultSubmissions } from "@/lib/grading-defaults";
+import { MAX_GRADING_QUESTIONS } from "@/contracts/grading";
 
 // Recover the handoff if a worker died after parsing but before enqueuing grading.
 // Compare source versions, so re-recognition can produce its own fresh report.
@@ -21,8 +22,8 @@ export async function continueQuickGrade(id?: string) {
   const tasks = await getDb().examTask.findMany({ where: { id: { in: pending.map((t) => t.id) } } });
   for (const task of tasks) {
     const exam = await taskResult(task);
-    if (!exam?.questions.length) continue;
-    try { await createGradeTask(task.userId, task.id, defaultSubmissions(exam).slice(0, 100).map((s) => ({ ...s, maxPoints: s.maxPoints ?? 1 }))); }
+    if (!exam?.questions.length || exam.questions.some((q) => !q.solution?.sufficient || !q.solution.answer.trim())) continue;
+    try { await createGradeTask(task.userId, task.id, defaultSubmissions(exam).slice(0, MAX_GRADING_QUESTIONS)); }
     catch { /* An unavailable service leaves the handoff pending for the next sweep. */ }
   }
 }

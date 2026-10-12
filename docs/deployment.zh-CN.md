@@ -1,6 +1,6 @@
 # 单机部署与联合备份
 
-本地开发仍使用本机 PostgreSQL，不需要 Docker。仓库新增 Web/Worker 多阶段 Dockerfile、Compose、Caddy HTTPS 配置与联合备份/恢复脚本。本次环境没有 Docker CLI，容器构建、Compose 启动和恢复演练尚未执行；不能将这些文件视为已通过生产验证。
+本地开发使用本机 PostgreSQL，启动步骤见 [本地开发说明](development-setup.zh-CN.md)。仓库提供 Web/Worker 多阶段 Dockerfile、Compose、Caddy HTTPS 配置与联合备份/恢复脚本。容器构建、Compose 启动和恢复演练尚未完成验收。
 
 生产机准备 Docker Engine/Compose 和指向服务器的域名。在 `.env` 中配置以下项目，保留原来的登录及 AI 凭据加密密钥。不要把本机 `localhost` 数据库地址用于容器。
 
@@ -26,7 +26,7 @@ docker compose ps
 docker compose logs --tail=100 web worker migrate
 ```
 
-数据库不公开端口。迁移服务成功结束后 Web/Worker 启动；Caddy 等待 Web 健康。Worker 健康检查查询最近数据库心跳。`WORKER_CONCURRENCY` 是每类队列的并发数；识别、批改和练习可以同时执行，按服务器资源降低并发。当前未设置硬性磁盘配额或账号费用额度，需要在实际部署前补充并试压。
+数据库不公开端口。迁移服务成功结束后 Web/Worker 启动；Caddy 等待 Web 健康。Worker 健康检查查询最近数据库心跳。`WORKER_CONCURRENCY` 是每类队列的并发数；识别、批改和练习可以同时执行，按服务器资源降低并发。模型请求另受后台提供商最大并发数限制，多个 Worker 各自限流。当前未设置硬性磁盘配额或账号费用额度。
 
 联合备份会短暂停止 Web 和 Worker，使数据库与文件落在同一个静止时点，结束时自动启动。备份写入 PostgreSQL 自定义格式转储、用户文件压缩包和 SHA256 校验。
 
@@ -44,4 +44,4 @@ sudo chown -R 1000:1000 storage tmp
 docker compose up -d --build
 ```
 
-恢复后验证登录、原图读取、报告下载、后台心跳和队列消费。每次生产发布前都应在测试环境进行恢复演练。本次仅做脚本语法检查，尚未做容器或真实备份恢复验收。
+恢复后验证登录、原图读取、报告下载、后台心跳和队列消费。每次生产发布前应在测试环境进行恢复演练。现有脚本只完成语法检查，尚未做容器或真实备份恢复验收。

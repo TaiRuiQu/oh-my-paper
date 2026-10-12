@@ -1,4 +1,5 @@
 import type { ContentBlock, DigitalExam } from "@/contracts/exams";
+import { findFigureAsset } from "@/lib/figure-assets";
 
 export function exportExamMarkdown(exam: DigitalExam) {
   const render = (blocks: ContentBlock[]): string => blocks.map((block) => {
@@ -9,7 +10,7 @@ export function exportExamMarkdown(exam: DigitalExam) {
       const row = (cells: string[]) => `| ${cells.map((cell) => cell.replaceAll("|", "\\|").replaceAll("\n", "<br>")).join(" | ")} |`;
       return [row(block.rows[0]), row(block.rows[0].map(() => "---")), ...block.rows.slice(1).map(row)].join("\n");
     }
-    const asset = exam.assets.find((item) => JSON.stringify(item.region) === JSON.stringify(block.region));
+    const asset = findFigureAsset(exam.assets, block, "question");
     if (!asset?.cleanKey) return `[图像待复核：${block.caption}]`;
     return `![${block.caption.replaceAll("[", "").replaceAll("]", "")}](${asset.cleanKey})`;
   }).join("\n\n");

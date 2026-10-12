@@ -47,6 +47,7 @@ model AiProvider {
   structuredOutputs Boolean  @default(false)
   maxOutputTokens   Int      @default(16000)
   timeoutSeconds    Int      @default(240)
+  maxConcurrency    Int      @default(3)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   settings          AiSetting[]
@@ -88,6 +89,7 @@ model ExamTask {
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   gradeTasks       GradeTask[]
+  templateBatches  GradeBatch[] @relation("BatchTemplate")
   autoGrade        Boolean        @default(false)
   studentId        String?
   student          StudentProfile? @relation(fields: [studentId], references: [id], onDelete: SetNull)
@@ -134,6 +136,9 @@ model GradeBatch {
   classroom   Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
   name        String
   exams       ExamTask[]
+  templateId  String?
+  template    ExamTask? @relation("BatchTemplate", fields: [templateId], references: [id], onDelete: Restrict)
+  templateOutputKey String?
   createdAt   DateTime @default(now())
   @@map("grade_batches")
 }

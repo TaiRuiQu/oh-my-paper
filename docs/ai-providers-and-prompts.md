@@ -1,46 +1,56 @@
-# AI 提供商与提示词
+# AI 提供商、阶段模型与提示词
 
-管理员登录后访问 `/admin/ai`，填写提供商名称、API 协议、完整 base URL、API key 和模型 ID。支持 Responses、Chat Completions 兼容协议、Anthropic Messages 和 Google Generative AI。模型必须支持图片输入；“测试连接”检查图片输入与 JSON 输出，不能衡量试卷准确率。
+管理员在 `/admin/ai` 保存提供商名称、API 协议、base URL、API key 和模型 ID。支持 Responses、Chat Completions 兼容协议、Anthropic Messages 与 Google Generative AI。一个配置对应一个接口和模型；同一供应商的不同模型可以保存为多条配置。
 
-新账号默认角色为 `USER`。通过受控数据库操作将指定管理员账号的 `role` 设置为 `ADMIN`，才会显示 AI 设置入口；详见[账号与管理员权限](framework.zh-CN.md)。测试不会把真实账号自动提升为管理员。
+新账号默认角色为 `USER`。管理员由受控数据库操作授予 `ADMIN`，权限规则见 [工程底座](framework.zh-CN.md#认证与权限)。
 
-保存后点击“用于识别”或“用于批改”，两种任务可选不同模型。未单独配置批改模型时使用识别模型。协议和提示词预设独立配置，例如 Kimi 模型使用 Chat Completions 兼容协议时仍选择 Kimi 提示词。Chat Completions 默认使用 JSON Object；接口支持 JSON Schema 时可在高级设置中启用。输出 token 数和调用超时按模型限制调整。网页任务使用数据库配置，CLI 原有 DeepSeek 环境变量入口仍可使用。
+## 六个阶段分别选模型
 
-API key 以 AES-256-GCM 加密保存。`PROVIDER_KEY_ENCRYPTION_KEY` 必须是至少 32 字符的随机秘密；Web 与 Worker 使用同一值，重新部署时保留该值。密钥不回传浏览器。编辑时留空保留旧密钥。任务保存加密配置快照，修改或删除提供商不会改变已提交任务。
+保存配置后，在阶段模型设置中分别选择：
 
-## 官方依据与应用预设
-
-以下为应用自主编写的试卷提示词，采用官方推荐结构，并非官方发布的试卷识别提示词，也不声称已经提升准确率。
-
-| 预设 | 应用方式 | 官方依据 |
+| 配置键 | 阶段职责 | 所需输入 |
 | --- | --- | --- |
-| OpenAI | 角色、固定规则、任务和输出约束分区 | [Prompt engineering](https://developers.openai.com/api/docs/guides/prompt-engineering) |
-| Gemini | 直接指令、明确图像用途、结构化输出和最后检查 | [Prompt design strategies](https://ai.google.dev/gemini-api/docs/prompting-strategies) |
-| Anthropic | XML 分隔固定规则、阶段任务、格式示例 | [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) |
-| DeepSeek | 明确 JSON、结构示例、完整输出与转义 | [JSON Output](https://api-docs.deepseek.com/guides/json_mode/) |
-| Kimi | 中文角色、清晰分步指令、参考证据和缺失信息处理 | [Prompt Best Practices](https://platform.kimi.ai/docs/guide/prompt-best-practice) |
+| `inventory` | 全卷题目识别，确定题数、分值与页码 | 所有正向页面 |
+| `localization` | 每题的整题框与非文字材料框 | 本题涉及的完整页面 |
+| `transcription` | 裁切图文本化 Agent | 本题裁切图、材料目录 |
+| `solution` | 整理或生成逐项标准答案与解析 | 电子题目、干净材料图、已提取参考答案 |
+| `answer_extraction` | 作答定位与裁切图文本化 Agent | 作答页、题套结构、有序作答裁切图 |
+| `grading` | 每题独立匹配作答并评分 | 完整作答文档、图像、本题及标准答案 |
 
-每套预设共享相同的业务边界：忠实转录、不解题、不补造缺失题目；学生作答、教师批注与参考答案独立保存。预设包围每个识别阶段，包括方向、页面清单、内容识别、独立核对和配图边界检查。结果记录模型与完整提示词版本。
+旧的“用于识别”设置 `exam` 保留为默认配置。未单独选择的阶段使用它；`solution` 优先依次使用 `solution`、`grading`、`exam`。配置可分别选择，也可共享同一个模型。
 
-## 前缀与缓存
+视觉输入阶段需要模型支持图片和多图输入；文本化、作答解析与批改 Agent 还需要工具调用能力。“测试连接”检查图片输入和 JSON 输出，不能证明工具调用兼容或试卷准确率。应通过实际阶段请求确认所选接口可用。
 
-重复最多的角色、证据边界和转录规则组成固定前缀；阶段名称、阶段示例及 schema 在其后，页面、图像、PDF 文本、草稿及前后页上下文放在 user 消息中。不在固定前缀插入时间、用户 ID 或试卷名称。识别与核对使用相同公共前缀，识别的完整原图在核对请求中也保留原有顺序。缓存不通过删减必要证据来实现。
+## 输出、并发与超时
 
-DeepSeek 采用[自动前缀缓存](https://api-docs.deepseek.com/guides/kv_cache/)；OpenAI 和 Gemini 可由服务商使用隐式缓存。Anthropic 在稳定 system 块上设置 `cacheControl: { type: 'ephemeral' }`，阶段块放在其后，依据[官方缓存指南](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)。不同 schema、模型、服务商缓存门槛及过期时间仍可能造成缓存未命中。
+协议与提示词预设独立设置。例如使用 Chat Completions 兼容协议的 Kimi 模型仍可选择 Kimi 预设。提供商配置包含输出 token 上限、调用超时和最大并发数。
 
-调用返回的 `inputTokenDetails.cacheReadTokens` / `cacheWriteTokens` 累计到核对记录中。DeepSeek 兼容接口可读取其 `prompt_cache_hit_tokens`。这些数值来自 API 返回值，不把“同前缀”直接当成实际命中，也不根据 token 数臆算费用。
+最大并发数范围为 1–32，默认 3。一个 Worker 进程内，相同供应商的识别、求解、批改和练习请求共享调度器；不同供应商独立调度。单次调用超时从取得槽位后计算。多个 Worker 各自限流，当前没有跨进程的供应商总额度。
+
+Chat Completions 默认不启用原生 JSON Schema，可在高级设置中开启兼容接口支持的结构化输出。关闭时，程序将当前阶段的 JSON Schema 同时写入提示词。所有输出仍须通过 Zod 和业务校验。合法的 Markdown JSON 代码块先解包；格式错误仅在预算内尝试一次序列化修复。
+
+试卷任务提交时冻结六阶段模型配置及生成答案选项，批改任务提交时冻结批改模型配置。修改或删除后台提供商不会改变已经提交的配置快照。
+
+## 提示词与缓存
+
+OpenAI、Gemini、Anthropic、DeepSeek 和 Kimi 五套预设由应用维护，具体来源链接记录在 [预设定义](../src/contracts/prompt-presets.ts) 中。预设组织角色、证据规则和阶段输出约束，实际职责由阶段提示词定义。定位阶段只输出框，文本化阶段忠实转录，求解与批改各使用独立任务规则。
+
+公共证据规则构成稳定 system 前缀，当前阶段及 Schema 跟随其后；题目、图片、裁切图和作答属于该请求的输入。Anthropic 的缓存标记放在包含当前阶段和 Schema 的 system 块末尾。调用记录累计 API 返回的缓存读写 token；兼容接口可读取 DeepSeek 的 `prompt_cache_hit_tokens`。实际缓存命中由接口返回，无法仅凭相同提示词保证。
+
+## 凭据与上传边界
+
+API key 使用 AES-256-GCM 加密保存，`PROVIDER_KEY_ENCRYPTION_KEY` 至少 32 字符，Web 与 Worker 必须一致并在重新部署时保留。密钥不回传浏览器；编辑配置时留空保留旧密钥。任务配置快照同样保存加密凭据。
+
+Web 与 Worker 共享 PostgreSQL 和 `STORAGE_ROOT`。用户原件和产物位于私有目录，通过授权 API 访问。上传限制为单文件 40 MB、每次 20 个文件、合计 100 MB，解析最多 50 页；普通上传每用户最多同时 3 个识别任务。业务任务记录与入队在同一数据库事务中写入。
 
 ## 启动与验证
 
 ```bash
-pnpm db:generate
-pnpm db:deploy
-pnpm dev:all
-node --conditions=react-server --import tsx scripts/test-exam-web.ts
-# 使用 .env 中的 DeepSeek key 执行真实图片识别测试（产生 API 费用）
-node --conditions=react-server --import tsx scripts/test-exam-web.ts --live
+pnpm run db:generate
+pnpm run db:deploy
+pnpm run dev:all
 ```
 
-Web 与 Worker 共享 PostgreSQL 和 `STORAGE_ROOT`。上传存储在私有目录，API 验证当前用户拥有试卷后才返回原图或导出文件。上传流限制为单文件 40 MB、20 个文件、总计 100 MB；解析最多 50 页。每用户最多 3 个同时识别任务。任务记录和入队写入同一数据库事务。
+网页任务使用数据库配置。CLI 可用 `--configured` 读取相同的阶段配置；不带该参数时使用原有 DeepSeek 环境变量适配器。命令和费用边界见 [真实样例验证](exam-parsing-validation.md)。
 
-集成测试创建临时账号与提供商，完成后恢复原识别配置并清理其生成文件；`--keep` 可为浏览器验证保留临时数据，使用 `pnpm test:exam-web --cleanup` 清理。真实测试使用明确标注的合成试卷，不是准确率基准测试。
+本地集成检查使用 `pnpm run test:exam-web`。脚本创建临时账号和提供商，完成后恢复原识别与批改默认设置并清理生成文件；使用 `--keep` 保留的测试数据可用 `pnpm run test:exam-web --cleanup` 清理。

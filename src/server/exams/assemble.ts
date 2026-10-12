@@ -1,4 +1,12 @@
 import type { ContentBlock, DigitalExam, ExamQuestion, ParsedPage, QuestionFragment } from "@/contracts/exams";
+import { findFigureAsset } from "@/lib/figure-assets";
+
+function blocksQuestionContent(code: string, severity: "warning" | "error") {
+  // Scores and optional blank workspace do not alter the digital question's
+  // text/image readiness. Keep their notices visible for scoring corrections.
+  if (/points|score|missing_answer_space/i.test(code) || ["solution_unavailable","reference_extraction_failed"].includes(code)) return false;
+  return severity === "error" || /missing|incomplete|clipped|uncertain|overflow|ambiguous|conflict/i.test(code);
+}
 
 function appendBlocks(target: ContentBlock[], incoming: ContentBlock[]) {
   const seen = new Set(target.map((block) => JSON.stringify(block)));
@@ -93,16 +101,16 @@ export function finalizeExam(exam: DigitalExam, unfinished: { number: string; se
         message: `Question ${question.number} has repeated option labels.`, questionNumber: question.number });
     }
     if (question.regions.some((region) => exam.pages.find((page) => page.page === region.page)?.status !== "verified") ||
-      exam.verification.findings.some((finding) => question.regions.some((region) => region.page === finding.page) &&
+      exam.verification.findings.some((finding) => blocksQuestionContent(finding.code,finding.severity) && question.regions.some((region) => region.page === finding.page) &&
         (finding.questionNumber === null || finding.questionNumber === question.number))) question.status = "needs_review";
   }
   // Image cleanliness is part of question readiness, even if the text is legible.
   for (const question of exam.questions) {
     const blocks = [...allQuestionBlocks(question), ...exam.materials.filter((material) => question.materialRefs.includes(material.key)).flatMap((material) => material.blocks)];
     if (blocks.some((block) => block.type === "figure" && (block.contaminated ||
-      !exam.assets.find((asset) => JSON.stringify(asset.region) === JSON.stringify(block.region))?.cleanKey))) question.status = "needs_review";
+      !findFigureAsset(exam.assets, block, "question")?.cleanKey))) question.status = "needs_review";
   }
-  for (const page of exam.pages) if (page.status === "verified" && exam.verification.findings.some((finding) => finding.page === page.page)) {
+  for (const page of exam.pages) if (page.status === "verified" && exam.verification.findings.some((finding) => finding.page === page.page && finding.questionNumber === null && blocksQuestionContent(finding.code,finding.severity))) {
     page.status = "needs_review";
   }
   exam.verification.status = exam.pages.some((page) => page.status === "failed") ? "partial"

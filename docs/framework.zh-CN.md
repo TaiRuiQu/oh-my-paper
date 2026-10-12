@@ -1,55 +1,65 @@
-# 工程底座
+# 当前工程与运行边界
 
-本次完成实施计划阶段 1 的工程与账号底座。供应商后台、AI、文件上传、评分及学生业务数据结构仍待实现。没有添加试题样本、模拟评分或模型调用。
+应用由 Next.js Web 和独立 Worker 组成。Web 提供页面、认证、上传和任务接口；Worker 消费 PostgreSQL 中的 pg-boss 队列，执行试卷解析、批改和练习任务。业务数据由 Prisma 管理，原件与产物保存在共享本地存储。
 
 ## 运行入口
 
-Next.js 负责页面、认证接口和服务端权限校验。Worker 独立运行，共享 Prisma、队列与存储模块。Next.js instrumentation 只记录初始化事件，不连接数据库、不启动消费者；生产构建不执行任务。
+`pnpm run dev` 与 `pnpm run dev:all` 同时启动 Web 和 Worker。只启动页面使用 `pnpm run dev:web`，单独启动 Worker 使用 `pnpm run dev:worker`。生产入口为 `pnpm run start` 与 `pnpm run start:worker`。
 
-开发服务器使用默认 Turbopack；生产构建脚本使用 Next.js 内置的 Webpack。当前环境中 Turbopack 生产构建的 CSS helper 无法绑定本地端口，Webpack 构建可用。
+开发使用默认 Turbopack，生产构建脚本使用 `next build --webpack`。Next.js instrumentation 只记录初始化事件，构建和页面进程不注册队列消费者。
 
-`pnpm run dev:all` 同时运行 Web 与 Worker，任一进程退出时停止另一进程。先使用 `pnpm run db:setup` 启动现有本地数据库、生成 Client、应用迁移。新增迁移用 `pnpm run db:migrate -- --name <名称>`；部署已有迁移用 `pnpm run db:deploy`，不执行 db push 或重置数据库。
+Prisma 使用 `prisma-client` 生成器及 PostgreSQL 驱动适配器，Client 输出到忽略 Git 的 `src/generated/prisma`。已有迁移使用 `pnpm run db:deploy`，新增迁移使用 `pnpm run db:migrate -- --name <名称>`。本地环境准备见 [开发说明](development-setup.zh-CN.md)。
 
-Prisma 使用 7.x 的 `prisma-client` 生成器和 PostgreSQL 驱动适配器，生成目录为 `src/generated/prisma`，不提交 Git。数据库连接懒加载并在进程内复用；初始连接具备有限重试，连接与查询设置超时。Web 就绪检查 `/api/health` 验证认证表可查询，失败返回 503，不返回底层连接错误。
+Worker 显式加载环境变量，外部进程变量优先，然后依次读取 `.env.<mode>.local`、`.env.local`（test 模式跳过）、`.env.<mode>`、`.env`。Web 和 Worker 从同一项目根目录运行，使用相同数据库、存储根目录及凭据加密主密钥。
 
-Worker 通过 dotenv 显式加载环境，顺序与 Next.js 一致：外部进程变量优先，然后 `.env.<mode>.local`、`.env.local`（test 模式跳过）、`.env.<mode>`、`.env`。从项目根目录启动进程，确保两个进程的相对文件路径一致。
-
-`pnpm run start` 运行已构建的 Web；`pnpm run start:worker` 显式使用 production 模式，保证两个生产入口加载对应的生产配置。
-
-共享服务端模块使用 `server-only` 防止浏览器导入。独立 Worker 和集成检查通过 Node 的 `--conditions=react-server` 条件导入这些模块，不依赖 Next.js 请求上下文。
+共享服务端模块通过 `server-only` 限制浏览器导入。Worker 和独立集成脚本使用 Node 的 `--conditions=react-server` 条件加载这些模块。
 
 ## 认证与权限
 
-邮箱/密码注册、登录、退出和持久化会话已经可用，注册密码至少 10 个字符。Better Auth 负责密码哈希、Cookie、来源校验和基础请求限流。当前不提供邮件验证、密码找回、社交登录或组织邀请；接入邮件服务后再添加相应流程。内存限流是单进程基础保护，多副本部署时需补充共享限流。
+邮箱密码注册、登录、退出和持久会话可用，注册密码至少 10 个字符。Better Auth 负责会话、密码哈希、来源校验和基础限流。当前没有邮件验证、密码找回、社交登录或组织邀请流程。
 
-新账号角色固定为 `USER`。`role` 禁止客户端写入，没有默认管理员或硬编码账号；管理员需要通过受控数据库操作授予 `ADMIN`。`requireAdmin` 每次读取当前数据库角色，以便角色撤销立即生效。
+新账号固定为 `USER`，客户端不能写入 `role`。管理员通过受控数据库操作授予 `ADMIN`，`requireAdmin` 每次查询当前数据库角色。登录后首次访问创建个人工作空间和 OWNER 成员，并通过事务与唯一约束避免重复创建。
 
-登录后首次访问工作台或 `/api/me` 时，以数据库事务和唯一约束创建个人工作空间及 OWNER 成员。并发创建触发唯一约束时重试完整事务，重复访问不会重复创建空间。schema 保留 TEACHING 工作空间类型和 OWNER/TEACHER/STUDENT 成员角色；教师空间创建、邀请、学生档案绑定还未实现。
+班级由创建者管理，可添加学生档案并关联已注册学生账号。学生只能读取自己被授权的学习记录，不能修改教师分数。班级与学生的授权在学习模块实现；schema 中的 TEACHING 工作空间类型和成员角色并不代表已提供完整组织邀请功能。
 
-`requireWorkspaceAccess` 按当前会话用户和成员关系检查访问，可再限制允许的成员角色。无会话返回 401，不可访问的空间返回 404，角色不足返回 403。业务 API 接入时必须复用这些服务端检查。
+业务 API 在服务端检查会话、归属或成员关系。未登录返回 `401`，无法访问的资源通常返回 `404`，管理员权限不足返回 `403`。原件、裁切图、历史批改证据和下载同样通过授权接口访问。
 
-| 路径 | 当前行为 |
+| 路径 | 职责 |
 | --- | --- |
-| `/login`、`/register` | 认证表单；已登录用户跳转工作台 |
-| `/dashboard` | 服务端保护的个人工作空间 |
-| `/api/auth/*` | Better Auth 登录、注册、会话及退出接口 |
-| `/api/me` | 当前用户与被授权的工作空间 |
-| `/api/workspaces/:workspaceId` | 按成员权限返回指定工作空间 |
-| `/api/admin/status` | 验证管理员授权底座 |
-| `/api/health` | 数据库和认证表就绪检查 |
+| `/login`、`/register` | 登录与注册 |
+| `/dashboard` | 题套上传与试卷列表 |
+| `/classes` | 班级、学生与批次 |
+| `/exams/:id` | 题套详情与编辑 |
+| `/grading` | 选择题套上传作答，或直接上传完整作答卷 |
+| `/analysis`、`/wrong-questions` | 学情汇总与错题练习 |
+| `/admin/ai` | 提供商与六阶段模型配置 |
+| `/api/health` | 数据库就绪检查 |
 
-## 队列与文件
+## 队列与恢复
 
-pg-boss 使用同一 PostgreSQL 的 `pgboss` schema，业务表由 Prisma 迁移管理，队列表由 pg-boss 初始化管理。Web 使用的 producer 不启动调度器或维护器；只有独立 Worker 注册消费者与 Cron。
+pg-boss 使用同一 PostgreSQL 的 `pgboss` schema，业务表由 Prisma 迁移管理。Web 的 producer 负责入队；独立 Worker 注册识别、批改、练习和基础设施检查消费者。`framework.ping` 每 15 分钟触发一次，不调用模型。
 
-`framework.ping` 是唯一已注册任务，具备有限重试和执行超时，每 15 分钟触发一次基础设施检查。任务只校验载荷、记录任务 ID，并由队列保存完成状态。业务幂等写入与检查点在 pipeline 模块实现时定义，ping 不声称实现业务恢复保证。Worker 收到 SIGINT/SIGTERM 后停止领取任务，最多给运行中任务 30 秒收尾，35 秒后强制退出。队列持久性与失败重试可通过 `test:queue` 验证。
+业务任务记录和队列入队在同一事务中写入。Worker 每十秒更新数据库心跳，45 秒内没有有效心跳时，新任务返回 `503`；已有任务保留。试卷任务有 30 分钟总时限，批改任务有两小时总时限，各模型调用另有独立超时。
 
-Worker 启动时创建并验证 STORAGE_ROOT/TEMP_ROOT 可读写。文件上传、授权下载、Range、路径校验及孤儿文件清理尚未开放。用户文件保存在忽略目录，不能放在 public。
+产物与状态写入检查 `jobId`、`attempt` 和任务状态，防止旧执行覆盖新任务。解析保存阶段产物和检查点；批改逐题保存结果，恢复时只复用相同提示词版本的评分。pg-boss 重放任务不保证外部模型只调用一次，崩溃窗口可能造成重复请求。
 
-## 当前范围与下一步
+Worker 收到 SIGINT/SIGTERM 后停止领取任务，最多给运行任务 30 秒收尾，35 秒后强制退出。`WORKER_CONCURRENCY` 限制每类队列的本地任务并发，提供商最大并发数限制模型请求，两者分别配置。
 
-依赖沿用已有版本，只新增 `server-only@0.0.1`。当前不需要试题数据即可验证注册/登录、数据库、权限和基础队列；数据集准备好后再细化业务 schema、供应商配置与评测契约。
+## 文件与模块
 
-生产部署 Dockerfile/Compose 在供应商和文件基础流程完成后按实施计划准备，本次未配置生产服务或发布网站。
+Worker 启动时验证 `STORAGE_ROOT` 与 `TEMP_ROOT` 可读写。上传校验文件类型、大小和数量；私有文件以相对 key 保存，通过授权接口读取或下载。当前文件接口返回完整文件，没有实现 HTTP Range。Web 和 Worker 必须挂载同一存储根目录。
 
-框架接口与数据库配置参考 [Better Auth Next.js 集成](https://better-auth.com/docs/integrations/next)、[Better Auth Prisma 适配](https://better-auth.com/docs/adapters/prisma) 和 [Prisma Client 生成](https://www.prisma.io/docs/orm/v7/prisma-client/setup-and-configuration/generating-prisma-client)。
+| 目录 | 职责 |
+| --- | --- |
+| `src/app`、`src/components` | 页面、API 与界面组件 |
+| `src/contracts` | Zod 数据与任务契约 |
+| `src/server/auth`、`src/server/db` | 认证、授权及数据库访问 |
+| `src/server/ai` | 提供商适配、凭据、阶段设置、Agent 运行及请求调度 |
+| `src/server/exams` | 标准化、全卷识别、逐题定位、文本化、参考答案和作答文档 |
+| `src/server/grading` | 完整作答匹配、逐题评分、汇总、报告与人工修分 |
+| `src/server/jobs`、`src/server/pipeline` | 队列、心跳及自动批改交接 |
+| `src/server/learning` | 班级、错题、练习与学生授权 |
+| `src/server/storage` | 存储目录初始化 |
+| `worker`、`prisma` | 独立执行入口、数据结构与迁移 |
+
+AI 算法边界见 [试卷与批改流程](paper-workflow.zh-CN.md)，容器和联合备份操作见 [部署说明](deployment.zh-CN.md)。

@@ -1,99 +1,30 @@
-# Exam parsing
+# 试卷解析
 
-`parseExam()` is a server-only Worker/CLI service for local PDF, JPG/JPEG and PNG files. It uses
-`deepseek-flash` through the OpenAI-compatible **Responses API** with inline image inputs.
-No database or running Web server is needed. The caller must authorize the source paths and
-output location; this service is not an upload or public download endpoint.
+`parseExam` 在 worker/CLI 中执行，上传 HTTP 请求只保存文件并入队。流程不依赖 `docs` 下的计划。
 
-```bash
-pnpm parse:exam "examples/数学_仅试题.pdf"
-pnpm parse:exam page-1.jpg page-2.png --out storage/exam-parses/my-paper
-pnpm eval:exams
+1. 将全部正向页面交给 inventory 模型：返回唯一的题目清单、总题数、分值来源与相关页码。答案页和答题卡的编号不能成为题目。
+2. 每题独立请求 localization 模型：只定位整题片段，以及表格、图形、图片等材料；跨页/跨栏保留多个有序框。
+3. 先裁切整题，再交给 transcription Agent。它只拥有这些裁切图和受限的 `inspect_crop` 工具。正文通过材料 ID 引用定位阶段的图片，服务端验证每个图片 ID 恰好插入一次。
+4. 有印刷参考答案时独立提取并优先整理。用户启用生成时，solution 模型只收到电子题目和干净材料图片；每个小问、每个空须有对应答案与解析。未启用且没有参考答案时不请求求解。
+5. 已保存题套可通过 solutions 接口入队补生成答案，使用保存的编辑版本，复用裁切图，不重新解析原件。
+
+作答上传可以绑定固定题套版本，也可以先解析完整作答卷建立题套。答案解析分为全卷证据定位和裁切图电子化；`answerDocument` 保留所有有序作答、未确定归属的片段、非文字图片、空白状态及原图区域。解析过程不接收标准答案。
+
+六个阶段可分别配置提供商、模型、提示词预设和并发数。提供商配置与题套版本在入队时冻结；原有 `exam`/`grading` 配置作为未单独配置阶段的默认值。
+
+兼容接口未开启结构化输出时，每次请求同时在提示词中带上当前阶段的 JSON Schema，避免接口忽略 Schema 参数。定位材料的 ID 由程序生成；图像匹配比较坐标数值和资产 ID，不依赖 JSON 字段顺序，避免数据库 JSONB 重排后丢失证据。
+
+检查点包含 inventory、每题 bounds/transcription、参考答案与完整 answer-document。输出包含整题裁切图、材料图、作答图和 JSON/Markdown。坐标始终基于正向整页；裁切工具仅能访问授权的片段。推测分值保留来源和依据，无法辨认的内容保留待核对状态。
+
+校验失败会在原有证据范围内最多纠正一次；持续失败保留题目身份和证据，不编造正文。模型只输出被代码块包裹的合法 JSON 时，仅解包后验证，不改写文字/公式。
+
+验证命令：
+
+```sh
+pnpm test
+pnpm typecheck
+pnpm test:exam-web
+pnpm eval:exams --configured --no-answers --only math,biology,chinese
 ```
 
-The output directory must be new; its parent must exist for direct service calls. The CLI
-creates the parent. Multiple files are treated as ordered pages of one exam; evaluate
-different papers separately. Configure `DEEPSEEK_API_KEY` in `.env`. Optional
-`DEEPSEEK_BASE_URL` defaults to `https://api.deepseek.com`. Poppler `pdfinfo`, `pdftoppm` and
-`pdftotext` must be installed; override their paths with `PDFINFO_PATH`, `PDFTOPPM_PATH` and
-`PDFTOTEXT_PATH`. The parser reads no authentication/database secrets.
-
-API formats and limits were checked against the [DeepSeek Responses reference](https://api-docs.deepseek.com/api/create-response/)
-and [vision guide](https://api-docs.deepseek.com/guides/vision/). Image inputs use the SDK's current
-`file` content parts, which the Responses adapter converts to `input_image`.
-
-```ts
-import { parseExam } from "@/server/exams";
-
-const exam = await parseExam({
-  files: [authorizedFilePath],
-  outputDir: newTaskDirectory,
-  signal: cancellationSignal,
-  onProgress: ({ page, total, phase }) => console.log(page, total, phase),
-});
-```
-
-Processing stages:
-
-1. Check actual file signatures, file size and PDF page limits, preserve original files and
-   SHA-256 hashes, render PDFs and extract optional text hints. Normalize images with Sharp.
-2. For photographs, use optional Tesseract OSD to detect orientation. If unavailable or
-   inconclusive, ask the model to choose among four physically rotated images and flag the
-   orientation for visual review. Retain the rotated page as the coordinate reference. Perspective distortion is handled
-   by visual reading; this version does not reconstruct book curvature or hidden text.
-3. Build a compact page inventory distinguishing questions, teacher notes, answer sheets and
-   reference answers. Read the overview, overlapping detail crops, and adjacent-page context.
-4. Transcribe question stems, options, math, tables, nested subparts and shared materials into
-   the Zod contract. Store student answers, teacher annotations and reference solutions separately.
-5. Verify the complete draft against the images in a fresh model call, record corrections and
-   unresolved issues. The same model is used with an independent request, not a second provider.
-6. Check figure edges against a labeled coordinate grid and detail crops; anchor clean simple
-   geometry diagrams to connected source pixels to prevent clipped vertices/labels.
-   Crop actual figure regions, merge explicit cross-page continuations, preserve section number
-   resets, and check duplicates, missing materials/options and incomplete content.
-
-Results:
-
-| File/directory | Contents |
-| --- | --- |
-| `exam.json` | Versioned digital document, source regions, questions, materials, separate annotations, assets and review status |
-| `exam.md` | Clean question content with LaTeX, tables and clean figure links; no answer/annotation objects |
-| `verification.json` | Model review corrections, unresolved findings, actual successful-call token usage |
-| `sources/` | Original source files |
-| `pages/` | Upright page images for checking normalized `[0,1]` coordinates |
-| `figures/` | Source image crops; contaminated crops are evidence only and have `cleanKey: null` |
-| `checkpoints/` | Page inventory, original draft, and verified draft |
-| `exam.partial.json` | Last saved intermediate result if processing is interrupted |
-
-`verified` means model-reviewed with no recorded structural/content issues; it is not a claim
-of perfect transcription accuracy. `needs_review` retains recoverable content, obscured text
-and polluted images for correction. `partial` means at least one page could not be parsed.
-Student marks are never erased by generated imagery. Contaminated/invalid figures are withheld
-from clean Markdown and require a clean original or manual replacement. Answer-only pages
-cannot become inferred question templates.
-
-Each model call has a timeout, output-token cap, and bounded transport retries. Malformed
-structured output receives at most one model repair call; original wording still undergoes
-image verification. Failure messages expose error types, never full SDK requests or API keys.
-Failed page parsing does not silently remove the original page or stop other pages. Checkpoints
-are inspection artifacts; automatic resume is not implemented yet.
-
-For reliable photo orientation, install Tesseract with its `osd` language data. Optional
-`TESSERACT_PATH` and `TESSERACT_DATA_PATH` override the executable and data directory.
-This development workspace also supports a local extracted installation under `.tools/tesseract/`.
-If OSD cannot establish orientation, parsing continues with a recorded review finding.
-
-Defaults are 40 MiB per source file, 50 pages per task, 45 million decoded image pixels,
-60 seconds per Poppler process and 240 seconds per model operation. File/page/process limits
-can be overridden through `limits`; the model adapter accepts a custom timeout. All model
-requests remain inside that timeout, including one serialization repair. `model` can be injected
-with an `ExamModel` implementation for provider substitution or offline tests.
-
-The six real example files have minimal structural annotations in `evals/exam-samples.ts`.
-`pnpm eval:exams --only math,biology --out storage/exam-evals/run-id` runs extraction, model
-verification and structural checks, saving `report.json`. Use `--reuse` with the same output
-directory to recheck existing `exam.json` results without spending API tokens. The report
-checks question-number order, figure coverage, annotation separation and answer-only pages;
-it does not measure text/formula accuracy against a full human transcription. These are
-development samples, not a held-out benchmark. Generated results and raw student files belong
-under ignored `storage/`, outside Git.
+真实样例检查验证结构和证据覆盖，不代表已测得逐字转录或解题准确率。

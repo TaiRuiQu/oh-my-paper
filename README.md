@@ -1,16 +1,16 @@
 # Oh My Paper
 
-K12 试卷解析、批改与错题练习。已实现工程与账号底座，以及基于真实样本的试卷解析模块：支持 PDF、扫描图和照片，提取题干、选项、子题、材料与题图，分离作答/参考答案，并调用 DeepSeek 独立复核。
+K12 试卷解析、批改与错题练习。支持 PDF、扫描图和照片，通过全卷题目识别、逐题精细定位和裁切图文本化保存电子题套；参考答案、学生作答和材料图分别保存。
 
-登录后在工作台上传试卷，查看后台进度、对照原图核对内容并下载 Markdown / JSON。管理员在 `/admin/ai` 配置多个 AI 提供商、接口类型、base URL、加密密钥、自定义模型和五套系统提示词预设。详细说明与官方提示词/缓存依据见 [AI 配置指南](docs/ai-providers-and-prompts.md)。
+登录后在试卷板块上传文件，选择是否生成标准答案，查看后台进度、对照原图编辑并下载 HTML / Markdown / JSON。管理员在 `/admin/ai` 配置提供商和五套提示词预设，六个阶段分别选择模型。详见 [试卷流程](docs/paper-workflow.zh-CN.md) 与 [AI 配置指南](docs/ai-providers-and-prompts.md)。
 
-识别结果可进入 AI 批改，补充作答、参考答案、评分标准和分值。模型逐评分点给出评语；缺少参考答案时先独立求解与核对，生成的建议经人工确认后计入总分。详见 [批改流程与测试](docs/ai-grading.md)。
+批改要求先补充或生成标准答案。每题的批改 Agent 读取完整作答文档和图像，自行匹配本题答案并逐评分点判分；不明确的作答保留待核对。详见 [批改流程与测试](docs/ai-grading.md)。
 
-新增学生错题本、原题重练、相似题独立核对、手写作答上传，以及班级/学生与批次批改。首页可一次上传自动识别并进入批改；默认启动命令同时运行 Web 和 Worker，避免仅开页面导致任务排队。详见 [学生错题与练习](docs/student-learning.zh-CN.md)。
+批改板块可选择题套上传试卷或答题卡，也可直接上传完整作答卷建立题套后批改。班级批次固定题套版本并复用答案，错题可进入原题重练和相似题练习。功能边界见 [学生错题与练习](docs/student-learning.zh-CN.md)。
 
-本次 Web 集成的自动测试、真实 API 用量与浏览器验证记录见[集成验证](docs/ai-web-validation.md)。
+自动检查、Web/Worker 测试与浏览器回归记录见 [集成验证](docs/ai-web-validation.md)。
 
-配置 `.env` 中的 `DEEPSEEK_API_KEY` 后运行 `pnpm parse:exam "examples/数学_仅试题.pdf"`。结果位于忽略 Git 的 `storage/exam-parses/`。运行 `pnpm eval:exams` 可对六份真实样本进行解析、模型复核与结构检查。完整接口、依赖、输出和限制见 [试卷解析模块](src/server/exams/README.md)。
+CLI 使用后台阶段配置时运行 `pnpm run parse:exam examples/数学_仅试题.pdf --configured --no-answers`；不带 `--configured` 时使用 `.env` 中的 DeepSeek 配置。产物位于忽略 Git 的 `storage/exam-parses/`。真实请求产生 API 费用，六份样例的结构期望与运行方法见 [真实样例验证](docs/exam-parsing-validation.md)，模块说明见 [试卷解析模块](src/server/exams/README.md)。
 
 ## 本地启动
 
@@ -48,19 +48,19 @@ pnpm run test:learning-web
 | 目录 | 职责 |
 | --- | --- |
 | `src/app` | 页面与 API，受保护的工作空间布局 |
-| `src/components` / `src/lib` | 登录表单、退出、Query Provider、浏览器认证客户端 |
+| `src/components` / `src/lib` | 工作空间界面、题目编辑、报告、认证客户端与共用工具 |
 | `src/contracts` | 共用 Zod 契约 |
 | `src/server/auth` | Better Auth、会话、工作空间及管理员授权 |
 | `src/server/db` | Prisma 单例、连接重试、工作空间数据访问 |
-| `src/server/jobs` | 入队连接、基础设施任务、消费者及定时任务 |
+| `src/server/jobs` | 入队、识别/批改/练习消费者、心跳与基础设施定时检查 |
 | `src/server/storage` | Web/Worker 共用存储目录初始化 |
-| `src/server/exams` / `src/server/ai` | 试卷标准化、视觉结构化解析、DeepSeek Responses 接入与独立复核 |
-| `src/server/grading` | 独立求解、参考答案复核、逐题批改、程序汇总和人工核对 |
+| `src/server/exams` / `src/server/ai` | 试卷解析、裁切图 Agent、标准答案、作答文档与多提供商阶段配置 |
+| `src/server/grading` | 完整作答匹配、逐题批改、程序汇总、证据报告和人工修分 |
 | `src/server/pipeline`, `learning` | 快速批改交接、错题投影、练习与班级授权 |
 | `worker` | 独立 Worker 进程、环境加载及有限时间内退出 |
 | `prisma` | 数据结构与版本化 SQL 迁移 |
-| `tools` / `evals` | 待实现的受限工具与评测资料 |
+| `tools` / `evals` | 辅助工具目录与真实样例结构标注 |
 
 Dockerfile/Compose、联合备份与恢复操作见 [部署说明](docs/deployment.zh-CN.md)；当前环境未进行容器部署验收。
 
-更多说明见 [工程底座说明](docs/framework.zh-CN.md) 和 [实施计划](docs/implementation-plan.zh-CN.md)。
+完整说明见 [文档导航](docs/README.md) 和 [当前工程与运行边界](docs/framework.zh-CN.md)。

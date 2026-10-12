@@ -5,6 +5,7 @@ export const UPLOAD_LIMITS = { fileBytes: 40 * 1024 * 1024, totalBytes: 100 * 10
 export type ExamTaskSummary = {
   id: string; name: string; status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED";
   page: number; totalPages: number; phase: string; error: string | null;
-  model: string; createdAt: string; outputKey?: string | null;
+  autoGrade?: boolean; batchId?: string | null; model: string; createdAt: string; outputKey?: string | null;
+  generateAnswers?: boolean; templateTaskId?: string;
 };
 export type ExamTaskDetail = { task: ExamTaskSummary; exam: DigitalExam | null; mathImages?: Record<string, string> };

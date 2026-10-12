@@ -1,5 +1,13 @@
-# Grading module boundary
+# 批改
 
-`service.ts` runs independent reference solving/verification and question-level grading against immutable exam/answer snapshots. Solver inputs omit all student answers and annotations. Model-generated references remain provisional. `score.ts` validates criterion sums, bounds and verdict consistency, aggregates in integer cents, and preserves manual reviews. `tasks.ts` authorizes report ownership, enqueues transactionally and checkpoints each completed question for worker recovery. Exports contain validated scores and separate suggestions.
+批改要求所选题目已有可用的保存标准答案，或教师在提交中补充参考答案。缺少答案时接口拒绝创建批改任务；批改 Agent 不临时求解或从学生作答推导标准答案。
 
-The five provider prompt presets use stable shared prefixes and record API-reported cache usage. Details, limits and live-test commands: [AI grading](../../../docs/ai-grading.md).
+每题独立启动 SDK Agent，并发数受批改模型和提供商限制。每个 Agent 收到相同的完整 `answerDocument`、所有非文字作答图、本题的干净电子题目、固定标准答案和评分标准。它自行识别本题作答，返回 `matchedSourceIds`、完整有序作答 blocks、作答状态和逐评分点结果。答案解析阶段的题号提示可以被纠正；未归属片段不会被预过滤。
+
+来源不存在、答案归属不明、图片漏传或遗漏、不可辨认的作答保留待核对。只有完整文档中明确匹配的空白证据能按未作答记零分。教师修改的答案按明确输入处理。评分验证满分、评分点总和、得分总和和判定一致性；出现错误时不静默截断或汇总该题分数。
+
+多小问/多空题的评分点必须通过 targetKey 覆盖每个可作答项。原题材料与学生作答图使用不同的资产 ID 和 role，哪怕它们的页码、坐标相同，也不能互相替代。
+
+Agent 工具只能放大作答解析阶段保存的授权裁切图。总调用预算在并发请求前预留，SDK 步数、修复请求和失败请求用量均计入预算。进度持久化串行保存完整快照，重启时复用同版本的已完成题目。
+
+报告保存提交时的题目、作答、图像引用、标准答案与模型配置。图片接口基于批改任务授权和固定来源版本读取，允许查看历史报告中的图形作答。
