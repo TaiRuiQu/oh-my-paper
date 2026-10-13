@@ -224,9 +224,17 @@ describe("answer and grading SDK agents", () => {
       .png()
       .toFile(input);
     const progress: AgentResult[] = [];
+    const viewPage = {
+      name: "python",
+      args: {
+        code: 'import shutil\nshutil.copy("pages/001.jpg", "output/view.png")',
+        images: ["view.png"],
+        replacePages: [],
+      },
+    };
     const model = scriptedModel(
       [
-        [{ name: "read_pages", args: { pages: [1] } }],
+        [viewPage],
         [{ name: "read_question", args: { questionId: ids[0] } }],
         [{ name: "append_answers", args: { questions: [answers[0]] } }],
         [{ name: "append_answers", args: { questions: [answers[1]] } }],
@@ -240,7 +248,7 @@ describe("answer and grading SDK agents", () => {
           expect(request.messages[0].content).not.toMatch(/[\u3400-\u9fff]/);
           expect(
             request.tools.map((item: { function: { name: string } }) => item.function.name),
-          ).toContain("read_pages");
+          ).toContain("python");
         }
         if (round === 1) expect(body).toContain("data:image/jpeg;base64,");
       },
@@ -284,8 +292,6 @@ describe("answer and grading SDK agents", () => {
           const names = request.tools.map(
             (item: { function: { name: string } }) => item.function.name,
           );
-          expect(names).not.toContain("read_pages");
-          expect(names).not.toContain("inspect_image");
           expect(names).toContain("python");
           expect(request.messages[0].content).not.toMatch(/[\u3400-\u9fff]/);
           expect(request.messages[0].content).toContain("Save each completed question promptly");
@@ -326,9 +332,17 @@ describe("answer and grading SDK agents", () => {
     await sharp({ create: { width: 100, height: 200, channels: 3, background: "white" } })
       .png()
       .toFile(input);
+    const viewPage = {
+      name: "python",
+      args: {
+        code: 'import shutil\nshutil.copy("pages/001.jpg", "output/view.png")',
+        images: ["view.png"],
+        replacePages: [],
+      },
+    };
     const model = scriptedModel(
       [
-        [{ name: "read_pages", args: { pages: [1] } }],
+        [viewPage],
         [{ name: "read_question", args: { questionId: ids[0] } }],
         [{ name: "append_grades", args: { questions: [{ ...grades[0], score: 9 }] } }],
         [{ name: "append_grades", args: { questions: [grades[0]] } }],
@@ -350,8 +364,8 @@ describe("answer and grading SDK agents", () => {
           const names = request.tools.map(
             (item: { function: { name: string } }) => item.function.name,
           );
-          expect(names).toContain("read_pages");
-          expect(names).toContain("inspect_image");
+          expect(names).toContain("python");
+          expect(names).toContain("shell");
           expect(request.messages[0].content).not.toMatch(/[\u3400-\u9fff]/);
         }
         if (round === 1) expect(body).toContain("data:image/jpeg;base64,");

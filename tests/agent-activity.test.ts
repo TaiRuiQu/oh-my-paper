@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, readFile, appendFile, rm } from "node:fs/promises";
+import { mkdtemp, mkdir, appendFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -124,7 +124,7 @@ describe("actual agent activity", () => {
     expect(await readActivity(target)).toMatchObject([{ sequence: 2, text: "specific failure" }]);
     expect(String(write.mock.calls[0][0])).toContain("activity.write.failed");
   });
-  it("inspection tools use source coordinates and never accept nonexistent pages", async () => {
+  it("inspection tools expose shell and python and never accept nonexistent pages", async () => {
     const root = await directory();
     await mkdir(join(root, "agent"));
     await mkdir(join(root, "pages"));
@@ -134,17 +134,13 @@ describe("actual agent activity", () => {
       .toFile(path);
     const tools = createInspectionTools([{ page: 1, path, width: 100, height: 200 }], root);
     const options = { toolCallId: "test", messages: [], context: {} };
-    expect(Object.keys(tools)).toEqual(["read_pages", "inspect_image", "shell", "python"]);
-    const result = await tools.inspect_image.execute!(
-      { region: { page: 1, x: 0.1, y: 0.2, width: 0.5, height: 0.3 }, scale: 2, sharpen: false },
-      options,
-    );
-    expect(result).toMatchObject({ width: 100, height: 120 });
-    if (!("images" in result)) throw new Error("Expected a complete tool result");
-    expect(await readFile(join(root, result.images[0]))).toBeInstanceOf(Buffer);
-    await expect(tools.read_pages.execute!({ pages: [2] }, options)).rejects.toThrow(
-      "页面 2 不存在",
-    );
+    expect(Object.keys(tools)).toEqual(["shell", "python"]);
+    await expect(
+      tools.python.execute!(
+        { code: "print(1)", images: [], replacePages: [{ page: 2, image: "x.png" }] },
+        options,
+      ),
+    ).rejects.toThrow("页面 2 不存在");
   });
   it("records tool calls and returns only the minimal exam submitted through the SDK loop", async () => {
     const events: AgentEventInput[] = [];

@@ -9,6 +9,7 @@ import { apiRequest } from "@/lib/http-client";
 import { formatTime } from "@/lib/date-time";
 
 const toolNames: Record<string, string> = {
+  // read_pages 与 inspect_image 已下线，保留标签以便展示历史任务的记录。
   read_pages: "查看试卷页面",
   inspect_image: "放大图像区域",
   python: "运行 Python 处理图像",
@@ -30,6 +31,7 @@ function brief(event: AgentEvent) {
   const data = object(event.data);
   if (event.tool === "report_question_count" && typeof data.total === "number")
     return `共 ${data.total} 道题`;
+  // 已下线工具的摘要逻辑，服务于历史任务的记录展示。
   if (event.tool === "read_pages" && Array.isArray(data.pages))
     return `页面 ${data.pages.map((p) => (typeof p === "number" ? p : object(p).page)).join("、")}`;
   if (event.tool === "inspect_image") return `第 ${object(data.region).page ?? ""} 页`;

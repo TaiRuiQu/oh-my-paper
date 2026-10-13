@@ -73,9 +73,6 @@ describe("local Python sandbox", () => {
       pages: [{ page: 1, width: 200, height: 100 }],
     });
     expect(pages[0]).toMatchObject({ width: 200, height: 100 });
-    expect(await tools.read_pages.execute!({ pages: [1] }, options)).toMatchObject({
-      pages: [{ width: 200, height: 100 }],
-    });
     expect(
       await tools.python.execute!(
         {
@@ -230,7 +227,7 @@ describe("local Python sandbox", () => {
     expect(result.stdout).toContain("285\n(100, 200)");
     expect(await readdir(join(root, ".python"))).toEqual([]);
   });
-  it("returns rotated images to the model and uses the corrected page for later reads and crops", async () => {
+  it("returns rotated images to the model and uses the corrected page for later calls", async () => {
     const { root, pages, path } = await fixture();
     const source = await readFile(path);
     const tools = inspection(pages, root);
@@ -247,15 +244,6 @@ describe("local Python sandbox", () => {
       type: "content",
       value: [{ type: "text" }, { type: "file", mediaType: "image/jpeg" }],
     });
-    expect(await tools.read_pages.execute!({ pages: [1] }, options)).toMatchObject({
-      images: result.images,
-      pages: [{ width: 200, height: 100 }],
-    });
-    const crop = await tools.inspect_image.execute!(
-      { region: { page: 1, x: 0, y: 0, width: 0.5, height: 0.5 }, scale: 1, sharpen: false },
-      options,
-    );
-    expect(crop).toMatchObject({ width: 100, height: 50 });
     expect(await readFile(path)).toEqual(source);
   });
   it("keeps preview-only processing from changing the page, and reports Python exceptions", async () => {
