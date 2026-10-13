@@ -1,0 +1,10 @@
+[Unit]
+Description=Check OhMyPaper image updates every five minutes
+
+[Timer]
+OnCalendar=*:0/5
+RandomizedDelaySec=30
+Unit=oh-my-paper-update.service
+
+[Install]
+WantedBy=timers.target

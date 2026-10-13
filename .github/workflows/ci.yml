@@ -72,7 +72,8 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}${{ matrix.suffix }}
           tags: type=ref,event=tag
-          flavor: latest=false
+          # 除 git tag 外同时推送 latest，供部署端自动跟踪（回滚可固定 APP_VERSION）。
+          flavor: latest=true
       - name: Build and push
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:

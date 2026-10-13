@@ -51,32 +51,18 @@ openssl rand -base64 32
 
 ## 3. 发布：使用 GHCR 镜像（推荐）
 
-每次推送 `v*` tag 且 Lint 通过后，CI 会构建并推送 Web 与 Worker 两个镜像（`linux/amd64`）。tag 与 git tag 一致，不生成 `latest`。
+每次推送 `v*` tag 且 Lint 通过后，CI 会构建并推送 Web 与 Worker 两个镜像（`linux/amd64`），并同时打上 git tag 与 `latest` 两个标签：
 
 ```text
-ghcr.io/tairuiqu/oh-my-paper:<tag>
-ghcr.io/tairuiqu/oh-my-paper-worker:<tag>
+ghcr.io/tairuiqu/oh-my-paper:<tag> 与 :latest
+ghcr.io/tairuiqu/oh-my-paper-worker:<tag> 与 :latest
 ```
 
-新建 `compose.release.yaml` 覆盖构建行为，改为拉取已发布镜像：
-
-```yaml
-services:
-  migrate:
-    build: !reset null
-    image: ghcr.io/tairuiqu/oh-my-paper-worker:${APP_VERSION}
-  web:
-    build: !reset null
-    image: ghcr.io/tairuiqu/oh-my-paper:${APP_VERSION}
-  worker:
-    build: !reset null
-    image: ghcr.io/tairuiqu/oh-my-paper-worker:${APP_VERSION}
-```
-
-在 `.env` 中固定版本号，升级时只改这一行：
+仓库已提供 `compose.release.yaml`，覆盖构建行为改为拉取已发布镜像。版本号由 `.env` 中的 `APP_VERSION` 控制，**缺省跟随 `latest`**——配合 §6 的定时器即可全自动升级；需要回滚或固定版本时才设置它：
 
 ```bash
-APP_VERSION=v0.1.0
+# 可选，默认 latest
+APP_VERSION=v0.1.2
 ```
 
 启动：
@@ -85,7 +71,11 @@ APP_VERSION=v0.1.0
 docker compose -f compose.yaml -f compose.release.yaml up -d
 ```
 
-若镜像为私有仓库，先登录 GHCR：
+> 若服务器上曾手工创建过 `compose.release.yaml`，请先删除再用仓库内的版本，避免 `git pull` 冲突。
+
+镜像拉取本身就是增量的：Docker 按 layer 内容寻址，基础镜像、apt 软件包、Chromium、Python 虚拟环境等层不变就不会重复下载，通常只有应用层（构建产物与源码）随版本更新。CI 构建也启用了 GitHub Actions 缓存（`cache-from/cache-to: type=gha`），依赖不变时 `pnpm install` 等重头步骤直接复用缓存。
+
+若镜像为私有仓库，先登录 GHCR（定时器与 cron 都使用 root 的凭据）：
 
 ```bash
 echo "$GHCR_TOKEN" | docker login ghcr.io -u <用户名> --password-stdin
@@ -139,15 +129,56 @@ curl -fsS http://localhost:3000/api/health   # {"status":"ok","database":"ready"
 
 ## 6. 升级
 
+### 自动升级（推荐）
+
+安装 systemd 定时器，服务器每五分钟检查一次 GHCR：
+
 ```bash
-sed -i 's/^APP_VERSION=.*/APP_VERSION=v0.2.0/' .env
-docker compose -f compose.yaml -f compose.release.yaml pull
-docker compose -f compose.yaml -f compose.release.yaml up -d
+# 部署目录不是 /opt/oh-my-paper 时，先修改两个 unit 文件中的路径
+sudo cp deploy/oh-my-paper-update.service deploy/oh-my-paper-update.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now oh-my-paper-update.timer
+journalctl -u oh-my-paper-update.service -f   # 观察拉取与滚动日志
 ```
 
-`migrate` 服务会在 `web` / `worker` 启动前自动执行 `prisma migrate deploy`（`compose.yaml:39`），数据库结构升级无需手工介入。
+`deploy/update.sh` 依次执行 `pull` → `up -d` → `docker image prune -f`：
 
-滚动顺序由 `depends_on` 保证：迁移成功后才重启 Web 与 Worker，因此结构变更与代码版本始终配套。
+- 镜像没有变化时 `up -d` 不做任何事，开销只有几次 manifest 请求；
+- 有新版本时，compose 先重建并运行 `migrate`（`prisma migrate deploy`），成功后才滚动重启 `web` 与 `worker`，数据库结构与代码版本始终配套；
+- 被 `latest` 抛弃的旧镜像由 `docker image prune -f` 清理；
+- `db` 与 `proxy` 使用固定版本镜像，不在自动更新范围内，升级它们应当显式进行。
+
+因此日常发布只需要：
+
+```bash
+git tag v0.2.0 && git push origin v0.2.0
+```
+
+CI 推送 `:v0.2.0` 与 `:latest` 后，服务器在五分钟内自动跟进。
+
+> 不建议使用 Watchtower 之类的容器自动更新器：它们绕过 compose 直接重建容器，`migrate` 不会在 `web` / `worker` 之前重跑，数据库结构可能与新代码脱节。
+
+不便使用 systemd 时，用 cron 等价替代：
+
+```cron
+*/5 * * * * cd /opt/oh-my-paper && ./deploy/update.sh
+```
+
+### 手动升级
+
+```bash
+docker compose -f compose.yaml -f compose.release.yaml pull
+docker compose -f compose.yaml -f compose.release.yaml up -d
+docker image prune -f
+```
+
+### 回滚
+
+在 `.env` 中临时固定版本，执行一次 `deploy/update.sh`（或上面的手动命令），恢复后再删除该行：
+
+```bash
+APP_VERSION=v0.1.2
+```
 
 Worker 配置了 40 秒 `stop_grace_period` 与 35 秒优雅退出期限，正在处理的任务会等当前批次结束。**但强杀 `docker compose down` 仍可能中断试卷解析**——中断的任务在数据库中保留草稿，重试会从草稿续跑，已消耗的 credit 不退还。
 
@@ -172,7 +203,26 @@ tar czf storage-$(date +%F).tar.gz storage/
 
 **任务一直排队，Worker 无日志** —— `QUEUE_SCHEMA` 在 Web 与 Worker 之间不一致。两者从同一个 `.env` 读取，若手工覆盖过环境变量，检查 `docker compose exec web printenv QUEUE_SCHEMA` 与 Worker 的输出是否相同。
 
-**Python 工具报 `bwrap` 失败** —— 沙箱依赖非特权用户命名空间。compose 已为 Worker 配置 `no-new-privileges` / `seccomp:unconfined` / `apparmor:unconfined` 与 `cap_drop: [ALL]`（`compose.yaml:59-65`）。若你的宿主机内核禁用了非特权命名空间（常见于部分 VPS 与 rootless 限制环境），`python` 工具会持续失败，其余功能不受影响。
+**Python 工具报 `bwrap` 失败（`bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted` 或 `setting up uid map: Permission denied`）** —— 宿主机是 Ubuntu 24.04 及以上时，内核默认开启 `kernel.apparmor_restrict_unprivileged_userns`。它允许创建用户命名空间，但会在其中叠加受限的 AppArmor 标签，拒绝内部的能力使用（配置回环网卡、写 uid_map），即使容器已配置 `apparmor:unconfined` 也一样。沙箱依赖非特权用户命名空间（compose 已为 Worker 配置 `no-new-privileges` / `seccomp:unconfined` / `apparmor:unconfined` 与 `cap_drop: [ALL]`），因此 `python` / `shell` 工具会持续失败，其余功能不受影响。
+
+确认与修复（宿主机执行）：
+
+```bash
+sysctl kernel.apparmor_restrict_unprivileged_userns          # 输出 = 1 即中招
+sudo sysctl kernel.apparmor_restrict_unprivileged_userns=0   # 立即生效
+echo 'kernel.apparmor_restrict_unprivileged_userns = 0' | sudo tee /etc/sysctl.d/99-oh-my-paper-userns.conf
+sudo sysctl --system                                          # 重启后仍生效
+```
+
+验证（容器内执行，无输出且退出码为 0 即恢复）：
+
+```bash
+sudo docker compose exec worker bwrap --unshare-user --unshare-net \
+  --ro-bind /usr /usr --symlink usr/bin /bin --symlink usr/lib /lib --symlink usr/lib64 /lib64 \
+  --proc /proc --dev /dev -- /usr/bin/true
+```
+
+放宽该 sysctl 会回到 Ubuntu 22.04 及更早的默认行为，属于常见做法；若必须保持宿主机收紧，可改为编写含 `userns,` 规则的 AppArmor profile 挂给 Worker 容器（将 `apparmor:unconfined` 换成 `apparmor:<profile>`）。
 
 **上传报渲染失败** —— 仅 Worker 渲染页面。确认 Worker 存活，且 `PDFTOPPM_PATH` / `PDFINFO_PATH` 指向镜像内实际路径。
 
