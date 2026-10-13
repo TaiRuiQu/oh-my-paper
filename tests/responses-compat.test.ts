@@ -1,14 +1,182 @@
-import { describe, expect, it } from "vitest";
-import { APICallError } from "ai";
+import { describe, expect, it, vi } from "vitest";
+import { APICallError, tool, type ModelMessage } from "ai";
 import { z } from "zod";
 import {
   normalizeResponseAnnotations,
   compatibleResponsesResponse,
+  prepareResponsesMessages,
 } from "@/server/ai/responses-compat";
 import { createProviderExamModel } from "@/server/ai/providers";
 import { describeError } from "@/server/logger";
 
+type ResponsesRequest = {
+  store: boolean;
+  input: {
+    type?: string;
+    role?: string;
+    call_id?: string;
+    name?: string;
+    output?: string;
+    encrypted_content?: string;
+  }[];
+  reasoning?: { effort: string };
+  include?: string[];
+};
+
 describe("Responses gateway compatibility", () => {
+  it("retains encrypted reasoning sequences and tool context without mutating message history", () => {
+    const messages: ModelMessage[] = [
+      { role: "user", content: "Solve the question" },
+      {
+        role: "assistant",
+        content: [
+          { type: "reasoning", text: "unsupported summary" },
+          {
+            type: "reasoning",
+            text: "first summary",
+            providerOptions: { openai: { itemId: "rs_1", reasoningEncryptedContent: null } },
+          },
+          {
+            type: "reasoning",
+            text: "last summary",
+            providerOptions: { openai: { itemId: "rs_1", reasoningEncryptedContent: "opaque" } },
+          },
+          {
+            type: "reasoning",
+            text: "no item id",
+            providerOptions: { openai: { reasoningEncryptedContent: "opaque_2" } },
+          },
+          { type: "text", text: "Read the question" },
+          { type: "tool-call", toolName: "read_question", toolCallId: "call_1", input: {} },
+        ],
+      },
+      {
+        role: "tool",
+        content: [
+          {
+            type: "tool-result",
+            toolName: "read_question",
+            toolCallId: "call_1",
+            output: { type: "text", value: "1+1=?" },
+          },
+        ],
+      },
+      { role: "assistant", content: [{ type: "reasoning", text: "not recoverable" }] },
+    ];
+    const original = structuredClone(messages);
+    const prepared = prepareResponsesMessages(messages);
+    expect(prepared).toHaveLength(3);
+    expect(prepared[1]).toEqual({
+      ...messages[1],
+      content: original[1].role === "assistant" && original[1].content.slice(1),
+    });
+    expect(prepared[2]).toBe(messages[2]);
+    expect(messages).toEqual(original);
+    expect(prepareResponsesMessages(prepared)).toEqual(prepared);
+  });
+  it.each([
+    { effort: "default" as const, encrypted: null },
+    { effort: "low" as const, encrypted: null },
+    { effort: "low" as const, encrypted: "opaque-state" },
+  ])(
+    "runs multiple SDK tool rounds without warnings for $effort / $encrypted",
+    async ({ effort, encrypted }) => {
+      const requests: ResponsesRequest[] = [];
+      const transport: typeof fetch = async (_url, init) => {
+        requests.push(JSON.parse(String(init?.body)));
+        const step = requests.length;
+        return Response.json({
+          id: `resp_${step}`,
+          model: "deepseek/deepseek-v4.1-flash",
+          created_at: 1,
+          status: "completed",
+          output: [
+            {
+              type: "reasoning",
+              id: `rs_${step}`,
+              summary: [{ type: "summary_text", text: "Inspect and solve the question" }],
+              encrypted_content: encrypted,
+            },
+            {
+              type: "function_call",
+              id: `fc_${step}`,
+              call_id: `call_${step}`,
+              name: step === 1 ? "read_question" : "submit_answer",
+              arguments: JSON.stringify(step === 1 ? { id: "q_1" } : { answer: "2" }),
+            },
+          ],
+          usage: { input_tokens: 20, output_tokens: 30 },
+        });
+      };
+      let complete = false;
+      const warningLogger = vi.fn();
+      const previousLogger = globalThis.AI_SDK_LOG_WARNINGS;
+      globalThis.AI_SDK_LOG_WARNINGS = warningLogger;
+      try {
+        await createProviderExamModel(
+          {
+            providerId: "20000000-0000-4000-8000-000000000001",
+            name: "Responses gateway",
+            apiType: "openai_responses",
+            baseURL: "https://gateway.example/v1",
+            encryptedApiKey: "unused",
+            structuredOutputs: false,
+            maxOutputTokens: 1024,
+            timeoutSeconds: 60,
+            maxConcurrency: 3,
+            model: "deepseek/deepseek-v4.1-flash",
+            reasoningEffort: effort,
+          },
+          "test-key",
+          transport,
+        ).run({
+          system: "Read the question and submit its answer",
+          content: [{ type: "text", text: "Please solve q_1" }],
+          isComplete: () => complete,
+          tools: {
+            read_question: tool({
+              inputSchema: z.object({ id: z.string() }),
+              execute: async () => ({ description: "1+1=?" }),
+            }),
+            submit_answer: tool({
+              inputSchema: z.object({ answer: z.string() }),
+              execute: async ({ answer }) => {
+                expect(answer).toBe("2");
+                complete = true;
+                return { complete: true };
+              },
+            }),
+          },
+        });
+        expect(complete).toBe(true);
+        expect(requests).toHaveLength(2);
+        expect(warningLogger).not.toHaveBeenCalled();
+        for (const body of requests) {
+          expect(body.store).toBe(false);
+          expect(body.input[0].role).toBe("system");
+          if (effort === "default") expect(body.reasoning).toBeUndefined();
+          else {
+            expect(body.reasoning).toEqual({ effort });
+            expect(body.include).toContain("reasoning.encrypted_content");
+          }
+        }
+        const replay = requests[1].input;
+        expect(replay.find((item) => item.type === "function_call")).toMatchObject({
+          call_id: "call_1",
+          name: "read_question",
+        });
+        expect(replay.find((item) => item.type === "function_call_output")).toMatchObject({
+          call_id: "call_1",
+          output: JSON.stringify({ description: "1+1=?" }),
+        });
+        const reasoning = replay.find((item) => item.type === "reasoning");
+        if (encrypted) expect(reasoning).toMatchObject({ encrypted_content: encrypted });
+        else expect(reasoning).toBeUndefined();
+      } finally {
+        globalThis.AI_SDK_LOG_WARNINGS = previousLogger;
+      }
+    },
+  );
   it("fills missing or null annotations and preserves real citations, reasoning and tools", () => {
     const citation = {
       type: "url_citation",

@@ -13,7 +13,7 @@ import { redactErrorText } from "@/lib/error-message";
 import type { AgentEventInput, AgentTimingRequest } from "@/contracts/activity";
 import { providerConcurrencyLimiter } from "./concurrency";
 import { expandToolImages } from "./tool-images";
-import { compatibleResponsesResponse } from "./responses-compat";
+import { compatibleResponsesResponse, prepareResponsesMessages } from "./responses-compat";
 import type { CreditMeter } from "./credits";
 import { createResultTools } from "@/server/exams/result-tools";
 import type { z } from "zod";
@@ -68,14 +68,28 @@ export interface SingleCallModel {
   }): Promise<T>;
 }
 export function reasoningOptions(
-  config: Pick<ProviderSnapshot, "apiType" | "reasoningEffort">,
+  config: Pick<ProviderSnapshot, "apiType" | "reasoningEffort" | "baseURL">,
 ): NonNullable<Parameters<typeof generateText>[0]["providerOptions"]> {
   const effort = config.reasoningEffort;
   switch (config.apiType) {
-    case "openai_responses":
+    case "openai_responses": {
+      const compatibleGateway = new URL(config.baseURL).hostname !== "api.openai.com";
       return {
-        openai: { store: false, ...(effort === "default" ? {} : { reasoningEffort: effort }) },
+        openai: {
+          store: false,
+          ...(effort === "default"
+            ? {}
+            : {
+                reasoningEffort: effort,
+                // A gateway's administrator declares the model's supported efforts.
+                // The SDK's OpenAI model-name allowlist cannot identify these models.
+                ...(compatibleGateway
+                  ? { forceReasoning: true, systemMessageMode: "system", reasoningSummary: null }
+                  : {}),
+              }),
+        },
       };
+    }
     case "openai_chat":
       return effort === "default" ? {} : { exam: { reasoningEffort: effort } };
     case "anthropic":
@@ -189,7 +203,11 @@ export function createProviderExamModel(
           // 部分 OpenAI 兼容接口在思考模式下拒绝强制 tool_choice，工具调用改由提示词约束。
           ...(config.apiType === "openai_chat"
             ? { prepareStep: ({ messages }) => ({ messages: expandToolImages(messages) }) }
-            : {}),
+            : config.apiType === "openai_responses"
+              ? {
+                  prepareStep: ({ messages }) => ({ messages: prepareResponsesMessages(messages) }),
+                }
+              : {}),
           stopWhen: [isStepCount(MAX_AGENT_STEPS), request.isComplete],
           timeout: { stepMs: config.timeoutSeconds * 1000 },
           maxOutputTokens: config.maxOutputTokens,

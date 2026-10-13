@@ -121,6 +121,8 @@ Web 请求错误查看 Web 控制台，后台解析与工具错误查看 Worker 
 
 支持 OpenAI Responses、OpenAI 兼容 Chat Completions、Anthropic Messages 与 Google Generative AI。仅勾选实际模型支持的选项；`默认` 不发送推理参数，`关闭` 使用接口的关闭推理设置，其余选项映射至对应 API 的 reasoning/thinking 参数。模型需支持图片输入。API key 使用服务端 AES-GCM 加密，不传给浏览器。
 
+Responses 调用使用 `store: false`。第三方网关显式选择推理强度时，通过 SDK 的 `forceReasoning` 发送实际的 `reasoning.effort`，不依赖 OpenAI 模型名称白名单；保留网关原有的 `system` 角色，且不额外请求推理摘要。SDK 请求可用于后续轮次的加密推理状态；网关未返回该状态的摘要仅保留在当前响应中，不回传到后续请求。文本、工具调用及结果继续保留，已返回的加密推理状态正常回传。
+
 答案尚未开始解析时，答案页显示等待和题目进度，并持续刷新；初始化失败可通过 `POST /api/exams/:id/answers/upload/retry` 重试。答案准备流程不会出现在批改历史中。
 
 页面日期、时间及管理员活动记录统一使用北京时间（`Asia/Shanghai`），避免服务器与浏览器时区不同造成 hydration 错误。
