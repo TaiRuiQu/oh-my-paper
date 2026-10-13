@@ -109,6 +109,8 @@ for (const path of [
   "prisma/migrations",
   "tools/python/run.py",
   "tools/python/session.py",
+  "tools/document-scan/scan.py",
+  "assets/models",
 ]) {
   const target = join(output, path);
   await mkdir(dirname(target), { recursive: true });

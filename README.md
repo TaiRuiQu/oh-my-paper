@@ -214,3 +214,18 @@ Word 公式转换复用 KaTeX 与 docx，新增 `mathml2omml@0.5.0`（约 67 KB 
 后台把同一批次所有学生的题目放入统一并发池，每题仅发送对应作答截图、完整题干、材料和参考答案，使用一次无工具、无自动重试的 `generateText` API 调用。提供商并发上限继续生效；每次实际响应记录用量并结算 credit。逐题保存结果，单题失败不会丢失其他题目；「重试未完成题目」只调用缺失题目。每位学生完整评分后发布为 `Submission`，普通用户只看到完整报告，管理员可以读取诊断。模板与批次保存在 PostgreSQL 和 pg-boss，关闭页面不会中断。
 
 新增数据库迁移需要执行 `pnpm db:deploy`。可运行 `node --conditions=react-server --import tsx scripts/test-answer-cards.ts`，在独立临时数据库 schema 中验证模板、双面分组、并发、计费、访问权限及失败恢复，不调用外部模型。
+
+## 文档扫描预处理
+
+所有识别、答案解析、学生答卷批改和答题卡任务在模型读图前统一处理页面。JPG / PNG 先按 EXIF 校正方向，在原始分辨率上去除透明背景；DocCornerNet-Regression 的 320×320 ONNX 模型检测文档四角，坐标映射回原始宽高后由 OpenCV `warpPerspective` 矫正。输出尺寸来自原图中文档边长，不使用检测缩略图裁切或统一缩小到 2800px。PDF 按 300 DPI 渲染，保留页面范围并增强，不再以 2800px 作为长边上限。
+
+随后仅对亮度做轻度局部对比增强和锐化，保留红笔、淡笔迹及颜色。已有平整扫描件、置信度低于 0.9 或不可靠四边形保持完整页面，只做增强；原始上传文件始终保留。每页的角点、置信度、原始/输出尺寸和处理原因写入私有 `pages/NNN.jpg.scan.json`，可用于管理员排查。
+
+模型文件及 MIT 许可随仓库和 Worker 产物打包，来源、固定版本及 SHA-256 见 [assets/models/README.md](assets/models/README.md)。生产 Worker 使用 OpenCV DNN，不安装 PyTorch，不在请求时下载模型。Docker 构建会安装 `tools/python/requirements.txt`；本地安装依赖：
+
+```bash
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python tools/document-scan/test_scan.py
+```
+
+默认使用本地 `.venv/bin/python`；Docker 使用 `PYTHON_SANDBOX_VENV=/opt/python-sandbox`。需要自定义时设置 `DOCUMENT_SCAN_PYTHON` 和 `DOCUMENT_SCAN_MODEL`。缺少 Python / OpenCV / 模型会停止预处理并保留可重试任务，避免在部署不完整时悄悄跳过扫描。

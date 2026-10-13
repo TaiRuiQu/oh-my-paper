@@ -7,6 +7,7 @@ import { mkdir, readFile, rm, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileTypeFromBuffer } from "file-type";
 import sharp from "sharp";
+import { scanDocumentPage } from "./document-scan";
 const execute = promisify(execFile);
 export type PageImage = {
   page: number;
@@ -98,8 +99,8 @@ export async function prepareDocuments(
                 "-l",
                 String(localPage),
                 "-singlefile",
-                "-scale-to",
-                "2800",
+                "-r",
+                "300",
                 "-png",
                 inputPath,
                 prefix,
@@ -114,13 +115,24 @@ export async function prepareDocuments(
               { cause },
             );
           }
-          pages.push(await normalizePage(`${prefix}.png`, outputDir, pages.length + 1));
+          pages.push(
+            await normalizePage(
+              `${prefix}.png`,
+              outputDir,
+              pages.length + 1,
+              false,
+              limits,
+              signal,
+            ),
+          );
           await rm(`${prefix}.png`);
         }
       } else {
         if (pages.length >= limits.maxPages)
           throw new AppError(`总页数超过 ${limits.maxPages} 页。`, "PAGE_LIMIT", 422);
-        pages.push(await normalizePage(inputPath, outputDir, pages.length + 1));
+        pages.push(
+          await normalizePage(inputPath, outputDir, pages.length + 1, true, limits, signal),
+        );
       }
     }
     return pages;
@@ -131,15 +143,31 @@ export async function prepareDocuments(
   }
 }
 
-async function normalizePage(input: string, outputDir: string, page: number): Promise<PageImage> {
+async function normalizePage(
+  input: string,
+  outputDir: string,
+  page: number,
+  detect: boolean,
+  limits: DocumentLimits,
+  signal?: AbortSignal,
+): Promise<PageImage> {
   const key = `pages/${String(page).padStart(3, "0")}.jpg`;
   const path = join(outputDir, key);
-  const info = await sharp(input, { limitInputPixels: 45_000_000 })
+  // EXIF orientation and alpha compositing happen at native resolution before detection.
+  const original = join(outputDir, ".render", `${page}.original.png`);
+  await sharp(input, { limitInputPixels: 45_000_000 })
     .autoOrient()
-    .resize({ width: 2800, height: 2800, fit: "inside", withoutEnlargement: true })
     .flatten({ background: "white" })
-    .jpeg({ quality: 95 })
-    .toFile(path);
+    .png()
+    .toFile(original);
+  const info = await scanDocumentPage({
+    input: original,
+    output: path,
+    detect,
+    timeoutMs: limits.processTimeoutMs,
+    signal,
+  });
+  await rm(original);
   return {
     page,
     path,

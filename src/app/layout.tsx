@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/providers";
-import { version } from "../../package.json";
+import packageInfo from "../../package.json";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/noto-sans-sc";
 import "katex/dist/katex.min.css";
 import "./globals.css";
+const { version } = packageInfo;
 
 export const metadata: Metadata = {
   title: { default: "Oh My Paper · 试卷工作台", template: "%s · Oh My Paper" },
