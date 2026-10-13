@@ -192,3 +192,7 @@ pnpm run test:integration
 中文使用 Noto Sans SC，英文和数字使用 Geist。字体由固定版本 Fontsource 包提供，随静态资源自托管；通过 Unicode 分片按需加载，`font-display: swap` 保证加载期间仍可阅读。访问页面和生产构建均不需要请求 Google Fonts，Windows 的主字体不再依赖微软雅黑；公式继续使用 KaTeX 字体。
 
 管理员在 `/admin/exams` 可按试卷名称、用户姓名或邮箱分页审查全系统试卷，包含快速批改中的试卷；详情展示试题、材料及标准答案。审查接口独立于所属用户的操作接口。`/admin/users` 支持搜索用户、编辑姓名与角色、添加 credit，以及设置 10–128 字符的新密码。密码通过 Better Auth 的哈希实现保存，重置后撤销全部登录会话；角色变更也撤销会话，且禁止移除最后一名管理员。管理接口要求当前数据库中的管理员角色，写操作验证同源。
+
+试卷解析完成后，详情页提供「导出 PDF」和「导出 Word」，管理员审查页也可导出。PDF 直接将 Markdown 和 KaTeX 渲染为 A4 文档，保留中文、表格、题目层级、分值和配图，可下载打印。PDF 与 Word 中的小问题号（如 `(1)`）与正文首段同排，后续段落、独立公式和表格保留原有结构。Word 为 `.docx`，正文、标题和表格保持可编辑，所有数学公式转为三倍分辨率的 PNG 图片，使用替代文字保留 LaTeX；不会创建 Word 原生数学对象。三种公式写法 `$…$`、`$$…$$`、`\(…\)` 均受支持，代码块保持原文。普通用户仅可导出自己的试卷，管理员通过独立审查接口导出全站试卷。
+
+导出在 Web 服务中执行，需要系统 Chromium（或 Google Chrome）和中文字体。Docker Web 镜像已安装 Chromium 与 `fonts-noto-cjk`；本地 Debian/Ubuntu 可安装 `chromium fonts-noto-cjk`，其他浏览器路径可通过 `EXPORT_CHROMIUM_PATH` 指定。PDF 默认字体采用新宋体 NSimSun 5.03，字体从 `simsun.ttc` 的 NSimSun face 提取并保存于 `assets/fonts/nsimsun.ttf`，通过 `@font-face` 内嵌；无需系统安装或导出时下载。默认字体、KaTeX 字体和配图随文档内嵌，导出浏览器禁用页面脚本及外部网络加载。`node --conditions=react-server --import tsx scripts/check-exam-export.ts` 可生成测试 PDF/Word，并检查长文档分页、可搜索中文、可编辑正文及公式图片，产物位于 `tmp/exam-export-check`。

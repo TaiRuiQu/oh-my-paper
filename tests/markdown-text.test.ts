@@ -32,7 +32,7 @@ async function render(text: string) {
 describe("browser Markdown and KaTeX presentation", () => {
   it("preserves LaTeX on the server and renders it only after browser hydration", async () => {
     const latex = "\\frac{x_1}{2}";
-    const props = { text: `**已知** $${latex}$。\n\n| 数值 |\n| --- |\n| $${latex}$ |` };
+    const props = { text: `**已知** $${latex}$。\n\n| 数值 |\n| --- |\n| \\(${latex}\\) |` };
     const renderMath = vi.spyOn(katex, "render");
     const html = renderToString(createElement(MarkdownText, props));
 
@@ -61,6 +61,50 @@ describe("browser Markdown and KaTeX presentation", () => {
     expect(container.querySelector('math[display="block"]')).not.toBeNull();
     expect(container.querySelector(".katex-error")?.textContent).toBe("\\frac{1}{");
     expect(container.querySelectorAll(".katex")).toHaveLength(2);
+  });
+
+  it("renders parenthetical and dollar formulas together without interpreting TeX as Markdown", async () => {
+    await render(String.raw`已知\(x_1^2 + \frac{1}{2}\)，则 $y=2x$，且 \(\text{price: \$5}\)。`);
+    expect(container.querySelectorAll(".katex")).toHaveLength(3);
+    expect(
+      Array.from(container.querySelectorAll("annotation")).map((node) => node.textContent),
+    ).toEqual([String.raw`x_1^2 + \frac{1}{2}`, "y=2x", String.raw`\text{price: \$5}`]);
+    expect(container.querySelector("em")).toBeNull();
+    expect(container.querySelector(".katex-display")).toBeNull();
+  });
+
+  it("keeps TeX line breaks and multiline parenthetical formulas intact", async () => {
+    const latex = String.raw`\begin{matrix}1 & 2 \\ 3 & 4\end{matrix}`;
+    await render(`\\(${latex}\\)\n\n\\(x +\ny\\)`);
+    expect(container.querySelectorAll(".katex")).toHaveLength(2);
+    expect(container.querySelector("annotation")?.textContent).toBe(latex);
+    expect(container.querySelectorAll("annotation")[1].textContent).toBe("x +\ny");
+  });
+
+  it("leaves escaped delimiters, code samples and unclosed parentheses as ordinary Markdown", async () => {
+    const formula = String.raw`\(x^2\)`;
+    await render(
+      [
+        `\`${formula}\``,
+        `\`\`\`text\n${formula}\n\`\`\``,
+        `    ${formula}`,
+        String.raw`\\(literal\\)`,
+        String.raw`未闭合 \(x+1`,
+      ].join("\n\n"),
+    );
+    expect(container.querySelectorAll(".math-formula")).toHaveLength(0);
+    expect(container.querySelectorAll("code")).toHaveLength(3);
+    expect(container.querySelector("code")?.textContent).toBe(formula);
+    expect(container.textContent).toContain(String.raw`\(literal\)`);
+    expect(container.textContent).toContain("未闭合 (x+1");
+  });
+
+  it("keeps malformed parenthetical formulas readable and disables unsafe commands", async () => {
+    await render(String.raw`\(\frac{1}{\) 与 \(\href{javascript:alert(1)}{x}\) 与 \(x^2\)。`);
+    expect(container.querySelector(".katex-error")?.textContent).toBe(String.raw`\frac{1}{`);
+    expect(container.querySelectorAll(".math-formula")).toHaveLength(3);
+    expect(container.querySelectorAll(".katex")).toHaveLength(2);
+    expect(container.querySelector("a, img, script")).toBeNull();
   });
 
   it("updates an existing formula when its text or display mode changes", async () => {

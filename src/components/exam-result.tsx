@@ -13,6 +13,7 @@ import { materialKey } from "@/lib/exam-materials";
 import { MarkdownText } from "./markdown-text";
 import { RecognitionActivityFeed } from "./recognition-activity";
 import { ExamAgents } from "./exam-agents";
+import { ExamExport } from "./exam-export";
 
 export function ExamResult({
   id,
@@ -70,6 +71,7 @@ export function ExamResult({
         </div>
         {exam && (
           <div className="inline-actions">
+            <ExamExport taskId={id} name={exam.name} />
             <Link className="button" href={`/grading?exam=${id}`}>
               批改答卷
             </Link>

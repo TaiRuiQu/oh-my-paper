@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/date-time";
 import { ExamContent } from "./exam-result";
 import { AgentResultContent } from "./exam-agents";
 import { StatusBadge } from "./processing-state";
+import { ExamExport } from "./exam-export";
 export function AdminExamReview({ initialData }: { initialData: AdminExamDetail }) {
   const [view, setView] = useState("questions");
   const query = useQuery({
@@ -35,7 +36,10 @@ export function AdminExamReview({ initialData }: { initialData: AdminExamDetail 
             {task.owner.name} · {task.owner.email} · {task.source} · {formatDate(task.createdAt)}
           </p>
         </div>
-        <StatusBadge status={task.status} />
+        <div className="inline-actions">
+          {exam && <ExamExport taskId={task.id} name={exam.name} admin />}
+          <StatusBadge status={task.status} />
+        </div>
       </div>
       {query.error && (
         <p className="form-error" role="alert">

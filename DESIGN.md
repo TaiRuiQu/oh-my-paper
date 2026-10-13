@@ -2,6 +2,9 @@
 name: Oh My Paper
 description: Modern, concise OA workspace for paper management and student grading.
 colors:
+  print-ink: "#111111"
+  print-line: "#555555"
+  print-quote: "#888888"
   white: "#ffffff"
   workspace: "#f5f7fb"
   ink: "#202b3d"
@@ -34,6 +37,11 @@ colors:
   danger: "#b42318"
   drawer-scrim: "rgb(20 30 50 / 0.28)"
 typography:
+  pdf-body:
+    fontFamily: '"NSimSun", "Noto Serif CJK SC", "Noto Sans CJK SC", serif'
+    fontSize: "11pt"
+    fontWeight: 400
+    lineHeight: 1.7
   headline:
     fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
     fontSize: "25px"
@@ -233,6 +241,8 @@ Cool blue-gray neutrals support a single blue action accent; green, red and ambe
 
 ## Typography
 
+**PDF export font:** "NSimSun" is the CSS alias for the user-provided `assets/fonts/nsimsun.ttf` file, embedded locally in the print document. The font is the verified NSimSun face extracted from simsun.ttc (version 5.03). PDF body text uses 11 pt; KaTeX retains its own math fonts.
+
 **Body and heading font:** "Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif. English and numerals use Geist; Chinese uses Noto Sans SC. Both variable fonts are bundled via Fontsource and served from the application origin, with Unicode subsets loaded as needed and `font-display: swap`. System fonts are fallbacks only; Windows no longer depends on Microsoft YaHei.
 
 The hierarchy is compact and Chinese-first. Body copy uses 14px / 1.65. The implementation uses measured role sizes rather than a fixed mathematical scale:
@@ -332,3 +342,5 @@ AI 设置在提供商列表之前显示「功能模型」。AI 解析、AI 批�
 上传区域与列表使用相同的内容区宽度，不设置额外的 900px 上限。添加试卷和快速批改分别在主文件上传区下方提供「标准答案（可选）」，添加试卷时提示先解析试卷再匹配答案；快速批改明确上传时采用该答案、未上传时自动生成。试卷标准答案页并列提供「上传标准答案」和「生成标准答案」，上传面板内使用现有文件列表、移除按钮、进度与提交操作；上传解析进度称为「已解析答案」。
 
 试卷上传表单中的「标准答案（可选）」使用原生 `details` 折叠区，默认收起，选中文件时在摘要中保留数量。任务模型选择按功能并列显示模型与推理强度，选项随模型变化；本次任务与倍率说明集中在管理员 AI 设置中。系统管理新增「试卷记录审查」和「用户管理」，沿用搜索、表格、分页与现有表单样式。审查详情提供试题与标准答案切换；用户编辑和密码重置以内联面板呈现，明确目标用户、错误与成功反馈，手机表格保持局部滚动。
+
+试卷详情与管理员审查详情在标题操作区提供「导出 PDF」和「导出 Word」两个次级按钮，沿用现有图标、间距和按钮样式。导出期间两个按钮均禁用，当前格式显示「正在导出」，失败提示与按钮同组，用户可重试。手机上操作区自然换行。打印文档使用用户指定并随应用保存的字体文件、A4、20 mm 页边距与 11 pt 中文正文字号，标题和题号保持层级，公式、表格和配图随正文排版；小问题号与正文首段在同一段落中显示，题号加粗，后续段落与块级内容保留结构；Word 保留可编辑结构并以 PNG 呈现公式。

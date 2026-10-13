@@ -1926,3 +1926,11 @@ progress {
 .admin-user-editor .field .hint {
   margin-top: 8px;
 }
+
+.exam-export-controls {
+  min-width: 0;
+}
+.exam-export-controls .form-error {
+  margin-top: 8px;
+  max-width: 36ch;
+}
