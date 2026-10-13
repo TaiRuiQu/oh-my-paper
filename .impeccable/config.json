@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "files": [
+          "src/app/globals.css"
+        ],
+        "createdAt": "2026-10-13T11:37:03.918Z",
+        "reason": "Agent: DESIGN.md:246 explicitly defines Geist for English and numerals in the existing office interface; this task preserves that documented typography."
+      }
+    ]
+  }
+}
