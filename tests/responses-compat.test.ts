@@ -1,4 +1,4 @@
-import { modelStreamResponse } from "./model-stream-response";
+import { eventStream, modelStreamResponse } from "./model-stream-response";
 import { describe, expect, it, vi } from "vitest";
 import { APICallError, tool, type ModelMessage } from "ai";
 import { z } from "zod";
@@ -26,6 +26,146 @@ type ResponsesRequest = {
 };
 
 describe("Responses gateway compatibility", () => {
+  it("normalizes split UTF-8 and multiline CRLF events before the upstream stream closes", async () => {
+    let controller!: ReadableStreamDefaultController<Uint8Array>;
+    const cancel = vi.fn();
+    const response = new Response(
+      new ReadableStream<Uint8Array>({
+        start(value) {
+          controller = value;
+        },
+        cancel,
+      }),
+      {
+        headers: {
+          "content-type": "text/plain",
+          "content-length": "999",
+          "content-encoding": "gzip",
+        },
+      },
+    );
+    const normalized = await compatibleResponsesResponse(response, true);
+    expect(normalized.headers.has("content-length")).toBe(false);
+    expect(normalized.headers.has("content-encoding")).toBe(false);
+    const reader = normalized.body!.getReader();
+    const text =
+      ': heartbeat\r\n\r\nid: 11\r\nevent: response.output_item.added\r\ndata: {"type":"response.output_item.added",\r\ndata: "output_index":1,"item":{"type":"function_call","name":"题目","argumentsIgnored":"keep"}}\r\n\r\n';
+    for (const byte of new TextEncoder().encode(text)) controller.enqueue(Uint8Array.of(byte));
+    expect(new TextDecoder().decode((await reader.read()).value)).toBe(": heartbeat\r\n\r\n");
+    const frame = new TextDecoder().decode((await reader.read()).value);
+    expect(frame).toContain("id: 11\nevent: response.output_item.added\n");
+    const event = JSON.parse(
+      frame
+        .split("\n")
+        .find((line) => line.startsWith("data:"))!
+        .slice(5),
+    );
+    expect(event.item).toEqual({
+      type: "function_call",
+      name: "题目",
+      argumentsIgnored: "keep",
+      arguments: "",
+    });
+    await reader.cancel();
+    await vi.waitFor(() => expect(cancel).toHaveBeenCalledOnce());
+  });
+  it("preserves completed arguments, invalid start arguments, unknown events and invalid JSON", async () => {
+    const wire =
+      [
+        {
+          type: "response.output_item.added",
+          item: { type: "function_call", arguments: '{"q":1}' },
+        },
+        { type: "response.output_item.added", item: { type: "function_call", arguments: 42 } },
+        { type: "response.output_item.done", item: { type: "function_call" } },
+        { type: "future.event", item: { type: "function_call" } },
+      ]
+        .map((event) => `data: ${JSON.stringify(event)}\n\n`)
+        .join("") + "data: invalid\n\ndata: [DONE]\n\n";
+    expect(await (await compatibleResponsesResponse(new Response(wire), true)).text()).toBe(wire);
+  });
+  it("propagates an upstream Responses stream error", async () => {
+    const failure = new Error("connection reset");
+    const response = new Response(
+      new ReadableStream({
+        start(controller) {
+          controller.error(failure);
+        },
+      }),
+    );
+    await expect((await compatibleResponsesResponse(response, true)).text()).rejects.toBe(failure);
+  });
+  it("accepts the gateway's omitted initial tool arguments through the real SDK", async () => {
+    const execute = vi.fn(async (input: { label: string }) => ({
+      complete: true,
+      label: input.label,
+    }));
+    const record = vi.fn();
+    const model = createProviderExamModel(
+      {
+        providerId: "20000000-0000-4000-8000-000000000001",
+        name: "Responses gateway",
+        apiType: "openai_responses",
+        baseURL: "https://gateway.example/v1",
+        encryptedApiKey: "unused",
+        structuredOutputs: false,
+        maxOutputTokens: 1024,
+        timeoutSeconds: 60,
+        maxConcurrency: 3,
+        model: "test",
+        reasoningEffort: "default",
+      },
+      "test-key",
+      async () =>
+        eventStream([
+          {
+            type: "response.output_item.added",
+            output_index: 1,
+            item: {
+              call_id: "call_00_joiuti4vv9n4pzu9tvb3wbg5",
+              name: "list_questions",
+              type: "function_call",
+              id: "ace5a4e8-14b6-34d7-b58f-e1754a9fbb79",
+              status: "in_progress",
+            },
+            sequence_number: 11,
+          },
+          {
+            type: "response.function_call_arguments.delta",
+            output_index: 1,
+            item_id: "ace5a4e8-14b6-34d7-b58f-e1754a9fbb79",
+            delta: '{"label":"题目"}',
+          },
+          {
+            type: "response.output_item.done",
+            output_index: 1,
+            item: {
+              call_id: "call_00_joiuti4vv9n4pzu9tvb3wbg5",
+              name: "list_questions",
+              type: "function_call",
+              id: "ace5a4e8-14b6-34d7-b58f-e1754a9fbb79",
+              status: "completed",
+              arguments: '{"label":"题目"}',
+            },
+          },
+          {
+            type: "response.completed",
+            response: { usage: { input_tokens: 20, output_tokens: 30 } },
+          },
+        ]),
+      { beforeCall: async () => {}, record },
+    );
+    await model.run({
+      system: "List questions",
+      content: "work",
+      isComplete: () => execute.mock.calls.length > 0,
+      tools: { list_questions: tool({ inputSchema: z.object({ label: z.string() }), execute }) },
+    });
+    expect(execute).toHaveBeenCalledOnce();
+    expect(execute.mock.calls[0][0]).toEqual({ label: "题目" });
+    expect(record).toHaveBeenCalledOnce();
+    expect(record.mock.calls[0][1]).toMatchObject({ inputTokens: 20, outputTokens: 30 });
+  });
   it("retains encrypted reasoning sequences and tool context without mutating message history", () => {
     const messages: ModelMessage[] = [
       { role: "user", content: "Solve the question" },
@@ -216,10 +356,11 @@ describe("Responses gateway compatibility", () => {
     const stream = new Response("data: {}\n\n", {
       headers: { "content-type": "text/event-stream" },
     });
-    expect(await compatibleResponsesResponse(stream)).toBe(stream);
+    expect(await (await compatibleResponsesResponse(stream)).text()).toBe("data: {}\n\n");
     const mislabeled = new Response("data: {}\n\n", { headers: { "content-type": "text/plain" } });
-    expect(await compatibleResponsesResponse(mislabeled, true)).toBe(mislabeled);
-    expect(mislabeled.bodyUsed).toBe(false);
+    const compatible = await compatibleResponsesResponse(mislabeled, true);
+    expect(compatible.headers.get("content-type")).toBe("text/plain");
+    expect(await compatible.text()).toBe("data: {}\n\n");
     expect(await (await compatibleResponsesResponse(new Response("invalid"))).text()).toBe(
       "invalid",
     );

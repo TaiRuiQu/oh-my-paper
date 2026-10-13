@@ -123,7 +123,9 @@ Web 请求错误查看 Web 控制台，后台解析与工具错误查看 Worker 
 
 Responses 调用使用 `store: false`。第三方网关显式选择推理强度时，通过 SDK 的 `forceReasoning` 发送实际的 `reasoning.effort`，不依赖 OpenAI 模型名称白名单；保留网关原有的 `system` 角色，且不额外请求推理摘要。SDK 请求可用于后续轮次的加密推理状态；网关未返回该状态的摘要仅保留在当前响应中，不回传到后续请求。文本、工具调用及结果继续保留，已返回的加密推理状态正常回传。
 
-所有模型请求均使用流式 API：Agent 使用 `ToolLoopAgent.stream()`，单题评分和直接 JSON 生成使用 `streamText()`。Worker 持续消费流，管理员活动记录每轮首次开始输出的时间；模型完整结束后才执行工具或校验并保存最终 JSON。Chat Completions 请求流末尾的 token 用量用于结算；流错误、中断和超时向任务层传播，不将部分输出当作完整结果。Responses 流直接交给 SDK，不等待整个响应体，也不因网关错误标注 Content-Type 而转为整体读取。
+所有模型请求均使用流式 API：Agent 使用 `ToolLoopAgent.stream()`，单题评分和直接 JSON 生成使用 `streamText()`。Worker 持续消费流，管理员活动记录每轮首次开始输出的时间；模型完整结束后才执行工具或校验并保存最终 JSON。Chat Completions 请求流末尾的 token 用量用于结算；流错误、中断和超时向任务层传播，不将部分输出当作完整结果。Responses 流逐事件兼容后交给 SDK，不等待整个响应体，也不因网关错误标注 Content-Type 而转为整体读取。工具调用起始事件省略 `arguments` 时补为空字符串，后续参数增量和完整参数仍由 SDK 校验。
+
+管理员可在 AI 设置中删除提供商，确认后同时删除其模型，清除关联的功能默认模型和用户选择；相关功能需要重新配置。已有任务配置快照、答案和用量记录保留，运行中的任务继续使用原快照。接口为 `DELETE /api/admin/ai/providers/:id`，验证管理员权限和请求来源。
 
 提供商的「请求超时（秒）」分别限制等待响应头、收到响应头后等待首次有效输出，以及后续连续没有有效输出的时间；文本、思考或工具参数增量都属于有效输出，SSE 心跳不算。持续输出的模型不会因为整轮总耗时超过此值而中止；整个 Agent 任务仍受 25 分钟上限限制。流式传输便于观察进度，不保证减少模型总推理时间。
 
@@ -207,7 +209,7 @@ pnpm run test:integration
 
 Worker 镜像使用 `pnpm run build:worker` 生成的独立运行目录，只包含编译后的入口、实际运行依赖、数据库迁移与 Python 沙箱脚本，不再复制完整 `node_modules` 和应用源码。快速批改的「标准答案（可选）」默认折叠，选中文件后仍在摘要显示数量。
 
-部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.10 部署与升级指南](docs/releases/v0.1.10.zh-CN.md)。
+部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.11 部署与升级指南](docs/releases/v0.1.11.zh-CN.md)。
 
 Word 公式转换复用 KaTeX 与 docx，新增 `mathml2omml@0.5.0`（约 67 KB 运行时代码，无运行时依赖），并直接声明已有 docx 依赖 `xml-js`。转换库以未修改的运行时模块随应用分发，其 LGPL-3.0-or-later 许可及来源见 [第三方依赖说明](docs/third-party.md)。
 

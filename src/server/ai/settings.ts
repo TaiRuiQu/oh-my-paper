@@ -112,6 +112,13 @@ export async function saveProvider(raw: ProviderInput, id?: string) {
   });
 }
 
+export async function deleteProvider(id: string) {
+  // Cascades remove models and user selections; defaults become unconfigured.
+  // Task configuration snapshots and usage records have no provider foreign key.
+  const deleted = await getDb().aiProvider.deleteMany({ where: { id } });
+  if (!deleted.count) throw new AccessError(404, "提供商不存在。");
+}
+
 export async function activateModel(
   providerId: string,
   modelId: string,

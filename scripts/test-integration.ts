@@ -1521,6 +1521,81 @@ async function main() {
     } finally {
       await boss.stop();
     }
+    {
+      const { deleteProvider } = await import("../src/server/ai/settings");
+      const removedId = await saveProvider({
+        name: "删除测试",
+        apiType: "openai_responses",
+        baseURL: "https://example.invalid/v1",
+        apiKey: "delete-test-key",
+        structuredOutputs: false,
+        maxOutputTokens: 4096,
+        timeoutSeconds: 60,
+        maxConcurrency: 1,
+        models: [{ name: "removed-model", reasoningEfforts: ["default"], isPublic: true }],
+      });
+      const removedModel = await db.aiModel.findFirstOrThrow({ where: { providerId: removedId } });
+      await activateModel(removedId, removedModel.id, "default", "answer");
+      await db.userAiSelection.upsert({
+        where: { userId_purpose: { userId, purpose: "answer" } },
+        create: { userId, purpose: "answer", modelId: removedModel.id },
+        update: { modelId: removedModel.id },
+      });
+      const deletionExam = await db.exam.findFirstOrThrow();
+      const deletionTask = await db.examAgentTask.create({
+        data: {
+          examId: deletionExam.id,
+          kind: "ANSWER",
+          name: "删除后保留任务",
+          status: "COMPLETED",
+          inputFiles: [],
+          jobId: randomUUID(),
+          providerSnapshot: await getActiveProvider("answer"),
+        },
+      });
+      await db.creditUsage.create({
+        data: {
+          id: randomUUID(),
+          userId,
+          taskId: deletionTask.id,
+          taskKind: "ANSWER",
+          attempt: randomUUID(),
+          providerId: removedId,
+          providerName: "删除测试",
+          modelId: removedModel.id,
+          model: "removed-model",
+          creditMultiplier: 1,
+          inputTokens: 10,
+          cachedTokens: 0,
+          outputTokens: 5,
+          credits: "0.0035",
+        },
+      });
+      const beforeTasks = await db.examAgentTask.findMany({
+        select: { id: true, providerSnapshot: true, result: true },
+      });
+      const beforeUsage = await db.creditUsage.findMany();
+      await deleteProvider(removedId);
+      assert.equal(await db.aiProvider.findUnique({ where: { id: removedId } }), null);
+      assert.equal(await db.aiModel.count({ where: { providerId: removedId } }), 0);
+      assert.equal(await db.userAiSelection.count({ where: { modelId: removedModel.id } }), 0);
+      assert.equal(
+        (await db.aiSetting.findUniqueOrThrow({ where: { id: "answer" } })).modelId,
+        null,
+      );
+      await assert.rejects(getActiveProvider("answer"), /尚未设置/);
+      assert.deepEqual(
+        await db.examAgentTask.findMany({
+          select: { id: true, providerSnapshot: true, result: true },
+        }),
+        beforeTasks,
+      );
+      assert.deepEqual(await db.creditUsage.findMany(), beforeUsage);
+      await assert.rejects(deleteProvider(removedId), /提供商不存在/);
+      console.log(
+        "✓ Provider deletion cascades models/selections, clears defaults and preserves tasks and usage",
+      );
+    }
     if (process.argv.includes("--keep")) {
       // A retained fixture is for local browser verification only; the main schema is untouched.
       const url = new URL(connectionString);

@@ -60,16 +60,84 @@ export function normalizeResponseAnnotations(value: unknown): boolean {
   return changed;
 }
 
+// Only the start event may omit arguments: later deltas and the completed
+// item's arguments remain authoritative and must still pass SDK validation.
+function normalizeStreamEvent(frame: string): string {
+  const lines = frame.split(/\r\n|\r|\n/);
+  const data = lines.flatMap((line) =>
+    line === "data" ? [""] : line.startsWith("data:") ? [line.slice(5).replace(/^ /, "")] : [],
+  );
+  if (!data.length) return frame;
+  let value;
+  try {
+    value = JSON.parse(data.join("\n"));
+  } catch {
+    return frame;
+  }
+  if (
+    value?.type !== "response.output_item.added" ||
+    value.item?.type !== "function_call" ||
+    value.item.arguments !== undefined
+  )
+    return frame;
+  value.item.arguments = "";
+  let written = false;
+  return lines
+    .flatMap((line) => {
+      if (line !== "data" && !line.startsWith("data:")) return [line];
+      if (written) return [];
+      written = true;
+      return [`data: ${JSON.stringify(value)}`];
+    })
+    .join("\n");
+}
+
+function compatibleResponsesStream(response: Response): Response {
+  if (!response.body) return response;
+  let pending = "";
+  let frame = "";
+  const stream = response.body
+    .pipeThrough(new TextDecoderStream())
+    .pipeThrough(
+      new TransformStream<string, string>({
+        transform(chunk, controller) {
+          pending += chunk;
+          // Keep a trailing CR until the next chunk so split CRLF stays one newline.
+          let match;
+          while ((match = /\r\n|\r|\n/.exec(pending))) {
+            if (match[0] === "\r" && match.index === pending.length - 1) break;
+            const line = pending.slice(0, match.index);
+            frame += pending.slice(0, match.index + match[0].length);
+            pending = pending.slice(match.index + match[0].length);
+            if (line === "") {
+              controller.enqueue(normalizeStreamEvent(frame));
+              frame = "";
+            }
+          }
+        },
+        flush(controller) {
+          if (frame || pending) controller.enqueue(normalizeStreamEvent(frame + pending));
+        },
+      }),
+    )
+    .pipeThrough(new TextEncoderStream());
+  const headers = new Headers(response.headers);
+  headers.delete("content-length");
+  headers.delete("content-encoding");
+  return new Response(stream, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export async function compatibleResponsesResponse(
   response: Response,
   streaming = false,
 ): Promise<Response> {
-  if (
-    streaming ||
-    !response.ok ||
-    response.headers.get("content-type")?.includes("text/event-stream")
-  )
-    return response;
+  if (!response.ok) return response;
+  if (streaming || response.headers.get("content-type")?.includes("text/event-stream"))
+    return compatibleResponsesStream(response);
   const body = await response.text();
   let value: unknown;
   try {

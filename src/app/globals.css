@@ -527,6 +527,9 @@ fieldset {
 .danger-action {
   color: var(--danger);
 }
+.provider-settings .danger-action {
+  color: var(--danger);
+}
 .delete-confirmation {
   display: inline-flex;
   align-items: center;

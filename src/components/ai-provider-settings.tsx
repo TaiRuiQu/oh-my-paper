@@ -1,5 +1,5 @@
 "use client";
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import {
   API_TYPES,
   AI_PURPOSES,
@@ -37,14 +37,19 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
   const [providers, setProviders] = useState(initialProviders),
     [editingId, setEditingId] = useState<string>(),
     [draft, setDraft] = useState<ProviderInput | null>(null),
+    [deletingId, setDeletingId] = useState<string>(),
+    [notice, setNotice] = useState<string>(),
     [error, setError] = useState<string>(),
     [busy, setBusy] = useState(false);
+  const addButton = useRef<HTMLButtonElement>(null);
   async function reload() {
     setProviders(
       (await apiRequest<{ providers: ProviderSummary[] }>("/api/admin/ai/providers")).providers,
     );
   }
   function edit(provider?: ProviderSummary) {
+    setDeletingId(undefined);
+    setNotice(undefined);
     setEditingId(provider?.id);
     setError(undefined);
     setDraft(
@@ -106,6 +111,26 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
       setBusy(false);
     }
   }
+  async function remove(provider: ProviderSummary) {
+    setBusy(true);
+    setError(undefined);
+    setNotice(undefined);
+    try {
+      await apiRequest(`/api/admin/ai/providers/${provider.id}`, { method: "DELETE" });
+      if (editingId === provider.id) {
+        setDraft(null);
+        setEditingId(undefined);
+      }
+      setDeletingId(undefined);
+      await reload();
+      setNotice(`已删除提供商「${provider.name}」。请检查功能默认模型配置。`);
+      requestAnimationFrame(() => addButton.current?.focus());
+    } catch (error) {
+      setError(reportClientError("ai.provider.delete", error));
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
     <section className="provider-settings">
       {error && (
@@ -113,6 +138,7 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
           {error}
         </p>
       )}
+      {notice && <p role="status">{notice}</p>}
       <section className="surface model-assignments" aria-labelledby="model-assignments-title">
         <h2 id="model-assignments-title">功能默认模型</h2>
         <p className="hint">每项独立保存。用户创建任务时可以另选模型，未选择时使用默认配置。</p>
@@ -123,7 +149,7 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
           ];
           return (
             <ModelAssignment
-              key={`${purpose}:${active?.modelId}:${active?.reasoningEffort}`}
+              key={`${purpose}:${active?.modelId}:${active?.reasoningEffort}:${providers.map((item) => item.id).join(",")}`}
               purpose={purpose}
               providers={providers}
               busy={busy}
@@ -136,10 +162,51 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
         <section className="provider-section" key={provider.id}>
           <div className="section-heading">
             <h2>{provider.name}</h2>
-            <button className="button secondary" disabled={busy} onClick={() => edit(provider)}>
-              编辑
-            </button>
+            <div className="delete-confirmation">
+              <button className="button secondary" disabled={busy} onClick={() => edit(provider)}>
+                编辑
+              </button>
+              {deletingId !== provider.id && (
+                <button
+                  className="text-action danger-action"
+                  disabled={busy}
+                  aria-label={`删除提供商 ${provider.name}`}
+                  onClick={() => {
+                    setError(undefined);
+                    setNotice(undefined);
+                    setDeletingId(provider.id);
+                  }}
+                >
+                  删除
+                </button>
+              )}
+            </div>
           </div>
+          {deletingId === provider.id && (
+            <div role="group" aria-label={`确认删除提供商 ${provider.name}`}>
+              <p>
+                删除「{provider.name}
+                」及其全部模型？关联的功能默认模型和用户选择将清除，需重新配置。
+                已有任务和用量记录保留。
+              </p>
+              <div className="delete-confirmation">
+                <button
+                  className="text-action danger-action"
+                  disabled={busy}
+                  onClick={() => void remove(provider)}
+                >
+                  {busy ? "正在删除…" : "确认删除"}
+                </button>
+                <button
+                  className="text-action"
+                  disabled={busy}
+                  onClick={() => setDeletingId(undefined)}
+                >
+                  取消
+                </button>
+              </div>
+            </div>
+          )}
           <p className="hint">
             {API_TYPES[provider.apiType]} · {provider.baseURL}
           </p>
@@ -159,7 +226,7 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
         </section>
       ))}
       {!draft ? (
-        <button className="button" onClick={() => edit()} disabled={busy}>
+        <button ref={addButton} className="button" onClick={() => edit()} disabled={busy}>
           添加提供商
         </button>
       ) : (

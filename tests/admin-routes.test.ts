@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   review: vi.fn(),
   reset: vi.fn(),
   update: vi.fn(),
+  deleteProvider: vi.fn(),
 }));
 vi.mock("@/server/auth/authorization", () => ({ requireAdmin: mocks.admin }));
 vi.mock("@/server/admin/users", () => ({
@@ -16,6 +17,10 @@ vi.mock("@/server/admin/users", () => ({
   updateUser: mocks.update,
 }));
 vi.mock("@/server/admin/exams", () => ({ listAllExams: mocks.exams, reviewExam: mocks.review }));
+vi.mock("@/server/ai/settings", () => ({
+  deleteProvider: mocks.deleteProvider,
+  saveProvider: vi.fn(),
+}));
 vi.mock("@/server/http/mutations", async (original) => ({
   ...(await original<typeof import("@/server/http/mutations")>()),
   requireSameOrigin: mocks.origin,
@@ -28,6 +33,7 @@ import { GET as exams } from "@/app/api/admin/exams/route";
 import { GET as review } from "@/app/api/admin/exams/[id]/route";
 import { POST as reset } from "@/app/api/admin/users/[id]/password/route";
 import { PATCH as update } from "@/app/api/admin/users/[id]/route";
+import { DELETE as deleteProvider } from "@/app/api/admin/ai/providers/[id]/route";
 const context = { params: Promise.resolve({ id: "other-user" }) };
 const request = (body?: unknown) =>
   new Request("http://localhost/api/admin/test?search=paper&page=2", {
@@ -54,12 +60,30 @@ describe("administrator user management and paper review", () => {
         await review(request(), context),
         await reset(request({ password: "new-password-123" }), context),
         await update(request({ name: "Name", role: "ADMIN" }), context),
+        await deleteProvider(request(), context),
       ])
         expect(response.status).toBe(status);
-      for (const mock of [mocks.users, mocks.exams, mocks.review, mocks.reset, mocks.update])
+      for (const mock of [
+        mocks.users,
+        mocks.exams,
+        mocks.review,
+        mocks.reset,
+        mocks.update,
+        mocks.deleteProvider,
+      ])
         expect(mock).not.toHaveBeenCalled();
     },
   );
+  it("deletes a provider only after checking administrator access and request origin", async () => {
+    expect((await deleteProvider(request(), context)).status).toBe(200);
+    expect(mocks.deleteProvider).toHaveBeenCalledWith("other-user");
+    mocks.deleteProvider.mockClear();
+    mocks.origin.mockImplementation(() => {
+      throw new AccessError(403, "Invalid origin");
+    });
+    expect((await deleteProvider(request(), context)).status).toBe(403);
+    expect(mocks.deleteProvider).not.toHaveBeenCalled();
+  });
   it("searches and paginates global records without returning cacheable data", async () => {
     expect((await users(request())).headers.get("cache-control")).toBe("private, no-store");
     expect((await exams(request())).status).toBe(200);
