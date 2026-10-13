@@ -13,6 +13,7 @@ import { redactErrorText } from "@/lib/error-message";
 import type { AgentEventInput, AgentTimingRequest } from "@/contracts/activity";
 import { providerConcurrencyLimiter } from "./concurrency";
 import { expandToolImages } from "./tool-images";
+import { compatibleResponsesResponse } from "./responses-compat";
 import type { CreditMeter } from "./credits";
 import { createResultTools } from "@/server/exams/result-tools";
 
@@ -103,8 +104,8 @@ export function createProviderExamModel(
       const response = await fetch(input, { ...init, redirect: "error" });
       record.ttfbMs = Math.round(performance.now() - started);
       record.status = response.status;
-      if (response.body)
-        return new Response(
+      if (response.body) {
+        const timedResponse = new Response(
           response.body.pipeThrough(
             new TransformStream<Uint8Array, Uint8Array>({
               transform(chunk, controller) {
@@ -115,6 +116,10 @@ export function createProviderExamModel(
           ),
           response,
         );
+        return config.apiType === "openai_responses"
+          ? await compatibleResponsesResponse(timedResponse)
+          : timedResponse;
+      }
       return response;
     } catch (error) {
       record.ttfbMs = Math.round(performance.now() - started);

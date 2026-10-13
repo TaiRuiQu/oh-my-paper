@@ -96,6 +96,10 @@ export function describeError(error: unknown, extraSecrets: readonly string[] = 
   );
   let code = appError?.code ?? (api?.statusCode ? `AI_HTTP_${api.statusCode}` : undefined);
   let message = appError?.message;
+  if (!message && api?.statusCode && api.statusCode >= 200 && api.statusCode < 300) {
+    code = "AI_RESPONSE_INVALID";
+    message = `AI 接口已返回成功状态，但响应格式不符合 SDK 要求${problem?.validation?.length ? `：${problem.validation.map((issue) => issue.path || "根字段").join("、")}` : "，请检查接口兼容性"}。`;
+  }
   if (!message && api) {
     const messages: Record<number, string> = {
       400: "AI 接口拒绝了请求参数，请检查模型能力和接口配置（HTTP 400）。",
