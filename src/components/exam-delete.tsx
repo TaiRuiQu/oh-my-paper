@@ -37,7 +37,6 @@ export function ExamDelete({
     <span className="exam-delete">
       {confirming ? (
         <span className="delete-confirmation" role="group" aria-label={`确认删除 ${name}`}>
-          <span>从列表移除？管理员仍可审查记录。</span>
           <button
             className="text-action danger-action"
             disabled={pending}

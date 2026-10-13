@@ -91,7 +91,11 @@ describe("provider models and reasoning", () => {
         choices: [
           {
             index: 0,
-            message: { role: "assistant", content: JSON.stringify(output) },
+            message: {
+              role: "assistant",
+              // 说明不依赖结构化输出模式：允许模型用代码围栏包裹 JSON。
+              content: "试卷内容如下：\n```json\n" + JSON.stringify(output) + "\n```",
+            },
             finish_reason: "stop",
           },
         ],
@@ -104,7 +108,7 @@ describe("provider models and reasoning", () => {
     });
     expect(body.model).toBe(config.model);
     expect(body.reasoning_effort).toBe("high");
-    expect(body.response_format).toMatchObject({ type: "json_schema" });
+    expect(body.response_format).toBeUndefined();
     expect(redirect).toBe("error");
     expect(exam).toEqual(output);
   });

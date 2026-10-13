@@ -54,9 +54,38 @@ const events: AgentEvent[] = [
     data: { message: "区域无效" },
   },
   { sequence: 6, at: task.createdAt, type: "message", step: 1, text: "重新检查页面区域。" },
-  { sequence: 7, at: task.createdAt, type: "step", step: 2 },
   {
-    sequence: 8,
+    sequence: 7,
+    at: task.createdAt,
+    type: "timing",
+    step: 1,
+    durationMs: 12400,
+    data: {
+      requests: [{ ttfbMs: 11500, bodyMs: 700, status: 200, failed: false }],
+      inputTokens: 32000,
+      outputTokens: 900,
+      outputTokensPerSecond: 73,
+    },
+  },
+  { sequence: 8, at: task.createdAt, type: "step", step: 2 },
+  {
+    sequence: 9,
+    at: task.createdAt,
+    type: "timing",
+    step: 2,
+    durationMs: 21500,
+    data: {
+      requests: [
+        { ttfbMs: 500, bodyMs: 100, status: 429, failed: true },
+        { ttfbMs: 20000, bodyMs: 800, status: 200, failed: false },
+      ],
+      inputTokens: 45000,
+      outputTokens: 1800,
+      outputTokensPerSecond: 84,
+    },
+  },
+  {
+    sequence: 10,
     at: task.createdAt,
     type: "tool_call",
     step: 2,
@@ -70,7 +99,7 @@ function render(isAdmin?: boolean) {
   client.setQueryData<RecognitionActivity>(["recognition-activity", task.id, task.status], {
     attempt: "attempt",
     events,
-    cursor: 8,
+    cursor: 10,
     active: true,
   });
   const content =
@@ -99,6 +128,27 @@ describe("recognition activity presentation", () => {
     expect(rounds[0].querySelector("img")?.getAttribute("src")).toContain(
       "activity/images/pages/001.jpg?attempt=attempt",
     );
+  });
+  it("summarizes per-round and total timing across model, tool and network categories", () => {
+    const container = render();
+    const total = container.querySelector(".agent-timing-total");
+    expect(total?.textContent).toContain("累计耗时");
+    expect(total?.textContent).toContain("模型输出 33.9 秒");
+    expect(total?.textContent).toContain("工具执行 0.1 秒");
+    expect(total?.textContent).toContain("其中网络请求 33.6 秒（3 次请求）");
+    expect(total?.querySelectorAll(".agent-timing-legend li")).toHaveLength(3);
+    // 每轮折叠摘要展示总时长，展开后有分类明细与 tokens 概览。
+    const rounds = container.querySelectorAll(".agent-event-list > li");
+    expect(rounds[0].querySelector("summary")?.textContent).toContain("共 12.5 秒");
+    expect(rounds[0].querySelector(".agent-round-timing")?.textContent).toContain(
+      "模型输出 12.4 秒 · 工具执行 0.1 秒 · 其中网络请求 12.2 秒（1 次请求）",
+    );
+    expect(rounds[0].querySelector(".agent-round-timing")?.textContent).toContain(
+      "输入 32.0k / 输出 900 tokens · 73 tokens/秒",
+    );
+    expect(rounds[1].querySelector(".agent-round-timing")?.textContent).toContain("2 次请求");
+    // timing 事件本身不作为消息行重复展示。
+    expect(rounds[0].querySelectorAll(".agent-event")).toHaveLength(3);
   });
   it("shows the activity feed only to administrators while preserving ordinary parsing status", () => {
     expect(render(true).querySelector(".agent-activity")).not.toBeNull();

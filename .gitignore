@@ -21,3 +21,7 @@ src/generated/
 
 # 定时升级脚本的互斥锁
 deploy/.update.lock
+
+# 本地工具目录
+.claude/worktrees/
+.codex/

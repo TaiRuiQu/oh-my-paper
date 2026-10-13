@@ -4,26 +4,28 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogle } from "@ai-sdk/google";
-import {
-  generateText,
-  Output,
-  ToolLoopAgent,
-  isStepCount,
-  type ToolSet,
-  type UserContent,
-} from "ai";
+import { generateText, ToolLoopAgent, isStepCount, type ToolSet, type UserContent } from "ai";
 import { parsedExamSchema, type ParsedExam } from "@/contracts/exams";
 import { providerSnapshotSchema, type ProviderSnapshot } from "@/contracts/ai-providers";
 import { AppError } from "@/server/errors";
 import { logError } from "@/server/logger";
 import { redactErrorText } from "@/lib/error-message";
-import type { AgentEventInput } from "@/contracts/activity";
+import type { AgentEventInput, AgentTimingRequest } from "@/contracts/activity";
 import { providerConcurrencyLimiter } from "./concurrency";
 import { expandToolImages } from "./tool-images";
 import type { CreditMeter } from "./credits";
 import { createResultTools } from "@/server/exams/result-tools";
 
 const MAX_AGENT_STEPS = 256;
+
+// 不依赖结构化输出模式：模型按提示词返回 JSON 文本，这里容错提取后交给 zod 校验。
+function extractJson(text: string): unknown {
+  const fenced = /```(?:json)?\s*([\s\S]*?)\s*```/i.exec(text),
+    candidate = (fenced ? fenced[1] : text).trim(),
+    start = candidate.indexOf("{"),
+    end = candidate.lastIndexOf("}");
+  return JSON.parse(start >= 0 && end > start ? candidate.slice(start, end + 1) : candidate);
+}
 
 export interface AgentRequest {
   system: string;
@@ -84,20 +86,41 @@ export function createProviderExamModel(
   creditMeter?: CreditMeter,
 ): ExamModel & AgentModel {
   const config = providerSnapshotSchema.parse(raw);
-  const common = {
-    apiKey,
-    baseURL: config.baseURL,
-    fetch: ((input, init) => fetch(input, { ...init, redirect: "error" })) as typeof fetch,
-  };
+  // 逐个 HTTP 请求计时（等待响应头、接收响应体），供管理员活动面板按轮展示耗时。
+  const requestTimings: AgentTimingRequest[] = [];
+  const timedFetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const started = performance.now();
+    const record: AgentTimingRequest = { ttfbMs: 0, bodyMs: 0, status: 0, failed: false };
+    requestTimings.push(record);
+    try {
+      const response = await fetch(input, { ...init, redirect: "error" });
+      record.ttfbMs = Math.round(performance.now() - started);
+      record.status = response.status;
+      if (response.body)
+        return new Response(
+          response.body.pipeThrough(
+            new TransformStream<Uint8Array, Uint8Array>({
+              transform(chunk, controller) {
+                controller.enqueue(chunk);
+                record.bodyMs = Math.round(performance.now() - started - record.ttfbMs);
+              },
+            }),
+          ),
+          response,
+        );
+      return response;
+    } catch (error) {
+      record.ttfbMs = Math.round(performance.now() - started);
+      record.failed = true;
+      throw error;
+    }
+  }) as typeof fetch;
+  const common = { apiKey, baseURL: config.baseURL, fetch: timedFetch };
   const model =
     config.apiType === "openai_responses"
       ? createOpenAI(common).responses(config.model)
       : config.apiType === "openai_chat"
-        ? createOpenAICompatible({
-            ...common,
-            name: "exam",
-            supportsStructuredOutputs: config.structuredOutputs,
-          })(config.model)
+        ? createOpenAICompatible({ ...common, name: "exam" })(config.model)
         : config.apiType === "anthropic"
           ? createAnthropic(common)(config.model)
           : createGoogle(common)(config.model);
@@ -109,12 +132,27 @@ export function createProviderExamModel(
         const emit = request.onEvent ?? (async () => {});
         const agent = new ToolLoopAgent({
           model,
-          onLanguageModelCallStart: async () => creditMeter?.beforeCall(),
-          onLanguageModelCallEnd: async ({ callId, usage }) =>
-            creditMeter?.record(`${callId}:${step}`, usage),
+          onLanguageModelCallStart: async () => {
+            requestTimings.length = 0;
+            await creditMeter?.beforeCall();
+          },
+          onLanguageModelCallEnd: async ({ callId, usage, performance: timings }) => {
+            await creditMeter?.record(`${callId}:${step}`, usage);
+            await emit({
+              type: "timing",
+              step,
+              durationMs: Math.round(timings.responseTimeMs),
+              data: {
+                requests: requestTimings.splice(0),
+                inputTokens: usage.inputTokens ?? 0,
+                outputTokens: usage.outputTokens ?? 0,
+                outputTokensPerSecond: Math.round(timings.effectiveOutputTokensPerSecond),
+              },
+            });
+          },
           instructions: request.system,
           tools: request.tools,
-          toolChoice: "required",
+          // 部分 OpenAI 兼容接口在思考模式下拒绝强制 tool_choice，工具调用改由提示词约束。
           ...(config.apiType === "openai_chat"
             ? { prepareStep: ({ messages }) => ({ messages: expandToolImages(messages) }) }
             : {}),
@@ -228,15 +266,15 @@ export function createProviderExamModel(
           const timeout = AbortSignal.timeout(config.timeoutSeconds * 1000);
           const result = await generateText({
             model,
-            onLanguageModelCallStart: async () => creditMeter?.beforeCall(),
+            onLanguageModelCallStart: async () => {
+              requestTimings.length = 0;
+              await creditMeter?.beforeCall();
+            },
             onLanguageModelCallEnd: async ({ callId, usage }) => creditMeter?.record(callId, usage),
             system:
               request.system +
-              (!config.structuredOutputs
-                ? `\nRequired JSON schema: ${JSON.stringify(parsedExamSchema.toJSONSchema())}`
-                : ""),
+              `\nRequired JSON schema: ${JSON.stringify(parsedExamSchema.toJSONSchema())}`,
             messages: [{ role: "user", content: request.content }],
-            output: Output.object({ schema: parsedExamSchema, name: "exam" }),
             maxOutputTokens: config.maxOutputTokens,
             providerOptions: reasoningOptions(config),
             maxRetries: 1,
@@ -248,7 +286,7 @@ export function createProviderExamModel(
               "AI_OUTPUT_INCOMPLETE",
               422,
             );
-          return parsedExamSchema.parse(result.output);
+          return parsedExamSchema.parse(extractJson(result.text));
         },
         request.signal,
       );

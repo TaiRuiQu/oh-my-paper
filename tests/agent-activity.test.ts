@@ -152,6 +152,8 @@ describe("actual agent activity", () => {
           (tool: { function: { name: string } }) => tool.function.name === "read_text",
         ),
       ).toBe(false);
+      // 部分 OpenAI 兼容接口在思考模式下拒绝强制 tool_choice，因此不得强制要求工具调用。
+      expect(body.tool_choice).not.toBe("required");
       const next = [
         { name: "read_pages", args: { pages: [1] } },
         { name: "report_question_count", args: { total: 1 } },
@@ -202,6 +204,18 @@ describe("actual agent activity", () => {
       ["read_pages", "report_question_count", "append_questions", "submit_exam"],
     );
     expect(events.filter((event) => event.type === "tool_result")).toHaveLength(4);
+    const timings = events.filter((event) => event.type === "timing");
+    expect(timings).toHaveLength(4);
+    expect(timings[0]).toMatchObject({
+      type: "timing",
+      step: 1,
+      data: {
+        requests: [
+          { status: 200, failed: false, ttfbMs: expect.any(Number), bodyMs: expect.any(Number) },
+        ],
+      },
+    });
+    expect(timings[0].durationMs).toBeGreaterThanOrEqual(0);
     expect(output).not.toHaveProperty("activity");
   });
   it("records invalid tool arguments even when execute never runs", async () => {
@@ -298,7 +312,7 @@ describe("actual agent activity", () => {
         tools: {},
         onProgress,
       }),
-    ).rejects.toMatchObject({ name: "AI_ToolChoiceViolationError" });
+    ).rejects.toMatchObject({ name: "AppError", code: "AGENT_INCOMPLETE" });
     expect(onProgress).toHaveBeenCalledOnce();
     expect(onProgress).toHaveBeenCalledWith(questionBatch(1));
   });

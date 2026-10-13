@@ -363,18 +363,6 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
             </button>
             <details className="advanced-settings">
               <summary>请求设置</summary>
-              <div className="field">
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={draft.structuredOutputs}
-                    onChange={(event) =>
-                      setDraft({ ...draft, structuredOutputs: event.target.checked })
-                    }
-                  />
-                  接口支持结构化输出
-                </label>
-              </div>
               {(
                 [
                   ["maxOutputTokens", "最大输出 tokens", 1024, 64000],

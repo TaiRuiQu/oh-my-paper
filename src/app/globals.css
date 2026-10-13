@@ -758,6 +758,7 @@ time,
 }
 .agent-round > summary {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   min-height: 36px;
@@ -923,6 +924,68 @@ time,
   margin: 12px 0 0 32px;
   color: var(--muted);
 }
+.agent-timing-total {
+  margin: 0 0 18px;
+}
+.agent-timing-total .hint {
+  margin: 0 0 6px;
+}
+.agent-timing-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.agent-timing-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-right: 6px;
+}
+.agent-timing-bar {
+  display: flex;
+  gap: 2px;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--line);
+}
+.agent-timing-bar > span {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+}
+.agent-timing-network {
+  background: #b9cdf2;
+}
+.agent-timing-model {
+  background: var(--accent);
+}
+.agent-timing-tools {
+  background: #2e7d64;
+}
+.agent-round-timing-bar {
+  flex-basis: 100%;
+  margin-top: 2px;
+}
+.agent-round-timing-bar .agent-timing-bar {
+  height: 4px;
+  border-radius: 2px;
+}
+.agent-round-timing {
+  margin: 6px 0 0 24px;
+}
+.agent-round-timing .hint {
+  margin: 0 0 4px;
+}
+.agent-round-timing .agent-timing-bar {
+  margin-bottom: 4px;
+}
 .agent-spinner {
   animation: agent-spin 1s linear infinite;
 }
@@ -943,8 +1006,12 @@ time,
   .agent-round-meta time {
     display: none;
   }
-  .agent-round-events {
+  .agent-round-events,
+  .agent-round-timing {
     padding-left: 0;
+  }
+  .agent-round-timing {
+    margin-left: 0;
   }
   .agent-tool summary {
     align-items: flex-start;

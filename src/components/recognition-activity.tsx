@@ -3,7 +3,12 @@
 import { useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronDown, Circle, LoaderCircle, Terminal, X } from "lucide-react";
-import type { AgentEvent, RecognitionActivity } from "@/contracts/activity";
+import type {
+  AgentEvent,
+  AgentTiming,
+  AgentTimingRequest,
+  RecognitionActivity,
+} from "@/contracts/activity";
 import type { ExamTaskSummary } from "@/contracts/exam-tasks";
 import { apiRequest } from "@/lib/http-client";
 import { formatTime } from "@/lib/date-time";
@@ -67,6 +72,103 @@ function groupRounds(events: AgentEvent[]): ActivityRound[] {
 function timeLabel(event: AgentEvent) {
   return formatTime(event.at);
 }
+function timingRequests(value: unknown): AgentTimingRequest[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const record: Record<string, unknown> = item;
+    return Number.isFinite(record.ttfbMs) && Number.isFinite(record.bodyMs)
+      ? [
+          {
+            ttfbMs: Number(record.ttfbMs),
+            bodyMs: Number(record.bodyMs),
+            status: Number(record.status) || 0,
+            failed: record.failed === true,
+          },
+        ]
+      : [];
+  });
+}
+function timingOf(event: AgentEvent): AgentTiming | undefined {
+  if (event.type !== "timing") return undefined;
+  const data = object(event.data);
+  return {
+    requests: timingRequests(data.requests),
+    inputTokens: Number(data.inputTokens) || 0,
+    outputTokens: Number(data.outputTokens) || 0,
+    outputTokensPerSecond: Number(data.outputTokensPerSecond) || 0,
+  };
+}
+type RoundTiming = {
+  modelMs: number;
+  networkMs: number;
+  toolMs: number;
+  requests: number;
+  inputTokens: number;
+  outputTokens: number;
+  outputTokensPerSecond: number;
+  totalMs: number;
+};
+function roundTiming(events: AgentEvent[]): RoundTiming | undefined {
+  const event = events.find((item) => item.type === "timing");
+  if (!event) return undefined;
+  const data = timingOf(event);
+  if (!data) return undefined;
+  const modelMs = event.durationMs ?? 0,
+    networkMs = data.requests.reduce((sum, request) => sum + request.ttfbMs + request.bodyMs, 0),
+    toolMs = events.reduce(
+      (sum, item) =>
+        item.type === "tool_result" || item.type === "tool_error"
+          ? sum + (item.durationMs ?? 0)
+          : sum,
+      0,
+    );
+  return {
+    modelMs,
+    networkMs,
+    toolMs,
+    requests: data.requests.length,
+    inputTokens: data.inputTokens,
+    outputTokens: data.outputTokens,
+    outputTokensPerSecond: data.outputTokensPerSecond,
+    totalMs: modelMs + toolMs,
+  };
+}
+function duration(ms: number) {
+  return ms >= 60_000 ? `${(ms / 60_000).toFixed(1)} 分钟` : `${(ms / 1000).toFixed(1)} 秒`;
+}
+function tokenCount(count: number) {
+  return count >= 1000 ? `${(count / 1000).toFixed(1)}k` : String(count);
+}
+function TimingBar({
+  networkMs,
+  modelMs,
+  toolMs,
+  scale,
+}: {
+  networkMs: number;
+  modelMs: number;
+  toolMs: number;
+  scale: number;
+}) {
+  const segments = [
+    { key: "network", ms: Math.min(networkMs, modelMs) },
+    { key: "model", ms: Math.max(0, modelMs - networkMs) },
+    { key: "tools", ms: toolMs },
+  ].filter((segment) => segment.ms > 0);
+  if (!segments.length || scale <= 0) return null;
+  return (
+    <span className="agent-timing-bar" aria-hidden="true">
+      {segments.map((segment) => (
+        <span
+          key={segment.key}
+          className={`agent-timing-segment agent-timing-${segment.key}`}
+          style={{ width: `${(segment.ms / scale) * 100}%` }}
+        />
+      ))}
+    </span>
+  );
+}
 export function RecognitionActivityFeed({
   task,
   baseURL = `/api/exams/${task.id}/activity`,
@@ -100,6 +202,20 @@ export function RecognitionActivityFeed({
   const events = activity.data?.events ?? [];
   const calls = events.filter((e) => e.type === "tool_call");
   const rounds = groupRounds(events);
+  const timings = rounds.map((round) => roundTiming(round.events));
+  const scale = Math.max(1, ...timings.map((timing) => timing?.totalMs ?? 0));
+  const totals = timings.reduce(
+    (sum, timing) =>
+      timing
+        ? {
+            modelMs: sum.modelMs + timing.modelMs,
+            networkMs: sum.networkMs + timing.networkMs,
+            toolMs: sum.toolMs + timing.toolMs,
+            requests: sum.requests + timing.requests,
+          }
+        : sum,
+    { modelMs: 0, networkMs: 0, toolMs: 0, requests: 0 },
+  );
   const visible = active || expanded ? rounds : rounds.slice(-4);
   const attempt = activity.data?.attempt;
   const previewURL = (key: string) => `${baseURL}/images/${key}?attempt=${attempt}`;
@@ -128,6 +244,33 @@ export function RecognitionActivityFeed({
           </button>
         </p>
       )}
+      {timings.some(Boolean) && (
+        <div className="agent-timing-total">
+          <p className="hint">
+            累计耗时：模型输出 {duration(totals.modelMs)} · 工具执行 {duration(totals.toolMs)}
+            {totals.networkMs > 0 &&
+              ` · 其中网络请求 ${duration(totals.networkMs)}（${totals.requests} 次请求）`}
+          </p>
+          <ul className="agent-timing-legend">
+            {[
+              ["network", "网络请求（等待响应与传输）"],
+              ["model", "模型输出（其余调用时间）"],
+              ["tools", "工具执行"],
+            ].map(([key, label]) => (
+              <li key={key}>
+                <span className={`agent-timing-dot agent-timing-${key}`} aria-hidden="true" />
+                {label}
+              </li>
+            ))}
+          </ul>
+          <TimingBar
+            networkMs={totals.networkMs}
+            modelMs={totals.modelMs}
+            toolMs={totals.toolMs}
+            scale={Math.max(1, totals.modelMs + totals.toolMs)}
+          />
+        </div>
+      )}
       {!rounds.length && (
         <p className="agent-empty" role="status">
           {active ? "后台开始处理后，工具操作会实时显示在这里。" : "这份试卷没有 Agent 操作记录。"}
@@ -137,6 +280,7 @@ export function RecognitionActivityFeed({
         {visible.map((round) => {
           const { first } = round;
           const roundCalls = round.events.filter((event) => event.type === "tool_call");
+          const timing = roundTiming(round.events);
           const rejected = round.events.some(
             (event) =>
               event.type === "tool_error" ||
@@ -183,16 +327,52 @@ export function RecognitionActivityFeed({
                             ? `${roundCalls.length} 次工具调用`
                             : ""}
                     </span>
+                    {timing && <span>共 {duration(timing.totalMs)}</span>}
                     <time dateTime={first.at}>{timeLabel(first)}</time>
                     <ChevronDown size={14} aria-hidden="true" />
                   </span>
+                  {timing && (
+                    <span className="agent-round-timing-bar">
+                      <TimingBar
+                        networkMs={timing.networkMs}
+                        modelMs={timing.modelMs}
+                        toolMs={timing.toolMs}
+                        scale={scale}
+                      />
+                    </span>
+                  )}
                 </summary>
+                {timing && (
+                  <div className="agent-round-timing">
+                    <p className="hint">
+                      模型输出 {duration(timing.modelMs)} · 工具执行 {duration(timing.toolMs)}
+                      {timing.networkMs > 0 &&
+                        ` · 其中网络请求 ${duration(timing.networkMs)}（${timing.requests} 次请求）`}
+                    </p>
+                    {(timing.inputTokens > 0 || timing.outputTokens > 0) && (
+                      <p className="hint">
+                        输入 {tokenCount(timing.inputTokens)} / 输出{" "}
+                        {tokenCount(timing.outputTokens)} tokens · {timing.outputTokensPerSecond}{" "}
+                        tokens/秒
+                      </p>
+                    )}
+                    <TimingBar
+                      networkMs={timing.networkMs}
+                      modelMs={timing.modelMs}
+                      toolMs={timing.toolMs}
+                      scale={scale}
+                    />
+                  </div>
+                )}
                 <ol
                   className="agent-round-events"
                   aria-label={first.step === undefined ? "任务详情" : `第 ${first.step} 轮详情`}
                 >
                   {round.events
-                    .filter((event) => !["step", "tool_result", "tool_error"].includes(event.type))
+                    .filter(
+                      (event) =>
+                        !["step", "timing", "tool_result", "tool_error"].includes(event.type),
+                    )
                     .map((event) => {
                       const result =
                         event.type === "tool_call"
