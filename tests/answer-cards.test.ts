@@ -1,3 +1,4 @@
+import { modelStreamResponse } from "./model-stream-response";
 import { describe, it, expect } from "vitest";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -46,7 +47,7 @@ describe("answer card grading", () => {
     };
     const transport: typeof fetch = async () => {
       calls++;
-      return Response.json({
+      return modelStreamResponse({
         id: "test",
         object: "chat.completion",
         created: 1,

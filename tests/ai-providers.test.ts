@@ -1,3 +1,4 @@
+import { modelStreamResponse } from "./model-stream-response";
 import { describe, expect, it } from "vitest";
 import { providerInputSchema, type ProviderSnapshot } from "@/contracts/ai-providers";
 import { anthropicBaseURL, createProviderExamModel, reasoningOptions } from "@/server/ai/providers";
@@ -47,7 +48,8 @@ describe("provider models and reasoning", () => {
       expect(new Headers(init?.headers).get("anthropic-version")).toBe("2023-06-01");
       const body = JSON.parse(String(init?.body));
       expect(body.model).toBe("qwen3.8-flash");
-      return Response.json({
+      expect(body.stream).toBe(true);
+      return modelStreamResponse({
         id: "msg_test",
         type: "message",
         role: "assistant",
@@ -141,7 +143,7 @@ describe("provider models and reasoning", () => {
     const transport: typeof fetch = async (_url, init) => {
       body = JSON.parse(String(init?.body));
       redirect = init?.redirect;
-      return Response.json({
+      return modelStreamResponse({
         id: "completion",
         object: "chat.completion",
         created: 1,
@@ -165,6 +167,8 @@ describe("provider models and reasoning", () => {
       content: [{ type: "text", text: "paper" }],
     });
     expect(body.model).toBe(config.model);
+    expect(body.stream).toBe(true);
+    expect(body.stream_options).toEqual({ include_usage: true });
     expect(body.reasoning_effort).toBe("high");
     expect(body.response_format).toBeUndefined();
     expect(redirect).toBe("error");

@@ -1,3 +1,4 @@
+import { modelStreamResponse } from "./model-stream-response";
 import { mkdtemp, mkdir, appendFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -59,7 +60,7 @@ function scriptedModel(rounds: { name: string; args: unknown }[][]) {
   let requests = 0;
   const fetch: typeof globalThis.fetch = async () => {
     const calls = rounds[requests++];
-    return Response.json({
+    return modelStreamResponse({
       id: `call-${requests}`,
       object: "chat.completion",
       created: 1,
@@ -161,7 +162,7 @@ describe("actual agent activity", () => {
         { name: "append_questions", args: exam },
         { name: "submit_exam", args: { name: exam.name, totalScore: exam.totalScore } },
       ][requests++];
-      return Response.json({
+      return modelStreamResponse({
         id: `call-${requests}`,
         object: "chat.completion",
         created: 1,
@@ -231,7 +232,7 @@ describe("actual agent activity", () => {
         { name: "append_questions", args: exam },
         { name: "submit_exam", args: { name: exam.name, totalScore: exam.totalScore } },
       ][requests++];
-      return Response.json({
+      return modelStreamResponse({
         id: "call",
         object: "chat.completion",
         created: 1,

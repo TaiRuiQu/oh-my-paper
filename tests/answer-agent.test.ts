@@ -1,3 +1,4 @@
+import { modelStreamResponse } from "./model-stream-response";
 import { mkdtemp, mkdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -208,7 +209,7 @@ function scriptedModel(
   const fetch: typeof globalThis.fetch = async (_input, init) => {
     inspect?.(String(init?.body), count);
     const calls = rounds[count++];
-    return Response.json({
+    return modelStreamResponse({
       id: `call-${count}`,
       object: "chat.completion",
       created: 1,

@@ -60,8 +60,15 @@ export function normalizeResponseAnnotations(value: unknown): boolean {
   return changed;
 }
 
-export async function compatibleResponsesResponse(response: Response): Promise<Response> {
-  if (!response.ok || response.headers.get("content-type")?.includes("text/event-stream"))
+export async function compatibleResponsesResponse(
+  response: Response,
+  streaming = false,
+): Promise<Response> {
+  if (
+    streaming ||
+    !response.ok ||
+    response.headers.get("content-type")?.includes("text/event-stream")
+  )
     return response;
   const body = await response.text();
   let value: unknown;

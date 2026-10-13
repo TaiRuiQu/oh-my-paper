@@ -1,3 +1,4 @@
+import { modelStreamResponse } from "./model-stream-response";
 import { describe, expect, it, vi } from "vitest";
 import { APICallError, tool, type ModelMessage } from "ai";
 import { z } from "zod";
@@ -11,6 +12,7 @@ import { describeError } from "@/server/logger";
 
 type ResponsesRequest = {
   store: boolean;
+  stream: boolean;
   input: {
     type?: string;
     role?: string;
@@ -85,7 +87,7 @@ describe("Responses gateway compatibility", () => {
       const transport: typeof fetch = async (_url, init) => {
         requests.push(JSON.parse(String(init?.body)));
         const step = requests.length;
-        return Response.json({
+        return modelStreamResponse({
           id: `resp_${step}`,
           model: "deepseek/deepseek-v4.1-flash",
           created_at: 1,
@@ -153,6 +155,7 @@ describe("Responses gateway compatibility", () => {
         expect(warningLogger).not.toHaveBeenCalled();
         for (const body of requests) {
           expect(body.store).toBe(false);
+          expect(body.stream).toBe(true);
           expect(body.input[0].role).toBe("system");
           if (effort === "default") expect(body.reasoning).toBeUndefined();
           else {
@@ -214,6 +217,9 @@ describe("Responses gateway compatibility", () => {
       headers: { "content-type": "text/event-stream" },
     });
     expect(await compatibleResponsesResponse(stream)).toBe(stream);
+    const mislabeled = new Response("data: {}\n\n", { headers: { "content-type": "text/plain" } });
+    expect(await compatibleResponsesResponse(mislabeled, true)).toBe(mislabeled);
+    expect(mislabeled.bodyUsed).toBe(false);
     expect(await (await compatibleResponsesResponse(new Response("invalid"))).text()).toBe(
       "invalid",
     );
@@ -235,7 +241,7 @@ describe("Responses gateway compatibility", () => {
       ],
     };
     const transport: typeof fetch = async () =>
-      Response.json({
+      modelStreamResponse({
         id: "resp_1",
         model: "glm-5.3-flash",
         created_at: 1,

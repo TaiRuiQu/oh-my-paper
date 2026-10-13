@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { Client } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { loadEnvironment } from "./load-env.mjs";
+import { modelStreamResponse } from "../tests/model-stream-response";
 loadEnvironment();
 
 async function main() {
@@ -253,6 +254,8 @@ async function main() {
     globalThis.fetch = async (_input, init) => {
       const request = JSON.parse(String(init?.body));
       assert.equal(request.model, snapshot.model);
+      assert.equal(request.stream, true);
+      assert.deepEqual(request.stream_options, { include_usage: true });
       assert.equal(request.reasoning_effort, "high");
       const steps = [
         { name: "read_pages", args: { pages: [1] } },
@@ -278,7 +281,7 @@ async function main() {
       }
       const next = steps[calls++];
       assert.ok(next, "Unexpected extra model call");
-      return Response.json({
+      return modelStreamResponse({
         id: `test-completion-${calls}`,
         object: "chat.completion",
         created: 1,
@@ -521,14 +524,17 @@ async function main() {
     ) {
       agentCalls = 0;
       globalThis.fetch = async (_input, init) => {
-        assert.equal(JSON.parse(String(init?.body)).model, expectedModel);
+        const request = JSON.parse(String(init?.body));
+        assert.equal(request.model, expectedModel);
+        assert.equal(request.stream, true);
+        assert.deepEqual(request.stream_options, { include_usage: true });
         assert.equal(
           new Headers(init?.headers).get("authorization"),
           `Bearer ${expectedModel === "grading-vision" ? "grading-test-key" : "test-key"}`,
         );
         await before?.(agentCalls);
         const next = rounds[agentCalls++];
-        return Response.json({
+        return modelStreamResponse({
           id: `agent-${agentCalls}`,
           object: "chat.completion",
           created: 1,

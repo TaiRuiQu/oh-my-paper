@@ -1,3 +1,4 @@
+import { modelStreamResponse } from "./model-stream-response";
 import { describe, expect, it, vi } from "vitest";
 import type { LanguageModelUsage } from "ai";
 import { usageCharge } from "@/server/ai/credits";
@@ -79,7 +80,7 @@ describe("credit accounting", () => {
     };
     const fetch: typeof globalThis.fetch = async () => {
       round++;
-      return Response.json({
+      return modelStreamResponse({
         id: `completion-${round}`,
         object: "chat.completion",
         created: 1,

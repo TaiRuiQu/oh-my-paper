@@ -167,10 +167,13 @@ describe("local Python sandbox", () => {
         code: "PYTHON_SANDBOX_FAILED",
         message: expect.stringContaining("沙箱进程退出（1）"),
       });
-      await writeFile(stub, `#!/bin/sh
+      await writeFile(
+        stub,
+        `#!/bin/sh
 read line
 printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
-`);
+`,
+      );
       const result = await session.run({ command: "printf kept", images: [] });
       expect(result.stdout).toContain("沙箱进程已重启");
       expect(result.stdout).toContain("ok");

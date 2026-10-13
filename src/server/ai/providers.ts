@@ -4,7 +4,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogle } from "@ai-sdk/google";
-import { generateText, ToolLoopAgent, isStepCount, type ToolSet, type UserContent } from "ai";
+import { streamText, ToolLoopAgent, isStepCount, type ToolSet, type UserContent } from "ai";
 import { parsedExamSchema, type ParsedExam } from "@/contracts/exams";
 import { providerSnapshotSchema, type ProviderSnapshot } from "@/contracts/ai-providers";
 import { AppError } from "@/server/errors";
@@ -18,6 +18,7 @@ import type { CreditMeter } from "./credits";
 import { createResultTools } from "@/server/exams/result-tools";
 import type { z } from "zod";
 import { randomUUID } from "node:crypto";
+import { consumeModelStream } from "./streams";
 
 const MAX_AGENT_STEPS = 256;
 
@@ -69,7 +70,7 @@ export interface SingleCallModel {
 }
 export function reasoningOptions(
   config: Pick<ProviderSnapshot, "apiType" | "reasoningEffort" | "baseURL">,
-): NonNullable<Parameters<typeof generateText>[0]["providerOptions"]> {
+): NonNullable<Parameters<typeof streamText>[0]["providerOptions"]> {
   const effort = config.reasoningEffort;
   switch (config.apiType) {
     case "openai_responses": {
@@ -118,14 +119,29 @@ export function createProviderExamModel(
   creditMeter?: CreditMeter,
 ): ExamModel & AgentModel & SingleCallModel {
   const config = providerSnapshotSchema.parse(raw);
+  const streamTimeout = {
+    firstChunkMs: config.timeoutSeconds * 1000,
+    chunkMs: config.timeoutSeconds * 1000,
+  };
   // 逐个 HTTP 请求计时（等待响应头、接收响应体），供管理员活动面板按轮展示耗时。
   const requestTimings: AgentTimingRequest[] = [];
   const timedFetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
     const started = performance.now();
     const record: AgentTimingRequest = { ttfbMs: 0, bodyMs: 0, status: 0, failed: false };
     requestTimings.push(record);
+    const headersAbort = new AbortController();
+    const timer = setTimeout(() => {
+      headersAbort.abort(new DOMException("等待 AI 接口响应头超时。", "TimeoutError"));
+    }, config.timeoutSeconds * 1000);
     try {
-      const response = await fetch(input, { ...init, redirect: "error" });
+      const response = await fetch(input, {
+        ...init,
+        signal: init?.signal
+          ? AbortSignal.any([init.signal, headersAbort.signal])
+          : headersAbort.signal,
+        redirect: "error",
+      });
+      clearTimeout(timer);
       record.ttfbMs = Math.round(performance.now() - started);
       record.status = response.status;
       if (response.body) {
@@ -141,7 +157,7 @@ export function createProviderExamModel(
           response,
         );
         return config.apiType === "openai_responses"
-          ? await compatibleResponsesResponse(timedResponse)
+          ? await compatibleResponsesResponse(timedResponse, true)
           : timedResponse;
       }
       return response;
@@ -149,6 +165,8 @@ export function createProviderExamModel(
       record.ttfbMs = Math.round(performance.now() - started);
       record.failed = true;
       throw error;
+    } finally {
+      clearTimeout(timer);
     }
   }) as typeof fetch;
   const common = { apiKey, baseURL: config.baseURL, fetch: timedFetch };
@@ -156,7 +174,7 @@ export function createProviderExamModel(
     config.apiType === "openai_responses"
       ? createOpenAI(common).responses(config.model)
       : config.apiType === "openai_chat"
-        ? createOpenAICompatible({ ...common, name: "exam" })(config.model)
+        ? createOpenAICompatible({ ...common, name: "exam", includeUsage: true })(config.model)
         : config.apiType === "anthropic"
           ? createAnthropic({ ...common, baseURL: anthropicBaseURL(config.baseURL) })(config.model)
           : createGoogle(common)(config.model);
@@ -209,7 +227,7 @@ export function createProviderExamModel(
                 }
               : {}),
           stopWhen: [isStepCount(MAX_AGENT_STEPS), request.isComplete],
-          timeout: { stepMs: config.timeoutSeconds * 1000 },
+          timeout: streamTimeout,
           maxOutputTokens: config.maxOutputTokens,
           maxRetries: 1,
           providerOptions: reasoningOptions(config),
@@ -277,12 +295,26 @@ export function createProviderExamModel(
             if (text) await emit({ type: "message", step, text: redactErrorText(text, [apiKey]) });
           },
         });
-        await agent.generate({
-          messages: [{ role: "user", content: request.content }],
-          abortSignal: request.signal
-            ? AbortSignal.any([request.signal, billingAbort.signal])
-            : billingAbort.signal,
-        });
+        try {
+          const result = await agent.stream({
+            messages: [{ role: "user", content: request.content }],
+            abortSignal: request.signal
+              ? AbortSignal.any([request.signal, billingAbort.signal])
+              : billingAbort.signal,
+          });
+          let outputStep = 0;
+          await consumeModelStream(result, async (part) => {
+            if (
+              outputStep !== step &&
+              ["text-delta", "reasoning-delta", "tool-input-delta"].includes(part.type)
+            ) {
+              outputStep = step;
+              await emit({ type: "message", step, text: "模型开始流式输出。" });
+            }
+          });
+        } catch (error) {
+          throw billingError ?? error;
+        }
         if (billingError) throw billingError;
         if (!request.isComplete())
           throw new AppError(
@@ -299,10 +331,9 @@ export function createProviderExamModel(
       providerConcurrencyLimiter(config.providerId).run(
         config.maxConcurrency,
         async () => {
-          const timeout = AbortSignal.timeout(config.timeoutSeconds * 1000);
           // SDK lifecycle notifications swallow callback errors. Billing must be awaited directly.
           await creditMeter?.beforeCall();
-          const result = await generateText({
+          const result = streamText({
             model,
             system:
               request.system +
@@ -312,18 +343,20 @@ export function createProviderExamModel(
             providerOptions: reasoningOptions(config),
             // Each question makes exactly one API call. Failed questions may be retried explicitly.
             maxRetries: 0,
-            abortSignal: request.signal ? AbortSignal.any([request.signal, timeout]) : timeout,
+            timeout: streamTimeout,
+            abortSignal: request.signal,
           });
+          const finishReason = await consumeModelStream(result);
           try {
-            await creditMeter?.record(randomUUID(), result.usage);
+            await creditMeter?.record(randomUUID(), await result.usage);
           } catch (cause) {
             throw new AppError("用量结算失败，已停止后续评分。", "CREDIT_SETTLEMENT_FAILED", 503, {
               cause,
             });
           }
-          if (result.finishReason !== "stop")
+          if (finishReason !== "stop")
             throw new AppError("评分响应未完整结束，请重试该题。", "AI_OUTPUT_INCOMPLETE", 422);
-          return request.schema.parse(extractJson(result.text));
+          return request.schema.parse(extractJson(await result.text));
         },
         request.signal,
       ),
@@ -350,14 +383,10 @@ export function createProviderExamModel(
       return providerConcurrencyLimiter(config.providerId).run(
         config.maxConcurrency,
         async () => {
-          const timeout = AbortSignal.timeout(config.timeoutSeconds * 1000);
-          const result = await generateText({
+          requestTimings.length = 0;
+          await creditMeter?.beforeCall();
+          const result = streamText({
             model,
-            onLanguageModelCallStart: async () => {
-              requestTimings.length = 0;
-              await creditMeter?.beforeCall();
-            },
-            onLanguageModelCallEnd: async ({ callId, usage }) => creditMeter?.record(callId, usage),
             system:
               request.system +
               `\nRequired JSON schema: ${JSON.stringify(parsedExamSchema.toJSONSchema())}`,
@@ -365,15 +394,18 @@ export function createProviderExamModel(
             maxOutputTokens: config.maxOutputTokens,
             providerOptions: reasoningOptions(config),
             maxRetries: 1,
-            abortSignal: request.signal ? AbortSignal.any([request.signal, timeout]) : timeout,
+            timeout: streamTimeout,
+            abortSignal: request.signal,
           });
-          if (result.finishReason !== "stop")
+          const finishReason = await consumeModelStream(result);
+          await creditMeter?.record(randomUUID(), await result.usage);
+          if (finishReason !== "stop")
             throw new AppError(
-              `AI 返回内容不完整（结束原因：${result.finishReason}），请检查输出 token 上限。`,
+              `AI 返回内容不完整（结束原因：${finishReason}），请检查输出 token 上限。`,
               "AI_OUTPUT_INCOMPLETE",
               422,
             );
-          return parsedExamSchema.parse(extractJson(result.text));
+          return parsedExamSchema.parse(extractJson(await result.text));
         },
         request.signal,
       );

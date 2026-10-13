@@ -7,6 +7,7 @@ import { Client } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import sharp from "sharp";
 import { loadEnvironment } from "./load-env.mjs";
+import { modelStreamResponse } from "../tests/model-stream-response";
 loadEnvironment();
 async function main() {
   const schema = `cards_test_${randomUUID().replaceAll("-", "")}`,
@@ -138,7 +139,7 @@ async function main() {
       peak = 0,
       failOnce = true;
     const response = (content: unknown, finish = "stop") =>
-      Response.json({
+      modelStreamResponse({
         id: randomUUID(),
         object: "chat.completion",
         created: 1,
@@ -148,6 +149,8 @@ async function main() {
       });
     globalThis.fetch = async (_input, init) => {
       const body = JSON.parse(String(init?.body));
+      assert.equal(body.stream, true);
+      assert.deepEqual(body.stream_options, { include_usage: true });
       if (body.tools) {
         layoutCalls++;
         if (layoutCalls === 1)
