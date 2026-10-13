@@ -34,8 +34,6 @@ export async function exportExam(
             format === "pdf"
               ? Buffer.from(
                   await page.pdf({
-                    format: "A4",
-                    margin: { top: "20mm", bottom: "20mm", left: "20mm", right: "20mm" },
                     printBackground: true,
                     preferCSSPageSize: true,
                     waitForFonts: true,

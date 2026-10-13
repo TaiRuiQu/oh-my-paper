@@ -77,6 +77,7 @@ export function agentTaskSummary(task: StoredTask): ExamAgentTask {
   const result = parseResult(task);
   return {
     id: task.id,
+    examRevision: task.examRevision,
     kind: task.kind,
     ...(task.kind === "ANSWER"
       ? { answerSource: task.inputFiles.length ? ("UPLOAD" as const) : ("GENERATED" as const) }
@@ -158,6 +159,7 @@ export async function createAgentTask(
 ) {
   const source = await ownedExamTask(userId, sourceId),
     exam = await taskResult(source);
+  if (source.deletedAt && !workflow) throw new AccessError(404, "试卷已删除。");
   if (!exam || !source.outputKey) throw new RequestError(409, "请先完成试卷识别。");
   await requireCredits(userId);
   await requireWorker();
@@ -209,6 +211,9 @@ export async function createAgentTask(
       await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
       await requireCredits(userId, tx);
       await tx.$queryRaw`SELECT id FROM exams WHERE id = ${exam.id} FOR UPDATE`;
+      const currentExam = await tx.exam.findUniqueOrThrow({ where: { id: exam.id } });
+      if (currentExam.revision !== (exam.revision ?? 0))
+        throw new RequestError(409, "试卷内容已更新，请重新提交任务。");
       let linkedAnswerId: string | undefined;
       if (
         kind === "ANSWER" &&
@@ -255,7 +260,13 @@ export async function createAgentTask(
       let reference: unknown[] = [];
       if (kind === "GRADING") {
         const completed = await tx.examAgentTask.findFirst({
-          where: { id: linkedAnswerId, examId: exam.id, kind: "ANSWER", status: "COMPLETED" },
+          where: {
+            id: linkedAnswerId,
+            examId: exam.id,
+            examRevision: currentExam.revision,
+            kind: "ANSWER",
+            status: "COMPLETED",
+          },
           orderBy: { createdAt: "desc" },
         });
         if (!completed) throw new RequestError(409, "请先生成完整标准答案，再上传学生答卷。");
@@ -282,6 +293,7 @@ export async function createAgentTask(
           id,
           jobId,
           examId: exam.id,
+          examRevision: currentExam.revision,
           totalQuestions: examQuestionCount(exam),
           kind,
           name:
@@ -331,6 +343,9 @@ export async function retryAgentTask(
     await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
     await requireCredits(userId, tx);
     await tx.$queryRaw`SELECT id FROM exams WHERE id = ${task.examId} FOR UPDATE`;
+    const currentExam = await tx.exam.findUniqueOrThrow({ where: { id: task.examId } });
+    if (currentExam.revision !== task.examRevision)
+      throw new RequestError(409, "试卷内容已更新，请为新版试卷重新开始任务。");
     if (
       (await tx.examAgentTask.count({
         where: { exam: { userId }, status: { in: ["QUEUED", "RUNNING"] } },
@@ -376,6 +391,8 @@ export async function processAgentTask(id: string, jobId: string, workerSignal: 
       throw new AppError("试卷原始材料不可用。", "EXAM_SOURCE_MISSING", 422);
     const exam = await taskResult(source);
     if (!exam) throw new AppError("试卷尚未完成识别。", "EXAM_NOT_READY", 422);
+    if ((exam.revision ?? 0) !== task.examRevision)
+      throw new RequestError(409, "试卷内容已更新，请为新版试卷重新开始任务。");
     const provider = providerSnapshotSchema.parse(task.providerSnapshot);
     apiKey = decryptApiKey(provider.encryptedApiKey);
     const signal = AbortSignal.any([workerSignal, AbortSignal.timeout(25 * 60_000)]);

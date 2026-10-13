@@ -40,7 +40,9 @@ export function ExamAgents({
         ? 2000
         : false,
   });
-  const answers = (query.data?.tasks ?? []).filter((task) => task.kind === "ANSWER");
+  const answers = (query.data?.tasks ?? []).filter(
+    (task) => task.kind === "ANSWER" && (task.examRevision ?? 0) === (exam.revision ?? 0),
+  );
   const running = answers.find((task) => ["QUEUED", "RUNNING"].includes(task.status));
   const attachedUpload = query.data?.upload;
   const waiting = !!attachedUpload && ["QUEUED", "RUNNING"].includes(attachedUpload.status);

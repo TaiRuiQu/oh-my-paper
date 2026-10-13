@@ -34,6 +34,7 @@ export function taskSummary(task: ExamTask): ExamTaskSummary {
     error: task.error,
     errorCode: task.errorCode,
     createdAt: task.createdAt.toISOString(),
+    deletedAt: task.deletedAt?.toISOString() ?? null,
     creditsSpent: task.creditsSpent?.toFixed(8) ?? "0",
     progress: { total: task.totalQuestions ?? null, completed: task.parsedQuestions ?? 0 },
   };
@@ -65,7 +66,7 @@ async function reconcileTask(task: ExamTask) {
 }
 export async function listExamTasks(userId: string) {
   const tasks = await getDb().examTask.findMany({
-    where: { userId },
+    where: { userId, deletedAt: null },
     orderBy: { createdAt: "desc" },
     take: 50,
     include: {
@@ -120,6 +121,7 @@ export async function taskResult(task: ExamTask): Promise<Exam | null> {
   if (!exam) return null;
   return {
     id: exam.id,
+    revision: exam.revision,
     name: exam.name,
     totalScore: exam.totalScore,
     sections: exam.sections.map((section) => {

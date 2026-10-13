@@ -6,7 +6,11 @@ import JSZip from "jszip";
 import sharp from "sharp";
 import type { Exam } from "@/contracts/exams";
 import { examExportFilename } from "@/contracts/exam-exports";
-import { buildExportDocument, resolveDocumentImage } from "@/server/exams/export/document";
+import {
+  buildExportDocument,
+  resolveDocumentImage,
+  splitChoices,
+} from "@/server/exams/export/document";
 import { exportHtml } from "@/server/exams/export/html";
 import { exportWord } from "@/server/exams/export/word";
 const roots: string[] = [];
@@ -86,7 +90,7 @@ describe("printable PDF source and editable Word documents", () => {
     const document = await buildExportDocument(exam, directory, undefined, "task");
     expect(
       document.parts.filter((part) => part.kind === "heading").map((part) => part.text),
-    ).toEqual(["数学 <script>试卷", "一、计算题（10 分）", "第 15 题"]);
+    ).toEqual(["数学 <script>试卷"]);
     expect(document.images.size).toBe(2);
     expect(Array.from(document.formulas.values()).map((formula) => formula.latex)).toEqual([
       "x^2",
@@ -100,12 +104,16 @@ describe("printable PDF source and editable Word documents", () => {
     ).toBeUndefined();
     expect(resolveDocumentImage(document, "../../.env")).toBeUndefined();
     const html = await exportHtml(document);
-    expect(html).toContain("@page{size:A4");
+    expect(html).toContain("@page{size:210mm 148mm;margin:5mm}");
+    expect(html).toContain("grid-template-columns:repeat(4,minmax(0,1fr))");
+    expect(html).toContain("<strong>15.</strong> 求");
+    expect(html).toContain("一、计算题（10 分）：");
+    expect(html).not.toContain("第 15 题</h3>");
     expect(html).toContain("<table>");
     expect(html).toContain("data:image/jpeg;base64,");
     expect(html).toContain("data:font/woff2;base64,");
     expect(html).toContain('font-family:"NSimSun";src:url("data:font/ttf;base64,');
-    expect(html).toContain('font:11pt/1.7 "NSimSun",');
+    expect(html).toContain('font:5.5pt/1.45 "NSimSun",');
     expect(html).toContain("<strong>认真阅读</strong>");
     expect(html).not.toContain('<img src="https:');
     expect(html).not.toContain('<a href="javascript:');
@@ -130,7 +138,10 @@ describe("printable PDF source and editable Word documents", () => {
     const data = await exportWord(document, formulas),
       zip = await JSZip.loadAsync(data);
     const xml = await zip.file("word/document.xml")!.async("string");
-    expect(xml).toContain("第 15 题");
+    expect(xml).toContain("15.");
+    expect(xml).toContain('w:orient="landscape"');
+    expect(xml).toContain('w:num="4"');
+    expect(xml).toContain('w:w="11906" w:h="8391"');
     expect(xml).toContain("第二步");
     expect(xml).toContain("<w:t");
     expect(xml).toContain("<w:tbl>");
@@ -159,5 +170,12 @@ describe("printable PDF source and editable Word documents", () => {
     await expect(buildExportDocument(exam, directory, AbortSignal.abort())).rejects.toMatchObject({
       name: "AbortError",
     });
+  });
+  it("recognizes four options without splitting mathematical variable names", () => {
+    expect(splitChoices("选择正确答案。\nA. $x=1$\nB. $x=2$\nC. $x=3$\nD. $x=4$")).toEqual({
+      stem: "选择正确答案。",
+      choices: ["A. $x=1$", "B. $x=2$", "C. $x=3$", "D. $x=4$"],
+    });
+    expect(splitChoices("已知点 A、B、C，求面积。").choices).toEqual([]);
   });
 });

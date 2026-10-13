@@ -14,6 +14,7 @@ export type ExamTaskSummary = {
   error: string | null;
   errorCode?: string | null;
   createdAt: string;
+  deletedAt?: string | null;
   creditsSpent?: string;
   progress?: QuestionProgress;
   answerStatus?: "MISSING" | "PROCESSING" | "READY";

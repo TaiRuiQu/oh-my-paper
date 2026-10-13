@@ -13,6 +13,7 @@ import type { TaskModelSelection, UserAiSettings } from "@/contracts/user-ai";
 import { TaskModelPicker, useTaskModelSettings } from "./task-model-picker";
 import { FileUpload } from "./file-upload";
 import { StatusBadge } from "./processing-state";
+import { ExamDelete } from "./exam-delete";
 export const taskLabels: Record<ExamTaskSummary["status"], string> = {
   QUEUED: "处理中",
   RUNNING: "处理中",
@@ -251,6 +252,11 @@ export function ExamWorkbench({
                           批改答卷
                         </Link>
                       )}
+                      <ExamDelete
+                        id={task.id}
+                        name={task.name}
+                        onDeleted={() => router.refresh()}
+                      />
                     </td>
                   </tr>
                 ))}

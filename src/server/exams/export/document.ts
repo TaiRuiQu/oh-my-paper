@@ -22,11 +22,18 @@ export type ExportImage = {
 };
 export type ExportPart =
   | { kind: "heading"; level: 1 | 2 | 3 | 4; text: string }
-  | { kind: "markdown"; tree: Root; definitions: Map<string, Definition> }
+  | {
+      kind: "markdown";
+      tree: Root;
+      definitions: Map<string, Definition>;
+      role?: "section" | "question" | "choices";
+      choiceColumns?: 2 | 4;
+    }
   | { kind: "image"; key: string };
 export type ExportFormula = { id: string; latex: string; display: boolean };
 export type ExportDocument = {
   title: string;
+  totalScore?: number | null;
   taskId?: string;
   parts: ExportPart[];
   images: Map<string, ExportImage>;
@@ -38,7 +45,32 @@ const parser = unified()
   .use(remarkGfm)
   .use(remarkMath)
   .use(remarkParentheticalMath);
-export const PAGE_WIDTH_PX = 642; // A4 with 20 mm side margins, at 96 dpi.
+// The reference is a 210 × 148 mm landscape sheet with four compact columns.
+export const PRINT_LAYOUT = {
+  widthMm: 210,
+  heightMm: 148,
+  marginMm: 5,
+  gapMm: 3.5,
+  columns: 4,
+} as const;
+export const SHEET_WIDTH_PX = ((PRINT_LAYOUT.widthMm - PRINT_LAYOUT.marginMm * 2) * 96) / 25.4;
+export const SHEET_HEIGHT_PX = ((PRINT_LAYOUT.heightMm - PRINT_LAYOUT.marginMm * 2) * 96) / 25.4;
+export const PAGE_WIDTH_PX =
+  (SHEET_WIDTH_PX - ((PRINT_LAYOUT.columns - 1) * PRINT_LAYOUT.gapMm * 96) / 25.4) /
+  PRINT_LAYOUT.columns;
+
+export function splitChoices(text: string) {
+  const matches = [...text.matchAll(/(?:^|\s)([A-D])[.．、)）]\s*/g)];
+  if (matches.length !== 4 || matches.map((item) => item[1]).join("") !== "ABCD")
+    return { stem: text, choices: [] as string[] };
+  return {
+    stem: text.slice(0, matches[0].index).trimEnd(),
+    choices: matches.map(
+      (match, index) =>
+        `${match[1]}. ${text.slice(match.index! + match[0].length, matches[index + 1]?.index ?? text.length).trim()}`,
+    ),
+  };
+}
 function visit(node: Nodes, callback: (node: Nodes) => void) {
   callback(node);
   if ("children" in node) node.children.forEach((child) => visit(child, callback));
@@ -52,6 +84,7 @@ export async function buildExportDocument(
   signal?.throwIfAborted();
   const document: ExportDocument = {
     title: exam.name,
+    totalScore: exam.totalScore,
     taskId,
     parts: [],
     images: new Map(),
@@ -61,7 +94,7 @@ export async function buildExportDocument(
   const formulaKeys = new Map<string, string>();
   const heading = (level: 1 | 2 | 3 | 4, text: string) =>
     document.parts.push({ kind: "heading", level, text });
-  const markdown = (text: string, label?: string) => {
+  const markdown = (text: string, label?: string, role?: "section" | "question" | "choices") => {
     if (!text.trim() && !label) return;
     const tree = parser.parse(text),
       definitions = new Map<string, Definition>();
@@ -95,21 +128,43 @@ export async function buildExportDocument(
       }
       document.formulaIds.set(node, id);
     });
-    document.parts.push({ kind: "markdown", tree, definitions });
+    const choiceColumns =
+      role === "choices" &&
+      tree.children.every((node) => {
+        let size = 0;
+        visit(node, (child) => {
+          if (child.type === "text") size += child.value.length;
+          if (child.type === "inlineMath")
+            size += child.value.replace(/\\[a-zA-Z]+/g, "x").replace(/[{}_^]/g, "").length;
+        });
+        return size <= 8;
+      })
+        ? 4
+        : 2;
+    document.parts.push({
+      kind: "markdown",
+      tree,
+      definitions,
+      role,
+      ...(role === "choices" ? { choiceColumns } : {}),
+    });
   };
   const score = (value: number | null) => (value === null ? "" : `（${value} 分）`);
   heading(1, exam.name);
-  if (exam.totalScore !== null) markdown(`总分：${exam.totalScore} 分`);
   let position = 0;
   for (const section of exam.sections) {
-    heading(2, `${section.number}、${section.title}${score(section.score)}`);
-    markdown(section.description);
+    markdown(
+      section.description,
+      `${section.number}、${section.title}${score(section.score)}：`,
+      "section",
+    );
     for (const question of section.questions) {
-      heading(3, `第 ${question.number} 题${score(question.score)}`);
-      markdown(question.description);
+      const { stem, choices } = splitChoices(question.description);
+      markdown(stem, `${question.number}.${score(question.score)}`, "question");
       question.materials.forEach((_, index) =>
         document.parts.push({ kind: "image", key: materialKey(position, index) }),
       );
+      if (choices.length) markdown(choices.join("\n\n"), undefined, "choices");
       question.subquestions.forEach((part, partPosition) => {
         markdown(part.description, `${part.number}${score(part.score)}`);
         part.materials.forEach((_, index) =>
@@ -149,7 +204,7 @@ export function resolveDocumentImage(document: ExportDocument, url: string) {
   return undefined;
 }
 export function imageDimensions(image: ExportImage, maxWidth = PAGE_WIDTH_PX) {
-  const scale = Math.min(1, maxWidth / image.width, 820 / image.height);
+  const scale = Math.min(1, maxWidth / image.width, SHEET_HEIGHT_PX / image.height);
   return { width: image.width * scale, height: image.height * scale };
 }
 export function safeLink(url: string) {

@@ -3,9 +3,10 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { taskErrorMessage } from "@/lib/error-message";
 import { ProcessingState, StatusBadge } from "./processing-state";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ExamTaskDetail } from "@/contracts/exam-tasks";
 import { examQuestionCount, type Exam, type Material } from "@/contracts/exams";
 import { apiRequest } from "@/lib/http-client";
@@ -14,6 +15,8 @@ import { MarkdownText } from "./markdown-text";
 import { RecognitionActivityFeed } from "./recognition-activity";
 import { ExamAgents } from "./exam-agents";
 import { ExamExport } from "./exam-export";
+import { ExamEditor } from "./exam-editor";
+import { ExamDelete } from "./exam-delete";
 
 export function ExamResult({
   id,
@@ -26,6 +29,10 @@ export function ExamResult({
   isAdmin?: boolean;
   initialView?: "questions" | "answers";
 }) {
+  const router = useRouter(),
+    client = useQueryClient();
+  const [editing, setEditing] = useState(false),
+    [saved, setSaved] = useState(false);
   const [view, setView] = useState(initialView),
     [retrying, setRetrying] = useState(false),
     [retryError, setRetryError] = useState("");
@@ -71,6 +78,19 @@ export function ExamResult({
         </div>
         {exam && (
           <div className="inline-actions">
+            {!task.deletedAt && (
+              <button
+                className="button secondary"
+                disabled={editing}
+                onClick={() => {
+                  setEditing(true);
+                  setView("questions");
+                  setSaved(false);
+                }}
+              >
+                编辑试卷
+              </button>
+            )}
             <ExamExport taskId={id} name={exam.name} />
             <Link className="button" href={`/grading?exam=${id}`}>
               批改答卷
@@ -79,6 +99,16 @@ export function ExamResult({
               <a className="button secondary" href={`/api/exams/${id}/files/exam.json`}>
                 下载 JSON
               </a>
+            )}
+            {!editing && !task.deletedAt && (
+              <ExamDelete
+                id={id}
+                name={exam.name}
+                onDeleted={() => {
+                  router.push("/dashboard");
+                  router.refresh();
+                }}
+              />
             )}
           </div>
         )}
@@ -130,16 +160,40 @@ export function ExamResult({
       )}
       {exam && (
         <>
+          {saved && (
+            <p role="status" className="hint">
+              修改已保存。请重新生成或上传与新版试题对应的标准答案。
+            </p>
+          )}
           <div className="content-tabs" role="group" aria-label="试卷视图">
             <button aria-pressed={view === "questions"} onClick={() => setView("questions")}>
               试题内容
             </button>
-            <button aria-pressed={view === "answers"} onClick={() => setView("answers")}>
+            <button
+              disabled={editing}
+              aria-pressed={view === "answers"}
+              onClick={() => setView("answers")}
+            >
               标准答案
             </button>
           </div>
           <div className="surface detail-surface">
-            {view === "questions" ? (
+            {editing ? (
+              <ExamEditor
+                exam={exam}
+                taskId={id}
+                onCancel={() => setEditing(false)}
+                onSaved={(updated) => {
+                  client.setQueryData<ExamTaskDetail>(["exam", id], {
+                    task: { ...task, name: updated.name },
+                    exam: updated,
+                  });
+                  setEditing(false);
+                  setSaved(true);
+                  router.refresh();
+                }}
+              />
+            ) : view === "questions" ? (
               <ExamContent exam={exam} taskId={id} />
             ) : (
               <ExamAgents exam={exam} taskId={id} isAdmin={isAdmin} />

@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { randomUUID } from "node:crypto";
 const mocks = vi.hoisted(() => ({
-  db: { gradingWorkflow: { findFirst: vi.fn(), updateMany: vi.fn() }, $transaction: vi.fn() },
+  db: {
+    exam: { findUnique: vi.fn() },
+    gradingWorkflow: { findFirst: vi.fn(), updateMany: vi.fn() },
+    $transaction: vi.fn(),
+  },
   source: vi.fn(),
   agents: vi.fn(),
   create: vi.fn(),
@@ -62,6 +66,7 @@ beforeEach(() => {
     error: null,
   };
   mocks.db.gradingWorkflow.findFirst.mockResolvedValue(flow);
+  mocks.db.exam.findUnique.mockResolvedValue({ revision: 0 });
   mocks.db.gradingWorkflow.updateMany.mockResolvedValue({ count: 1 });
   mocks.db.$transaction.mockImplementation(async (fn) => fn(mocks.db));
   mocks.source.mockResolvedValue({
@@ -75,6 +80,20 @@ beforeEach(() => {
   mocks.log.mockReturnValue({ message: "internal error" });
 });
 describe("durable grading coordinator", () => {
+  it("prepares a new answer instead of reusing an answer from before a manual edit", async () => {
+    mocks.db.exam.findUnique.mockResolvedValue({ revision: 1 });
+    mocks.agents.mockResolvedValue([
+      { id: "old-answer", kind: "ANSWER", status: "COMPLETED", examRevision: 0 },
+    ]);
+    await processWorkflow(flow.id, flow.jobId);
+    expect(mocks.create).toHaveBeenCalledWith(expect.any(Request), "u", flow.sourceId, "ANSWER", {
+      id: flow.id,
+      jobId: flow.jobId,
+    });
+    expect(mocks.db.gradingWorkflow.updateMany).not.toHaveBeenCalledWith(
+      expect.objectContaining({ data: { answerTaskId: "old-answer" } }),
+    );
+  });
   it("stops after parsing the answer key for a paper upload", async () => {
     flow.kind = "ANSWER_UPLOAD";
     flow.answerTaskId = "uploaded-answer";

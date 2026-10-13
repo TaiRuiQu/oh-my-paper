@@ -2,7 +2,8 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }) }));
 import type { AgentEvent, RecognitionActivity } from "@/contracts/activity";
 import type { ExamTaskSummary } from "@/contracts/exam-tasks";
 import { RecognitionActivityFeed } from "@/components/recognition-activity";

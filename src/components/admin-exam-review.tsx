@@ -34,6 +34,7 @@ export function AdminExamReview({ initialData }: { initialData: AdminExamDetail 
           <h1>{task.name}</h1>
           <p className="intro admin-record-owner">
             {task.owner.name} · {task.owner.email} · {task.source} · {formatDate(task.createdAt)}
+            {task.deletedAt && ` · 用户已删除（${formatDate(task.deletedAt)}）`}
           </p>
         </div>
         <div className="inline-actions">

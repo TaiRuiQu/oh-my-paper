@@ -92,7 +92,17 @@ export type Section = Omit<z.infer<typeof sectionSchema>, "questions"> & {
   id: string;
   questions: Question[];
 };
-export type Exam = Omit<ParsedExam, "sections"> & { id: string; sections: Section[] };
+export type Exam = Omit<ParsedExam, "sections"> & {
+  id: string;
+  revision?: number;
+  sections: Section[];
+};
+
+// Editing keeps IDs and material positions stable so existing crops and records stay linked.
+export const examEditSchema = z.strictObject({
+  revision: z.number().int().nonnegative(),
+  exam: parsedExamSchema,
+});
 
 export function examQuestionCount(exam: Pick<ParsedExam, "sections">) {
   return exam.sections.reduce((count, section) => count + section.questions.length, 0);

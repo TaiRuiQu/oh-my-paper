@@ -40,6 +40,7 @@ export type GradedAnswer = z.infer<typeof gradedAnswerSchema>;
 export type AgentResult = { questions: (GeneratedAnswer | GradedAnswer)[] };
 export type ExamAgentTask = {
   id: string;
+  examRevision?: number;
   kind: ExamAgentKind;
   answerSource?: "UPLOAD" | "GENERATED";
   name: string;

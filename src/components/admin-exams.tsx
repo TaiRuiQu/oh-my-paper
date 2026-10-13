@@ -88,6 +88,7 @@ export function AdminExams({ initialData }: { initialData: AdminList<AdminExam> 
                   <td>{formatDate(task.createdAt)}</td>
                   <td>
                     <StatusBadge status={task.status} />
+                    {task.deletedAt && <span className="hint"> · 用户已删除</span>}
                   </td>
                   <td>
                     <Link className="text-action" href={`/admin/exams/${task.id}`}>

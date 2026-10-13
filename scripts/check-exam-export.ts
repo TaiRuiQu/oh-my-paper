@@ -57,9 +57,19 @@ $$
   };
   for (let index = 1; index <= 20; index++)
     await writeFile(join(directory, `materials/${index}-1.jpg`), picture);
+  exam.sections[0].questions[19].description += `\n\n${"这是一段用于验证长题干跨栏分页的完整材料。".repeat(160)}结束标记。\n\n| 编号 | 数据 |\n| --- | --- |\n${Array.from({ length: 80 }, (_, index) => `| ${index + 1} | 表格内容 ${index + 1} |`).join("\n")}`;
   const document = await buildExportDocument(exam, directory);
   await withExportPage(document, undefined, async (page) => {
-    const pdf = await page.pdf({ format: "A4", preferCSSPageSize: true, printBackground: true });
+    const layout = await page.evaluate(() => ({
+      sheets: globalThis.document.querySelectorAll(".paper-page").length,
+      columns: globalThis.document.querySelectorAll(".paper-column").length,
+      overflow: [...globalThis.document.querySelectorAll<HTMLElement>(".paper-column")].some(
+        (column) => column.scrollHeight > column.clientHeight + 1,
+      ),
+    }));
+    assert.equal(layout.columns, layout.sheets * 4);
+    assert.equal(layout.overflow, false);
+    const pdf = await page.pdf({ preferCSSPageSize: true, printBackground: true });
     assert.equal(Buffer.from(pdf).subarray(0, 5).toString(), "%PDF-");
     await writeFile(join(directory, "exam.pdf"), pdf);
     const formulas = await formulaImages(page, document);
@@ -73,7 +83,8 @@ $$
     await writeFile(join(directory, "exam.docx"), word);
     const zip = await JSZip.loadAsync(word),
       xml = await zip.file("word/document.xml")!.async("string");
-    assert.ok(xml.includes("第 20 题"));
+    assert.ok(xml.includes("20."));
+    assert.ok(xml.includes('w:num="4"'));
     assert.ok(xml.includes("<w:tbl>"));
     assert.ok(xml.includes("<w:t"));
     assert.equal(xml.includes("<m:oMath"), false);
@@ -103,18 +114,20 @@ $$
   ]);
   const pages = Number(stdout.match(/^Pages:\s+(\d+)/m)?.[1]);
   assert.ok(pages > 1);
-  assert.ok(stdout.includes("(A4)"));
+  assert.match(stdout, /Page size:\s+594\.96 x 420 pts/);
   await execute(process.env.PDFTOTEXT_PATH ?? "pdftotext", [
     join(directory, "exam.pdf"),
     join(directory, "exam.txt"),
   ]);
   const text = await readFile(join(directory, "exam.txt"), "utf8");
   assert.ok(text.includes("试卷导出验证"));
-  assert.ok(text.includes("第 20 题"));
-  assert.ok(text.includes("写出完整计算过程"));
+  assert.ok(text.includes("20."));
+  assert.ok(text.replace(/\s/g, "").includes("结束标记"));
+  assert.ok(text.replace(/\s/g, "").includes("表格内容80"));
+  assert.ok(text.replace(/\s/g, "").includes("写出完整计算过程"));
   assert.match(text, /\(1\)（2 分）[^\S\r\n]*结合配图说明计算过程。/);
   assert.match(text, /\(2\)（3 分）[^\S\r\n]*求值/);
-  console.log(`✓ A4 PDF with ${pages} pages and searchable Chinese text`);
+  console.log(`✓ Landscape four-column PDF with ${pages} pages and searchable Chinese text`);
   console.log(`Export verification files: ${directory}`);
 }
 main().catch((error) => {

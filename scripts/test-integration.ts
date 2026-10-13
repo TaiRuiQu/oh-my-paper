@@ -1394,6 +1394,120 @@ async function main() {
       console.log(
         "✓ Quick grading links its reference, copies original uploads, enqueues once and completes the report",
       );
+      {
+        const { editExam, deleteExamTask } = await import("../src/server/exams/edit");
+        const { listExamTasks } = await import("../src/server/exams/tasks");
+        const { reviewExam } = await import("../src/server/admin/exams");
+        const { parsedExamSchema } = await import("../src/contracts/exams");
+        const editableId = randomUUID();
+        const savedExam = await db.exam.create({
+          data: {
+            userId,
+            name: "编辑删除测试",
+            totalScore: 5,
+            sections: {
+              create: {
+                position: 1,
+                number: "一",
+                title: "计算题",
+                description: "请作答",
+                score: 5,
+              },
+            },
+          },
+          include: { sections: true },
+        });
+        const question = await db.examQuestion.create({
+          data: {
+            examId: savedExam.id,
+            sectionId: savedExam.sections[0].id,
+            position: 1,
+            number: 1,
+            description: "计算 $1+1$",
+            score: 5,
+            materials: [],
+          },
+        });
+        await db.examTask.create({
+          data: {
+            id: editableId,
+            userId,
+            examId: savedExam.id,
+            name: savedExam.name,
+            status: "COMPLETED",
+            inputFiles: [],
+            providerSnapshot: {},
+            jobId: randomUUID(),
+          },
+        });
+        const original = (await taskResult(
+          await db.examTask.findUniqueOrThrow({ where: { id: editableId } }),
+        ))!;
+        const payload = {
+          revision: 0,
+          exam: parsedExamSchema.parse({
+            name: original.name,
+            totalScore: original.totalScore,
+            sections: original.sections.map((section) => ({
+              number: section.number,
+              title: section.title,
+              description: section.description,
+              score: section.score,
+              questions: section.questions.map((item) => ({
+                number: item.number,
+                description: item.description,
+                score: item.score,
+                materials: item.materials,
+                subquestions: item.subquestions,
+              })),
+            })),
+          }),
+        };
+        payload.exam.name = "已修改的试卷";
+        payload.exam.sections[0].questions[0].description = "计算 $1+2$";
+        await assert.rejects(editExam("another-owner", editableId, payload));
+        const updated = (await editExam(userId, editableId, payload))!;
+        assert.equal(updated.name, payload.exam.name);
+        assert.equal(updated.revision, 1);
+        assert.equal(updated.sections[0].questions[0].id, question.id);
+        assert.equal(updated.sections[0].questions[0].description, "计算 $1+2$");
+        await assert.rejects(editExam(userId, editableId, payload), /其他页面修改/);
+        const activeTask = await db.examAgentTask.create({
+          data: {
+            examId: savedExam.id,
+            examRevision: 1,
+            kind: "ANSWER",
+            name: "并发测试",
+            status: "QUEUED",
+            inputFiles: [],
+            providerSnapshot: {},
+            jobId: randomUUID(),
+          },
+        });
+        await assert.rejects(
+          editExam(userId, editableId, { ...payload, revision: 1 }),
+          /正在生成答案或批改/,
+        );
+        await db.examAgentTask.update({
+          where: { id: activeTask.id },
+          data: { status: "COMPLETED" },
+        });
+        await assert.rejects(deleteExamTask("another-owner", editableId));
+        await deleteExamTask(userId, editableId);
+        await deleteExamTask(userId, editableId);
+        assert.equal(
+          (await listExamTasks(userId)).some((task) => task.id === editableId),
+          false,
+        );
+        const review = await reviewExam(editableId);
+        assert.ok(review.task.deletedAt);
+        assert.equal(review.exam?.sections[0].questions[0].id, question.id);
+        assert.ok(review.agents.some((task) => task.id === activeTask.id));
+        await assert.rejects(editExam(userId, editableId, { ...payload, revision: 1 }), /已删除/);
+        console.log(
+          "✓ Owned edits preserve question IDs, reject stale/active writes; soft deletion hides lists and preserves admin review",
+        );
+      }
     } finally {
       await boss.stop();
     }

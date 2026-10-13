@@ -4,10 +4,14 @@ import {
   BorderStyle,
   Document,
   ExternalHyperlink,
+  Footer,
   HeadingLevel,
   ImageRun,
   Packer,
   Paragraph,
+  PageNumber,
+  PageOrientation,
+  SectionType,
   Table,
   TableCell,
   TableRow,
@@ -24,6 +28,7 @@ import {
   resolveDocumentImage,
   safeLink,
   PAGE_WIDTH_PX,
+  PRINT_LAYOUT,
 } from "./document";
 export async function exportWord(document: ExportDocument, formulas: Map<string, ExportImage>) {
   const image = (item: ExportImage, formula = false, maxWidth = PAGE_WIDTH_PX) =>
@@ -121,7 +126,7 @@ export async function exportWord(document: ExportDocument, formulas: Map<string,
         return [
           new Paragraph({
             children: inline(node, definitions),
-            spacing: { after: 120 },
+            spacing: { after: 40 },
             widowControl: true,
             indent: depth ? { left: depth * 360 } : undefined,
           }),
@@ -139,7 +144,7 @@ export async function exportWord(document: ExportDocument, formulas: Map<string,
           new Paragraph({
             children: inline(node, definitions),
             alignment: AlignmentType.CENTER,
-            spacing: { before: 120, after: 120 },
+            spacing: { before: 60, after: 60 },
             keepLines: true,
           }),
         ];
@@ -219,7 +224,7 @@ export async function exportWord(document: ExportDocument, formulas: Map<string,
           new Paragraph({
             children: [new TextRun(prefix), ...inline(first, definitions)],
             indent: { left: (depth + 1) * 360, hanging: 260 },
-            spacing: { after: 80 },
+            spacing: { after: 40 },
           }),
         );
       else result.push(new Paragraph({ text: prefix, indent: { left: (depth + 1) * 360 } }));
@@ -228,26 +233,79 @@ export async function exportWord(document: ExportDocument, formulas: Map<string,
       return result;
     });
   }
-  const children = document.parts.flatMap((part) => {
-    if (part.kind === "markdown") return blocks(part.tree, part.definitions);
-    if (part.kind === "image")
+  const children = document.parts
+    .filter((part) => part.kind !== "heading" || part.level !== 1)
+    .flatMap((part) => {
+      if (part.kind === "markdown") {
+        if (part.role === "choices") {
+          const paragraphs = part.tree.children.filter((node) => node.type === "paragraph");
+          const count = part.choiceColumns ?? 2;
+          return [
+            new Table({
+              width: { size: 100, type: WidthType.PERCENTAGE },
+              borders: Object.fromEntries(
+                ["top", "bottom", "left", "right", "insideHorizontal", "insideVertical"].map(
+                  (side) => [side, { style: BorderStyle.NONE, size: 0, color: "FFFFFF" }],
+                ),
+              ),
+              rows: (count === 4 ? [0] : [0, 2]).map(
+                (offset) =>
+                  new TableRow({
+                    cantSplit: true,
+                    children: paragraphs.slice(offset, offset + count).map(
+                      (node) =>
+                        new TableCell({
+                          width: { size: 100 / count, type: WidthType.PERCENTAGE },
+                          margins: { top: 0, bottom: 0, left: 0, right: 30 },
+                          children: [
+                            new Paragraph({
+                              children: inline(
+                                node,
+                                part.definitions,
+                                {},
+                                PAGE_WIDTH_PX / count - 4,
+                              ),
+                              spacing: { after: 30 },
+                            }),
+                          ],
+                        }),
+                    ),
+                  }),
+              ),
+            }),
+          ];
+        }
+        if (part.role === "section")
+          return [
+            new Paragraph({
+              children: part.tree.children.flatMap((node) =>
+                inline(node, part.definitions, { bold: true }),
+              ),
+              spacing: { before: 80, after: 40 },
+              keepNext: true,
+            }),
+          ];
+        return blocks(part.tree, part.definitions);
+      }
+      if (part.kind === "image")
+        return [
+          new Paragraph({
+            children: [image(document.images.get(part.key)!)],
+            alignment: AlignmentType.CENTER,
+            spacing: { before: 40, after: 40 },
+            keepLines: true,
+          }),
+        ];
       return [
         new Paragraph({
-          children: [image(document.images.get(part.key)!)],
-          spacing: { before: 120, after: 120 },
-          keepLines: true,
+          text: part.text,
+          heading: part.level === 1 ? HeadingLevel.TITLE : headingLevels[part.level - 2],
+          alignment: part.level === 1 ? AlignmentType.CENTER : AlignmentType.LEFT,
+          keepNext: true,
+          spacing: { before: part.level === 1 ? 0 : 180, after: 120 },
         }),
       ];
-    return [
-      new Paragraph({
-        text: part.text,
-        heading: part.level === 1 ? HeadingLevel.TITLE : headingLevels[part.level - 2],
-        alignment: part.level === 1 ? AlignmentType.CENTER : AlignmentType.LEFT,
-        keepNext: true,
-        spacing: { before: part.level === 1 ? 0 : 180, after: 120 },
-      }),
-    ];
-  });
+    });
   const file = new Document({
     title: document.title,
     creator: "Oh My Paper",
@@ -255,22 +313,68 @@ export async function exportWord(document: ExportDocument, formulas: Map<string,
     styles: {
       default: {
         document: {
-          run: { font: { name: "Calibri", eastAsia: "宋体" }, size: 22, color: "111111" },
-          paragraph: { spacing: { line: 340, after: 120 } },
+          run: { font: { name: "Times New Roman", eastAsia: "宋体" }, size: 11, color: "111111" },
+          paragraph: { spacing: { line: 290, after: 40 } },
         },
-        title: { run: { size: 36, bold: true, color: "111111" } },
-        heading1: { run: { size: 26, bold: true, color: "111111" } },
-        heading2: { run: { size: 22, bold: true, color: "111111" } },
-        heading3: { run: { size: 22, bold: true, color: "111111" } },
+        title: { run: { size: 16, bold: true, color: "111111" } },
+        heading1: { run: { size: 12, bold: true, color: "111111" } },
+        heading2: { run: { size: 11, bold: true, color: "111111" } },
+        heading3: { run: { size: 11, bold: true, color: "111111" } },
       },
     },
     sections: [
       {
         properties: {
           page: {
-            size: { width: 11906, height: 16838 },
-            margin: { top: 1134, bottom: 1134, left: 1134, right: 1134 },
+            // docx swaps the supplied portrait dimensions for landscape orientation.
+            size: { width: 8391, height: 11906, orientation: PageOrientation.LANDSCAPE },
+            margin: { top: 283, bottom: 283, left: 283, right: 283, footer: 100 },
           },
+        },
+        children: [
+          new Paragraph({
+            text: document.title,
+            heading: HeadingLevel.TITLE,
+            alignment: AlignmentType.CENTER,
+            spacing: { after: 40 },
+            border: {
+              top: { color: "111111", style: BorderStyle.SINGLE, size: 4 },
+              bottom: { color: "111111", style: BorderStyle.SINGLE, size: 4 },
+            },
+          }),
+          ...(document.totalScore === null || document.totalScore === undefined
+            ? []
+            : [
+                new Paragraph({
+                  text: `满分 ${document.totalScore} 分`,
+                  alignment: AlignmentType.RIGHT,
+                  spacing: { after: 40 },
+                }),
+              ]),
+        ],
+      },
+      {
+        properties: {
+          type: SectionType.CONTINUOUS,
+          column: { count: PRINT_LAYOUT.columns, space: 198, equalWidth: true },
+          page: {
+            size: { width: 8391, height: 11906, orientation: PageOrientation.LANDSCAPE },
+            margin: { top: 283, bottom: 283, left: 283, right: 283, footer: 100 },
+          },
+        },
+        footers: {
+          default: new Footer({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun("— "),
+                  new TextRun({ children: [PageNumber.CURRENT] }),
+                  new TextRun(" —"),
+                ],
+                alignment: AlignmentType.RIGHT,
+              }),
+            ],
+          }),
         },
         children,
       },

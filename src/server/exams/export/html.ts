@@ -9,6 +9,9 @@ import {
   resolveDocumentImage,
   safeLink,
   PAGE_WIDTH_PX,
+  PRINT_LAYOUT,
+  SHEET_WIDTH_PX,
+  SHEET_HEIGHT_PX,
 } from "./document";
 const escape = (value: string) =>
   value.replace(
@@ -126,13 +129,19 @@ export async function exportHtml(document: ExportDocument) {
   const body = document.parts
     .map((part) =>
       part.kind === "heading"
-        ? `<h${part.level}>${escape(part.text)}</h${part.level}>`
+        ? `<header class="paper-header"><h${part.level}>${escape(part.text)}</h${part.level}>${document.totalScore === null || document.totalScore === undefined ? "" : `<p style="text-align:right;margin:1pt 0">满分 ${document.totalScore} 分</p>`}</header>`
         : part.kind === "image"
           ? `<p class="material">${image(part.key, document.images.get(part.key)!.description)}</p>`
-          : render(part.tree, part.definitions),
+          : part.role === "choices"
+            ? `<div class="choices${part.choiceColumns === 4 ? " choices-four" : ""}">${render(part.tree, part.definitions)}</div>`
+            : part.role === "section"
+              ? `<div class="section-instructions">${render(part.tree, part.definitions)}</div>`
+              : part.role === "question"
+                ? `<div class="question-stem">${render(part.tree, part.definitions)}</div>`
+                : render(part.tree, part.definitions),
     )
     .join("\n");
   return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>${escape(document.title)}</title><style>${await exportStyles()}
-@page{size:A4;margin:20mm}*{box-sizing:border-box}body{width:${PAGE_WIDTH_PX}px;max-width:100%;margin:0 auto;background:white;color:#111;font:11pt/1.7 "NSimSun","Noto Serif CJK SC","Noto Sans CJK SC",serif}h1{font-size:18pt;text-align:center;margin:0 0 20pt}h2{font-size:13pt;margin:20pt 0 10pt}h3,h4{font-size:11pt;margin:12pt 0 6pt}h1,h2,h3,h4{break-after:avoid;page-break-after:avoid}p{margin:6pt 0;orphans:2;widows:2}img{display:inline-block;object-fit:contain;break-inside:avoid;max-height:820px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:10pt/1.6 monospace}table{width:100%;table-layout:fixed;border-collapse:collapse;margin:12pt 0}th,td{border:1px solid #555;padding:6pt;vertical-align:top;overflow-wrap:anywhere}thead{display:table-header-group}tr{break-inside:avoid}a{color:inherit;text-decoration:none}blockquote{margin:10pt 0;padding:0 12pt;border-left:1px solid #888}.material{break-inside:avoid}.export-formula{display:inline-block;padding:2px;max-width:100%;line-height:normal}.formula-baseline{display:inline-block;width:0;height:0}.display-formula{text-align:center;margin:12pt 0;break-inside:avoid}.katex-display{margin:0}.katex-error{white-space:pre-wrap;overflow-wrap:anywhere}.katex{white-space:nowrap}li>p{margin:3pt 0}@media print{body{width:auto}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-</style></head><body>${body}</body></html>`;
+@page{size:${PRINT_LAYOUT.widthMm}mm ${PRINT_LAYOUT.heightMm}mm;margin:${PRINT_LAYOUT.marginMm}mm}*{box-sizing:border-box}body{margin:0;background:white;color:#111;font:5.5pt/1.45 "NSimSun","Noto Serif CJK SC","Noto Sans CJK SC",serif}.print-source{width:${PAGE_WIDTH_PX}px}.paper-page{position:relative;width:${SHEET_WIDTH_PX}px;height:${SHEET_HEIGHT_PX}px;break-after:page;page-break-after:always;padding-bottom:10px}.paper-page:last-child{break-after:auto;page-break-after:auto}.paper-columns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:minmax(0,1fr);gap:${PRINT_LAYOUT.gapMm}mm;height:100%}.paper-column{min-width:0;min-height:0;display:flow-root}.paper-header{width:calc(50% - ${PRINT_LAYOUT.gapMm / 2}mm);padding:2pt 5pt;border-top:0.5pt solid #111;border-bottom:0.5pt solid #111;margin-bottom:4pt}.paper-page>.paper-header{position:absolute;top:0;left:0}.paper-header h1{font-size:8pt;text-align:center;margin:0;line-height:1.3}.paper-footer{position:absolute;right:0;bottom:0;font-size:5pt}.section-instructions{font-weight:bold;margin-top:5pt;break-after:avoid}.question-stem{margin-top:5pt}.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1pt 4pt}.choices p{margin:1pt 0}.choices-four{grid-template-columns:repeat(4,minmax(0,1fr))}.choices-wide{grid-template-columns:1fr}h2,h3,h4{font-size:6pt;margin:4pt 0 2pt}p{margin:2pt 0;orphans:2;widows:2;overflow-wrap:anywhere}img{display:inline-block;object-fit:contain;break-inside:avoid;max-height:440px}.material{text-align:center;margin:3pt 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:5pt/1.4 monospace}table{width:100%;table-layout:fixed;border-collapse:collapse;margin:4pt 0}th,td{border:0.4pt solid #555;padding:2pt;vertical-align:top;overflow-wrap:anywhere}thead{display:table-header-group}tr{break-inside:avoid}a{color:inherit;text-decoration:none}blockquote{margin:3pt 0;padding:0 4pt;border-left:0.5pt solid #888}.export-formula{display:inline-block;padding:1px;max-width:100%;line-height:normal}.formula-baseline{display:inline-block;width:0;height:0}.display-formula{text-align:center;margin:4pt 0;break-inside:avoid}.katex-display{margin:0}.katex-error{white-space:pre-wrap;overflow-wrap:anywhere}.katex{white-space:nowrap;font-size:1em}li>p{margin:1pt 0}ol,ul{padding-left:10pt;margin:3pt 0}@media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body><main class="print-source">${body}</main></body></html>`;
 }

@@ -36,6 +36,7 @@ model Exam {
   user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   name        String
   totalScore  Float?
+  revision    Int             @default(0)
   sections    ExamSection[]
   questions   ExamQuestion[]
   answer      ExamAnswer?
@@ -200,6 +201,7 @@ model ExamTask {
   errorCode        String?
   error            String?
   createdAt        DateTime          @default(now())
+  deletedAt        DateTime?
   workflows        GradingWorkflow[]
 
   @@index([userId, createdAt])
@@ -269,6 +271,7 @@ enum ExamAgentKind {
 model ExamAgentTask {
   id               String         @id @default(uuid())
   examId           String
+  examRevision     Int            @default(0)
   exam             Exam           @relation(fields: [examId], references: [id], onDelete: Cascade)
   kind             ExamAgentKind
   name             String

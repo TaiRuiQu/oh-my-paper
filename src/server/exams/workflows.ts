@@ -148,6 +148,7 @@ export async function listWorkflows(userId: string) {
 
 export async function createGradingWorkflow(request: Request, userId: string, sourceId: string) {
   const source = await ownedExamTask(userId, sourceId);
+  if (source.deletedAt) throw new AccessError(404, "试卷已删除。");
   if (source.status !== "COMPLETED" || !source.examId)
     throw new RequestError(409, "请选择已添加完成的试卷。");
   await requireCredits(userId);
@@ -184,10 +185,17 @@ export async function createGradingWorkflow(request: Request, userId: string, so
     const flow = await getDb().$transaction(async (tx) => {
       await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
       await requireCredits(userId, tx);
+      await tx.$queryRaw`SELECT id FROM exams WHERE id = ${source.examId} FOR UPDATE`;
+      const currentExam = await tx.exam.findUniqueOrThrow({ where: { id: source.examId! } });
       if ((await tx.gradingWorkflow.count({ where: { userId, status: { in: [...active] } } })) >= 3)
         throw new RequestError(429, "已有 3 份答卷正在处理，请稍后再上传。");
       const reference = await tx.examAgentTask.findFirst({
-        where: { examId: source.examId!, kind: "ANSWER", status: "COMPLETED" },
+        where: {
+          examId: source.examId!,
+          examRevision: currentExam.revision,
+          kind: "ANSWER",
+          status: "COMPLETED",
+        },
         orderBy: { createdAt: "desc" },
         select: { id: true },
       });
@@ -227,16 +235,22 @@ export async function processWorkflow(id: string, jobId: string) {
     if (state.source.status === "COMPLETED") {
       if (!flow.answerTaskId) {
         const tasks = await listAgentTasks(flow.userId, flow.sourceId);
+        const source = await ownedExamTask(flow.userId, flow.sourceId);
+        const exam = source.examId
+          ? await getDb().exam.findUnique({ where: { id: source.examId } })
+          : null;
         const reference =
           tasks.find(
             (task) =>
               task.kind === "ANSWER" &&
+              (task.examRevision ?? 0) === (exam?.revision ?? 0) &&
               (!flow.referenceFiles.length || task.answerSource === "UPLOAD") &&
               task.status === "COMPLETED",
           ) ??
           tasks.find(
             (task) =>
               task.kind === "ANSWER" &&
+              (task.examRevision ?? 0) === (exam?.revision ?? 0) &&
               (!flow.referenceFiles.length || task.answerSource === "UPLOAD") &&
               active.includes(task.status as (typeof active)[number]),
           );
