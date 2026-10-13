@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/providers";
+import { version } from "../../package.json";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/noto-sans-sc";
 import "katex/dist/katex.min.css";
@@ -18,6 +19,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           跳转到主要内容
         </a>
         <Providers>{children}</Providers>
+        <small className="site-version" aria-label={`网站版本 ${version}`}>
+          v{version}
+        </small>
       </body>
     </html>
   );
