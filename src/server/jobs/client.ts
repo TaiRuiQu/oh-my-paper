@@ -5,6 +5,7 @@ import { logError } from "@/server/logger";
 import { EXAM_PARSE_QUEUE } from "@/contracts/exam-tasks";
 import { EXAM_AGENT_QUEUE } from "@/contracts/exam-agents";
 import { WORKFLOW_QUEUE } from "@/contracts/workflows";
+import { CARD_TEMPLATE_QUEUE, CARD_BATCH_QUEUE } from "@/contracts/answer-cards";
 export function createJobClient(worker = false) {
   const boss = new PgBoss({
     connectionString: getEnv().DATABASE_URL,
@@ -19,7 +20,13 @@ export function createJobClient(worker = false) {
   return boss;
 }
 export async function initializeQueues(boss: PgBoss) {
-  for (const queue of [EXAM_PARSE_QUEUE, EXAM_AGENT_QUEUE, WORKFLOW_QUEUE])
+  for (const queue of [
+    EXAM_PARSE_QUEUE,
+    EXAM_AGENT_QUEUE,
+    WORKFLOW_QUEUE,
+    CARD_TEMPLATE_QUEUE,
+    CARD_BATCH_QUEUE,
+  ])
     await boss.createQueue(queue, {
       retryLimit: 2,
       retryDelay: 10,

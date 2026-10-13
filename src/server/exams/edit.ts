@@ -57,7 +57,9 @@ export async function editExam(userId: string, id: string, input: unknown) {
     const active = { in: ["QUEUED", "RUNNING"] as ("QUEUED" | "RUNNING")[] };
     if (
       (await tx.examAgentTask.count({ where: { examId: current.id, status: active } })) ||
-      (await tx.gradingWorkflow.count({ where: { sourceId: id, status: active } }))
+      (await tx.gradingWorkflow.count({ where: { sourceId: id, status: active } })) ||
+      (await tx.answerCardTemplate.count({ where: { sourceId: id, status: active } })) ||
+      (await tx.answerCardBatch.count({ where: { template: { sourceId: id }, status: active } }))
     )
       throw new RequestError(409, "这份试卷正在生成答案或批改，请等待任务结束后再保存。");
     const updated = await tx.exam.updateMany({

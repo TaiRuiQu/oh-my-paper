@@ -1164,6 +1164,55 @@ input {
   font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
+.card-template-list {
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.card-template-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.card-template-row > div {
+  min-width: 0;
+  flex: 1;
+}
+.card-template-row strong {
+  overflow-wrap: anywhere;
+}
+.card-template-preview summary {
+  cursor: pointer;
+  color: var(--accent);
+  padding-block: 12px;
+}
+.card-region-image {
+  position: relative;
+  margin-top: 16px;
+}
+.card-region-image img {
+  display: block;
+  width: 100%;
+}
+.card-region-box {
+  position: absolute;
+  border: 2px solid var(--accent);
+  background: rgb(36 81 188 / 6%);
+  pointer-events: none;
+}
+.card-region-box > span {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 1px 4px;
+}
+.card-student-result {
+  margin-top: 24px;
+  padding: 24px;
+}
 .workspace-body {
   margin-left: 228px;
   flex: 1;
@@ -1449,7 +1498,7 @@ h1 {
   cursor: pointer;
 }
 .upload-dropzone:has(input:disabled) {
-  opacity: 0.55;
+  background: var(--surface);
 }
 .upload-dropzone:has(input:disabled) input {
   cursor: not-allowed;

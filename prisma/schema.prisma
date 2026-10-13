@@ -8,24 +8,26 @@ datasource db {
 }
 
 model User {
-  id            String            @id
+  id            String               @id
   name          String
-  email         String            @unique
-  emailVerified Boolean           @default(false)
+  email         String               @unique
+  emailVerified Boolean              @default(false)
   image         String?
-  role          String            @default("USER")
-  credits       Decimal           @default(100) @db.Decimal(24, 8)
+  role          String               @default("USER")
+  credits       Decimal              @default(100) @db.Decimal(24, 8)
   aiSelections  UserAiSelection[]
   creditUsage   CreditUsage[]
   creditGrants  CreditGrant[]
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
   sessions      Session[]
   accounts      Account[]
   exams         Exam[]
   examTasks     ExamTask[]
   workflows     GradingWorkflow[]
   submissions   Submission[]
+  cardTemplates AnswerCardTemplate[]
+  cardBatches   AnswerCardBatch[]
 
   @@map("users")
 }
@@ -106,13 +108,14 @@ model QuestionAnswer {
 }
 
 model Submission {
-  id        String             @id @default(uuid())
-  examId    String
-  exam      Exam               @relation(fields: [examId], references: [id], onDelete: Cascade)
-  studentId String?
-  student   User?              @relation(fields: [studentId], references: [id], onDelete: SetNull)
-  answers   SubmissionAnswer[]
-  agentTask ExamAgentTask?
+  id          String             @id @default(uuid())
+  examId      String
+  exam        Exam               @relation(fields: [examId], references: [id], onDelete: Cascade)
+  studentId   String?
+  student     User?              @relation(fields: [studentId], references: [id], onDelete: SetNull)
+  answers     SubmissionAnswer[]
+  agentTask   ExamAgentTask?
+  cardStudent AnswerCardStudent?
 
   @@unique([id, examId])
   @@index([examId])
@@ -183,26 +186,27 @@ enum ExamTaskStatus {
 }
 
 model ExamTask {
-  id               String            @id @default(uuid())
+  id               String               @id @default(uuid())
   userId           String
-  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  examId           String?           @unique
-  exam             Exam?             @relation(fields: [examId], references: [id], onDelete: SetNull)
+  user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId           String?              @unique
+  exam             Exam?                @relation(fields: [examId], references: [id], onDelete: SetNull)
   name             String
-  status           ExamTaskStatus    @default(QUEUED)
+  status           ExamTaskStatus       @default(QUEUED)
   totalQuestions   Int?
-  parsedQuestions  Int               @default(0)
+  parsedQuestions  Int                  @default(0)
   inputFiles       String[]
-  creditsSpent     Decimal           @default(0) @db.Decimal(24, 8)
+  creditsSpent     Decimal              @default(0) @db.Decimal(24, 8)
   providerSnapshot Json
-  jobId            String            @unique
+  jobId            String               @unique
   attempt          String?
   outputKey        String?
   errorCode        String?
   error            String?
-  createdAt        DateTime          @default(now())
+  createdAt        DateTime             @default(now())
   deletedAt        DateTime?
   workflows        GradingWorkflow[]
+  cardTemplates    AnswerCardTemplate[]
 
   @@index([userId, createdAt])
   @@map("exam_tasks")
@@ -364,4 +368,70 @@ model CreditGrant {
 
   @@index([userId, createdAt])
   @@map("credit_grants")
+}
+
+model AnswerCardTemplate {
+  id               String            @id @default(uuid())
+  userId           String
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceId         String
+  source           ExamTask          @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  examRevision     Int
+  name             String
+  status           ExamTaskStatus    @default(QUEUED)
+  inputFiles       String[]
+  providerSnapshot Json
+  regions          Json              @default("[]")
+  pageCount        Int               @default(0)
+  jobId            String            @unique
+  attempt          String?
+  outputKey        String?
+  creditsSpent     Decimal           @default(0) @db.Decimal(24, 8)
+  error            String?
+  errorCode        String?
+  createdAt        DateTime          @default(now())
+  batches          AnswerCardBatch[]
+
+  @@index([userId, createdAt])
+  @@map("answer_card_templates")
+}
+
+model AnswerCardBatch {
+  id               String              @id @default(uuid())
+  userId           String
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId       String
+  template         AnswerCardTemplate  @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  name             String
+  status           ExamTaskStatus      @default(QUEUED)
+  examSnapshot     Json
+  reference        Json
+  providerSnapshot Json
+  jobId            String              @unique
+  attempt          String?
+  creditsSpent     Decimal             @default(0) @db.Decimal(24, 8)
+  error            String?
+  errorCode        String?
+  createdAt        DateTime            @default(now())
+  students         AnswerCardStudent[]
+
+  @@index([userId, createdAt])
+  @@map("answer_card_batches")
+}
+
+model AnswerCardStudent {
+  id           String          @id @default(uuid())
+  batchId      String
+  batch        AnswerCardBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  position     Int
+  name         String
+  inputFiles   String[]
+  status       ExamTaskStatus  @default(QUEUED)
+  result       Json            @default("{\"questions\":[]}")
+  submissionId String?         @unique
+  submission   Submission?     @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+  error        String?
+
+  @@unique([batchId, position])
+  @@map("answer_card_students")
 }

@@ -107,6 +107,9 @@ export function GradingManager({
               : "选择试卷，上传学生答卷，查看逐题反馈。"}
           </p>
         </div>
+        <Link className="button secondary" href="/grading/cards">
+          答题卡批量批改
+        </Link>
       </div>
       <section className="surface upload-section">
         <h2>{quick ? "上传作答试卷" : "新建批改"}</h2>

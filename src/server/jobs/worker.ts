@@ -10,6 +10,8 @@ import { EXAM_AGENT_QUEUE } from "@/contracts/exam-agents";
 import { agentJobSchema, processAgentTask } from "@/server/exams/agent-tasks";
 import { WORKFLOW_QUEUE } from "@/contracts/workflows";
 import { processWorkflow, workflowJobSchema } from "@/server/exams/workflows";
+import { CARD_TEMPLATE_QUEUE, CARD_BATCH_QUEUE } from "@/contracts/answer-cards";
+import { cardJobSchema, processCardTemplate, processCardBatch } from "@/server/answer-cards/tasks";
 export async function startWorker() {
   const boss = createJobClient(true);
   try {
@@ -50,6 +52,18 @@ export async function startWorker() {
           await processWorkflow(workflowJobSchema.parse(job.data).workflowId, job.id);
       },
     );
+    for (const [queue, process] of [
+      [CARD_TEMPLATE_QUEUE, processCardTemplate],
+      [CARD_BATCH_QUEUE, processCardBatch],
+    ] as const)
+      await boss.work(
+        queue,
+        { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 },
+        async (jobs) => {
+          for (const job of jobs)
+            await process(cardJobSchema.parse(job.data).id, job.id, job.signal);
+        },
+      );
     const id = randomUUID();
     const beat = () =>
       getDb().workerHeartbeat.upsert({

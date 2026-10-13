@@ -64,7 +64,7 @@ export interface CreditMeter {
 export function taskCreditMeter(options: {
   userId: string;
   taskId: string;
-  taskKind: "EXAM" | "ANSWER" | "GRADING";
+  taskKind: "EXAM" | "ANSWER" | "GRADING" | "CARD_TEMPLATE" | "CARD_BATCH";
   attempt: string;
   model: string;
   providerId: string;
@@ -81,10 +81,20 @@ export function taskCreditMeter(options: {
               where: { id: options.taskId },
               select: { status: true, attempt: true },
             })
-          : await getDb().examAgentTask.findUnique({
-              where: { id: options.taskId },
-              select: { status: true, attempt: true },
-            });
+          : options.taskKind === "CARD_TEMPLATE"
+            ? await getDb().answerCardTemplate.findUnique({
+                where: { id: options.taskId },
+                select: { status: true, attempt: true },
+              })
+            : options.taskKind === "CARD_BATCH"
+              ? await getDb().answerCardBatch.findUnique({
+                  where: { id: options.taskId },
+                  select: { status: true, attempt: true },
+                })
+              : await getDb().examAgentTask.findUnique({
+                  where: { id: options.taskId },
+                  select: { status: true, attempt: true },
+                });
       if (task?.status !== "RUNNING" || task.attempt !== options.attempt)
         throw new AppError("任务执行实例已更新，停止模型调用。", "AGENT_STALE", 409);
     },
@@ -131,6 +141,16 @@ export function taskCreditMeter(options: {
         // Count every paid call across retries. A stale call still consumed tokens.
         if (options.taskKind === "EXAM")
           await tx.examTask.update({
+            where: { id: options.taskId },
+            data: { creditsSpent: { increment: charge.credits } },
+          });
+        else if (options.taskKind === "CARD_TEMPLATE")
+          await tx.answerCardTemplate.update({
+            where: { id: options.taskId },
+            data: { creditsSpent: { increment: charge.credits } },
+          });
+        else if (options.taskKind === "CARD_BATCH")
+          await tx.answerCardBatch.update({
             where: { id: options.taskId },
             data: { creditsSpent: { increment: charge.credits } },
           });

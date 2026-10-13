@@ -16,6 +16,8 @@ import { expandToolImages } from "./tool-images";
 import { compatibleResponsesResponse } from "./responses-compat";
 import type { CreditMeter } from "./credits";
 import { createResultTools } from "@/server/exams/result-tools";
+import type { z } from "zod";
+import { randomUUID } from "node:crypto";
 
 const MAX_AGENT_STEPS = 256;
 
@@ -57,6 +59,14 @@ export interface ExamModel {
     onQuestionProgress?: (progress: QuestionProgress) => Promise<void>;
   }): Promise<ParsedExam>;
 }
+export interface SingleCallModel {
+  generateJson<T>(request: {
+    system: string;
+    content: UserContent;
+    schema: z.ZodType<T>;
+    signal?: AbortSignal;
+  }): Promise<T>;
+}
 export function reasoningOptions(
   config: Pick<ProviderSnapshot, "apiType" | "reasoningEffort">,
 ): NonNullable<Parameters<typeof generateText>[0]["providerOptions"]> {
@@ -92,7 +102,7 @@ export function createProviderExamModel(
   apiKey: string,
   fetch = globalThis.fetch,
   creditMeter?: CreditMeter,
-): ExamModel & AgentModel {
+): ExamModel & AgentModel & SingleCallModel {
   const config = providerSnapshotSchema.parse(raw);
   // 逐个 HTTP 请求计时（等待响应头、接收响应体），供管理员活动面板按轮展示耗时。
   const requestTimings: AgentTimingRequest[] = [];
@@ -141,15 +151,27 @@ export function createProviderExamModel(
       config.maxConcurrency,
       async () => {
         let step = 0;
+        let billingError: unknown;
+        const billingAbort = new AbortController();
         const emit = request.onEvent ?? (async () => {});
         const agent = new ToolLoopAgent({
           model,
           onLanguageModelCallStart: async () => {
             requestTimings.length = 0;
-            await creditMeter?.beforeCall();
+            try {
+              await creditMeter?.beforeCall();
+            } catch (error) {
+              billingError = error;
+              billingAbort.abort(error);
+            }
           },
           onLanguageModelCallEnd: async ({ callId, usage, performance: timings }) => {
-            await creditMeter?.record(`${callId}:${step}`, usage);
+            try {
+              await creditMeter?.record(`${callId}:${step}`, usage);
+            } catch (error) {
+              billingError = error;
+              billingAbort.abort(error);
+            }
             await emit({
               type: "timing",
               step,
@@ -239,8 +261,11 @@ export function createProviderExamModel(
         });
         await agent.generate({
           messages: [{ role: "user", content: request.content }],
-          abortSignal: request.signal,
+          abortSignal: request.signal
+            ? AbortSignal.any([request.signal, billingAbort.signal])
+            : billingAbort.signal,
         });
+        if (billingError) throw billingError;
         if (!request.isComplete())
           throw new AppError(
             `模型达到 ${MAX_AGENT_STEPS} 次调用上限或提前结束，任务尚未完成；已保存的结果保留。`,
@@ -252,6 +277,38 @@ export function createProviderExamModel(
     );
   return {
     run,
+    generateJson: (request) =>
+      providerConcurrencyLimiter(config.providerId).run(
+        config.maxConcurrency,
+        async () => {
+          const timeout = AbortSignal.timeout(config.timeoutSeconds * 1000);
+          // SDK lifecycle notifications swallow callback errors. Billing must be awaited directly.
+          await creditMeter?.beforeCall();
+          const result = await generateText({
+            model,
+            system:
+              request.system +
+              `\nReturn only JSON matching: ${JSON.stringify(request.schema.toJSONSchema())}`,
+            messages: [{ role: "user", content: request.content }],
+            maxOutputTokens: config.maxOutputTokens,
+            providerOptions: reasoningOptions(config),
+            // Each question makes exactly one API call. Failed questions may be retried explicitly.
+            maxRetries: 0,
+            abortSignal: request.signal ? AbortSignal.any([request.signal, timeout]) : timeout,
+          });
+          try {
+            await creditMeter?.record(randomUUID(), result.usage);
+          } catch (cause) {
+            throw new AppError("用量结算失败，已停止后续评分。", "CREDIT_SETTLEMENT_FAILED", 503, {
+              cause,
+            });
+          }
+          if (result.finishReason !== "stop")
+            throw new AppError("评分响应未完整结束，请重试该题。", "AI_OUTPUT_INCOMPLETE", 422);
+          return request.schema.parse(extractJson(result.text));
+        },
+        request.signal,
+      ),
     generate: async (request) => {
       if (request.tools) {
         const result = createResultTools(request.onProgress, request.onQuestionProgress);
