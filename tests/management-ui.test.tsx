@@ -43,8 +43,12 @@ const flow: GradingWorkflow = {
   },
   grading: null,
 };
-function render(element: React.ReactElement) {
+function render(
+  element: React.ReactElement,
+  activeTasks?: { exams: number; grading: number; quickGrading: number },
+) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  if (activeTasks) client.setQueryData(["active-tasks"], activeTasks);
   const container = document.createElement("div");
   container.innerHTML = renderToStaticMarkup(
     createElement(QueryClientProvider, { client }, element),
@@ -53,6 +57,40 @@ function render(element: React.ReactElement) {
   return container;
 }
 describe("management navigation and bundled workflows", () => {
+  it("shows task numbers inside loading rings on their matching navigation entries", () => {
+    const page = render(
+      <WorkspaceShell name="老师" isAdmin={false}>
+        工作区
+      </WorkspaceShell>,
+      {
+        exams: 2,
+        grading: 12,
+        quickGrading: 1,
+      },
+    );
+    const links = page.querySelectorAll('nav[aria-label="主导航"] a');
+    expect(
+      Array.from(links).map((link) => link.querySelector(".sidebar-task-count")?.textContent),
+    ).toEqual(["2", "12", "1"]);
+    expect(links[1].querySelector('[role="status"]')?.getAttribute("aria-label")).toBe(
+      "12 个任务正在进行中",
+    );
+  });
+  it("hides the loading indicator for entries with no active tasks", () => {
+    const page = render(
+      <WorkspaceShell name="老师" isAdmin={false}>
+        工作区
+      </WorkspaceShell>,
+      {
+        exams: 0,
+        grading: 1,
+        quickGrading: 0,
+      },
+    );
+    expect(page.querySelectorAll(".sidebar-task-count")).toHaveLength(1);
+    expect(page.querySelector('a[href="/dashboard"] .sidebar-task-count')).toBeNull();
+    expect(page.querySelector('a[href="/quick-grading"] .sidebar-task-count')).toBeNull();
+  });
   it("offers all three workflows and restricts settings to administrators", () => {
     const user = render(
       <WorkspaceShell name="老师" isAdmin={false}>

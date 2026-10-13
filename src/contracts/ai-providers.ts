@@ -24,6 +24,7 @@ export const REASONING_EFFORTS = [
 ] as const;
 export const reasoningEffortSchema = z.enum(REASONING_EFFORTS);
 export type ReasoningEffort = z.infer<typeof reasoningEffortSchema>;
+export const MAX_OUTPUT_TOKENS = 384 * 1024;
 export const REASONING_LABELS: Record<ReasoningEffort, string> = {
   default: "模型默认",
   none: "关闭推理",
@@ -71,7 +72,7 @@ export const providerSchema = z
       }, "URL 仅支持 HTTP/HTTPS，不能包含账号、查询参数或片段。")
       .transform((value) => value.replace(/\/+$/, "")),
     structuredOutputs: z.boolean().default(true),
-    maxOutputTokens: z.number().int().min(1024).max(64000).default(16000),
+    maxOutputTokens: z.number().int().min(1024).max(MAX_OUTPUT_TOKENS).default(MAX_OUTPUT_TOKENS),
     timeoutSeconds: z.number().int().min(15).max(1800).default(240),
     maxConcurrency: aiConcurrencySchema.default(3),
     models: z.array(modelSchema).min(1, "请添加至少一个模型。").max(50),

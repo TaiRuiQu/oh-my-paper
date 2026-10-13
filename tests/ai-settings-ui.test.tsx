@@ -44,6 +44,13 @@ function render(providers = [provider]) {
   act(() => root.render(<AiProviderSettings initialProviders={providers} />));
 }
 describe("independent AI model assignments", () => {
+  it("offers 384K output tokens for a new provider", () => {
+    render([]);
+    act(() => container.querySelector<HTMLButtonElement>(".provider-settings > button")!.click());
+    const input = container.querySelector<HTMLInputElement>("#maxOutputTokens")!;
+    expect(input.value).toBe("393216");
+    expect(input.max).toBe("393216");
+  });
   it("uses display names in selectors and retains API codes in the model editor", () => {
     render([
       {

@@ -146,7 +146,7 @@ model AiProvider {
   baseURL           String
   encryptedApiKey   String
   structuredOutputs Boolean   @default(true)
-  maxOutputTokens   Int       @default(16000)
+  maxOutputTokens   Int       @default(393216)
   timeoutSeconds    Int       @default(240)
   maxConcurrency    Int       @default(3)
   models            AiModel[]

@@ -1143,6 +1143,35 @@ input {
   color: #2451bc;
   font-weight: 600;
 }
+.sidebar-task-count {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  min-width: 28px;
+  aspect-ratio: 1;
+  padding: 4px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.sidebar-task-count::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: agent-spin 1s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-task-count::before {
+    animation: none;
+  }
+}
 .workspace-sidebar nav.sidebar-settings {
   margin-top: auto;
   padding-top: 24px;

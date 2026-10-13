@@ -14,13 +14,16 @@ import {
   FileSearch,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import type { ActiveTaskCounts } from "@/contracts/active-tasks";
+import { apiRequest } from "@/lib/http-client";
 import { CreditBalance } from "./credit-balance";
 import { SignOutButton } from "./sign-out-button";
 const navigation = [
-  { href: "/dashboard", label: "试卷管理", icon: Files },
-  { href: "/grading", label: "批改管理", icon: ClipboardCheck },
-  { href: "/quick-grading", label: "快速批改", icon: Zap },
-];
+  { href: "/dashboard", label: "试卷管理", icon: Files, taskKey: "exams" },
+  { href: "/grading", label: "批改管理", icon: ClipboardCheck, taskKey: "grading" },
+  { href: "/quick-grading", label: "快速批改", icon: Zap, taskKey: "quickGrading" },
+] as const;
 export function WorkspaceShell({
   children,
   name,
@@ -34,6 +37,12 @@ export function WorkspaceShell({
 }) {
   const path = usePathname(),
     [open, setOpen] = useState(false);
+  const activeTasks = useQuery({
+    queryKey: ["active-tasks"],
+    queryFn: () => apiRequest<ActiveTaskCounts>("/api/tasks/active"),
+    refetchInterval: 3000,
+    staleTime: 0,
+  });
   const sidebar = useRef<HTMLElement>(null),
     toggle = useRef<HTMLButtonElement>(null),
     close = useRef<HTMLButtonElement>(null);
@@ -101,7 +110,7 @@ export function WorkspaceShell({
           <PanelLeftClose size={20} />
         </button>
         <nav aria-label="主导航">
-          {navigation.map(({ href, label, icon: Icon }) => (
+          {navigation.map(({ href, label, icon: Icon, taskKey }) => (
             <Link
               key={href}
               href={href}
@@ -110,6 +119,16 @@ export function WorkspaceShell({
             >
               <Icon size={19} aria-hidden="true" />
               {label}
+              {!!activeTasks.data?.[taskKey] && (
+                <span
+                  className="sidebar-task-count"
+                  role="status"
+                  aria-label={`${activeTasks.data[taskKey]} 个任务正在进行中`}
+                  title={`${activeTasks.data[taskKey]} 个任务正在进行中`}
+                >
+                  <span aria-hidden="true">{activeTasks.data[taskKey]}</span>
+                </span>
+              )}
             </Link>
           ))}
         </nav>

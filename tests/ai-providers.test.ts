@@ -1,6 +1,10 @@
 import { modelStreamResponse } from "./model-stream-response";
 import { describe, expect, it } from "vitest";
-import { providerInputSchema, type ProviderSnapshot } from "@/contracts/ai-providers";
+import {
+  MAX_OUTPUT_TOKENS,
+  providerInputSchema,
+  type ProviderSnapshot,
+} from "@/contracts/ai-providers";
 import { anthropicBaseURL, createProviderExamModel, reasoningOptions } from "@/server/ai/providers";
 const config: ProviderSnapshot = {
   providerId: "10000000-0000-4000-8000-000000000001",
@@ -31,6 +35,23 @@ const output = {
   ],
 };
 describe("provider models and reasoning", () => {
+  it("defaults to 384K output tokens and accepts this limit when saving a provider", () => {
+    const input = {
+      name: "test",
+      apiType: "openai_chat",
+      baseURL: "https://provider.example/v1",
+      apiKey: "secret",
+      models: [{ name: "one", reasoningEfforts: ["default"] }],
+    };
+    expect(MAX_OUTPUT_TOKENS).toBe(393216);
+    expect(providerInputSchema.parse(input).maxOutputTokens).toBe(393216);
+    expect(providerInputSchema.parse({ ...input, maxOutputTokens: 393216 }).maxOutputTokens).toBe(
+      393216,
+    );
+    expect(providerInputSchema.safeParse({ ...input, maxOutputTokens: 393217 }).success).toBe(
+      false,
+    );
+  });
   it("normalizes Anthropic gateway roots without duplicating the API version", () => {
     expect(anthropicBaseURL("https://gateway.example/apps/anthropic/")).toBe(
       "https://gateway.example/apps/anthropic/v1",
@@ -48,6 +69,7 @@ describe("provider models and reasoning", () => {
       expect(new Headers(init?.headers).get("anthropic-version")).toBe("2023-06-01");
       const body = JSON.parse(String(init?.body));
       expect(body.model).toBe("qwen3.8-flash");
+      expect(body.max_tokens).toBe(MAX_OUTPUT_TOKENS);
       expect(body.stream).toBe(true);
       return modelStreamResponse({
         id: "msg_test",
@@ -66,6 +88,7 @@ describe("provider models and reasoning", () => {
         apiType: "anthropic",
         baseURL: "https://gateway.example/apps/anthropic",
         model: "qwen3.8-flash",
+        maxOutputTokens: MAX_OUTPUT_TOKENS,
         reasoningEffort: "default",
       },
       "test-key",

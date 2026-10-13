@@ -3,6 +3,7 @@ import { useRef, useState, type FormEvent } from "react";
 import {
   API_TYPES,
   AI_PURPOSES,
+  MAX_OUTPUT_TOKENS,
   type AiPurpose,
   REASONING_EFFORTS,
   providerInputSchema,
@@ -28,7 +29,7 @@ const emptyProvider = (): ProviderInput => ({
   baseURL: "",
   apiKey: "",
   structuredOutputs: true,
-  maxOutputTokens: 16000,
+  maxOutputTokens: MAX_OUTPUT_TOKENS,
   timeoutSeconds: 240,
   maxConcurrency: 3,
   models: [{ name: "", reasoningEfforts: ["default"] }],
@@ -432,7 +433,7 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
               <summary>请求设置</summary>
               {(
                 [
-                  ["maxOutputTokens", "最大输出 tokens", 1024, 64000],
+                  ["maxOutputTokens", "最大输出 tokens", 1024, MAX_OUTPUT_TOKENS],
                   ["timeoutSeconds", "请求超时（秒）", 15, 1800],
                   ["maxConcurrency", "并发请求数", 1, 32],
                 ] as const

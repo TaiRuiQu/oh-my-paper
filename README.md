@@ -209,7 +209,7 @@ pnpm run test:integration
 
 Worker 镜像使用 `pnpm run build:worker` 生成的独立运行目录，只包含编译后的入口、实际运行依赖、数据库迁移与 Python 沙箱脚本，不再复制完整 `node_modules` 和应用源码。快速批改的「标准答案（可选）」默认折叠，选中文件后仍在摘要显示数量。
 
-部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.11 部署与升级指南](docs/releases/v0.1.11.zh-CN.md)。
+部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.12 部署与升级指南](docs/releases/v0.1.12.zh-CN.md)。
 
 Word 公式转换复用 KaTeX 与 docx，新增 `mathml2omml@0.5.0`（约 67 KB 运行时代码，无运行时依赖），并直接声明已有 docx 依赖 `xml-js`。转换库以未修改的运行时模块随应用分发，其 LGPL-3.0-or-later 许可及来源见 [第三方依赖说明](docs/third-party.md)。
 
