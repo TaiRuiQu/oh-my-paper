@@ -37,10 +37,12 @@ export function createAnswerResultTools(options: {
         throw new AppError("The task is already submitted.", "AGENT_ALREADY_COMPLETE", 422);
       if (new Set(batch.map((item) => item.questionId)).size !== batch.length)
         throw new AppError("Duplicate question IDs in the same call.", "ANSWER_DUPLICATE", 422);
-      if (batch.length !== 1)
+      if (!batch.length || (options.kind === "ANSWER" ? batch.length > 50 : batch.length !== 1))
         throw new AppError(
-          "Save exactly one completed question per call.",
-          "ANSWER_SINGLE_QUESTION",
+          options.kind === "ANSWER"
+            ? "Save 1–50 completed answers per call."
+            : "Save exactly one graded question per call.",
+          options.kind === "ANSWER" ? "ANSWER_BATCH_INVALID" : "ANSWER_SINGLE_QUESTION",
           422,
         );
       const merged = new Map(saved.questions.map((item) => [item.questionId, item]));
@@ -106,7 +108,7 @@ export function createAnswerResultTools(options: {
       ? {
           append_answers: tool({
             description:
-              "Save exactly one completed answer promptly. Several append calls may run alongside reading or zooming the next question. Include solution and scoring criteria for all subquestions. Resend its ID to correct it.",
+              "Save 1–50 completed answers promptly in one call. Each answer includes its questionId, solution and grading criteria for all subquestions. Batch independent ready questions instead of making one call per question. Resend IDs to correct earlier answers; never wait for the whole document.",
             inputSchema: answerBatchSchema,
             execute: ({ questions }) => append(questions),
           }),

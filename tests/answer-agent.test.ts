@@ -85,16 +85,36 @@ describe("answer and grading incremental tools", () => {
       execute(state.tools, "append_answers", { questions: [answers[0]] }),
     ).rejects.toMatchObject({ code: "AGENT_ALREADY_COMPLETE" });
   });
-  it("requires one question per append call for answers and grades", async () => {
-    for (const kind of ["ANSWER", "GRADING"] as const) {
-      const state = createAnswerResultTools({ exam, kind, onProgress: async () => {} });
-      await expect(
-        execute(state.tools, kind === "ANSWER" ? "append_answers" : "append_grades", {
-          questions: kind === "ANSWER" ? answers : grades,
-        }),
-      ).rejects.toMatchObject({ code: "ANSWER_SINGLE_QUESTION" });
-      expect(state.result().questions).toHaveLength(0);
-    }
+  it("saves multiple answers in one atomic batch while grading still saves one question per call", async () => {
+    const progress = vi.fn(async () => {});
+    const answer = createAnswerResultTools({ exam, kind: "ANSWER", onProgress: progress });
+    await execute(answer.tools, "append_answers", { questions: [...answers].reverse() });
+    expect(answer.result().questions).toEqual(answers);
+    expect(progress).toHaveBeenCalledTimes(1);
+    await execute(answer.tools, "submit_answers", {});
+    expect(answer.isComplete()).toBe(true);
+    const grading = createAnswerResultTools({ exam, kind: "GRADING", onProgress: async () => {} });
+    await expect(
+      execute(grading.tools, "append_grades", { questions: grades }),
+    ).rejects.toMatchObject({ code: "ANSWER_SINGLE_QUESTION" });
+    expect(grading.result().questions).toHaveLength(0);
+  });
+  it("rejects an invalid answer batch without partially saving its valid questions", async () => {
+    const progress = vi.fn(async () => {});
+    const state = createAnswerResultTools({ exam, kind: "ANSWER", onProgress: progress });
+    await expect(
+      execute(state.tools, "append_answers", {
+        questions: [
+          answers[0],
+          { ...answers[1], questionId: "10000000-0000-4000-8000-000000000099" },
+        ],
+      }),
+    ).rejects.toMatchObject({ code: "ANSWER_QUESTION_INVALID" });
+    expect(state.result().questions).toEqual([]);
+    expect(progress).not.toHaveBeenCalled();
+    await expect(
+      execute(state.tools, "append_answers", { questions: [answers[0], answers[0]] }),
+    ).rejects.toMatchObject({ code: "ANSWER_DUPLICATE" });
   });
   it("retains the previous saved result after persistence fails and resumes from drafts", async () => {
     const progress = vi
@@ -217,6 +237,74 @@ function scriptedModel(
   return createProviderExamModel(config, "test-key", fetch);
 }
 describe("answer and grading SDK agents", () => {
+  it("reads several workbook questions and their images, then saves their answers in one SDK tool call", async () => {
+    const directory = await root();
+    await mkdir(join(directory, "materials"));
+    const workbook = structuredClone(exam);
+    workbook.totalScore = null;
+    workbook.sections[0].score = null;
+    for (const [index, question] of workbook.sections[0].questions.entries()) {
+      question.number = 15 + index * 3;
+      question.score = null;
+      question.materials = [{ page: 1, x: 0, y: 0, width: 1, height: 1 }];
+      await sharp({
+        create: { width: 60, height: 80, channels: 3, background: index ? "blue" : "red" },
+      })
+        .jpeg()
+        .toFile(join(directory, `materials/${index + 1}-1.jpg`));
+    }
+    const drafts: AgentResult[] = [];
+    const model = scriptedModel(
+      [
+        [{ name: "list_questions", args: {} }],
+        [{ name: "read_questions", args: { questionIds: ids } }],
+        [
+          {
+            name: "append_answers",
+            args: {
+              questions: [...answers]
+                .reverse()
+                .map((answer) => ({ ...answer, gradingCriteria: "未标注分值，不推断评分分数。" })),
+            },
+          },
+        ],
+        [{ name: "submit_answers", args: {} }],
+      ],
+      (body, round) => {
+        if (round === 2) {
+          const request = JSON.parse(body);
+          const result = request.messages.find(
+            (message: { role: string; tool_call_id: string }) =>
+              message.role === "tool" && message.tool_call_id === "tool-2-0",
+          );
+          const content = JSON.parse(JSON.parse(result.content)[0].text);
+          expect(
+            content.questions.map((item: { question: { id: string } }) => item.question.id),
+          ).toEqual(ids);
+          expect(
+            content.questions.map(
+              (item: { question: { score: number | null } }) => item.question.score,
+            ),
+          ).toEqual([null, null]);
+          expect(body.match(/data:image\/jpeg;base64,/g)).toHaveLength(2);
+        }
+      },
+    );
+    const result = await runAnswerAgent({
+      kind: "ANSWER",
+      exam: workbook,
+      sourceDirectory: directory,
+      files: [],
+      outputDir: join(directory, "run"),
+      model,
+      onProgress: async (draft) => {
+        drafts.push(draft);
+      },
+    });
+    expect(result.questions.map((question) => question.questionId)).toEqual(ids);
+    expect(drafts[0].questions).toHaveLength(2);
+    expect(drafts).toHaveLength(2);
+  });
   it("reads uploaded answer pages with an extraction prompt and saves each matched question", async () => {
     const directory = await root(),
       input = join(directory, "key.png");

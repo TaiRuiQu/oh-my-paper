@@ -207,6 +207,7 @@ async function main() {
     const parsed = {
       name: "数学测试卷",
       totalScore: 10,
+      layout: { paperSize: "A3", columns: 2, orientation: "landscape" },
       sections: [
         {
           number: "一",
@@ -263,7 +264,7 @@ async function main() {
             sharpen: false,
           },
         },
-        { name: "report_question_count", args: { total: 2 } },
+        { name: "report_exam_meta", args: { total: 2, paperSize: "A3", columns: 2 } },
         ...parsed.sections.map((section) => ({
           name: "append_questions",
           args: { ...parsed, sections: [section] },
@@ -321,6 +322,7 @@ async function main() {
     const task = await db.examTask.findUniqueOrThrow({ where: { id } });
     assert.equal(task.status, "COMPLETED");
     const exam = (await taskResult(task))!;
+    assert.deepEqual(exam.layout, { paperSize: "A3", columns: 2, orientation: "landscape" });
     assert.equal(exam.sections.length, 2);
     const questions = exam.sections.flatMap((section) => section.questions);
     assert.deepEqual(
@@ -353,7 +355,7 @@ async function main() {
       [
         "read_pages",
         "inspect_image",
-        "report_question_count",
+        "report_exam_meta",
         "append_questions",
         "append_questions",
         "submit_exam",
@@ -873,7 +875,7 @@ async function main() {
           uploadedTask = await db.examTask.findUniqueOrThrow({ where: { id: uploadedTask.id } });
         }
         installAgentModel([
-          { name: "report_question_count", args: { total: 2 } },
+          { name: "report_exam_meta", args: { total: 2, paperSize: "A3", columns: 2 } },
           { name: "append_questions", args: parsed },
           { name: "submit_exam", args: { name: parsed.name, totalScore: parsed.totalScore } },
         ]);
@@ -1448,6 +1450,7 @@ async function main() {
           exam: parsedExamSchema.parse({
             name: original.name,
             totalScore: original.totalScore,
+            layout: { paperSize: "A4", columns: 3, orientation: "portrait" },
             sections: original.sections.map((section) => ({
               number: section.number,
               title: section.title,
@@ -1469,6 +1472,7 @@ async function main() {
         const updated = (await editExam(userId, editableId, payload))!;
         assert.equal(updated.name, payload.exam.name);
         assert.equal(updated.revision, 1);
+        assert.deepEqual(updated.layout, { paperSize: "A4", columns: 3, orientation: "portrait" });
         assert.equal(updated.sections[0].questions[0].id, question.id);
         assert.equal(updated.sections[0].questions[0].description, "计算 $1+2$");
         await assert.rejects(editExam(userId, editableId, payload), /其他页面修改/);

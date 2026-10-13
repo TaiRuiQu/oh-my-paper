@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import type { Root, Nodes, Definition, PhrasingContent } from "mdast";
 import sharp from "sharp";
-import type { Exam } from "@/contracts/exams";
+import { resolveExamLayout, type Exam, type ExamLayout } from "@/contracts/exams";
 import { materialKey, examMaterials } from "@/lib/exam-materials";
 import { remarkParentheticalMath } from "@/lib/remark-parenthetical-math";
 import { AppError } from "@/server/errors";
@@ -33,6 +33,7 @@ export type ExportFormula = { id: string; latex: string; display: boolean };
 export type ExportDocument = {
   title: string;
   totalScore?: number | null;
+  layout: Required<ExamLayout>;
   taskId?: string;
   parts: ExportPart[];
   images: Map<string, ExportImage>;
@@ -44,19 +45,31 @@ const parser = unified()
   .use(remarkGfm)
   .use(remarkMath)
   .use(remarkParentheticalMath);
-// The reference is a 210 × 148 mm landscape sheet with four compact columns.
-export const PRINT_LAYOUT = {
-  widthMm: 210,
-  heightMm: 148,
-  marginMm: 5,
-  gapMm: 3.5,
-  columns: 4,
-} as const;
-export const SHEET_WIDTH_PX = ((PRINT_LAYOUT.widthMm - PRINT_LAYOUT.marginMm * 2) * 96) / 25.4;
-export const SHEET_HEIGHT_PX = ((PRINT_LAYOUT.heightMm - PRINT_LAYOUT.marginMm * 2) * 96) / 25.4;
-export const PAGE_WIDTH_PX =
-  (SHEET_WIDTH_PX - ((PRINT_LAYOUT.columns - 1) * PRINT_LAYOUT.gapMm * 96) / 25.4) /
-  PRINT_LAYOUT.columns;
+export function printLayout(source?: ExamLayout) {
+  const layout = resolveExamLayout(source);
+  const [short, long] = layout.paperSize === "A3" ? [297, 420] : [210, 297];
+  const [widthMm, heightMm] = layout.orientation === "landscape" ? [long, short] : [short, long];
+  const marginMm = 10,
+    gapMm = 6;
+  const sheetWidthPx = ((widthMm - marginMm * 2) * 96) / 25.4;
+  const sheetHeightPx = ((heightMm - marginMm * 2) * 96) / 25.4;
+  const columnWidthPx =
+    (sheetWidthPx - ((layout.columns - 1) * gapMm * 96) / 25.4) / layout.columns;
+  const fontSizePt =
+    Math.round(Math.min(11, Math.max(8, (columnWidthPx * 25.4) / 96 / 5.5)) * 2) / 2;
+  return {
+    ...layout,
+    widthMm,
+    heightMm,
+    marginMm,
+    gapMm,
+    sheetWidthPx,
+    sheetHeightPx,
+    columnWidthPx,
+    fontSizePt,
+  };
+}
+export type PrintLayout = ReturnType<typeof printLayout>;
 
 export function splitChoices(text: string) {
   const matches = [...text.matchAll(/(?:^|\s)([A-D])[.．、)）]\s*/g)];
@@ -84,6 +97,7 @@ export async function buildExportDocument(
   const document: ExportDocument = {
     title: exam.name,
     totalScore: exam.totalScore,
+    layout: resolveExamLayout(exam.layout),
     taskId,
     parts: [],
     images: new Map(),
@@ -202,8 +216,8 @@ export function resolveDocumentImage(document: ExportDocument, url: string) {
   }
   return undefined;
 }
-export function imageDimensions(image: ExportImage, maxWidth = PAGE_WIDTH_PX) {
-  const scale = Math.min(1, maxWidth / image.width, SHEET_HEIGHT_PX / image.height);
+export function imageDimensions(image: ExportImage, maxWidth: number, maxHeight: number) {
+  const scale = Math.min(1, maxWidth / image.width, maxHeight / image.height);
   return { width: image.width * scale, height: image.height * scale };
 }
 export function safeLink(url: string) {

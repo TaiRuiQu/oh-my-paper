@@ -1,7 +1,13 @@
 import "server-only";
 import { tool } from "ai";
 import { z } from "zod";
-import { parsedExamSchema, examQuestionCount, type ParsedExam } from "@/contracts/exams";
+import {
+  parsedExamSchema,
+  examQuestionCount,
+  examLayoutSchema,
+  resolveExamLayout,
+  type ParsedExam,
+} from "@/contracts/exams";
 import type { QuestionProgress } from "@/contracts/exam-tasks";
 import { AppError } from "@/server/errors";
 
@@ -9,7 +15,18 @@ export function createResultTools(
   onProgress?: (exam: ParsedExam) => Promise<void>,
   onQuestionProgress?: (progress: QuestionProgress) => Promise<void>,
 ) {
-  let total: number | null = null;
+  const metaSchema = examLayoutSchema.extend({
+    total: z
+      .number()
+      .int()
+      .positive()
+      .max(10000)
+      .nullable()
+      .describe(
+        "Number of independent parent questions visible in uploaded pages, excluding subquestions. Use null when a reliable count is unavailable; never use the entire workbook's count or the highest printed question number.",
+      ),
+  });
+  let meta: z.infer<typeof metaSchema> | undefined;
   let saved: ParsedExam | undefined;
   let completed = false;
   let pending = Promise.resolve();
@@ -24,20 +41,20 @@ export function createResultTools(
   };
   const persist = async (exam: ParsedExam) => {
     const count = examQuestionCount(exam);
-    if (total === null)
+    if (!meta)
       throw new AppError(
-        "Report the total question count first with report_question_count.",
-        "EXAM_COUNT_REQUIRED",
+        "Report paper size, columns and the visible question count first with report_exam_meta.",
+        "EXAM_META_REQUIRED",
         422,
       );
-    if (count > total)
+    if (meta.total !== null && count > meta.total)
       throw new AppError(
-        "Saved questions exceed the reported total. Correct report_question_count first.",
+        "Saved questions exceed the reported total. Correct report_exam_meta first.",
         "EXAM_COUNT_INVALID",
         422,
       );
     await onProgress?.(structuredClone(exam));
-    await onQuestionProgress?.({ total, completed: count });
+    await onQuestionProgress?.({ total: meta.total, completed: count });
     saved = exam;
     return {
       sections: exam.sections.length,
@@ -52,25 +69,33 @@ export function createResultTools(
     isComplete: () => completed,
     result: () => (saved ? structuredClone(saved) : undefined),
     tools: {
-      report_question_count: tool({
+      report_exam_meta: tool({
         description:
-          "Before saving any questions, inspect the whole paper and report its total independent numbered questions. Count each parent question once, not its subquestions or sections. Call again only to correct the total.",
-        inputSchema: z.strictObject({ total: z.number().int().positive().max(10000) }),
-        execute: ({ total: count }) =>
+          "In your first response, report the uploaded document's A3/A4 paper size, 1–4 text columns, orientation and count of visible independent parent questions. Workbook excerpts are valid; use total=null if the count is not yet reliable. Paper size cannot be proved from photo aspect ratio alone: estimate from the source layout, default A4 when uncertain. Call again to correct metadata. Count parent questions, not subquestions, sections or the highest printed number.",
+        inputSchema: metaSchema,
+        execute: (input) =>
           serialize(async () => {
             if (completed)
               throw new AppError("The paper is already submitted.", "EXAM_ALREADY_SUBMITTED", 422);
-            const parsed = z.number().int().positive().max(10000).parse(count);
+            const parsed = metaSchema.parse(input);
             const done = saved ? examQuestionCount(saved) : 0;
-            if (parsed < done)
+            if (parsed.total !== null && parsed.total < done)
               throw new AppError(
                 "The total cannot be smaller than saved questions.",
                 "EXAM_COUNT_INVALID",
                 422,
               );
-            await onQuestionProgress?.({ total: parsed, completed: done });
-            total = parsed;
-            return { total, completed: done };
+            const { total, ...layout } = parsed;
+            const next = saved ? { ...saved, layout: resolveExamLayout(layout) } : undefined;
+            if (next) await onProgress?.(structuredClone(next));
+            await onQuestionProgress?.({ total, completed: done });
+            meta = parsed;
+            saved = next;
+            return {
+              ...parsed,
+              orientation: resolveExamLayout(layout).orientation,
+              completed: done,
+            };
           }),
       }),
       append_questions: tool({
@@ -83,6 +108,7 @@ export function createResultTools(
               throw new AppError("The paper is already submitted.", "EXAM_ALREADY_SUBMITTED", 422);
             const batch = parsedExamSchema.parse(input);
             const merged: ParsedExam = saved ? structuredClone(saved) : { ...batch, sections: [] };
+            if (meta) merged.layout = resolveExamLayout(meta);
             merged.name = batch.name;
             merged.totalScore = batch.totalScore ?? merged.totalScore;
             for (const section of batch.sections) {
@@ -107,7 +133,7 @@ export function createResultTools(
       }),
       submit_exam: tool({
         description:
-          "Finish recognition only after every page and question has been read and saved with append_questions. Supply the final name and totalScore; all previously saved sections/questions are kept automatically. Do not resend the entire exam. Cannot finish an empty exam.",
+          "Finish after inspecting every uploaded page and saving all visible questions with append_questions. Workbook excerpts do not require missing pages, a complete exam or known scores. If total is known, saved question count must match it; if total=null, submit all observed questions without inventing a total. Supply final name and explicit totalScore or null. Saved layout and questions are retained automatically. Cannot finish an empty document.",
         inputSchema: z.strictObject({
           name: parsedExamSchema.shape.name,
           totalScore: parsedExamSchema.shape.totalScore,
@@ -116,7 +142,7 @@ export function createResultTools(
           serialize(async () => {
             if (!saved)
               throw new AppError("Save questions with append_questions first.", "EXAM_EMPTY", 422);
-            if (total === null || examQuestionCount(saved) !== total)
+            if (!meta || (meta.total !== null && examQuestionCount(saved) !== meta.total))
               throw new AppError(
                 "Save all reported questions before submitting; correct the total if the count was wrong.",
                 "EXAM_MISSING_QUESTIONS",

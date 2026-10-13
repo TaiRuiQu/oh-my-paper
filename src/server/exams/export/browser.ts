@@ -2,7 +2,7 @@ import "server-only";
 import { access } from "node:fs/promises";
 import puppeteer, { type Page } from "puppeteer-core";
 import { AppError } from "@/server/errors";
-import { PAGE_WIDTH_PX, SHEET_WIDTH_PX, SHEET_HEIGHT_PX, type ExportDocument } from "./document";
+import { printLayout, type PrintLayout, type ExportDocument } from "./document";
 import { exportHtml } from "./html";
 async function chromePath() {
   if (process.env.EXPORT_CHROMIUM_PATH) return process.env.EXPORT_CHROMIUM_PATH;
@@ -28,6 +28,7 @@ export async function withExportPage<T>(
 ): Promise<T> {
   signal?.throwIfAborted();
   const html = await exportHtml(document);
+  const layout = printLayout(document.layout);
   const browser = await puppeteer.launch({
     executablePath: await chromePath(),
     headless: true,
@@ -44,7 +45,11 @@ export async function withExportPage<T>(
   try {
     signal?.throwIfAborted();
     const page = await browser.newPage();
-    await page.setViewport({ width: 794, height: 560, deviceScaleFactor: 3 });
+    await page.setViewport({
+      width: Math.ceil((layout.widthMm * 96) / 25.4),
+      height: Math.ceil((layout.heightMm * 96) / 25.4),
+      deviceScaleFactor: 3,
+    });
     await page.setJavaScriptEnabled(false);
     await page.setRequestInterception(true);
     // Everything needed is embedded; uploaded Markdown cannot cause network or file reads.
@@ -56,10 +61,10 @@ export async function withExportPage<T>(
       ).catch(() => {});
     });
     await page.setContent(html, { waitUntil: "load", timeout: 30_000 });
-    await page.evaluate(async () => {
+    await page.evaluate(async (fontSize) => {
       await globalThis.document.fonts.ready;
-      await globalThis.document.fonts.load('5.5pt "NSimSun"');
-    });
+      await globalThis.document.fonts.load(`${fontSize}pt "NSimSun"`);
+    }, layout.fontSizePt);
     await page.evaluate((columnWidth) => {
       for (const element of globalThis.document.querySelectorAll<HTMLElement>("[data-formula]")) {
         const cell = element.closest("td,th");
@@ -76,8 +81,8 @@ export async function withExportPage<T>(
         if ([...choices.children].some((option) => option.scrollWidth > option.clientWidth + 1))
           choices.classList.add("choices-wide");
       }
-    }, PAGE_WIDTH_PX);
-    await paginateExportPage(page);
+    }, layout.columnWidthPx);
+    await paginateExportPage(page, layout);
     signal?.throwIfAborted();
     return await work(page);
   } finally {
@@ -88,11 +93,11 @@ export async function withExportPage<T>(
 }
 
 // Explicit sheets avoid Chromium's horizontal overflow when printing multicolumn content.
-export async function paginateExportPage(page: Page) {
+export async function paginateExportPage(page: Page, layout: PrintLayout) {
   // tsx annotates local functions when running the export verification script.
   await page.evaluate("globalThis.__name ??= (fn) => fn");
   await page.evaluate(
-    ({ width, height }) => {
+    ({ width, height, count }) => {
       const doc = globalThis.document;
       const source = doc.querySelector<HTMLElement>(".print-source")!;
       const header = source.querySelector<HTMLElement>(".paper-header")!;
@@ -107,7 +112,7 @@ export async function paginateExportPage(page: Page) {
         sheet.style.height = `${height}px`;
         const grid = doc.createElement("div");
         grid.className = "paper-columns";
-        columns = Array.from({ length: 4 }, () => {
+        columns = Array.from({ length: count }, () => {
           const column = doc.createElement("div");
           column.className = "paper-column";
           grid.append(column);
@@ -118,7 +123,7 @@ export async function paginateExportPage(page: Page) {
         if (!pageNumber) {
           sheet.prepend(header);
           const inset = header.getBoundingClientRect().height + 7;
-          columns[0].style.paddingTop = columns[1].style.paddingTop = `${inset}px`;
+          for (const column of columns) column.style.paddingTop = `${inset}px`;
         }
         const footer = doc.createElement("footer");
         footer.className = "paper-footer";
@@ -127,7 +132,7 @@ export async function paginateExportPage(page: Page) {
         columnIndex = 0;
       }
       function advance() {
-        if (++columnIndex === 4) sheet();
+        if (++columnIndex === count) sheet();
       }
       const fits = (element: HTMLElement) =>
         element.getBoundingClientRect().bottom <=
@@ -151,12 +156,14 @@ export async function paginateExportPage(page: Page) {
         }
         walk(element);
         const range = doc.createRange();
-        range.selectNodeContents(element);
         let low = 0,
           high = boundaries.length - 1,
           best = -1;
         const probe = element.cloneNode(false) as HTMLElement;
         element.replaceWith(probe);
+        // Removing a connected node relocates live Range boundaries to its
+        // parent. Select the detached source only after replacing it.
+        range.selectNodeContents(element);
         while (low <= high) {
           const middle = Math.floor((low + high) / 2),
             boundary = boundaries[middle];
@@ -257,6 +264,6 @@ export async function paginateExportPage(page: Page) {
       }
       source.remove();
     },
-    { width: SHEET_WIDTH_PX, height: SHEET_HEIGHT_PX },
+    { width: layout.sheetWidthPx, height: layout.sheetHeightPx, count: layout.columns },
   );
 }

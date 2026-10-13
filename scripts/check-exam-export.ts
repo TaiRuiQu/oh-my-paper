@@ -5,8 +5,8 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import JSZip from "jszip";
 import sharp from "sharp";
-import type { Exam } from "@/contracts/exams";
-import { buildExportDocument } from "@/server/exams/export/document";
+import { examLayoutSchema, type Exam } from "@/contracts/exams";
+import { buildExportDocument, printLayout } from "@/server/exams/export/document";
 import { withExportPage } from "@/server/exams/export/browser";
 import { exportWord } from "@/server/exams/export/word";
 const execute = promisify(execFile);
@@ -25,6 +25,10 @@ async function main() {
     id: "validation",
     name: "试卷导出验证（测试数据）",
     totalScore: 100,
+    layout: examLayoutSchema.parse({
+      paperSize: process.argv[3] ?? "A4",
+      columns: Number(process.argv[4] ?? 1),
+    }),
     sections: [
       {
         id: "section",
@@ -59,6 +63,7 @@ $$
     await writeFile(join(directory, `materials/${index}-1.jpg`), picture);
   exam.sections[0].questions[19].description += `\n\n${"这是一段用于验证长题干跨栏分页的完整材料。".repeat(160)}结束标记。\n\n| 编号 | 数据 |\n| --- | --- |\n${Array.from({ length: 80 }, (_, index) => `| ${index + 1} | 表格内容 ${index + 1} |`).join("\n")}`;
   const document = await buildExportDocument(exam, directory);
+  const settings = printLayout(exam.layout);
   await withExportPage(document, undefined, async (page) => {
     const layout = await page.evaluate(() => ({
       sheets: globalThis.document.querySelectorAll(".paper-page").length,
@@ -67,7 +72,7 @@ $$
         (column) => column.scrollHeight > column.clientHeight + 1,
       ),
     }));
-    assert.equal(layout.columns, layout.sheets * 4);
+    assert.equal(layout.columns, layout.sheets * settings.columns);
     assert.equal(layout.overflow, false);
     const pdf = await page.pdf({ preferCSSPageSize: true, printBackground: true });
     assert.equal(Buffer.from(pdf).subarray(0, 5).toString(), "%PDF-");
@@ -77,7 +82,7 @@ $$
     const zip = await JSZip.loadAsync(word),
       xml = await zip.file("word/document.xml")!.async("string");
     assert.ok(xml.includes("20."));
-    assert.ok(xml.includes('w:num="4"'));
+    assert.ok(xml.includes(`w:num="${settings.columns}"`));
     assert.ok(xml.includes("<w:tbl>"));
     assert.ok(xml.includes("<w:t"));
     assert.ok(xml.includes("<m:oMath"));
@@ -105,8 +110,11 @@ $$
   ]);
   const pages = Number(stdout.match(/^Pages:\s+(\d+)/m)?.[1]);
   assert.ok(pages > 1);
-  assert.match(stdout, /Page size:\s+594\.96 x 420 pts/);
+  const dimensions = stdout.match(/Page size:\s+([\d.]+) x ([\d.]+) pts/)!;
+  assert.ok(Math.abs(Number(dimensions[1]) - (settings.widthMm * 72) / 25.4) < 1);
+  assert.ok(Math.abs(Number(dimensions[2]) - (settings.heightMm * 72) / 25.4) < 1);
   await execute(process.env.PDFTOTEXT_PATH ?? "pdftotext", [
+    "-raw",
     join(directory, "exam.pdf"),
     join(directory, "exam.txt"),
   ]);
@@ -116,9 +124,12 @@ $$
   assert.ok(text.replace(/\s/g, "").includes("结束标记"));
   assert.ok(text.replace(/\s/g, "").includes("表格内容80"));
   assert.ok(text.replace(/\s/g, "").includes("写出完整计算过程"));
-  assert.match(text, /\(1\)（2 分）[^\S\r\n]*结合配图说明计算过程。/);
+  assert.match(text, /\(1\)（2 分）[^\S\r\n]*结合配图说明/);
+  assert.ok(text.replace(/\s/g, "").includes("结合配图说明计算过程。"));
   assert.match(text, /\(2\)（3 分）[^\S\r\n]*求值/);
-  console.log(`✓ Landscape four-column PDF with ${pages} pages and searchable Chinese text`);
+  console.log(
+    `✓ ${settings.paperSize} ${settings.orientation} ${settings.columns}-column PDF with ${pages} pages and searchable Chinese text`,
+  );
   console.log(`Export verification files: ${directory}`);
 }
 main().catch((error) => {

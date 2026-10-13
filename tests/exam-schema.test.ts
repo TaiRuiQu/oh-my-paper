@@ -7,6 +7,8 @@ import {
   questionSchema,
   sectionSchema,
   examQuestionCount,
+  examLayoutSchema,
+  resolveExamLayout,
 } from "@/contracts/exams";
 const question = {
   number: 15,
@@ -24,6 +26,19 @@ const section = {
 };
 const exam = { name: "数学", totalScore: 2, sections: [section] };
 describe("hierarchical exam contracts", () => {
+  it("validates paper and column metadata while preserving old records without layout", () => {
+    expect(resolveExamLayout()).toEqual({ paperSize: "A4", columns: 1, orientation: "portrait" });
+    for (const columns of [1, 2, 3, 4])
+      expect(examLayoutSchema.parse({ paperSize: "A3", columns }).columns).toBe(columns);
+    for (const layout of [
+      { paperSize: "A5", columns: 1 },
+      { paperSize: "A4", columns: 0 },
+      { paperSize: "A4", columns: 5 },
+      { paperSize: "A4", columns: 1.5 },
+    ])
+      expect(parsedExamSchema.safeParse({ ...exam, layout }).success).toBe(false);
+    expect(parsedExamSchema.parse(exam).layout).toBeUndefined();
+  });
   it("accepts only numbered sections, questions and subquestions with source content", () => {
     expect(parsedExamSchema.parse(exam).sections[0].questions[0]).toEqual(question);
     for (const extra of ["verification", "annotations", "template", "solution", "confidence"])

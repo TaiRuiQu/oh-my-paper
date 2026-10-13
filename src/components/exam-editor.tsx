@@ -1,7 +1,7 @@
 "use client";
 import { useState, type FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import type { Exam, ParsedExam } from "@/contracts/exams";
+import { resolveExamLayout, type Exam, type ParsedExam, type ExamLayout } from "@/contracts/exams";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { MarkdownText } from "./markdown-text";
 
@@ -9,6 +9,7 @@ function editable(exam: Exam): ParsedExam {
   return {
     name: exam.name,
     totalScore: exam.totalScore,
+    layout: resolveExamLayout(exam.layout),
     sections: exam.sections.map((section) => ({
       number: section.number,
       title: section.title,
@@ -165,6 +166,63 @@ export function ExamEditor({
             }
           />
         </div>
+        <div className="editor-metadata">
+          <label className="field">
+            导出纸型
+            <select
+              value={draft.layout?.paperSize}
+              onChange={(event) =>
+                change((next) => {
+                  next.layout = {
+                    ...resolveExamLayout(next.layout),
+                    paperSize: event.target.value as ExamLayout["paperSize"],
+                  };
+                })
+              }
+            >
+              <option value="A4">A4</option>
+              <option value="A3">A3</option>
+            </select>
+          </label>
+          <label className="field">
+            页面方向
+            <select
+              value={draft.layout?.orientation}
+              onChange={(event) =>
+                change((next) => {
+                  next.layout = {
+                    ...resolveExamLayout(next.layout),
+                    orientation: event.target.value as ExamLayout["orientation"],
+                  };
+                })
+              }
+            >
+              <option value="portrait">纵向</option>
+              <option value="landscape">横向</option>
+            </select>
+          </label>
+          <label className="field">
+            正文分栏
+            <select
+              value={draft.layout?.columns}
+              onChange={(event) =>
+                change((next) => {
+                  next.layout = {
+                    ...resolveExamLayout(next.layout),
+                    columns: Number(event.target.value),
+                  };
+                })
+              }
+            >
+              {[1, 2, 3, 4].map((columns) => (
+                <option key={columns} value={columns}>
+                  {columns} 栏
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <p className="hint">PDF 和 Word 使用此排版。拍照识别的纸型可能有偏差，可在此调整。</p>
         {draft.sections.map((section, si) => (
           <section
             className="editor-section"

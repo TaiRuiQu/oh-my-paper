@@ -27,22 +27,39 @@ import {
   imageDimensions,
   resolveDocumentImage,
   safeLink,
-  PAGE_WIDTH_PX,
-  PRINT_LAYOUT,
+  printLayout,
 } from "./document";
 import { wordMath, wordMathXml } from "./math";
 export async function exportWord(document: ExportDocument, signal?: AbortSignal) {
   signal?.throwIfAborted();
+  const layout = printLayout(document.layout);
+  const columnWidth = layout.columnWidthPx;
+  const twips = (mm: number) => Math.round((mm * 1440) / 25.4);
+  const pageSettings = {
+    size: {
+      width: twips(layout.paperSize === "A3" ? 297 : 210),
+      height: twips(layout.paperSize === "A3" ? 420 : 297),
+      orientation:
+        layout.orientation === "landscape" ? PageOrientation.LANDSCAPE : PageOrientation.PORTRAIT,
+    },
+    margin: {
+      top: twips(layout.marginMm),
+      bottom: twips(layout.marginMm),
+      left: twips(layout.marginMm),
+      right: twips(layout.marginMm),
+      footer: 150,
+    },
+  };
   const formulas = new Map<string, string>();
   for (const formula of document.formulas.values()) {
     signal?.throwIfAborted();
     formulas.set(formula.id, wordMathXml(formula));
   }
-  const image = (item: ExportImage, maxWidth = PAGE_WIDTH_PX) =>
+  const image = (item: ExportImage, maxWidth = columnWidth) =>
     new ImageRun({
       type: item.type,
       data: item.data,
-      transformation: imageDimensions(item, maxWidth),
+      transformation: imageDimensions(item, maxWidth, layout.sheetHeightPx - 120),
       altText: {
         title: "试卷配图",
         description: item.description,
@@ -53,7 +70,7 @@ export async function exportWord(document: ExportDocument, signal?: AbortSignal)
     node: Nodes,
     definitions: Map<string, Definition>,
     style: IRunPropertiesOptions = {},
-    maxWidth = PAGE_WIDTH_PX,
+    maxWidth = columnWidth,
   ): ParagraphChild[] => {
     const children = (next = style) =>
       "children" in node
@@ -169,7 +186,7 @@ export async function exportWord(document: ExportDocument, signal?: AbortSignal)
                                 child,
                                 definitions,
                                 { bold: index === 0 },
-                                PAGE_WIDTH_PX / row.children.length - 16,
+                                columnWidth / row.children.length - 16,
                               ),
                             ),
                           }),
@@ -259,12 +276,7 @@ export async function exportWord(document: ExportDocument, signal?: AbortSignal)
                           margins: { top: 0, bottom: 0, left: 0, right: 30 },
                           children: [
                             new Paragraph({
-                              children: inline(
-                                node,
-                                part.definitions,
-                                {},
-                                PAGE_WIDTH_PX / count - 4,
-                              ),
+                              children: inline(node, part.definitions, {}, columnWidth / count - 4),
                               spacing: { after: 30 },
                             }),
                           ],
@@ -313,23 +325,23 @@ export async function exportWord(document: ExportDocument, signal?: AbortSignal)
     styles: {
       default: {
         document: {
-          run: { font: { name: "Times New Roman", eastAsia: "宋体" }, size: 11, color: "111111" },
+          run: {
+            font: { name: "Times New Roman", eastAsia: "宋体" },
+            size: layout.fontSizePt * 2,
+            color: "111111",
+          },
           paragraph: { spacing: { line: 290, after: 40 } },
         },
-        title: { run: { size: 16, bold: true, color: "111111" } },
-        heading1: { run: { size: 12, bold: true, color: "111111" } },
-        heading2: { run: { size: 11, bold: true, color: "111111" } },
-        heading3: { run: { size: 11, bold: true, color: "111111" } },
+        title: { run: { size: (layout.fontSizePt + 3) * 2, bold: true, color: "111111" } },
+        heading1: { run: { size: (layout.fontSizePt + 1) * 2, bold: true, color: "111111" } },
+        heading2: { run: { size: layout.fontSizePt * 2, bold: true, color: "111111" } },
+        heading3: { run: { size: layout.fontSizePt * 2, bold: true, color: "111111" } },
       },
     },
     sections: [
       {
         properties: {
-          page: {
-            // docx swaps the supplied portrait dimensions for landscape orientation.
-            size: { width: 8391, height: 11906, orientation: PageOrientation.LANDSCAPE },
-            margin: { top: 283, bottom: 283, left: 283, right: 283, footer: 100 },
-          },
+          page: pageSettings,
         },
         children: [
           new Paragraph({
@@ -356,11 +368,8 @@ export async function exportWord(document: ExportDocument, signal?: AbortSignal)
       {
         properties: {
           type: SectionType.CONTINUOUS,
-          column: { count: PRINT_LAYOUT.columns, space: 198, equalWidth: true },
-          page: {
-            size: { width: 8391, height: 11906, orientation: PageOrientation.LANDSCAPE },
-            margin: { top: 283, bottom: 283, left: 283, right: 283, footer: 100 },
-          },
+          column: { count: layout.columns, space: twips(layout.gapMm), equalWidth: true },
+          page: pageSettings,
         },
         footers: {
           default: new Footer({

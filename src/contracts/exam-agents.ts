@@ -21,9 +21,9 @@ export const answerBatchSchema = z.strictObject({
   questions: z
     .array(generatedAnswerSchema)
     .min(1)
-    .max(1)
+    .max(50)
     .describe(
-      "Exactly one question per call. Save promptly; multiple independent calls can share a response.",
+      "Save 1–50 completed answers per call. Batch independent ready questions, include every subquestion, and persist promptly without waiting for the whole document.",
     ),
 });
 export const gradingBatchSchema = z.strictObject({

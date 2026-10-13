@@ -21,9 +21,11 @@ const toolNames: Record<string, string> = {
   shell: "运行沙箱命令",
   append_questions: "保存已识别题目",
   report_question_count: "确认试卷题目总数",
+  report_exam_meta: "确认文档纸型、分栏与题数",
   submit_exam: "完成试卷识别",
   list_questions: "查看题目列表",
   read_question: "查看题目与材料",
+  read_questions: "批量查看题目与材料",
   append_answers: "保存标准答案",
   submit_answers: "完成答案生成",
   append_grades: "保存批改结果",
@@ -34,6 +36,8 @@ function object(value: unknown): Record<string, unknown> {
 }
 function brief(event: AgentEvent) {
   const data = object(event.data);
+  if (event.tool === "report_exam_meta")
+    return `${data.paperSize ?? ""} · ${data.columns ?? ""} 栏 · ${typeof data.total === "number" ? `共 ${data.total} 道题` : "题数待确认"}`;
   if (event.tool === "report_question_count" && typeof data.total === "number")
     return `共 ${data.total} 道题`;
   // 已下线工具的摘要逻辑，服务于历史任务的记录展示。

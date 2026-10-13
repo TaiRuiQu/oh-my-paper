@@ -64,7 +64,12 @@ export async function editExam(userId: string, id: string, input: unknown) {
       throw new RequestError(409, "这份试卷正在生成答案或批改，请等待任务结束后再保存。");
     const updated = await tx.exam.updateMany({
       where: { id: current.id, userId, revision },
-      data: { name: exam.name, totalScore: exam.totalScore, revision: { increment: 1 } },
+      data: {
+        name: exam.name,
+        totalScore: exam.totalScore,
+        ...(exam.layout ? { layout: exam.layout } : {}),
+        revision: { increment: 1 },
+      },
     });
     if (!updated.count) throw new RequestError(409, "试卷已被其他页面修改，请重新加载后再编辑。");
     for (const [index, section] of exam.sections.entries()) {

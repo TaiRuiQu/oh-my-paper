@@ -316,7 +316,7 @@ export function createProviderExamModel(
           ...request,
           system:
             request.system +
-            "\nFirst scan all pages and call report_question_count. Save recognized questions promptly with append_questions. Batch independent tool calls in one response: save completed questions while reading or zooming the next. Never wait for a whole section. Rotate pages before saving material coordinates. Submit only after saving the reported total.",
+            "\nIn your first response call report_exam_meta with A3/A4 paper size, 1–4 text columns, orientation and the count of visible parent questions (total=null if uncertain). Uploaded workbook excerpts are valid; only uploaded pages define the task scope. Save recognized questions promptly with append_questions while independently inspecting the next. Rotate pages before saving material coordinates. Submit after all visible content is inspected and saved; enforce the reported total only when it is known. Keep absent scores null.",
           tools: { ...request.tools, ...result.tools },
           isComplete: result.isComplete,
         });

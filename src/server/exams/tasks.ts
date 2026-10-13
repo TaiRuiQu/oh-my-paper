@@ -4,7 +4,7 @@ import { rm, mkdir } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { z } from "zod";
 import { EXAM_PARSE_QUEUE, type ExamTaskSummary } from "@/contracts/exam-tasks";
-import { sectionSchema, examQuestionCount, type Exam } from "@/contracts/exams";
+import { sectionSchema, examQuestionCount, examLayoutSchema, type Exam } from "@/contracts/exams";
 import { providerSnapshotSchema } from "@/contracts/ai-providers";
 import type { ExamTask } from "@/generated/prisma/client";
 import { getDb } from "@/server/db/client";
@@ -124,6 +124,7 @@ export async function taskResult(task: ExamTask): Promise<Exam | null> {
     revision: exam.revision,
     name: exam.name,
     totalScore: exam.totalScore,
+    ...(exam.layout ? { layout: examLayoutSchema.parse(exam.layout) } : {}),
     sections: exam.sections.map((section) => {
       const parsed = sectionSchema.parse({
         number: section.number,
@@ -323,6 +324,7 @@ async function runExamTask(id: string, jobId: string, signal: AbortSignal) {
           userId: task.userId,
           name: exam.name,
           totalScore: exam.totalScore,
+          ...(exam.layout ? { layout: exam.layout } : {}),
           sections: {
             create: exam.sections.map((section, position) => ({
               position: position + 1,

@@ -10,6 +10,7 @@ import {
   buildExportDocument,
   resolveDocumentImage,
   splitChoices,
+  printLayout,
 } from "@/server/exams/export/document";
 import { exportHtml } from "@/server/exams/export/html";
 import { exportWord } from "@/server/exams/export/word";
@@ -85,6 +86,25 @@ $$
   return { exam, directory, picture };
 }
 describe("printable PDF source and editable Word documents", () => {
+  it.each(["A3", "A4"] as const)(
+    "uses %s and all four column counts in both export formats",
+    async (paperSize) => {
+      const { exam, directory } = await fixture();
+      for (const columns of [1, 2, 3, 4]) {
+        exam.layout = { paperSize, columns };
+        const document = await buildExportDocument(exam, directory);
+        const layout = printLayout(exam.layout);
+        const html = await exportHtml(document);
+        expect(html).toContain(`@page{size:${layout.widthMm}mm ${layout.heightMm}mm;margin:10mm}`);
+        expect(html).toContain(`grid-template-columns:repeat(${columns},minmax(0,1fr))`);
+        const zip = await JSZip.loadAsync(await exportWord(document));
+        const xml = await zip.file("word/document.xml")!.async("string");
+        expect(xml).toContain(`w:num="${columns}"`);
+        const twips = (mm: number) => Math.round((mm * 1440) / 25.4);
+        expect(xml).toContain(`w:w="${twips(layout.widthMm)}" w:h="${twips(layout.heightMm)}"`);
+      }
+    },
+  );
   it("preserves hierarchy, scores and pictures while using the existing math syntax", async () => {
     const { exam, directory } = await fixture();
     const document = await buildExportDocument(exam, directory, undefined, "task");
@@ -104,8 +124,8 @@ describe("printable PDF source and editable Word documents", () => {
     ).toBeUndefined();
     expect(resolveDocumentImage(document, "../../.env")).toBeUndefined();
     const html = await exportHtml(document);
-    expect(html).toContain("@page{size:210mm 148mm;margin:5mm}");
-    expect(html).toContain("grid-template-columns:repeat(4,minmax(0,1fr))");
+    expect(html).toContain("@page{size:210mm 297mm;margin:10mm}");
+    expect(html).toContain("grid-template-columns:repeat(1,minmax(0,1fr))");
     expect(html).toContain("<strong>15.</strong> 求");
     expect(html).toContain("一、计算题（10 分）：");
     expect(html).not.toContain("第 15 题</h3>");
@@ -113,7 +133,7 @@ describe("printable PDF source and editable Word documents", () => {
     expect(html).toContain("data:image/jpeg;base64,");
     expect(html).toContain("data:font/woff2;base64,");
     expect(html).toContain('font-family:"NSimSun";src:url("data:font/ttf;base64,');
-    expect(html).toContain('font:5.5pt/1.45 "NSimSun",');
+    expect(html).toContain('font:11pt/1.45 "NSimSun",');
     expect(html).toContain("<strong>认真阅读</strong>");
     expect(html).not.toContain('<img src="https:');
     expect(html).not.toContain('<a href="javascript:');
@@ -130,9 +150,9 @@ describe("printable PDF source and editable Word documents", () => {
       zip = await JSZip.loadAsync(data);
     const xml = await zip.file("word/document.xml")!.async("string");
     expect(xml).toContain("15.");
-    expect(xml).toContain('w:orient="landscape"');
-    expect(xml).toContain('w:num="4"');
-    expect(xml).toContain('w:w="11906" w:h="8391"');
+    expect(xml).toContain('w:orient="portrait"');
+    expect(xml).toContain('w:num="1"');
+    expect(xml).toContain('w:w="11906" w:h="16838"');
     expect(xml).toContain("第二步");
     expect(xml).toContain("<w:t");
     expect(xml).toContain("<w:tbl>");

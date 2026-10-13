@@ -1,6 +1,22 @@
 import { z } from "zod";
 
 export const scoreSchema = z.number().nonnegative().nullable();
+export const examLayoutSchema = z.strictObject({
+  paperSize: z.enum(["A3", "A4"]),
+  columns: z.number().int().min(1).max(4),
+  orientation: z.enum(["portrait", "landscape"]).optional(),
+});
+export type ExamLayout = z.infer<typeof examLayoutSchema>;
+export function resolveExamLayout(layout?: ExamLayout): Required<ExamLayout> {
+  const paperSize = layout?.paperSize ?? "A4";
+  const columns = layout?.columns ?? 1;
+  return {
+    paperSize,
+    columns,
+    orientation:
+      layout?.orientation ?? (paperSize === "A3" && columns > 1 ? "landscape" : "portrait"),
+  };
+}
 // Coordinates are fractions of the rendered page, measured from its top-left.
 export const materialSchema = z
   .strictObject({
@@ -32,7 +48,9 @@ export const questionSchema = z
       .number()
       .int()
       .positive()
-      .describe("Original Arabic question number; do not restart numbering by section."),
+      .describe(
+        "Original Arabic question number, including gaps and numbering restarted in separate workbook groups; assign reading-order numbers only when no Arabic label is available.",
+      ),
     description: z
       .string()
       .trim()
@@ -57,7 +75,9 @@ export const sectionSchema = z
     number: z
       .string()
       .regex(/^[一二三四五六七八九十百千]+$/)
-      .describe("Chinese numeral section number without punctuation."),
+      .describe(
+        "Original Chinese numeral section number without punctuation, or a unique reading-order Chinese group number when absent; preserve original chapter headings in title.",
+      ),
     title: z.string().trim().min(1).describe("Original section title or question type."),
     description: z
       .string()
@@ -78,6 +98,7 @@ export const parsedExamSchema = z
   .strictObject({
     name: z.string().trim().min(1),
     totalScore: scoreSchema,
+    layout: examLayoutSchema.optional(),
     sections: z.array(sectionSchema).min(1),
   })
   .refine(

@@ -36,6 +36,7 @@ const config: ProviderSnapshot = {
 const exam = {
   name: "test",
   totalScore: 1,
+  layout: { paperSize: "A4" as const, columns: 1, orientation: "portrait" as const },
   sections: [
     {
       number: "一",
@@ -156,7 +157,7 @@ describe("actual agent activity", () => {
       expect(body.tool_choice).not.toBe("required");
       const next = [
         { name: "read_pages", args: { pages: [1] } },
-        { name: "report_question_count", args: { total: 1 } },
+        { name: "report_exam_meta", args: { total: 1, paperSize: "A4", columns: 1 } },
         { name: "append_questions", args: exam },
         { name: "submit_exam", args: { name: exam.name, totalScore: exam.totalScore } },
       ][requests++];
@@ -201,7 +202,7 @@ describe("actual agent activity", () => {
     expect(output).toEqual(exam);
     expect(requests).toBe(4);
     expect(events.filter((event) => event.type === "tool_call").map((event) => event.tool)).toEqual(
-      ["read_pages", "report_question_count", "append_questions", "submit_exam"],
+      ["read_pages", "report_exam_meta", "append_questions", "submit_exam"],
     );
     expect(events.filter((event) => event.type === "tool_result")).toHaveLength(4);
     const timings = events.filter((event) => event.type === "timing");
@@ -226,7 +227,7 @@ describe("actual agent activity", () => {
     const transport: typeof fetch = async () => {
       const next = [
         { name: "read_pages", args: { pages: ["bad"] } },
-        { name: "report_question_count", args: { total: 1 } },
+        { name: "report_exam_meta", args: { total: 1, paperSize: "A4", columns: 1 } },
         { name: "append_questions", args: exam },
         { name: "submit_exam", args: { name: exam.name, totalScore: exam.totalScore } },
       ][requests++];
@@ -277,7 +278,7 @@ describe("actual agent activity", () => {
   it("continues beyond 24 calls while accumulating one question per round", async () => {
     const batches = Array.from({ length: 30 }, (_, index) => questionBatch(index + 1));
     const { model, requests } = scriptedModel([
-      [{ name: "report_question_count", args: { total: 30 } }],
+      [{ name: "report_exam_meta", args: { total: 30, paperSize: "A4", columns: 1 } }],
       ...batches.map((args) => [{ name: "append_questions", args }]),
       [{ name: "submit_exam", args: { name: "Complete paper", totalScore: 30 } }],
     ]);
@@ -301,7 +302,7 @@ describe("actual agent activity", () => {
   });
   it("does not treat saved partial questions as a completed exam when the model stops early", async () => {
     const { model } = scriptedModel([
-      [{ name: "report_question_count", args: { total: 2 } }],
+      [{ name: "report_exam_meta", args: { total: 2, paperSize: "A4", columns: 1 } }],
       [{ name: "append_questions", args: questionBatch(1) }],
     ]);
     const onProgress = vi.fn().mockResolvedValue(undefined);
@@ -319,7 +320,7 @@ describe("actual agent activity", () => {
   it("merges multiple tool calls in the same SDK round before finalizing", async () => {
     const { model, requests } = scriptedModel([
       [
-        { name: "report_question_count", args: { total: 2 } },
+        { name: "report_exam_meta", args: { total: 2, paperSize: "A4", columns: 1 } },
         { name: "append_questions", args: questionBatch(1) },
         { name: "append_questions", args: questionBatch(2) },
         { name: "submit_exam", args: { name: "test", totalScore: 2 } },
