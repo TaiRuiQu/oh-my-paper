@@ -72,7 +72,7 @@ services:
       migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: [CMD, node, --conditions=react-server, --import, tsx, scripts/worker-health.ts]
+      test: [CMD, node, --conditions=react-server, scripts/worker-health.mjs]
       interval: 20s
       timeout: 10s
       retries: 5

@@ -159,8 +159,13 @@ export function GradingManager({
             limitsLabel={quick ? "作答试卷与标准答案合计最多 20 个文件，共 100 MB。" : undefined}
           />
           {quick && (
-            <section className="reference-upload" aria-labelledby="quick-answer-heading">
-              <h3 id="quick-answer-heading">标准答案（可选）</h3>
+            <details className="reference-upload answer-disclosure">
+              <summary>
+                标准答案（可选）
+                {answerFiles.length > 0 && (
+                  <span className="count-label">已选 {answerFiles.length} 个文件</span>
+                )}
+              </summary>
               <p className="hint">
                 有标准答案时，可一起上传；系统按这份答案批改。不上传则自动生成。
               </p>
@@ -177,7 +182,7 @@ export function GradingManager({
                 label="选择标准答案或拖放到这里"
                 limitsLabel="与作答试卷合计最多 20 个文件，共 100 MB。"
               />
-            </section>
+            </details>
           )}
           <TaskModelPicker
             query={modelQuery}

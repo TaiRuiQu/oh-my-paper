@@ -199,6 +199,8 @@ pnpm run test:integration
 
 导出在 Web 服务中执行。PDF 需要系统 Chromium（或 Google Chrome）和中文字体；Word 在 Node.js 内直接生成原生公式，不需要浏览器。Docker Web 镜像已安装 Chromium 与 `fonts-noto-cjk`；本地 Debian/Ubuntu 可安装 `chromium fonts-noto-cjk`，其他浏览器路径可通过 `EXPORT_CHROMIUM_PATH` 指定。PDF 默认字体采用新宋体 NSimSun 5.03，字体从 `simsun.ttc` 的 NSimSun face 提取并保存于 `assets/fonts/nsimsun.ttf`，通过 `@font-face` 内嵌；无需系统安装或导出时下载。默认字体、KaTeX 字体和配图随文档内嵌，导出浏览器禁用页面脚本及外部网络加载。`node --conditions=react-server --import tsx scripts/check-exam-export.ts` 可生成测试 PDF/Word，并检查长文档分页、可搜索中文、可编辑正文及原生公式，产物位于 `tmp/exam-export-check`。
 
-部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.4 部署与升级指南](docs/releases/v0.1.4.zh-CN.md)。
+Worker 镜像使用 `pnpm run build:worker` 生成的独立运行目录，只包含编译后的入口、实际运行依赖、数据库迁移与 Python 沙箱脚本，不再复制完整 `node_modules` 和应用源码。快速批改的「标准答案（可选）」默认折叠，选中文件后仍在摘要显示数量。
+
+部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.5 部署与升级指南](docs/releases/v0.1.5.zh-CN.md)。
 
 Word 公式转换复用 KaTeX 与 docx，新增 `mathml2omml@0.5.0`（约 67 KB 运行时代码，无运行时依赖），并直接声明已有 docx 依赖 `xml-js`。转换库以未修改的运行时模块随应用分发，其 LGPL-3.0-or-later 许可及来源见 [第三方依赖说明](docs/third-party.md)。

@@ -3,6 +3,7 @@ node_modules/
 .local/
 .venv/
 .next/
+build/
 coverage/
 playwright-report/
 test-results/

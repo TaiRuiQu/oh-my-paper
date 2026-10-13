@@ -92,6 +92,10 @@ describe("management navigation and bundled workflows", () => {
     expect(page.querySelector<HTMLInputElement>('input[type="file"]')?.disabled).toBe(false);
     expect(page.textContent).toContain("开始批改");
     expect(page.textContent).toContain("标准答案（可选）");
+    expect(page.querySelector<HTMLDetailsElement>(".answer-disclosure")?.open).toBe(false);
+    expect(page.querySelector(".answer-disclosure > summary")?.textContent).toContain(
+      "标准答案（可选）",
+    );
     expect(page.querySelector<HTMLInputElement>("#quick-answer-files")?.disabled).toBe(false);
   });
   it("ordinary users see a patient waiting state and no internal stages or drafts", () => {

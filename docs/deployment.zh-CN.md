@@ -15,6 +15,8 @@
 
 只有 Worker 镜像需要 `poppler-utils`（`pdftoppm` / `pdfinfo`）、`bubblewrap` 和预装 Pillow 的 `/opt/python-sandbox` 虚拟环境。Web 镜像只负责接收上传与投递队列，不做页面渲染。
 
+Worker 的 Node.js 运行目录由 `pnpm run build:worker` 生成到 `build/worker`：编译 Worker、健康检查和 Prisma 配置，追踪实际依赖，并保留迁移文件与 Python 沙箱脚本。镜像仅复制该目录，不复制完整 `node_modules` 或应用源码，也不需要运行时 TypeScript 加载器。Worker 构建独立于 Next.js 构建；数据库迁移仍使用同一个 Worker 镜像，Compose 的启动方式无需调整。
+
 ## 2. 配置 `.env`
 
 从 `.env.example` 复制后按部署场景增补。**注意 `compose.yaml` 使用的数据库变量名与 `.env.example` 不同**：容器内 `DATABASE_URL` 由 `DEPLOY_DATABASE_URL` 覆盖（`compose.yaml:22`），主机名必须是服务名 `db`。
