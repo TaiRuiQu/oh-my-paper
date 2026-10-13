@@ -18,6 +18,13 @@ import { createResultTools } from "@/server/exams/result-tools";
 
 const MAX_AGENT_STEPS = 256;
 
+// The SDK appends /messages, but only adds /v1 for api.anthropic.com.
+// Compatible gateways commonly give users an unversioned API root instead.
+export function anthropicBaseURL(baseURL: string) {
+  const root = baseURL.replace(/\/+$/, "").replace(/\/messages$/, "");
+  return /\/v\d+$/.test(root) ? root : `${root}/v1`;
+}
+
 // 不依赖结构化输出模式：模型按提示词返回 JSON 文本，这里容错提取后交给 zod 校验。
 function extractJson(text: string): unknown {
   const fenced = /```(?:json)?\s*([\s\S]*?)\s*```/i.exec(text),
@@ -122,7 +129,7 @@ export function createProviderExamModel(
       : config.apiType === "openai_chat"
         ? createOpenAICompatible({ ...common, name: "exam" })(config.model)
         : config.apiType === "anthropic"
-          ? createAnthropic(common)(config.model)
+          ? createAnthropic({ ...common, baseURL: anthropicBaseURL(config.baseURL) })(config.model)
           : createGoogle(common)(config.model);
   const run = (request: AgentRequest) =>
     providerConcurrencyLimiter(config.providerId).run(

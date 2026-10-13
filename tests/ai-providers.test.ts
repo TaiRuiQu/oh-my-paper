@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { providerInputSchema, type ProviderSnapshot } from "@/contracts/ai-providers";
-import { createProviderExamModel, reasoningOptions } from "@/server/ai/providers";
+import { anthropicBaseURL, createProviderExamModel, reasoningOptions } from "@/server/ai/providers";
 const config: ProviderSnapshot = {
   providerId: "10000000-0000-4000-8000-000000000001",
   name: "test",
@@ -30,6 +30,48 @@ const output = {
   ],
 };
 describe("provider models and reasoning", () => {
+  it("normalizes Anthropic gateway roots without duplicating the API version", () => {
+    expect(anthropicBaseURL("https://gateway.example/apps/anthropic/")).toBe(
+      "https://gateway.example/apps/anthropic/v1",
+    );
+    expect(anthropicBaseURL("https://api.anthropic.com/v1")).toBe("https://api.anthropic.com/v1");
+    expect(anthropicBaseURL("https://gateway.example/anthropic/v1/messages")).toBe(
+      "https://gateway.example/anthropic/v1",
+    );
+  });
+  it("calls the versioned Anthropic Messages endpoint using SDK authentication and parses its response", async () => {
+    let url = "";
+    const transport: typeof fetch = async (input, init) => {
+      url = String(input);
+      expect(new Headers(init?.headers).get("x-api-key")).toBe("test-key");
+      expect(new Headers(init?.headers).get("anthropic-version")).toBe("2023-06-01");
+      const body = JSON.parse(String(init?.body));
+      expect(body.model).toBe("qwen3.8-flash");
+      return Response.json({
+        id: "msg_test",
+        type: "message",
+        role: "assistant",
+        model: body.model,
+        content: [{ type: "text", text: JSON.stringify(output) }],
+        stop_reason: "end_turn",
+        stop_sequence: null,
+        usage: { input_tokens: 20, output_tokens: 30 },
+      });
+    };
+    const exam = await createProviderExamModel(
+      {
+        ...config,
+        apiType: "anthropic",
+        baseURL: "https://gateway.example/apps/anthropic",
+        model: "qwen3.8-flash",
+        reasoningEffort: "default",
+      },
+      "test-key",
+      transport,
+    ).generate({ system: "Extract paper", content: [{ type: "text", text: "paper" }] });
+    expect(url).toBe("https://gateway.example/apps/anthropic/v1/messages");
+    expect(exam).toEqual(output);
+  });
   it("allows several models with independent effort options and rejects duplicates", () => {
     const input = {
       name: "test",
