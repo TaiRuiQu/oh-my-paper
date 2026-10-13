@@ -150,6 +150,8 @@ journalctl -u oh-my-paper-update.service -f   # 观察拉取与滚动日志
 - 被 `latest` 抛弃的旧镜像由 `docker image prune -f` 清理；
 - `db` 与 `proxy` 使用固定版本镜像，不在自动更新范围内，升级它们应当显式进行。
 
+定时任务只更新镜像，不执行 `git pull`，也不会同步服务器上的 Compose 文件、部署脚本或内核配置。涉及这些文件的版本更新，需要先在服务器上同步对应配置；之后仍可继续使用原定时任务。仅有应用代码和数据库迁移变化时，不需要手动更新。
+
 因此日常发布只需要：
 
 ```bash
@@ -226,15 +228,39 @@ sudo docker compose exec worker bwrap --unshare-user --unshare-net \
 
 放宽该 sysctl 会回到 Ubuntu 22.04 及更早的默认行为，属于常见做法；若必须保持宿主机收紧，可改为编写含 `userns,` 规则的 AppArmor profile 挂给 Worker 容器（将 `apparmor:unconfined` 换成 `apparmor:<profile>`）。
 
-**Python 工具报 `bwrap: Can't mount proc on /newroot/proc: Operation not permitted`** —— Worker 容器实际生效的安全配置拒绝了在容器内挂载新的 proc 文件系统。bind 挂载不受影响，所以报错通常落在 `--proc` 一步。compose.yaml 已为 Worker 配置 `seccomp:unconfined` 与 `apparmor:unconfined`；若仍报错，多半是服务器上的 compose 文件与仓库版本不一致，或容器不是由该 compose 创建的。确认与修复（宿主机执行）：
+**Python 工具报 `bwrap: Can't mount proc on /newroot/proc: Operation not permitted`** —— Docker 默认会屏蔽 `/proc` 下的部分路径。即使 `seccomp:unconfined`、`apparmor:unconfined` 和宿主机用户命名空间配置已经生效，这些覆盖挂载仍可能使内核拒绝 Bubblewrap 在自己的 PID 命名空间内挂载新的 proc 文件系统。先检查实际容器配置（在部署目录执行）：
 
 ```bash
-sudo docker inspect --format '{{json .HostConfig.SecurityOpt}}' \
+sudo docker inspect --format 'SecurityOpt={{json .HostConfig.SecurityOpt}} MaskedPaths={{json .HostConfig.MaskedPaths}} ReadonlyPaths={{json .HostConfig.ReadonlyPaths}}' \
   $(sudo docker compose -f compose.yaml -f compose.release.yaml ps -q worker)
-# 期望输出 ["no-new-privileges:true","seccomp:unconfined","apparmor:unconfined"]；若缺失：
-git fetch origin --tags && git checkout --detach v0.1.6   # 与运行镜像同版本
-sudo docker compose -f compose.yaml -f compose.release.yaml up -d --force-recreate worker
 ```
+
+若 `MaskedPaths` 或 `ReadonlyPaths` 不是空数组，在服务器 `compose.yaml` 的 **worker** 服务中补齐以下配置：
+
+```yaml
+security_opt:
+  - no-new-privileges:true
+  - seccomp:unconfined
+  - apparmor:unconfined
+  - systempaths=unconfined
+cap_drop: [ALL]
+```
+
+`systempaths=unconfined` 必须使用等号。Compose 将它转换成空的 `MaskedPaths` 和 `ReadonlyPaths`，因此它不会出现在 `docker inspect` 的 `SecurityOpt` 数组中。[Docker 文档](https://docs.docker.com/reference/cli/docker/container/run/#optional-security-options---security-opt)说明了该选项；[Compose 修复记录](https://github.com/docker/compose/pull/10110)说明了客户端处理方式。
+
+此设置仅适用于执行 Bubblewrap 的 Worker，保留 `cap_drop: [ALL]` 和 `no-new-privileges`；模型代码仍在 Bubblewrap 的独立用户、PID、网络命名空间和受限文件系统中执行。
+
+修改后需重建容器，单纯 `restart` 不会应用新的安全配置：
+
+```bash
+sudo docker compose -f compose.yaml -f compose.release.yaml up -d --no-deps --force-recreate worker
+sudo docker inspect --format 'MaskedPaths={{json .HostConfig.MaskedPaths}} ReadonlyPaths={{json .HostConfig.ReadonlyPaths}}' \
+  $(sudo docker compose -f compose.yaml -f compose.release.yaml ps -q worker)
+# 期望输出 MaskedPaths=[] ReadonlyPaths=[]
+sudo docker compose -f compose.yaml -f compose.release.yaml logs --since 2m worker
+```
+
+重建后不应再出现 `worker.sandbox.unavailable`，并可用上面的 `bwrap` 命令验证实际挂载。旧定时任务会继续使用已修改的 Compose 文件；只拉取新镜像不会自动修复这项配置。
 
 Worker 启动时会用与真实调用一致的完整参数做一次沙箱自检，环境不可用时在日志输出 `worker.sandbox.unavailable`（含诊断与修复建议）；排查时先 `docker compose logs worker | grep sandbox`。工具失败信息里也会附带对应的修复指引。另注意：沙箱进程意外退出后，下一次调用会自动重建沙箱，`/workspace` 中的临时文件会重置为初始页面，返回的 stdout 会带一行 `[沙箱进程已重启…]` 提示。
 

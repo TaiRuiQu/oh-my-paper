@@ -66,6 +66,8 @@ export async function runSandboxCommand(options: SandboxOptions & { command: str
 export function sandboxRemediation(diagnostic: string): string {
   if (/RTM_NEWADDR|uid map|creating new user namespace|new user namespaces/i.test(diagnostic))
     return "宿主机内核限制非特权用户命名空间：在宿主机执行 sysctl kernel.apparmor_restrict_unprivileged_userns=0 并持久化（docs/deployment.zh-CN.md §8）。";
+  if (/Can't mount proc/i.test(diagnostic))
+    return "Docker 的默认系统路径屏蔽可能拒绝沙箱的私有 /proc 挂载：Worker 的 security_opt 需包含 seccomp:unconfined、apparmor:unconfined 和 systempaths=unconfined（使用等号）；修改 compose.yaml 后重建 Worker，并用 docker inspect 确认 HostConfig.MaskedPaths 与 HostConfig.ReadonlyPaths 均为 []。定时更新仅拉取镜像，不会同步 Compose 文件（docs/deployment.zh-CN.md §8）。";
   if (/Can't mount|Operation not permitted|EPERM/i.test(diagnostic))
     return "容器安全配置拒绝了沙箱挂载：Worker 容器需以 seccomp:unconfined 与 apparmor:unconfined 运行，用 docker inspect --format '{{json .HostConfig.SecurityOpt}}' 确认实际生效值（docs/deployment.zh-CN.md §8）。";
   if (/ENOENT/.test(diagnostic))
@@ -77,7 +79,11 @@ export function sandboxRemediation(diagnostic: string): string {
 // possible: a user namespace with proc/dev/tmpfs mounts, dropped privileges and
 // read-only root, i.e. exactly the layers container runtimes or host kernels
 // may deny. A minimal bwrap call can pass while this full shape fails.
-export function verifySandboxEnvironment(): { ok: boolean; diagnostic: string; remediation: string } {
+export function verifySandboxEnvironment(): {
+  ok: boolean;
+  diagnostic: string;
+  remediation: string;
+} {
   if (globalThis.process.platform !== "linux")
     return { ok: false, diagnostic: "本地沙箱需要 Linux 和 Bubblewrap。", remediation: "" };
   const result = spawnSync(
