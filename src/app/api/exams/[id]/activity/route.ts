@@ -1,18 +1,24 @@
+import { z } from "zod";
 import { join } from "node:path";
-import { requireSession } from "@/server/auth/session";
+import { requireAdmin } from "@/server/auth/authorization";
 import { ownedExamTask, taskDirectory } from "@/server/exams/tasks";
 import { readActivity } from "@/server/exams/activity";
-import { errorResponse } from "@/server/http/errors";
-
-export const runtime = "nodejs";
+import { RequestError, errorResponse } from "@/server/http/errors";
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
+  let isAdmin = false;
   try {
-    const { user } = await requireSession(request.headers);
+    const { user } = await requireAdmin(request.headers);
+    isAdmin = true;
     const task = await ownedExamTask(user.id, (await context.params).id);
     const params = new URL(request.url).searchParams;
-    const sameAttempt = params.get("attempt") === task.attempt;
-    const cursor = Number(params.get("after") ?? 0);
-    const after = sameAttempt && Number.isSafeInteger(cursor) && cursor >= 0 ? cursor : 0;
+    const parsed = z.coerce
+      .number()
+      .int()
+      .nonnegative()
+      .max(Number.MAX_SAFE_INTEGER)
+      .safeParse(params.get("after") ?? 0);
+    if (!parsed.success) throw new RequestError(400, "活动记录游标必须是非负整数。");
+    const after = params.get("attempt") === task.attempt ? parsed.data : 0;
     const events = task.attempt
       ? await readActivity(join(taskDirectory(task.id), task.attempt), after)
       : [];
@@ -26,6 +32,6 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
       { headers: { "Cache-Control": "private, no-store" } },
     );
   } catch (error) {
-    return errorResponse(error);
+    return errorResponse(error, request, isAdmin);
   }
 }

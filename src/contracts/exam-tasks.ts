@@ -1,6 +1,6 @@
-import type { DigitalExam } from "./exams";
-
-export const EXAM_PARSE_QUEUE = "exam.parse.v1";
+export type QuestionProgress = { total: number | null; completed: number };
+import type { Exam } from "./exams";
+export const EXAM_PARSE_QUEUE = "exam.parse.v2";
 export const UPLOAD_LIMITS = {
   fileBytes: 40 * 1024 * 1024,
   totalBytes: 100 * 1024 * 1024,
@@ -11,20 +11,14 @@ export type ExamTaskSummary = {
   id: string;
   name: string;
   status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED";
-  page: number;
-  totalPages: number;
-  phase: string;
   error: string | null;
-  autoGrade?: boolean;
-  batchId?: string | null;
-  model: string;
+  errorCode?: string | null;
   createdAt: string;
-  outputKey?: string | null;
-  generateAnswers?: boolean;
-  templateTaskId?: string;
+  creditsSpent?: string;
+  progress?: QuestionProgress;
+  answerStatus?: "MISSING" | "PROCESSING" | "READY";
 };
 export type ExamTaskDetail = {
   task: ExamTaskSummary;
-  exam: DigitalExam | null;
-  mathImages?: Record<string, string>;
+  exam: Exam | null;
 };

@@ -2,66 +2,53 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { getDb } from "@/server/db/client";
 import { getEnv } from "@/server/config/env";
-import { logEvent } from "@/server/logger";
-import { FRAMEWORK_PING_QUEUE, pingJobSchema } from "@/contracts/jobs";
+import { logError } from "@/server/logger";
 import { createJobClient, initializeQueues } from "./client";
 import { EXAM_PARSE_QUEUE } from "@/contracts/exam-tasks";
 import { examJobSchema, processExamTask } from "@/server/exams/tasks";
-import { GRADING_QUEUE } from "@/contracts/grading";
-import { PRACTICE_QUEUE } from "@/contracts/learning";
-import { processPractice } from "@/server/learning/practice";
-import { continueQuickGrade } from "@/server/pipeline/quick-grade";
-import { gradingJobSchema, processGradeTask } from "@/server/grading/tasks";
-
+import { EXAM_AGENT_QUEUE } from "@/contracts/exam-agents";
+import { agentJobSchema, processAgentTask } from "@/server/exams/agent-tasks";
+import { WORKFLOW_QUEUE } from "@/contracts/workflows";
+import { processWorkflow, workflowJobSchema } from "@/server/exams/workflows";
 export async function startWorker() {
   const boss = createJobClient(true);
   try {
     await boss.start({ attempts: 5 });
     await initializeQueues(boss);
     await boss.work(
-      PRACTICE_QUEUE,
-      { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 },
-      async (jobs) => {
-        for (const job of jobs)
-          await processPractice(examJobSchema.parse(job.data).taskId, job.id, job.signal);
-      },
-    );
-    await boss.work(
-      GRADING_QUEUE,
-      { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 },
-      async (jobs) => {
-        for (const job of jobs)
-          await processGradeTask(gradingJobSchema.parse(job.data).taskId, job.id, job.signal);
-      },
-    );
-    await boss.work(
       EXAM_PARSE_QUEUE,
       { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 },
       async (jobs) => {
         for (const job of jobs) {
-          const { taskId } = examJobSchema.parse(job.data);
-          await processExamTask(taskId, job.id, job.signal);
-          await continueQuickGrade(taskId);
+          const parsed = examJobSchema.safeParse(job.data);
+          if (!parsed.success) {
+            logError("worker.job.invalid", parsed.error, {
+              jobId: job.id,
+              queue: EXAM_PARSE_QUEUE,
+            });
+            throw parsed.error;
+          }
+          await processExamTask(parsed.data.taskId, job.id, job.signal);
         }
       },
     );
     await boss.work(
-      FRAMEWORK_PING_QUEUE,
+      EXAM_AGENT_QUEUE,
       { localConcurrency: getEnv().WORKER_CONCURRENCY, pollingIntervalSeconds: 1 },
       async (jobs) => {
         for (const job of jobs) {
-          pingJobSchema.parse(job.data);
-          logEvent("queue.ping.completed", { queue: FRAMEWORK_PING_QUEUE, jobId: job.id });
+          const parsed = agentJobSchema.parse(job.data);
+          await processAgentTask(parsed.taskId, job.id, job.signal);
         }
-        return { ok: true };
       },
     );
-    // Exercise scheduling without creating business jobs or invoking models.
-    await boss.schedule(
-      FRAMEWORK_PING_QUEUE,
-      "*/15 * * * *",
-      { message: "scheduled-ping" },
-      { tz: "UTC" },
+    await boss.work(
+      WORKFLOW_QUEUE,
+      { localConcurrency: 2, pollingIntervalSeconds: 1 },
+      async (jobs) => {
+        for (const job of jobs)
+          await processWorkflow(workflowJobSchema.parse(job.data).workflowId, job.id);
+      },
     );
     const id = randomUUID();
     const beat = () =>
@@ -71,27 +58,27 @@ export async function startWorker() {
         update: { updatedAt: new Date() },
       });
     await beat();
-    await continueQuickGrade();
     const timer = setInterval(
-      () => void beat().catch(() => logEvent("worker.heartbeat.failed")),
+      () =>
+        void beat().catch((error) => {
+          logError("worker.heartbeat.failed", error);
+        }),
       10_000,
     );
     timer.unref();
-    const sweep = setInterval(
-      () => void continueQuickGrade().catch(() => logEvent("pipeline.sweep.failed")),
-      30_000,
-    );
-    sweep.unref();
     boss.once("stopped", () => {
       clearInterval(timer);
-      clearInterval(sweep);
       void getDb()
         .workerHeartbeat.deleteMany({ where: { id } })
-        .catch(() => undefined);
+        .catch((error) => {
+          logError("worker.heartbeat.cleanup.failed", error);
+        });
     });
     return boss;
-  } catch {
-    await boss.stop().catch(() => undefined);
-    throw new Error("Worker queue startup failed.");
+  } catch (error) {
+    await boss.stop().catch((cleanupError) => {
+      logError("worker.queue.cleanup.failed", cleanupError);
+    });
+    throw error;
   }
 }

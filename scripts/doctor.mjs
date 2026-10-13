@@ -25,8 +25,16 @@ async function check(name, action) {
     console.log(`✓ ${name}${detail ? ": " + detail : ""}`);
   } catch (error) {
     failures++;
-    // Connection errors can contain credentials; print only their code.
-    console.error(`✗ ${name}: ${error.code || "验证失败"}`);
+    const { redactErrorText } = await import("../src/lib/error-message.ts");
+    console.error(
+      `✗ ${name}: ${redactErrorText(
+        error.message || String(error),
+        Object.entries(process.env)
+          .filter(([key]) => /SECRET|PASSWORD|TOKEN|API_KEY|DATABASE_URL|ENCRYPTION_KEY/i.test(key))
+          .map(([, value]) => value)
+          .filter(Boolean),
+      )} ${error.code || ""}`,
+    );
   }
 }
 function run(command, args) {
@@ -37,7 +45,10 @@ function run(command, args) {
     timeout: 15000,
   });
   if (result.error) throw result.error;
-  assert.equal(result.status, 0);
+  if (result.status !== 0)
+    throw new Error(
+      `${command} exited with status ${result.status}: ${(result.stdout + result.stderr).trim()}`,
+    );
   return (result.stdout + result.stderr).trim();
 }
 await check("Node.js / pnpm", () => {
@@ -57,25 +68,21 @@ await check("项目依赖", () => {
   }
   return `${Object.keys(packages).length} 个直接依赖版本匹配`;
 });
-await check("Python / SymPy", () =>
-  run(resolve(root, process.env.PYTHON_PATH || ".venv/bin/python"), [
-    "-c",
-    'import sympy; x=sympy.Symbol("x"); assert sympy.simplify((x+1)**2-x*x-2*x-1)==0; print("SymPy " + sympy.__version__)',
-  ]),
-);
-await check("Python / Pillow / OpenCV", () =>
-  run(resolve(root, process.env.PYTHON_PATH || ".venv/bin/python"), [
-    "-c",
-    'import PIL, cv2; print("Pillow " + PIL.__version__ + " / OpenCV " + cv2.__version__)',
-  ]),
-);
-await check("Poppler 渲染和文本工具", () => {
+await check("Poppler 页面检查和渲染工具", () => {
   const versions = [
     run(process.env.PDFTOPPM_PATH || "pdftoppm", ["-v"]),
-    run(process.env.PDFTOTEXT_PATH || "pdftotext", ["-v"]),
+    run(process.env.PDFINFO_PATH || "pdfinfo", ["-v"]),
   ];
   return versions.map((text) => text.split("\n")[0]).join(" / ");
 });
+await check("本地 Python 沙箱 / Pillow", () =>
+  run(process.execPath, [
+    "--conditions=react-server",
+    "--import",
+    "tsx",
+    "scripts/check-python-sandbox.ts",
+  ]),
+);
 await check("中文字体", () => {
   const fonts = run("fc-match", ["Noto Sans CJK SC:lang=zh"]);
   assert.match(fonts, /Noto.*CJK/);
@@ -90,9 +97,10 @@ await check("Sharp 图像处理", async () => {
   return "PNG 创建和读取通过";
 });
 await check("AI SDK", async () => {
-  const { ToolLoopAgent } = await import("ai");
-  assert.equal(typeof ToolLoopAgent, "function");
-  return "ToolLoopAgent 可用";
+  const { generateText, Output } = await import("ai");
+  assert.equal(typeof generateText, "function");
+  assert.equal(typeof Output.object, "function");
+  return "结构化生成可用";
 });
 await check("PostgreSQL 工具", () => run(resolve(pgBin, "psql"), ["--version"]));
 await check("PostgreSQL 连接", async () => {
@@ -124,15 +132,15 @@ await check("工程配置 / Prisma / 认证表 / 存储目录", () =>
     loadEnvironment();
     const { getEnv } = await import('./src/server/config/env.ts');
     const { getDb, disconnectDatabase } = await import('./src/server/db/client.ts');
-    const { initializeStorage } = await import('./src/server/storage/index.ts');
+    const { initializeStorage } = await import('./src/server/storage.ts');
     getEnv();
     try {
       await getDb().user.count();
-      await getDb().workspace.count();
+      await getDb().exam.count();
       await initializeStorage();
       console.log('环境校验、Prisma 查询与文件目录检查通过');
     } finally { await disconnectDatabase(); }
-  })().catch(() => { console.error('底座验证失败，请先生成 Client 并应用迁移'); process.exitCode = 1; });`,
+  })().catch(async error => { const {logError}=await import('./src/server/logger.ts'); logError('doctor.foundation.failed',error); process.exitCode = 1; });`,
   ]),
 );
 process.exitCode = failures ? 1 : 0;

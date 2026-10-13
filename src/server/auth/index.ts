@@ -1,4 +1,5 @@
 import "server-only";
+import { logError } from "@/server/logger";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { getDb } from "@/server/db/client";
@@ -20,6 +21,23 @@ function createAuth() {
     },
     session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24 },
     rateLimit: { enabled: true },
+    onAPIError: {
+      onError: (error) => {
+        logError("auth.api.failed", error);
+      },
+    },
+    logger: {
+      level: "warn",
+      log: (level, message, ...args) => {
+        if (level === "warn" || level === "error")
+          logError(
+            "auth.internal.failed",
+            args.find((arg) => arg instanceof Error) ?? new Error(message),
+            {},
+            { level },
+          );
+      },
+    },
   });
 }
 

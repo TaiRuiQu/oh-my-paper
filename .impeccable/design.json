@@ -1,411 +1,341 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-12T03:53:19.195457+00:00",
+  "generatedAt": "2026-10-12T15:35:43.977176+00:00",
   "title": "Design System: Oh My Paper",
   "extensions": {
     "colorMeta": {
-      "surface": {
+      "white": {
         "role": "neutral",
-        "displayName": "Surface",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
+        "displayName": "White"
       },
-      "paper": {
+      "workspace": {
         "role": "neutral",
-        "displayName": "Paper",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
+        "displayName": "Workspace"
       },
       "ink": {
-        "role": "primary",
-        "displayName": "Ink",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
-      },
-      "neutral-strong": {
-        "role": "primary",
-        "displayName": "Neutral Strong",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
-      },
-      "neutral-deep": {
-        "role": "primary",
-        "displayName": "Neutral Deep",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
-      },
-      "neutral-fill": {
         "role": "neutral",
-        "displayName": "Neutral Fill",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
+        "displayName": "Ink"
       },
       "muted": {
         "role": "neutral",
-        "displayName": "Muted",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
+        "displayName": "Muted"
       },
       "line": {
         "role": "neutral",
-        "displayName": "Line",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
+        "displayName": "Line"
       },
-      "input": {
-        "role": "neutral",
-        "displayName": "Input",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
-      },
-      "ring": {
-        "role": "neutral",
-        "displayName": "Ring",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
-      },
-      "figure": {
-        "role": "neutral",
-        "displayName": "Figure",
-        "tonalRamp": [
-          "#18181b",
-          "#27272a",
-          "#3f3f46",
-          "#52525b",
-          "#71717a",
-          "#a1a1aa",
-          "#d4d4d8",
-          "#f4f4f5"
-        ]
-      },
-      "question-selection": {
+      "accent": {
         "role": "primary",
-        "displayName": "Question Selection",
-        "tonalRamp": [
-          "oklch(15% 0.245 262.88)",
-          "oklch(27% 0.245 262.88)",
-          "oklch(38% 0.245 262.88)",
-          "oklch(50% 0.245 262.88)",
-          "oklch(61% 0.245 262.88)",
-          "oklch(73% 0.245 262.88)",
-          "oklch(84% 0.245 262.88)",
-          "oklch(95% 0.245 262.88)"
-        ]
+        "displayName": "Accent"
       },
-      "error": {
+      "accent-hover": {
         "role": "primary",
-        "displayName": "Error",
-        "tonalRamp": [
-          "oklch(15% 0.16 29)",
-          "oklch(27% 0.16 29)",
-          "oklch(38% 0.16 29)",
-          "oklch(50% 0.16 29)",
-          "oklch(61% 0.16 29)",
-          "oklch(73% 0.16 29)",
-          "oklch(84% 0.16 29)",
-          "oklch(95% 0.16 29)"
-        ]
+        "displayName": "Accent Hover"
       },
-      "destructive": {
+      "accent-soft": {
         "role": "primary",
-        "displayName": "Destructive",
-        "tonalRamp": [
-          "oklch(15% 0.16 29)",
-          "oklch(27% 0.16 29)",
-          "oklch(38% 0.16 29)",
-          "oklch(50% 0.16 29)",
-          "oklch(61% 0.16 29)",
-          "oklch(73% 0.16 29)",
-          "oklch(84% 0.16 29)",
-          "oklch(95% 0.16 29)"
-        ]
+        "displayName": "Accent Soft"
       },
-      "review-text": {
+      "nav-active-text": {
+        "role": "primary",
+        "displayName": "Nav Active Text"
+      },
+      "selection": {
         "role": "neutral",
-        "displayName": "Review Text",
-        "tonalRamp": [
-          "oklch(15% 0.06 80)",
-          "oklch(27% 0.06 80)",
-          "oklch(38% 0.06 80)",
-          "oklch(50% 0.06 80)",
-          "oklch(61% 0.06 80)",
-          "oklch(73% 0.06 80)",
-          "oklch(84% 0.06 80)",
-          "oklch(95% 0.06 80)"
-        ]
+        "displayName": "Selection"
+      },
+      "control-line": {
+        "role": "neutral",
+        "displayName": "Control Line"
+      },
+      "field-line": {
+        "role": "neutral",
+        "displayName": "Field Line"
+      },
+      "icon-hover": {
+        "role": "neutral",
+        "displayName": "Icon Hover"
+      },
+      "avatar-fill": {
+        "role": "neutral",
+        "displayName": "Avatar Fill"
+      },
+      "avatar-text": {
+        "role": "neutral",
+        "displayName": "Avatar Text"
+      },
+      "upload-fill": {
+        "role": "neutral",
+        "displayName": "Upload Fill"
+      },
+      "upload-line": {
+        "role": "neutral",
+        "displayName": "Upload Line"
+      },
+      "table-header": {
+        "role": "neutral",
+        "displayName": "Table Header"
+      },
+      "table-hover": {
+        "role": "neutral",
+        "displayName": "Table Hover"
+      },
+      "status-processing-fill": {
+        "role": "neutral",
+        "displayName": "Status Processing Fill"
+      },
+      "status-processing-text": {
+        "role": "neutral",
+        "displayName": "Status Processing Text"
+      },
+      "status-completed-fill": {
+        "role": "neutral",
+        "displayName": "Status Completed Fill"
+      },
+      "status-completed-text": {
+        "role": "neutral",
+        "displayName": "Status Completed Text"
+      },
+      "status-failed-fill": {
+        "role": "neutral",
+        "displayName": "Status Failed Fill"
+      },
+      "status-failed-text": {
+        "role": "neutral",
+        "displayName": "Status Failed Text"
+      },
+      "empty-icon": {
+        "role": "neutral",
+        "displayName": "Empty Icon"
+      },
+      "score-fill": {
+        "role": "neutral",
+        "displayName": "Score Fill"
+      },
+      "grade-incorrect": {
+        "role": "neutral",
+        "displayName": "Grade Incorrect"
+      },
+      "grade-review": {
+        "role": "neutral",
+        "displayName": "Grade Review"
+      },
+      "danger": {
+        "role": "neutral",
+        "displayName": "Danger"
+      },
+      "drawer-scrim": {
+        "role": "neutral",
+        "displayName": "Drawer Scrim"
       }
     },
     "typographyMeta": {
       "headline": {
         "displayName": "Headline",
-        "purpose": "Workspace page heading, reduced to 22px on mobile."
+        "purpose": "Implemented headline role."
       },
-      "title": {
-        "displayName": "Title",
-        "purpose": "Paper comparison and question headings."
+      "headline-mobile": {
+        "displayName": "Headline Mobile",
+        "purpose": "Page title at 760px and below."
+      },
+      "section-title": {
+        "displayName": "Section Title",
+        "purpose": "Implemented section title role."
+      },
+      "brand": {
+        "displayName": "Brand",
+        "purpose": "Implemented brand role."
+      },
+      "processing-title": {
+        "displayName": "Processing Title",
+        "purpose": "Calm waiting message."
+      },
+      "panel-title": {
+        "displayName": "Panel Title",
+        "purpose": "Implemented panel title role."
+      },
+      "empty-title": {
+        "displayName": "Empty Title",
+        "purpose": "Implemented empty title role."
+      },
+      "question-title": {
+        "displayName": "Question Title",
+        "purpose": "Implemented question title role."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Chinese task descriptions and question content."
+        "purpose": "Implemented body role."
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Fields, topbar, tables, and custom controls."
+        "purpose": "Implemented label role."
       },
       "caption": {
         "displayName": "Caption",
-        "purpose": "Supporting navigation and status text."
+        "purpose": "Implemented caption role."
+      },
+      "score": {
+        "displayName": "Score",
+        "purpose": "Grading-summary emphasis with tabular numerals."
+      },
+      "debug": {
+        "displayName": "Debug",
+        "purpose": "Administrator tool names and serialized details."
       }
     },
-    "shadows": [
-      {
-        "name": "shadcn-control",
-        "value": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
-        "purpose": "Stock small shadow on controls and active tabs."
-      },
-      {
-        "name": "shadcn-sheet",
-        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
-        "purpose": "Mobile navigation Sheet."
-      }
-    ],
+    "shadows": [],
     "motion": [
       {
-        "name": "custom-control-transition",
-        "value": "150ms ease-out",
-        "purpose": "Custom button, field, and dropzone color transitions."
+        "name": "action-color",
+        "value": "160ms",
+        "purpose": "Button background/border and navigation background/text color transitions."
       },
       {
-        "name": "shadcn-transition",
-        "value": "150ms cubic-bezier(0.4, 0, 0.2, 1)",
-        "purpose": "Stock transition utilities; reduced-motion CSS disables transitions."
+        "name": "mobile-drawer",
+        "value": "180ms ease",
+        "purpose": "Navigation translateX transition at 760px and below."
       },
       {
-        "name": "sheet-open",
-        "value": "500ms ease-in-out",
-        "purpose": "Stock Sheet open-state transition declaration."
+        "name": "document-breathe",
+        "value": "2.4s ease-in-out infinite",
+        "purpose": "Document rises 5px and changes opacity from .75 to 1."
       },
       {
-        "name": "sheet-close",
-        "value": "300ms ease-in-out",
-        "purpose": "Stock Sheet closed-state transition declaration."
+        "name": "processing-dot",
+        "value": "1.5s ease-in-out infinite",
+        "purpose": "Three dots rise 4px with .18s delays and opacity .3 to 1."
+      },
+      {
+        "name": "administrator-spinner",
+        "value": "1s linear infinite",
+        "purpose": "Rotation inside administrator execution evidence."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none !important; transition: none !important",
+        "purpose": "Global reduced-motion preference disables all animations and transitions."
       }
     ],
     "breakpoints": [
       {
-        "name": "form-pair-stack",
-        "value": "540px"
+        "name": "supporting-form-and-debug",
+        "value": "640px"
       },
       {
-        "name": "supporting-mobile-layout",
-        "value": "600px"
-      },
-      {
-        "name": "oa-mobile",
+        "name": "mobile-drawer-and-report-stack",
         "value": "760px"
       },
       {
-        "name": "supporting-single-column",
-        "value": "800px"
-      },
-      {
-        "name": "paper-comparison-two-column",
-        "value": "1150px"
+        "name": "compact-desktop",
+        "value": "1050px"
       }
     ]
   },
   "components": [
     {
-      "name": "Primary Button",
+      "name": "Primary action",
       "kind": "button",
-      "description": "Local shadcn primary action variant.",
+      "refersTo": "button-primary",
+      "description": "Blue action for the current task.",
       "html": "<button class=\"ds-primary\">开始批改</button>",
-      "css": ".ds-primary{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:8px 16px;border:0;border-radius:6px;font-weight:500;cursor:pointer;transition:color 150ms cubic-bezier(0.4,0,0.2,1),background-color 150ms cubic-bezier(0.4,0,0.2,1);background:var(--primary,#18181b);color:var(--primary-foreground,#fff);box-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);}.ds-primary:hover{background:color-mix(in srgb,var(--primary,#18181b) 90%,transparent)}.ds-primary:focus-visible{outline:none;box-shadow:0 0 0 1px var(--ring,#71717a);}.ds-primary:disabled{pointer-events:none;opacity:.5}",
-      "refersTo": "button-primary"
+      "css": ".ds-primary{font-family:\"Geist Variable\", \"Noto Sans SC Variable\", \"PingFang SC\", sans-serif;font-size:14px;line-height:1.65;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:7px 16px;border:1px solid var(--accent,#2459d3);border-radius:8px;background:var(--accent,#2459d3);color:#fff;font-size:13px;font-weight:500;cursor:pointer;transition:background-color 160ms,border-color 160ms}.ds-primary:hover:not(:disabled){background:var(--accent-hover,#1946b4);border-color:var(--accent-hover,#1946b4)}.ds-primary:focus-visible{outline:2px solid var(--accent,#2459d3);outline-offset:4px}.ds-primary:disabled{cursor:not-allowed;opacity:.6}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
     },
     {
-      "name": "Outline Button",
+      "name": "Secondary action",
       "kind": "button",
-      "description": "Local shadcn outline action variant.",
-      "html": "<button class=\"ds-outline\">查看试卷</button>",
-      "css": ".ds-outline{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:8px 16px;border:0;border-radius:6px;font-weight:500;cursor:pointer;transition:color 150ms cubic-bezier(0.4,0,0.2,1),background-color 150ms cubic-bezier(0.4,0,0.2,1);background:var(--background,#fff);color:var(--foreground,#18181b);border:1px solid var(--input,#d4d4d8);box-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);}.ds-outline:hover{background:#f4f4f5}.ds-outline:focus-visible{outline:none;box-shadow:0 0 0 1px var(--ring,#71717a);}.ds-outline:disabled{pointer-events:none;opacity:.5}",
-      "refersTo": "button-outline"
+      "refersTo": "button-secondary",
+      "description": "White bordered supporting action.",
+      "html": "<button class=\"ds-secondary\">查看试卷</button>",
+      "css": ".ds-secondary{font-family:\"Geist Variable\", \"Noto Sans SC Variable\", \"PingFang SC\", sans-serif;font-size:14px;line-height:1.65;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:7px 16px;border:1px solid var(--line,#e3e8f0);border-radius:8px;background:#fff;color:var(--ink,#202b3d);font-size:13px;font-weight:500;cursor:pointer;transition:background-color 160ms,border-color 160ms}.ds-secondary:hover:not(:disabled){background:var(--surface,#f5f7fb);border-color:#c5cfdf}.ds-secondary:focus-visible{outline:2px solid var(--accent,#2459d3);outline-offset:4px}.ds-secondary:disabled{cursor:not-allowed;opacity:.6}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none}}"
     },
     {
-      "name": "Ghost Button",
+      "name": "Icon action",
       "kind": "button",
-      "description": "Local shadcn ghost action variant.",
-      "html": "<button class=\"ds-ghost\">收起侧边栏</button>",
-      "css": ".ds-ghost{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:8px 16px;border:0;border-radius:6px;font-weight:500;cursor:pointer;transition:color 150ms cubic-bezier(0.4,0,0.2,1),background-color 150ms cubic-bezier(0.4,0,0.2,1);background:transparent;color:var(--foreground,#18181b);}.ds-ghost:hover{background:#f4f4f5}.ds-ghost:focus-visible{outline:none;box-shadow:0 0 0 1px var(--ring,#71717a);}.ds-ghost:disabled{pointer-events:none;opacity:.5}",
-      "refersTo": "button-ghost"
+      "refersTo": "button-icon",
+      "description": "Compact menu and close controls.",
+      "html": "<button class=\"ds-icon\" aria-label=\"打开导航\"><svg width=\"21\" height=\"21\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M4 6h16M4 12h16M4 18h16\"/></svg></button>",
+      "css": ".ds-icon{display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--ink,#202b3d);min-width:36px;min-height:36px;border-radius:6px;cursor:pointer}.ds-icon:hover{background:#f4f4f5}.ds-icon:focus-visible{outline:2px solid var(--accent,#2459d3);outline-offset:4px}.ds-icon:disabled{cursor:not-allowed;opacity:.6}"
     },
     {
-      "name": "Labeled Input",
+      "name": "Labeled field",
       "kind": "input",
-      "description": "Compact field in class-management forms.",
-      "html": "<label class=\"ds-label\" for=\"ds-class\">班级名称</label><input class=\"ds-field\" id=\"ds-class\" placeholder=\"输入班级名称\">",
-      "css": ".ds-label{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;display:block;margin-bottom:8px;font-size:13px;font-weight:500;color:var(--ink,#18181b)}.ds-field{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;width:100%;height:38px;padding:7px 12px;border:1px solid var(--input,#d4d4d8);border-radius:6px;background:var(--surface,#fff);color:var(--ink,#18181b);caret-color:var(--accent,#27272a);box-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);transition:border-color 150ms ease-out}.ds-field::placeholder{color:var(--muted,#62626b);opacity:1}.ds-field:hover{border-color:var(--muted,#62626b)}.ds-field:focus-visible{outline:none;box-shadow:0 0 0 1px var(--ring,#71717a);}.ds-field:disabled{cursor:not-allowed;opacity:.5}.ds-field[aria-invalid=\"true\"]{border-color:var(--error,#a22f2a)}",
-      "refersTo": "field"
+      "refersTo": "field",
+      "description": "Above-field label and compact native input.",
+      "html": "<label class=\"ds-label\" for=\"ds-paper\">试卷名称</label><input class=\"ds-field\" id=\"ds-paper\" placeholder=\"输入试卷名称\">",
+      "css": ".ds-label{font-family:\"Geist Variable\", \"Noto Sans SC Variable\", \"PingFang SC\", sans-serif;font-size:14px;line-height:1.65;display:block;margin-bottom:6px;font-weight:500;color:var(--ink,#202b3d)}.ds-field{font-family:\"Geist Variable\", \"Noto Sans SC Variable\", \"PingFang SC\", sans-serif;font-size:14px;line-height:1.65;width:100%;min-height:38px;padding:7px 12px;border:1px solid #d4d4d8;border-radius:6px;background:#fff;color:var(--ink,#202b3d);caret-color:var(--accent,#2459d3)}.ds-field::placeholder{color:var(--muted,#657084)}.ds-field:focus-visible{outline:2px solid var(--accent,#2459d3);outline-offset:4px}.ds-field:disabled{cursor:not-allowed;opacity:.6}"
     },
     {
-      "name": "Active Navigation",
+      "name": "Active navigation",
       "kind": "nav",
-      "description": "Current section with inline Lucide-style icon and secondary text.",
-      "html": "<a class=\"ds-nav\" href=\"#\" aria-current=\"page\"><svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75\"/></svg><span>班级管理<small>班级与学生</small></span></a>",
-      "css": ".ds-nav{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;display:flex;align-items:center;gap:12px;padding:12px;border-radius:6px;color:var(--ink,#18181b);background:#f4f4f5;font-weight:600;text-decoration:none}.ds-nav small{display:block;margin-top:2px;font-size:12px;color:var(--muted,#62626b);font-weight:400}.ds-nav:hover{background:var(--paper,#fafafa)}.ds-nav:focus-visible{outline:3px solid var(--accent,#27272a);outline-offset:4px}",
-      "refersTo": "navigation-active"
+      "refersTo": "navigation-active",
+      "description": "Current module in the white navigation rail.",
+      "html": "<a class=\"ds-nav\" href=\"#\" aria-current=\"page\"><svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3H3v18h13v-3M9 3h12v15H9z\"/></svg>试卷管理</a>",
+      "css": ".ds-nav{font-family:\"Geist Variable\", \"Noto Sans SC Variable\", \"PingFang SC\", sans-serif;font-size:14px;line-height:1.65;display:flex;align-items:center;gap:12px;min-height:46px;padding:10px 14px;border-radius:8px;background:var(--accent-soft,#edf2ff);color:#2451bc;font-weight:600;text-decoration:none;transition:background-color 160ms,color 160ms}.ds-nav:hover{background:var(--accent-soft,#edf2ff);color:#2451bc}.ds-nav:focus-visible{outline:2px solid var(--accent,#2459d3);outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-nav{transition:none}}"
     },
     {
-      "name": "Secondary Status Badge",
+      "name": "Status badges",
       "kind": "chip",
-      "description": "Compact saved-solution state.",
-      "html": "<span class=\"ds-status\">教师已调整</span>",
-      "css": ".ds-status{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;display:inline-flex;align-items:center;border:1px solid transparent;border-radius:6px;padding:2px 10px;background:var(--secondary,#f4f4f5);color:var(--secondary-foreground,#27272a);font-size:12px;line-height:16px;font-weight:600;transition:background-color 150ms cubic-bezier(0.4,0,0.2,1)}.ds-status:hover{background:color-mix(in srgb,var(--secondary,#f4f4f5) 80%,transparent)}",
-      "refersTo": "status-secondary"
+      "refersTo": "status-processing",
+      "description": "Chinese labels and dots pair with semantic colors.",
+      "html": "<div class=\"ds-statuses\"><span class=\"ds-status\"><span></span>处理中</span><span class=\"ds-status ds-completed\"><span></span>已完成</span><span class=\"ds-status ds-failed\"><span></span>需重试</span></div>",
+      "css": ".ds-statuses{display:flex;flex-wrap:wrap;gap:8px}.ds-status{font-family:\"Geist Variable\", \"Noto Sans SC Variable\", \"PingFang SC\", sans-serif;font-size:14px;line-height:1.65;display:inline-flex;align-items:center;gap:7px;padding:4px 9px;border-radius:5px;font-size:12px;white-space:nowrap;background:#eef3ff;color:#2852b5}.ds-status>span{width:5px;height:5px;border-radius:50%;background:currentColor}.ds-completed{background:#edf8f1;color:#21724e}.ds-failed{background:#fff0ed;color:#a33c32}"
     },
     {
-      "name": "Upload Panel",
+      "name": "Upload surface",
       "kind": "card",
-      "description": "White working container with pale dashed upload target.",
-      "html": "<section class=\"ds-panel\"><h2>上传试卷</h2><div class=\"ds-drop\">选择 PDF、JPG 或 PNG 文件</div></section>",
-      "css": ".ds-panel{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;padding:24px;border:1px solid var(--line,#e4e4e7);border-radius:8px;background:var(--surface,#fff);color:var(--ink,#18181b)}.ds-panel h2{font-size:1.15rem;font-weight:650;margin:0}.ds-drop{margin-top:20px;border:1px dashed var(--input,#d4d4d8);border-radius:8px;padding:28px;text-align:center;background:var(--paper,#fafafa);color:var(--muted,#62626b);transition:background-color 150ms ease-out}.ds-drop:hover,.ds-drop[data-dragging=\"true\"]{background:#f4f4f5}",
-      "refersTo": "upload-panel"
+      "refersTo": "upload-target",
+      "description": "White working surface and dashed native file target.",
+      "html": "<section class=\"ds-upload-panel\"><h2>添加试卷</h2><div class=\"ds-drop\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 16V4m-4 4 4-4 4 4M4 16v4h16v-4\"/></svg><label for=\"ds-files\">选择或拖入试卷</label><span>PDF、JPG、PNG</span><input id=\"ds-files\" type=\"file\" multiple accept=\".pdf,.jpg,.jpeg,.png\"></div></section>",
+      "css": ".ds-upload-panel{font-family:\"Geist Variable\", \"Noto Sans SC Variable\", \"PingFang SC\", sans-serif;font-size:14px;line-height:1.65;background:#fff;border:1px solid var(--line,#e3e8f0);border-radius:12px;padding:26px 28px;color:var(--ink,#202b3d)}.ds-upload-panel h2{margin:0;font-size:16px;font-weight:600}.ds-drop{position:relative;margin-top:22px;padding:28px 20px;background:#fbfcff;border:1px dashed #b9c8e4;border-radius:10px;min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}.ds-drop svg{color:var(--accent,#2459d3);margin-bottom:6px}.ds-drop label{font-weight:500}.ds-drop>span{color:var(--muted,#657084);font-size:13px}.ds-drop input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.ds-drop:focus-within{outline:2px solid var(--accent,#2459d3);outline-offset:3px}.ds-drop[data-dragging=\"true\"]{background:var(--accent-soft,#edf2ff);border-color:var(--accent,#2459d3)}.ds-drop:has(input:disabled){opacity:.55}.ds-drop input:disabled{cursor:not-allowed}@media(max-width:760px){.ds-upload-panel{padding:20px}.ds-drop{padding:24px 16px}}"
     },
     {
-      "name": "Grading Tabs",
+      "name": "Management table",
       "kind": "custom",
-      "description": "Personal and batch modes with white active trigger.",
-      "html": "<div class=\"ds-tabs\" role=\"tablist\" aria-label=\"批改模式\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\">个人批改</button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\">班级批次</button></div>",
-      "css": ".ds-tabs{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;display:inline-flex;align-items:center;height:42px;gap:4px;padding:4px;border-radius:8px;background:#f4f4f5;color:var(--muted,#62626b)}.ds-tab{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;display:flex;align-items:center;gap:8px;border:0;border-radius:6px;padding:8px 16px;color:inherit;background:transparent;font-weight:500;cursor:pointer;transition:all 150ms cubic-bezier(0.4,0,0.2,1)}.ds-tab[aria-selected=\"true\"]{background:var(--background,#fff);color:var(--foreground,#18181b);box-shadow:0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)}.ds-tab:focus-visible{outline:none;box-shadow:0 0 0 2px var(--background,#fff),0 0 0 4px var(--ring,#71717a)}.ds-tab:disabled{pointer-events:none;opacity:.5}",
-      "refersTo": "tabs-list"
+      "refersTo": "surface",
+      "description": "Compact row hierarchy with local overflow.",
+      "html": "<div class=\"ds-table-wrap\"><table class=\"ds-table\"><thead><tr><th>试卷名称</th><th>状态</th><th>操作</th></tr></thead><tbody><tr><td>数学试卷</td><td>已完成</td><td><a href=\"#\">查看试卷</a></td></tr></tbody></table></div>",
+      "css": ".ds-table-wrap{background:#fff;border:1px solid var(--line,#e3e8f0);border-radius:12px;overflow-x:auto}.ds-table{font-family:\"Geist Variable\", \"Noto Sans SC Variable\", \"PingFang SC\", sans-serif;font-size:14px;line-height:1.65;width:100%;border-collapse:collapse;text-align:left;color:var(--ink,#202b3d)}.ds-table th{background:#f9fafc;color:var(--muted,#657084);font-size:12px;font-weight:500;white-space:nowrap;padding:12px 24px}.ds-table td{padding:18px 24px;border-top:1px solid var(--line,#e3e8f0);font-size:13px}.ds-table tbody tr:hover{background:#fcfdff}.ds-table a{color:var(--accent,#2459d3);text-decoration:none}.ds-table a:hover{text-decoration:underline}.ds-table a:focus-visible{outline:2px solid var(--accent,#2459d3);outline-offset:4px}@media(max-width:760px){.ds-table{min-width:680px}}"
     },
     {
-      "name": "Current Question Boundary",
+      "name": "Content switch",
       "kind": "custom",
-      "description": "Functional current-question selection and dashed grayscale figure bounds.",
-      "html": "<div class=\"ds-paper\"><button class=\"ds-bound\" aria-label=\"选择第 1 题\"><span>第 1 题</span></button><div class=\"ds-figure\"><span>题图</span></div></div>",
-      "css": ".ds-paper{position:relative;height:140px;background:var(--surface,#fff);border:1px solid var(--line,#e4e4e7)}.ds-bound{position:absolute;left:8%;top:24px;width:70%;height:48px;border:2px solid #2563eb;background:rgb(37 99 235 / 4%);padding:0;cursor:pointer}.ds-bound>span{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;position:absolute;left:0;top:0;padding:1px 5px;color:#fff;background:#2563eb;font-size:10px;line-height:16px;white-space:nowrap}.ds-bound:focus-visible{outline:3px solid var(--accent,#27272a);outline-offset:4px}.ds-figure{position:absolute;left:46%;top:88px;width:30%;height:30px;border:1px dashed #52525b;pointer-events:none}.ds-figure>span{font-family:\"Noto Sans CJK SC\", \"PingFang SC\", \"Microsoft YaHei\", sans-serif;font-size:14px;line-height:20px;position:absolute;right:0;bottom:0;font-size:10px;color:#fff;background:#52525b;padding:0 3px}"
+      "refersTo": "surface",
+      "description": "Underlined switch between questions and standard answers.",
+      "html": "<div class=\"ds-tabs\" role=\"group\" aria-label=\"试卷视图\"><button aria-pressed=\"true\">试题内容</button><button aria-pressed=\"false\">标准答案</button></div>",
+      "css": ".ds-tabs{font-family:\"Geist Variable\", \"Noto Sans SC Variable\", \"PingFang SC\", sans-serif;font-size:14px;line-height:1.65;display:flex;gap:24px;margin:26px 0 20px;border-bottom:1px solid var(--line,#e3e8f0)}.ds-tabs button{font:inherit;border:0;border-bottom:2px solid transparent;padding:12px 4px;background:transparent;color:var(--muted,#657084);font-weight:500;cursor:pointer}.ds-tabs button:hover{color:var(--accent,#2459d3)}.ds-tabs button[aria-pressed=\"true\"]{color:var(--accent,#2459d3);border-bottom-color:var(--accent,#2459d3)}.ds-tabs button:focus-visible{outline:2px solid var(--accent,#2459d3);outline-offset:4px}"
+    },
+    {
+      "name": "Quiet waiting",
+      "kind": "custom",
+      "refersTo": "surface",
+      "description": "Polite status with document motion and three dots, without progress stages.",
+      "html": "<div class=\"ds-wait\" role=\"status\" aria-live=\"polite\"><div class=\"ds-animation\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8\"/></svg><span></span><span></span><span></span></div><div><h2>正在处理，请稍候</h2><p>结果准备好后会自动显示。你可以离开页面，稍后回来查看。</p></div></div>",
+      "css": ".ds-wait{font-family:\"Geist Variable\", \"Noto Sans SC Variable\", \"PingFang SC\", sans-serif;font-size:14px;line-height:1.65;min-height:290px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:24px;padding:38px 24px;text-align:center;color:var(--ink,#202b3d)}.ds-wait h2{margin:0;font-size:17px;font-weight:600}.ds-wait p{margin:10px 0 0;color:var(--muted,#657084);font-size:13px;max-width:50ch}.ds-animation{position:relative;color:var(--accent,#2459d3);width:64px;height:72px;display:grid;place-items:center}.ds-animation svg{width:40px;height:40px;animation:ds-document 2.4s ease-in-out infinite}.ds-animation span{position:absolute;bottom:0;width:5px;height:5px;border-radius:50%;background:var(--accent,#2459d3);animation:ds-dot 1.5s ease-in-out infinite}.ds-animation span:nth-of-type(1){left:20px}.ds-animation span:nth-of-type(2){left:30px;animation-delay:.18s}.ds-animation span:nth-of-type(3){left:40px;animation-delay:.36s}@keyframes ds-document{0%,100%{transform:translateY(0);opacity:.75}50%{transform:translateY(-5px);opacity:1}}@keyframes ds-dot{0%,70%,100%{transform:translateY(0);opacity:.3}35%{transform:translateY(-4px);opacity:1}}@media(prefers-reduced-motion:reduce){.ds-animation svg,.ds-animation span{animation:none}}"
     }
   ],
   "narrative": {
-    "northStar": "Operate · 教学工作台",
-    "overview": "Operate is a white, full-width teaching workspace. Chinese labels, compact controls, neutral separators, and clear task states let teachers move between classes, reusable papers, grading, and learning analysis. The interface uses the established shadcn/ui new-york neutral primitives and the existing Chinese sans-serif stack.\n\nThe content carries the hierarchy: page title, task controls, then the working material. Original papers, question crops, and electronic questions remain visible together when space permits. Color identifies an actionable selection or an error; it is not a decorative backdrop.",
+    "northStar": "Operate · 教学管理工作台",
+    "overview": "Oh My Paper uses the modern, concise OA/admin direction chosen by the user: a white navigation rail and header around a cool gray work area, with white bordered working surfaces and blue primary actions. Chinese system sans, compact tables and consistent fields make paper and grading tasks easy to scan.\n\nThe interface has three clearly named work areas: 试卷管理, 批改管理 and 快速批改. Content and actionable results carry the hierarchy. Ordinary users see completed work, calm waiting feedback and recovery actions; administrator execution evidence sits behind collapsed disclosures.",
     "keyCharacteristics": [
-      "Pure white application surfaces with zinc text and borders.",
-      "Full-width work areas with a persistent desktop sidebar and mobile Sheet.",
-      "Compact shadcn/ui controls, restrained corners, and clear keyboard focus.",
-      "Original paper, crop, and electronic question form a coordinated review workspace."
+      "Cool gray workspace, white navigation and content surfaces, restrained blue actions.",
+      "Desktop office layout with a persistent rail; phone navigation uses an accessible drawer.",
+      "Compact management tables and predictable form controls.",
+      "Readable question hierarchy and reports, with calm waiting and separate administrator evidence."
     ],
-    "rules": [
-      {
-        "name": "White Workspace",
-        "body": "The application shell and main work surface remain pure white; neutral fills mark local state and supporting surfaces.",
-        "section": "colors"
-      },
-      {
-        "name": "Selection Has Meaning",
-        "body": "Blue marks the current question on the original paper. Figure bounds remain dashed and grayscale.",
-        "section": "colors"
-      },
-      {
-        "name": "Flat Work Areas",
-        "body": "Use whitespace and neutral separators for structural depth. Keep shadows on stock controls and the mobile navigation Sheet.",
-        "section": "elevation"
-      }
-    ],
+    "rules": [],
     "dos": [
-      "Do keep the workspace background pure white and use neutral borders to separate work areas.",
-      "Do use the existing shadcn/ui new-york neutral primitives and Lucide stroke icons.",
-      "Do preserve the original / crop / electronic question order as the grid collapses.",
-      "Do keep saved standard answers, their readiness status, and grading actions close to the question content.",
-      "Do show clear Chinese labels, recovery messages, empty states, and disabled or loading feedback."
+      "Do use the cool gray workspace, white bordered surfaces and blue primary actions.",
+      "Do keep the three main Chinese navigation labels and one clear starting action per work area.",
+      "Do preserve question numbering, shared stems, subquestions, material images, mathematical content and unknown scores.",
+      "Do keep results, retries and quiet waiting feedback readable for ordinary users; keep execution evidence in collapsed administrator disclosures.",
+      "Do preserve keyboard focus, drawer focus management, local table/math scrolling and reduced-motion behavior."
     ],
     "donts": [
-      "Don't introduce a decorative accent palette, gradients, illustrations, or a new display font.",
-      "Don't constrain the OA work area inside a centered narrow page container.",
-      "Don't use the blue question-selection treatment as a general brand accent.",
-      "Don't replace paper content or working tables with decorative metric cards.",
-      "Don't imply that teacher approval is required before a completed saved AI solution can be used for grading."
+      "Don't expose internal stages, saved drafts or technical exceptions to ordinary users.",
+      "Don't replace working paper content and tables with decorative metric cards.",
+      "Don't add a display font, decorative illustration or ornamental gradient to this office interface.",
+      "Don't claim progress percentages or stage completion through the waiting animation.",
+      "Don't reintroduce class, batch-student, practice or analytics navigation into the documented three-module scope."
     ]
   }
 }

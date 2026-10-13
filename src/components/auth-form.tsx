@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { reportClientError } from "@/lib/error-message";
 import { authClient } from "@/lib/auth-client";
 import { authFormSchema, type AuthFields } from "@/contracts/auth";
 
@@ -41,13 +42,16 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
           })
         : await authClient.signIn.email({ email: values.email, password: values.password });
       if (result.error) {
-        setError(authErrors[result.error.code ?? ""] ?? "暂时无法完成操作，请稍后重试。");
+        const message =
+          authErrors[result.error.code ?? ""] ??
+          `认证失败（${result.error.code ?? `HTTP ${result.error.status}`}）：${result.error.message ?? "请稍后重试。"}`;
+        setError(reportClientError("auth.submit", new Error(message)));
         return;
       }
       router.replace("/dashboard");
       router.refresh();
-    } catch {
-      setError("无法连接服务，请检查网络后重试。");
+    } catch (error) {
+      setError(reportClientError("auth.submit", error));
     }
   });
 
@@ -58,7 +62,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       </Link>
       <h1 id="auth-heading">{registering ? "创建你的账号" : "登录工作台"}</h1>
       <p className="intro">
-        {registering ? "准备好你的试卷，接下来的事交给工作台。" : "让每一份作答，都有清晰的反馈。"}
+        {registering ? "准备好你的试卷，接下来的事交给工作台。" : "上传试卷，查看结构化题目。"}
       </p>
       <form onSubmit={submit} noValidate>
         {registering && (

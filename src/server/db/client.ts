@@ -1,4 +1,5 @@
 import "server-only";
+import { logError } from "@/server/logger";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@/generated/prisma/client";
 import { getEnv } from "@/server/config/env";
@@ -7,12 +8,15 @@ const globalDb = globalThis as typeof globalThis & { paperDb?: PrismaClient };
 
 export function getDb() {
   if (!globalDb.paperDb) {
-    const adapter = new PrismaPg({
-      connectionString: getEnv().DATABASE_URL,
-      max: 10,
-      connectionTimeoutMillis: 5000,
-      query_timeout: 5000,
-    });
+    const adapter = new PrismaPg(
+      {
+        connectionString: getEnv().DATABASE_URL,
+        max: 10,
+        connectionTimeoutMillis: 5000,
+        query_timeout: 5000,
+      },
+      { schema: new URL(getEnv().DATABASE_URL).searchParams.get("schema") ?? "public" },
+    );
     globalDb.paperDb = new PrismaClient({ adapter, log: [] });
   }
   return globalDb.paperDb;
@@ -23,9 +27,9 @@ export async function connectDatabase(attempts = 5) {
     try {
       await getDb().$queryRaw`SELECT 1`;
       return;
-    } catch {
-      if (attempt === attempts)
-        throw new Error("Database unavailable; check PostgreSQL and DATABASE_URL.");
+    } catch (error) {
+      logError("database.connect.failed", error, { attempt, attempts });
+      if (attempt === attempts) throw error;
       await new Promise((resolve) => setTimeout(resolve, attempt * 500));
     }
   }

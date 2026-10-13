@@ -1,228 +1,332 @@
 ---
 name: Oh My Paper
-description: White, full-width teaching workspace for paper review and grading.
+description: Modern, concise OA workspace for paper management and student grading.
 colors:
-  surface: "#ffffff"
-  paper: "#fafafa"
-  ink: "#18181b"
-  neutral-strong: "#27272a"
-  neutral-deep: "#09090b"
-  neutral-fill: "#f4f4f5"
-  muted: "#62626b"
-  line: "#e4e4e7"
-  input: "#d4d4d8"
-  ring: "#71717a"
-  figure: "#52525b"
-  question-selection: "#2563eb"
-  error: "#a22f2a"
-  destructive: "#b42318"
-  review-text: "#614516"
+  white: "#ffffff"
+  workspace: "#f5f7fb"
+  ink: "#202b3d"
+  muted: "#657084"
+  line: "#e3e8f0"
+  accent: "#2459d3"
+  accent-hover: "#1946b4"
+  accent-soft: "#edf2ff"
+  nav-active-text: "#2451bc"
+  selection: "#dce7ff"
+  control-line: "#c5cfdf"
+  field-line: "#d4d4d8"
+  icon-hover: "#f4f4f5"
+  avatar-fill: "#edf1f8"
+  avatar-text: "#49556b"
+  upload-fill: "#fbfcff"
+  upload-line: "#b9c8e4"
+  table-header: "#f9fafc"
+  table-hover: "#fcfdff"
+  status-processing-fill: "#eef3ff"
+  status-processing-text: "#2852b5"
+  status-completed-fill: "#edf8f1"
+  status-completed-text: "#21724e"
+  status-failed-fill: "#fff0ed"
+  status-failed-text: "#a33c32"
+  empty-icon: "#8895a9"
+  score-fill: "#f5f8fe"
+  grade-incorrect: "#9a493a"
+  grade-review: "#946413"
+  danger: "#b42318"
+  drawer-scrim: "rgb(20 30 50 / 0.28)"
 typography:
   headline:
-    fontFamily: '"Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
     fontSize: "25px"
     fontWeight: 650
-    lineHeight: 1.3
-  title:
-    fontFamily: '"Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif'
-    fontSize: "14px"
+    lineHeight: 1.4
+    letterSpacing: "-0.02em"
+  headline-mobile:
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
+    fontSize: "22px"
     fontWeight: 650
+    lineHeight: 1.4
+    letterSpacing: "-0.02em"
+  section-title:
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
+    fontSize: "18px"
+    fontWeight: 600
+    lineHeight: 1.65
+  brand:
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
+    fontSize: "17px"
+    fontWeight: 600
+    lineHeight: 1.65
+  processing-title:
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
+    fontSize: "17px"
+    fontWeight: 600
+    lineHeight: 1.65
+  panel-title:
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
+    fontSize: "16px"
+    fontWeight: 600
+    lineHeight: 1.65
+  empty-title:
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
+    fontSize: "15px"
+    fontWeight: 600
+    lineHeight: 1.65
+  question-title:
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
+    fontSize: "14px"
+    fontWeight: 600
     lineHeight: 1.65
   body:
-    fontFamily: '"Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.65
   label:
-    fontFamily: '"Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
     fontSize: "13px"
     fontWeight: 500
     lineHeight: 1.65
   caption:
-    fontFamily: '"Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif'
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
+    fontSize: "12px"
+    fontWeight: 400
+    lineHeight: 1.65
+  score:
+    fontFamily: '"Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif'
+    fontSize: "28px"
+    fontWeight: 600
+    lineHeight: 1.65
+  debug:
+    fontFamily: "ui-monospace, monospace"
     fontSize: "12px"
     fontWeight: 400
     lineHeight: 1.65
 rounded:
-  md: "6px"
-  lg: "8px"
-  panel: "12px"
+  status: "5px"
+  compact: "6px"
+  control: "8px"
+  upload: "10px"
+  surface: "12px"
+  circle: "50%"
 spacing:
   xs: "4px"
+  icon-gap: "7px"
   sm: "8px"
-  control: "12px"
+  nav-gap: "12px"
   md: "16px"
-  comparison: "20px"
-  lg: "24px"
-  section: "28px"
+  lg: "20px"
+  section: "24px"
+  upload: "28px"
   xl: "32px"
+  workspace: "36px"
 components:
   button-primary:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.surface}"
-    rounded: "{rounded.md}"
-    padding: "8px 16px"
-    height: "36px"
-  button-outline:
-    backgroundColor: "{colors.surface}"
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.white}"
+    rounded: "{rounded.control}"
+    padding: "7px 16px"
+    typography: "{typography.label}"
+  button-primary-hover:
+    backgroundColor: "{colors.accent-hover}"
+  button-secondary:
+    backgroundColor: "{colors.white}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.md}"
-    padding: "8px 16px"
-    height: "36px"
-  button-ghost:
-    rounded: "{rounded.md}"
-    padding: "8px 16px"
-    height: "36px"
+    rounded: "{rounded.control}"
+    padding: "7px 16px"
+    typography: "{typography.label}"
+  button-icon:
+    rounded: "{rounded.compact}"
+    size: "36px"
   field:
+    backgroundColor: "{colors.white}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.md}"
+    rounded: "{rounded.compact}"
     padding: "7px 12px"
-    height: "38px"
-  status-secondary:
-    backgroundColor: "{colors.neutral-fill}"
-    textColor: "{colors.neutral-strong}"
-    rounded: "{rounded.md}"
-    padding: "2px 10px"
-  navigation-active:
-    backgroundColor: "{colors.neutral-fill}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.md}"
-    padding: "12px"
-  upload-panel:
-    backgroundColor: "{colors.surface}"
-    rounded: "{rounded.lg}"
-    padding: "24px"
-  tabs-list:
-    backgroundColor: "{colors.neutral-fill}"
+  search-field:
     textColor: "{colors.muted}"
-    rounded: "{rounded.lg}"
-    padding: "4px"
-    height: "42px"
+    rounded: "{rounded.control}"
+    padding: "7px 12px"
+  navigation-active:
+    backgroundColor: "{colors.accent-soft}"
+    textColor: "{colors.nav-active-text}"
+    rounded: "{rounded.control}"
+    padding: "10px 14px"
+  status-processing:
+    backgroundColor: "{colors.status-processing-fill}"
+    textColor: "{colors.status-processing-text}"
+    rounded: "{rounded.status}"
+    padding: "4px 9px"
+    typography: "{typography.caption}"
+  status-completed:
+    backgroundColor: "{colors.status-completed-fill}"
+    textColor: "{colors.status-completed-text}"
+    rounded: "{rounded.status}"
+    padding: "4px 9px"
+  status-failed:
+    backgroundColor: "{colors.status-failed-fill}"
+    textColor: "{colors.status-failed-text}"
+    rounded: "{rounded.status}"
+    padding: "4px 9px"
+  surface:
+    backgroundColor: "{colors.white}"
+    rounded: "{rounded.surface}"
+  upload-target:
+    backgroundColor: "{colors.upload-fill}"
+    rounded: "{rounded.upload}"
+    padding: "28px 20px"
+  detail-surface:
+    backgroundColor: "{colors.white}"
+    rounded: "{rounded.surface}"
+    padding: "28px 32px"
+  grade-summary:
+    backgroundColor: "{colors.score-fill}"
+    rounded: "{rounded.control}"
+    padding: "20px 24px"
+  debug-disclosure:
+    backgroundColor: "{colors.white}"
+    rounded: "{rounded.control}"
+    padding: "16px 20px"
 ---
 
 # Design System: Oh My Paper
 
 ## Overview
 
-**Creative North Star: "Operate · 教学工作台"**
+**Creative North Star: "Operate · 教学管理工作台"**
 
-Operate is a white, full-width teaching workspace. Chinese labels, compact controls, neutral separators, and clear task states let teachers move between classes, reusable papers, grading, and learning analysis. The interface uses the established shadcn/ui new-york neutral primitives and the existing Chinese sans-serif stack.
+Oh My Paper uses the modern, concise OA/admin direction chosen by the user: a white navigation rail and header around a cool gray work area, with white bordered working surfaces and blue primary actions. Chinese system sans, compact tables and consistent fields make paper and grading tasks easy to scan.
 
-The content carries the hierarchy: page title, task controls, then the working material. Original papers, question crops, and electronic questions remain visible together when space permits. Color identifies an actionable selection or an error; it is not a decorative backdrop.
+The interface has three clearly named work areas: 试卷管理, 批改管理 and 快速批改. Content and actionable results carry the hierarchy. Ordinary users see completed work, calm waiting feedback and recovery actions; administrator execution evidence sits behind collapsed disclosures.
 
 **Key Characteristics:**
 
-- Pure white application surfaces with zinc text and borders.
-- Full-width work areas with a persistent desktop sidebar and mobile Sheet.
-- Compact shadcn/ui controls, restrained corners, and clear keyboard focus.
-- Original paper, crop, and electronic question form a coordinated review workspace.
+- Cool gray workspace, white navigation and content surfaces, restrained blue actions.
+- Desktop office layout with a persistent rail; phone navigation uses an accessible drawer.
+- Compact management tables and predictable form controls.
+- Readable question hierarchy and reports, with calm waiting and separate administrator evidence.
 
-This system was extracted from `src/app/globals.css`, `src/components/workspace-shell.tsx`, the local UI primitives, and the paper/class/grading components. The frontmatter owns tokens; `.impeccable/design.json` extends it with preview snippets, responsive thresholds, motion, and depth metadata.
+This document records the implemented replacement world. The final management section in `src/app/globals.css` overrides the earlier parsing-interface styles; those earlier colors and layout rules are not the new shell's authority. Product facts remain in `PRODUCT.md`.
 
 ## Colors
 
-White supplies the work surface and zinc supplies information hierarchy. Frontmatter color values are normative.
+Cool blue-gray neutrals support a single blue action accent; green, red and amber communicate meaningful result states. Frontmatter values are the normative palette.
 
 ### Primary
 
-- **Ink:** body copy, headings, active navigation, and shadcn primary actions.
-- **Neutral Strong / Neutral Deep:** the existing custom action background and its darker hover state.
-- **Question Selection:** the current question's bounding box and small label on the original paper. The selected area has a very light translucent fill.
-- **Error / Destructive:** existing field errors and the shadcn destructive action variant.
+- **Action Blue** (`accent`): primary buttons, text actions, focus outlines, upload icons and score emphasis. `accent-hover` darkens primary buttons.
+- **Quiet Blue** (`accent-soft`, `nav-active-text`): active navigation and dragged-over upload targets. `selection` marks selected text.
 
 ### Neutral
 
-- **Surface:** shell, topbar, sidebar, paper panels, and main canvas.
-- **Paper / Neutral Fill:** table headings, upload targets, hover surfaces, active navigation, tabs, and secondary badges.
-- **Muted:** supporting copy, captions, placeholders, and inactive navigation.
-- **Line / Input:** dividers and surface boundaries / stronger form strokes.
-- **Ring / Figure:** keyboard focus and unselected question outlines / dashed figure outlines and their labels.
-- **Review Text:** cautionary review notes on a pale neutral surface.
+- **Cool Workspace** (`workspace`) surrounds white panels; `white` is the sidebar, header, field and content surface.
+- **Slate Ink** (`ink`) and **Muted Slate** (`muted`) distinguish primary content from descriptions and metadata.
+- `line` separates structures. `control-line` is the exam selector and secondary-button hover border; `field-line` remains on general form fields. `icon-hover` is the compact icon-button hover fill.
+- `avatar-fill` and `avatar-text` identify the account. `empty-icon` softens empty-state illustrations made from stroke icons.
+- `upload-fill` and `upload-line` define the dashed file target. `table-header` and `table-hover` are subtle local table fills. `score-fill` frames the grading summary.
+- `drawer-scrim` dims the main area while the mobile navigation is open.
 
-**The White Workspace Rule.** The application shell and main work surface remain pure white; neutral fills mark local state and supporting surfaces.
+### Status
 
-**The Selection Has Meaning Rule.** Blue marks the current question on the original paper. Figure bounds remain dashed and grayscale.
+- Processing uses `status-processing-fill` / `status-processing-text`; completed uses `status-completed-fill` / `status-completed-text`; retryable failure uses `status-failed-fill` / `status-failed-text`.
+- Grading outcomes use `grade-incorrect`, `status-completed-text` and `grade-review`. Form and technical error text uses `danger`.
+- Status badges pair color with a Chinese label and a small dot; color alone does not carry the state.
 
 ## Typography
 
-**Body and heading font:** the existing Noto Sans CJK SC, PingFang SC, Microsoft YaHei, sans-serif stack. There is no separate display face.
+**Body and heading font:** "Geist Variable", "Noto Sans SC Variable", "PingFang SC", sans-serif. English and numerals use Geist; Chinese uses Noto Sans SC. Both variable fonts are bundled via Fontsource and served from the application origin, with Unicode subsets loaded as needed and `font-display: swap`. System fonts are fallbacks only; Windows no longer depends on Microsoft YaHei.
 
-The type system is compact and practical. Weight, whitespace, and document structure distinguish tasks. Paragraph text is limited to a readable measure (70ch); grading scores use tabular numerals.
+The hierarchy is compact and Chinese-first. Body copy uses 14px / 1.65. The implementation uses measured role sizes rather than a fixed mathematical scale:
 
-### Hierarchy
+- **Page headline:** 25px, weight 650, line-height 1.4, letter-spacing -0.02em; 22px at 760px and below.
+- **Section title:** 18px / 600. **Panel title:** 16px / 600.
+- **Brand and waiting title:** 17px / 600. **Empty-state title:** 15px / 600.
+- **Question title:** 14px / 600. **Body:** 14px / 400.
+- **Control label:** 13px / 500; descriptions, dates and table cells also use 13px with context-specific regular weight.
+- **Caption:** 12px; table headings use weight 500 and column labels use weight 500. Status and account-role labels are compact captions.
+- **Score:** 28px / 600 with tabular numerals. Administrator tool names and serialized details use `ui-monospace, monospace` at 12px.
 
-- **Headline:** workspace page title; mobile reduces it to (22px).
-- **Title:** paper comparison headings and question headings. Generic secondary headings elsewhere retain their existing size (1.15rem).
-- **Body:** ordinary Chinese text, task descriptions, and electronic question content.
-- **Label:** fields, topbar text, custom action labels, and table content. Stock shadcn controls use text-sm type (14px / 20px).
-- **Caption:** navigation descriptions, upload hints, and compact status text. Bounding-box labels are smaller (10px) because they annotate the paper image.
+Question prose is bounded to 75ch. Waiting descriptions are bounded to 50ch and empty-state paragraphs to 65ch. Preserve meaningful headings and printed question numbering.
 
 ## Layout
 
-The desktop shell uses a sidebar (232px), a collapsed state (68px), and a topbar (64px). Main content consumes the remaining width without a maximum container width. Desktop content and topbar gutters are (32px).
+Desktop uses a fixed 228px white sidebar and a main body offset by the same width. The white account header has a 72px minimum height and 16px 36px padding. Main content has 34px 36px 64px padding, a 1600px maximum width and centered margins within the available body. The rail has 28px 16px padding; navigation starts 42px below the brand, with 6px gaps and 46px minimum-height links.
 
-At viewport widths of (760px) or less, navigation uses the local shadcn Sheet backed by Radix Dialog. The left drawer is (280px) wide with a maximum width (85vw); it retains labels and icons, a close control, screen-reader title/description, and modal focus handling. The main area uses horizontal gutters (16px), top spacing (24px), and bottom spacing (40px). The topbar retains its height and hides secondary breadcrumb/account text.
+At 1050px and below, the rail and body offset become 200px. Main padding becomes 28px 24px 48px; header and table padding tighten. At 760px and below, the 228px rail becomes a drawer, the body offset disappears, the header minimum height becomes 64px, and main padding becomes 24px 16px 40px. Closed navigation is hidden from focus. Opening moves focus to its close button, traps Tab within the rail, makes the body inert, and restores the toggle focus on close; Escape and the scrim close it.
 
-Paper review uses three coordinated columns above (1150px): original paper, question crop, electronic question in a (1 / 0.8 / 1.2) ratio with gaps (20px). At (1150px) or less, original and crop share two columns while electronic content spans the next row. At (760px) or less, all three stack in that order. The original is sticky on desktop and static on mobile. Question navigation and tables scroll locally when required.
+Use 16–32px gaps to group task controls and content. Page headings place title and primary action on one row; section headings can wrap on mobile. Tables live inside a horizontally scrollable surface and retain a 680px minimum width on mobile, so the page itself can stay within the viewport. Mobile search expands to the toolbar width.
 
-Primary navigation stays consistent across `/classes`, `/dashboard`, `/grading`, and `/analysis`. Related result and practice routes activate their parent section. Grading uses personal and batch tabs within this shell. Form pairs stack at the existing threshold (540px); supporting older layouts also retain rules at (600px) and (800px).
-
-Controls cluster with gaps (8–16px), comparison content uses (20px), and major sections separate by (24–32px). Form widths can remain bounded for readable editing while the workspace remains full-width.
+Reports use `minmax(0, 1.25fr) minmax(0, 1fr)` columns with a 32px gap. The criteria column has a 24px inset and left separator. At 760px and below these become one column with a 20px gap and a top separator. Summary and question headings wrap. Question images stay contained, with a 600px maximum figure width and 500px maximum image height. Wide mathematics and Markdown tables scroll locally. Supporting form and administrator-feed rows also adapt at 640px.
 
 ## Elevation & Depth
 
-Work areas are flat: white surfaces, whitespace, and light neutral dividers provide structural depth. Shadcn buttons, fields, and active tab triggers retain their small stock shadows. The mobile Sheet retains its larger stock shadow and dark overlay. Focus rings identify interaction rather than elevation. Exact shadow definitions are in the sidecar.
+The implemented management UI is flat: no box shadows are defined for its controls or surfaces. White fills, the cool workspace and single-pixel separators create structural depth. The mobile drawer uses the translucent `drawer-scrim` and stacking order (scrim 25, rail 30), without a shadow treatment.
 
-**The Flat Work Areas Rule.** Use whitespace and neutral separators for structural depth. Keep shadows on stock controls and the mobile navigation Sheet.
+Focus uses a 2px Action Blue outline with a 4px offset. Search uses a 2px offset and upload uses a 3px offset. Do not replace visible focus with a subtle border color alone.
 
 ## Shapes
 
-Controls and navigation use the gently curved `md` token. Tabs and upload panels use `lg`; existing empty/editor panels can use `panel`. Paper and crop images and electronic question columns remain rectangular. The account avatar is circular; status badges are compact rounded rectangles. Borders are thin (1px), except the current question's functional outline (2px).
+Use 12px corners on working surfaces and the authentication panel; 10px on upload targets; 8px on primary/secondary buttons, active navigation, search, exam selection, score summaries and debug disclosures. Compact icon buttons and general fields retain 6px corners; status badges use 5px corners. Avatars and the 5px status/loading dots use circular geometry. Working surfaces have a 1px `line` border; file targets use a dashed `upload-line` border. Content tabs use a 2px bottom indicator rather than pill geometry.
 
 ## Components
 
 ### Buttons
 
-Use the local official shadcn/ui new-york variants. Default is dark neutral with white text; outline is white with an input-colored stroke; ghost stays transparent until hover. Common heights are (36px), with small (32px), large (40px), and square icon variants (36px). Stock primary hover reduces opacity to (90%); outline and ghost use neutral accent fill. Shadcn focus uses the ring token; disabled controls block pointer interaction and fade to (50%).
-
-Existing custom buttons follow the same compact neutral direction: minimum height (36px), label type, darker primary hover, and white outlined secondary treatment. Their loading-disabled state keeps the wait cursor and opacity (65%).
+Primary buttons use Action Blue, white text, a matching border, 8px radius, at least 40px height and 7px 16px padding. Their 13px labels have weight 500, with 7px icon gaps. Hover darkens the fill and border. Secondary actions use white, Slate Ink and a `line` border; hover uses `workspace` and `control-line`. Compact icon buttons have 36px minimum width/height and 6px radius. Text actions use blue 13px labels and underline on hover. Disabled buttons and fields use a not-allowed cursor and 0.6 opacity.
 
 ### Inputs / Fields
 
-White or transparent fields have neutral strokes and compact corners. Within labeled forms, inputs are at least (38px) tall, using the frontmatter field padding; standalone shadcn inputs are (36px). Textareas preserve readable multiline spacing, the stock minimum height (60px), and vertical resizing within labeled forms. Hints sit immediately below fields. Preserve error borders, placeholder contrast, caret color, keyboard focus, and disabled feedback.
+General fields and selects use white, a 1px `field-line` border, 6px radius, 38px minimum height and 7px 12px padding. The exam selector uses 8px corners and `control-line`, with a 680px maximum form width. Labels sit above fields with 6px separation. Search is an 8px bordered wrapper around a borderless 13px input; its wrapper owns the visible focus state. Placeholders use Muted Slate and the caret uses Action Blue. Inline error messages retain readable text and recovery actions.
 
 ### Navigation
 
-Desktop links combine a Lucide stroke icon, Chinese label, and secondary description. Active links use neutral fill and stronger text; hover uses the pale paper surface. Collapsed navigation retains icons and link titles. Mobile opens the same labeled navigation through Sheet; choosing a route closes it. Preserve the Sheet's keyboard focus containment, Escape dismissal, and focus return.
+The sidebar exposes 试卷管理, 批改管理 and 快速批改 with 19px Lucide stroke icons. Links use 10px 14px padding, 12px gaps and 8px corners. Default text is muted, hover is Slate Ink on the workspace fill, and active is blue on Quiet Blue with weight 600. Administrators additionally receive AI 设置 below a separator. The white header identifies the current work area and account; mobile hides the role caption and retains avatar, name and sign-out.
 
-### Tabs and status badges
+### Status badges
 
-Personal and batch grading modes use the shadcn Tabs primitive. The grading rail is (42px) high, with neutral fill and a white active trigger. Secondary badges describe saved-solution state in a compact neutral style; review-needed status stays textual and distinct from question selection.
+Use compact 12px labels with 4px 9px padding, 5px corners and a 5px currentColor dot. Labels are 处理中, 已完成 and 需重试. The same processing treatment covers queued and running work for ordinary users.
 
-### Tables and containers
+### Surfaces, uploads and tables
 
-Use the local Table primitive for rosters and grading data. Working tables have compact labels, horizontal cell padding (16px), neutral row rules, and pale headers. Keep overflow local to the table. Upload and empty-state containers use white surfaces and neutral borders; the dashed upload target has a pale surface and a visible drag state. Comparison columns use separators rather than nested cards.
+White bordered surfaces use 12px corners. Upload sections have 26px 28px padding; detail sections use 28px 32px. Both use 20px on mobile. The file target is at least 160px tall, with 28px 20px padding, a blue stroke icon and a full-area native file input. Keyboard focus outlines the target; dragging changes its fill and border to blue; disabled targets use 0.55 opacity. Upload limits and the selected-file list remain visible.
 
-### Paper comparison and saved solutions
+List toolbars use 20px 24px padding and a bottom separator. Table headings use 12px medium labels and 12px 24px padding; cells use 13px labels and 18px 24px padding. Names wrap within their title area and actions stay together. A subtle row hover supports scanning. Empty states use a muted stroke icon, a 15px title and useful Chinese copy.
 
-The original-paper canvas aligns question bounds with the paper image. The current question uses blue selection; other question bounds are neutral and figure bounds are dashed grayscale. Question-index buttons, source bounds, crops, and electronic content refer to the same selection.
+### Questions, standard answers and reports
 
-A saved solution sits below its electronic question, separated by a neutral rule. Show standard answer, explanation, criteria, and status in this context. Completed saved AI solutions are immediately usable for grading; teacher edits update the reusable answer. Advanced parsing/download details use the existing disclosure controls.
+The content switch between 试题内容 and 标准答案 is a transparent button row with a blue bottom border for the active view. Keep big-question sections, numbered questions and indented subquestions distinct through headings, spacing and dividers. Standard answers and grading criteria use the report columns described above. Grading summaries use a soft blue fill with 28px tabular score emphasis; outcome labels accompany the per-question content. Unknown scores remain unknown and unreadable answers carry a review label.
+
+### Waiting and recovery
+
+`ProcessingState` is a polite live status area with a 290px minimum height, 38px 24px padding and 24px spacing. A 40px document icon gently rises 5px over 2.4s; three 5px dots rise 4px over 1.5s with 0.18s offsets. This communicates ongoing work without exposing backend stages. The message explains that results appear automatically and that the user can return later. Failure notices offer concrete retry/reload actions and ordinary-language errors.
+
+Color transitions on buttons/navigation use 160ms; the mobile drawer uses a 180ms ease translation. `prefers-reduced-motion: reduce` disables all animations and transitions, including loading and administrator spinner motion.
+
+### Administrator debug
+
+Execution evidence uses native `details` disclosures, closed by default. The outer debug panel uses 8px corners, a white fill, 1px border and 16px 20px padding (14px mobile); summaries use 13px Muted Slate. Nested rounds and tools show timing, messages, inputs, outputs and authenticated image evidence. Scroll areas bound long logs. This technical presentation belongs only in administrator views; it must not become ordinary task progress or a draft preview.
+
+No generated or sourced shipping raster imagery was added for this visual world. Lucide SVG stroke icons and CSS loading motion are the interface assets; uploaded paper materials and administrator evidence are user content.
+
+等待区保留文档与圆点动画，并在标题后显示累计时间。题目进度使用 6px 蓝色轨道、平滑的填充宽度过渡，以及左右对齐的操作名称和「已完成 / 总题数」。总数未知时使用不显示百分比的往返动画；已知总数后仅依据已保存题目更新。快速批改依次显示解析、答案和批改三项进度。普通用户可以查看计数，草稿与工具轨迹仍在管理员调试区。所有动画遵守减少动态效果偏好。
+
+AI 设置在提供商列表之前显示「功能模型」。AI 解析、AI 批改、AI 生成答案分别占一行，模型按提供商分组，推理选项随模型变化，每项单独保存并显示配置状态。桌面采用功能名称、模型、推理程度、保存按钮四列，窄屏改为单列；内容区使用现有白色边框表面与 24px 内边距，手机内边距 20px。所有日期与时间使用北京时间，服务器和浏览器渲染保持一致。
 
 ## Do's and Don'ts
 
 ### Do:
 
-- Do keep the workspace background pure white and use neutral borders to separate work areas.
-- Do use the existing shadcn/ui new-york neutral primitives and Lucide stroke icons.
-- Do preserve the original / crop / electronic question order as the grid collapses.
-- Do keep saved standard answers, their readiness status, and grading actions close to the question content.
-- Do show clear Chinese labels, recovery messages, empty states, and disabled or loading feedback.
+- **Do** use the cool gray workspace, white bordered surfaces and blue primary actions.
+- **Do** keep the three main Chinese navigation labels and one clear starting action per work area.
+- **Do** preserve question numbering, shared stems, subquestions, material images, mathematical content and unknown scores.
+- **Do** keep results, retries and quiet waiting feedback readable for ordinary users; keep execution evidence in collapsed administrator disclosures.
+- **Do** preserve keyboard focus, drawer focus management, local table/math scrolling and reduced-motion behavior.
 
 ### Don't:
 
-- Don't introduce a decorative accent palette, gradients, illustrations, or a new display font.
-- Don't constrain the OA work area inside a centered narrow page container.
-- Don't use the blue question-selection treatment as a general brand accent.
-- Don't replace paper content or working tables with decorative metric cards.
-- Don't imply that teacher approval is required before a completed saved AI solution can be used for grading.
+- **Don't** expose internal stages, saved drafts or technical exceptions to ordinary users.
+- **Don't** replace working paper content and tables with decorative metric cards.
+- **Don't** add a display font, decorative illustration or ornamental gradient to this office interface.
+- **Don't** claim progress percentages or stage completion through the waiting animation.
+- **Don't** reintroduce class, batch-student, practice or analytics navigation into the documented three-module scope.
+
+上传区域与列表使用相同的内容区宽度，不设置额外的 900px 上限。添加试卷和快速批改分别在主文件上传区下方提供「标准答案（可选）」，添加试卷时提示先解析试卷再匹配答案；快速批改明确上传时采用该答案、未上传时自动生成。试卷标准答案页并列提供「上传标准答案」和「生成标准答案」，上传面板内使用现有文件列表、移除按钮、进度与提交操作；上传解析进度称为「已解析答案」。

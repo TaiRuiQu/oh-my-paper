@@ -1,16 +1,22 @@
 "use client";
 
+import { useEffect } from "react";
+import { reportClientError } from "@/lib/error-message";
 export default function ErrorPage({
-  reset,
+  error,
+  retry,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }) {
+  useEffect(() => {
+    reportClientError("page.render", error);
+  }, [error]);
   return (
     <main id="main" className="message-page">
       <h1>暂时无法打开页面</h1>
-      <p>服务连接出现问题，请稍后重试。</p>
-      <button className="button" onClick={reset}>
+      <p>请稍后重试，或返回列表重新打开。</p>
+      <button className="button" onClick={retry}>
         重新加载
       </button>
     </main>

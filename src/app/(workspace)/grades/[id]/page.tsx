@@ -1,38 +1,22 @@
+import { presentWorkflow } from "@/lib/task-presentation";
 import { notFound } from "next/navigation";
 import { requirePageSession } from "@/server/auth/session";
-import { gradeTaskResult, gradeTaskSummary, ownedGradeTask } from "@/server/grading/tasks";
+import { getDb } from "@/server/db/client";
+import { workflowDetail } from "@/server/exams/workflows";
 import { AccessError } from "@/server/http/errors";
-import { GradeReport } from "@/components/grade-report";
-import { renderMathText } from "@/server/exams/math";
-
-export const metadata = { title: "批改报告" };
-export default async function GradeReportPage({ params }: { params: Promise<{ id: string }> }) {
-  const { user } = await requirePageSession();
-  let task;
-  try {
-    task = await ownedGradeTask(user.id, (await params).id);
-  } catch (error) {
+import { WorkflowResult } from "@/components/workflow-result";
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { user } = await requirePageSession(),
+    { id } = await params;
+  const flow = await workflowDetail(user.id, id).catch((error) => {
     if (error instanceof AccessError && error.status === 404) notFound();
     throw error;
-  }
-  const result = gradeTaskResult(task);
+  });
+  const current = await getDb().user.findUnique({ where: { id: user.id }, select: { role: true } });
   return (
-    <GradeReport
-      initialData={{
-        task: gradeTaskSummary(task),
-        result,
-        canReview: task.examTask.userId === user.id,
-        mathImages: result
-          ? await renderMathText(
-              result.questions.flatMap((q) => [
-                q.questionText,
-                q.studentAnswer,
-                q.expectedAnswer,
-                q.feedback,
-              ]),
-            )
-          : {},
-      }}
+    <WorkflowResult
+      initialWorkflow={presentWorkflow(flow, current?.role === "ADMIN")}
+      isAdmin={current?.role === "ADMIN"}
     />
   );
 }

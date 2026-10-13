@@ -1,11 +1,31 @@
+import { reportClientError } from "./error-message";
 export async function apiRequest<T>(url: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(url, { cache: "no-store", ...init });
-  const data = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(data?.error ?? "请求失败，请稍后重试。");
-  if (!data) throw new Error("服务返回了无效结果，请稍后重试。");
-  return data as T;
+  try {
+    const response = await fetch(url, { cache: "no-store", ...init });
+    let data: unknown;
+    try {
+      data = await response.json();
+    } catch (cause) {
+      throw new Error(
+        `接口返回的内容不是有效 JSON（HTTP ${response.status}）：${url.split("?")[0]}`,
+        { cause },
+      );
+    }
+    if (!response.ok) {
+      const problem =
+        data && typeof data === "object" ? (data as { error?: string; errorId?: string }) : {};
+      throw new Error(
+        problem.error ??
+          `接口请求失败（HTTP ${response.status}）：${url.split("?")[0]}${problem.errorId ? `，错误编号：${problem.errorId}` : ""}`,
+      );
+    }
+    if (!data) throw new Error(`接口返回空结果：${url.split("?")[0]}`);
+    return data as T;
+  } catch (error) {
+    const message = reportClientError("api.request", error);
+    throw new Error(message, { cause: error });
+  }
 }
-
 export function jsonBody(body: unknown): RequestInit {
   return { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) };
 }

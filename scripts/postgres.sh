@@ -7,7 +7,7 @@ PG_DATA="$PG_ROOT/data"
 case "${1:-status}" in
   start)
     if [[ ! -f "$PG_DATA/PG_VERSION" ]]; then
-      echo '数据库尚未初始化，请参阅 docs/development-setup.zh-CN.md。' >&2
+      echo '数据库尚未初始化，请先准备本地 PostgreSQL 或在 .env 中配置 DATABASE_URL。' >&2
       exit 1
     fi
     if pg_ctl -D "$PG_DATA" status >/dev/null 2>&1; then

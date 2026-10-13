@@ -1,23 +1,18 @@
 import "server-only";
+import { AppError } from "@/server/errors";
+import { logError } from "@/server/logger";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { createHash } from "node:crypto";
-import { copyFile, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
-import { basename, join, resolve } from "node:path";
+import { mkdir, readFile, rm, stat } from "node:fs/promises";
+import { join, resolve } from "node:path";
 import { fileTypeFromBuffer } from "file-type";
 import sharp from "sharp";
-import type { DigitalExam } from "@/contracts/exams";
-
 const execute = promisify(execFile);
 export type PageImage = {
   page: number;
-  key: string;
   width: number;
   height: number;
-  rotation: number;
-  text: string;
   path: string;
-  isPhotograph: boolean;
 };
 export type DocumentLimits = { maxFileBytes: number; maxPages: number; processTimeoutMs: number };
 export const DEFAULT_LIMITS: DocumentLimits = {
@@ -31,10 +26,8 @@ export async function prepareDocuments(
   outputDir: string,
   limits: DocumentLimits,
   signal?: AbortSignal,
-): Promise<{ sources: DigitalExam["sourceFiles"]; pages: PageImage[] }> {
-  const sources: DigitalExam["sourceFiles"] = [];
+): Promise<PageImage[]> {
   const pages: PageImage[] = [];
-  await mkdir(join(outputDir, "sources"), { mode: 0o700 });
   await mkdir(join(outputDir, "pages"), { mode: 0o700 });
   const renderDir = join(outputDir, ".render");
   await mkdir(renderDir, { mode: 0o700 });
@@ -44,20 +37,15 @@ export async function prepareDocuments(
       const inputPath = resolve(input);
       const info = await stat(inputPath);
       if (!info.isFile() || info.size > limits.maxFileBytes || !info.size)
-        throw new Error("Input must be a nonempty file within the configured size limit.");
+        throw new AppError(`第 ${index + 1} 个文件为空或超过大小限制。`, "FILE_SIZE_INVALID", 422);
       const bytes = await readFile(inputPath);
       const type = await fileTypeFromBuffer(bytes);
       if (!type || !["application/pdf", "image/jpeg", "image/png"].includes(type.mime))
-        throw new Error("Supported exam formats: PDF, JPG/JPEG, PNG (checked by file contents).");
-      const key = `sources/${index + 1}.${type.ext}`;
-      const sourcePath = join(outputDir, key);
-      await copyFile(inputPath, sourcePath);
-      sources.push({
-        name: basename(inputPath),
-        key,
-        sha256: createHash("sha256").update(bytes).digest("hex"),
-        mimeType: type.mime,
-      });
+        throw new AppError(
+          `第 ${index + 1} 个文件不是有效的 PDF、JPG 或 PNG。`,
+          "FILE_TYPE_INVALID",
+          422,
+        );
       if (type.mime === "application/pdf") {
         const toolOptions = {
           timeout: limits.processTimeoutMs,
@@ -69,14 +57,23 @@ export async function prepareDocuments(
         try {
           const { stdout } = await execute(
             process.env.PDFINFO_PATH ?? "pdfinfo",
-            [sourcePath],
+            [inputPath],
             toolOptions,
           );
           pageCount = Number(stdout.match(/^Pages:\s+(\d+)/m)?.[1]);
-          if (/^Encrypted:\s+yes/m.test(stdout)) throw new Error("encrypted");
-        } catch {
-          throw new Error(
-            "Cannot inspect PDF. Check PDFINFO_PATH; damaged/encrypted PDFs are unsupported.",
+          if (/^Encrypted:\s+yes/m.test(stdout))
+            throw new AppError(
+              `第 ${index + 1} 个 PDF 已加密，请解除密码后上传。`,
+              "PDF_ENCRYPTED",
+              422,
+            );
+        } catch (cause) {
+          if (cause instanceof AppError) throw cause;
+          throw new AppError(
+            `无法检查第 ${index + 1} 个 PDF，请确认文件完整且 pdfinfo 已安装（PDFINFO_PATH）。`,
+            "PDF_INSPECT_FAILED",
+            422,
+            { cause },
           );
         }
         if (
@@ -84,7 +81,11 @@ export async function prepareDocuments(
           pageCount < 1 ||
           pages.length + pageCount > limits.maxPages
         )
-          throw new Error("PDF exceeds the page limit or has invalid page metadata.");
+          throw new AppError(
+            `第 ${index + 1} 个 PDF 的页数无效或总页数超过 ${limits.maxPages} 页。`,
+            "PDF_PAGE_LIMIT",
+            422,
+          );
         for (let localPage = 1; localPage <= pageCount; localPage++) {
           signal?.throwIfAborted();
           const prefix = join(renderDir, `${index}-${localPage}`);
@@ -100,48 +101,37 @@ export async function prepareDocuments(
                 "-scale-to",
                 "2800",
                 "-png",
-                sourcePath,
+                inputPath,
                 prefix,
               ],
               toolOptions,
             );
-          } catch {
-            throw new Error(
-              `PDF rendering failed at page ${localPage}. Check PDFTOPPM_PATH and the PDF.`,
+          } catch (cause) {
+            throw new AppError(
+              `第 ${index + 1} 个 PDF 的第 ${localPage} 页渲染失败，请检查文件和 pdftoppm（PDFTOPPM_PATH）。`,
+              "PDF_RENDER_FAILED",
+              422,
+              { cause },
             );
           }
-          let text = "";
-          try {
-            const result = await execute(
-              process.env.PDFTOTEXT_PATH ?? "pdftotext",
-              ["-f", String(localPage), "-l", String(localPage), "-layout", sourcePath, "-"],
-              toolOptions,
-            );
-            text = result.stdout.replace(/\f/g, "").trim().slice(0, 30_000);
-          } catch {
-            /* The visual input is authoritative; text extraction is optional. */
-          }
-          pages.push(await normalizePage(`${prefix}.png`, outputDir, pages.length + 1, text));
+          pages.push(await normalizePage(`${prefix}.png`, outputDir, pages.length + 1));
           await rm(`${prefix}.png`);
         }
       } else {
-        if (pages.length >= limits.maxPages) throw new Error("Input exceeds the page limit.");
-        pages.push(await normalizePage(sourcePath, outputDir, pages.length + 1, "", true));
+        if (pages.length >= limits.maxPages)
+          throw new AppError(`总页数超过 ${limits.maxPages} 页。`, "PAGE_LIMIT", 422);
+        pages.push(await normalizePage(inputPath, outputDir, pages.length + 1));
       }
     }
-    return { sources, pages };
+    return pages;
   } finally {
-    await rm(renderDir, { recursive: true, force: true });
+    await rm(renderDir, { recursive: true, force: true }).catch((error) => {
+      logError("pdf.render.cleanup.failed", error);
+    });
   }
 }
 
-async function normalizePage(
-  input: string,
-  outputDir: string,
-  page: number,
-  text: string,
-  isPhotograph = false,
-): Promise<PageImage> {
+async function normalizePage(input: string, outputDir: string, page: number): Promise<PageImage> {
   const key = `pages/${String(page).padStart(3, "0")}.jpg`;
   const path = join(outputDir, key);
   const info = await sharp(input, { limitInputPixels: 45_000_000 })
@@ -152,30 +142,8 @@ async function normalizePage(
     .toFile(path);
   return {
     page,
-    key,
     path,
     width: info.width,
     height: info.height,
-    rotation: 0,
-    text,
-    isPhotograph,
   };
-}
-
-export async function rotatePage(page: PageImage, degrees: number) {
-  if (!degrees) return;
-  const { data, info } = await sharp(page.path)
-    .rotate(degrees)
-    .jpeg({ quality: 95 })
-    .toBuffer({ resolveWithObject: true });
-  await writeFile(page.path, data);
-  page.width = info.width;
-  page.height = info.height;
-  page.rotation = degrees;
-}
-
-export async function ensureEmptyOutput(outputDir: string) {
-  // Require a new output directory to prevent overwriting originals or another parse.
-  await mkdir(outputDir, { mode: 0o700 });
-  if ((await readdir(outputDir)).length) throw new Error("Output directory must be empty.");
 }

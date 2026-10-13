@@ -56,6 +56,13 @@ services:
       target: worker
     env_file: .env
     environment: *app-env
+    # Bubblewrap creates the restricted Python namespaces inside this container.
+    # Docker's default profiles block nested user namespaces and mounts.
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:unconfined
+      - apparmor:unconfined
+    cap_drop: [ALL]
     volumes:
       - ./storage:/data/storage
       - ./tmp:/data/tmp

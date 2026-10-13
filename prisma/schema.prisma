@@ -7,58 +7,169 @@ datasource db {
   provider = "postgresql"
 }
 
-enum WorkspaceKind {
-  PERSONAL
-  TEACHING
-}
-
-enum WorkspaceRole {
-  OWNER
-  TEACHER
-  STUDENT
-}
-
 model User {
-  id            String   @id
+  id            String            @id
   name          String
-  email         String   @unique
-  emailVerified Boolean  @default(false)
+  email         String            @unique
+  emailVerified Boolean           @default(false)
   image         String?
-  role          String   @default("USER")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  role          String            @default("USER")
+  credits       Decimal           @default(100) @db.Decimal(24, 8)
+  aiSelections  UserAiSelection[]
+  creditUsage   CreditUsage[]
+  creditGrants  CreditGrant[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   sessions      Session[]
   accounts      Account[]
-  workspaces    Workspace[]
-  memberships   WorkspaceMember[]
+  exams         Exam[]
   examTasks     ExamTask[]
+  workflows     GradingWorkflow[]
+  submissions   Submission[]
 
   @@map("users")
 }
 
+model Exam {
+  id          String          @id @default(uuid())
+  userId      String
+  user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  totalScore  Float?
+  sections    ExamSection[]
+  questions   ExamQuestion[]
+  answer      ExamAnswer?
+  submissions Submission[]
+  task        ExamTask?
+  agentTasks  ExamAgentTask[]
+
+  @@index([userId])
+  @@map("exams")
+}
+
+model ExamSection {
+  id          String         @id @default(uuid())
+  examId      String
+  exam        Exam           @relation(fields: [examId], references: [id], onDelete: Cascade)
+  position    Int
+  number      String
+  title       String
+  description String         @db.Text
+  score       Float?
+  questions   ExamQuestion[]
+
+  @@unique([examId, position])
+  @@unique([examId, number])
+  @@unique([id, examId])
+  @@map("exam_sections")
+}
+
+model ExamQuestion {
+  id           String             @id @default(uuid())
+  examId       String
+  exam         Exam               @relation(fields: [examId], references: [id], onDelete: Cascade)
+  position     Int
+  sectionId    String
+  section      ExamSection        @relation(fields: [sectionId, examId], references: [id, examId], onDelete: Cascade)
+  number       Int
+  description  String             @db.Text
+  materials    Json
+  score        Float?
+  subquestions Json               @default("[]")
+  answer       QuestionAnswer?
+  submissions  SubmissionAnswer[]
+
+  @@unique([examId, position])
+  @@unique([id, examId])
+  @@map("exam_questions")
+}
+
+model ExamAnswer {
+  examId    String           @id
+  exam      Exam             @relation(fields: [examId], references: [id], onDelete: Cascade)
+  questions QuestionAnswer[]
+
+  @@map("exam_answers")
+}
+
+model QuestionAnswer {
+  questionId      String       @id
+  examId          String
+  examAnswer      ExamAnswer   @relation(fields: [examId], references: [examId], onDelete: Cascade)
+  question        ExamQuestion @relation(fields: [questionId, examId], references: [id, examId], onDelete: Cascade)
+  solution        String       @db.Text
+  gradingCriteria String       @db.Text
+
+  @@unique([questionId, examId])
+  @@map("question_answers")
+}
+
+model Submission {
+  id        String             @id @default(uuid())
+  examId    String
+  exam      Exam               @relation(fields: [examId], references: [id], onDelete: Cascade)
+  studentId String?
+  student   User?              @relation(fields: [studentId], references: [id], onDelete: SetNull)
+  answers   SubmissionAnswer[]
+  agentTask ExamAgentTask?
+
+  @@unique([id, examId])
+  @@index([examId])
+  @@index([studentId])
+  @@map("submissions")
+}
+
+model SubmissionAnswer {
+  submissionId String
+  examId       String
+  questionId   String
+  submission   Submission   @relation(fields: [submissionId, examId], references: [id, examId], onDelete: Cascade)
+  question     ExamQuestion @relation(fields: [questionId, examId], references: [id, examId], onDelete: Cascade)
+  answer       String       @db.Text
+  feedback     String       @default("") @db.Text
+  correct      Boolean?
+  score        Float?
+
+  @@id([submissionId, questionId])
+  @@map("submission_answers")
+}
+
 model AiProvider {
-  id                String   @id @default(uuid())
+  id                String    @id @default(uuid())
   name              String
   apiType           String
   baseURL           String
-  model             String
-  promptPreset      String   @default("openai")
   encryptedApiKey   String
-  structuredOutputs Boolean  @default(false)
-  maxOutputTokens   Int      @default(16000)
-  timeoutSeconds    Int      @default(240)
-  maxConcurrency    Int      @default(3)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  settings          AiSetting[]
+  structuredOutputs Boolean   @default(true)
+  maxOutputTokens   Int       @default(16000)
+  timeoutSeconds    Int       @default(240)
+  maxConcurrency    Int       @default(3)
+  models            AiModel[]
 
   @@map("ai_providers")
 }
 
+model AiModel {
+  id               String            @id @default(uuid())
+  providerId       String
+  provider         AiProvider        @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  name             String
+  displayName      String            @default("")
+  reasoningEfforts String[]
+  settings         AiSetting[]
+  isPublic         Boolean           @default(false)
+  creditMultiplier Decimal           @default(1) @db.Decimal(12, 4)
+  userSelections   UserAiSelection[]
+
+  @@unique([providerId, name])
+  @@map("ai_models")
+}
+
 model AiSetting {
-  id         String      @id
-  providerId String?
-  provider   AiProvider? @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  id              String   @id
+  modelId         String?
+  model           AiModel? @relation(fields: [modelId], references: [id], onDelete: SetNull)
+  reasoningEffort String   @default("default")
 
   @@map("ai_settings")
 }
@@ -71,30 +182,25 @@ enum ExamTaskStatus {
 }
 
 model ExamTask {
-  id               String         @id @default(uuid())
+  id               String            @id @default(uuid())
   userId           String
-  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examId           String?           @unique
+  exam             Exam?             @relation(fields: [examId], references: [id], onDelete: SetNull)
   name             String
-  status           ExamTaskStatus @default(QUEUED)
+  status           ExamTaskStatus    @default(QUEUED)
+  totalQuestions   Int?
+  parsedQuestions  Int               @default(0)
   inputFiles       String[]
+  creditsSpent     Decimal           @default(0) @db.Decimal(24, 8)
   providerSnapshot Json
-  model            String
-  jobId            String         @unique
+  jobId            String            @unique
   attempt          String?
   outputKey        String?
-  page             Int            @default(0)
-  totalPages       Int            @default(0)
-  phase            String         @default("queued")
+  errorCode        String?
   error            String?
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  gradeTasks       GradeTask[]
-  templateBatches  GradeBatch[] @relation("BatchTemplate")
-  autoGrade        Boolean        @default(false)
-  studentId        String?
-  student          StudentProfile? @relation(fields: [studentId], references: [id], onDelete: SetNull)
-  batchId          String?
-  batch            GradeBatch?     @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  createdAt        DateTime          @default(now())
+  workflows        GradingWorkflow[]
 
   @@index([userId, createdAt])
   @@map("exam_tasks")
@@ -103,98 +209,8 @@ model ExamTask {
 model WorkerHeartbeat {
   id        String   @id
   updatedAt DateTime @default(now())
+
   @@map("worker_heartbeats")
-}
-
-model Classroom {
-  id        String @id @default(uuid())
-  ownerId   String
-  name      String
-  students  StudentProfile[]
-  batches   GradeBatch[]
-  createdAt DateTime @default(now())
-  @@index([ownerId])
-  @@map("classrooms")
-}
-
-model StudentProfile {
-  id          String @id @default(uuid())
-  classroomId String
-  classroom   Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
-  name        String
-  number      String
-  accountId   String?
-  exams       ExamTask[]
-  @@unique([classroomId, number])
-  @@index([accountId])
-  @@map("student_profiles")
-}
-
-model GradeBatch {
-  id          String @id @default(uuid())
-  classroomId String
-  classroom   Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
-  name        String
-  exams       ExamTask[]
-  templateId  String?
-  template    ExamTask? @relation("BatchTemplate", fields: [templateId], references: [id], onDelete: Restrict)
-  templateOutputKey String?
-  createdAt   DateTime @default(now())
-  @@map("grade_batches")
-}
-
-model LearningTag {
-  id        String @id @default(uuid())
-  userId    String
-  entryKey  String
-  topicId   String
-  @@unique([userId, entryKey])
-  @@map("learning_tags")
-}
-
-model PracticeSession {
-  id          String @id @default(uuid())
-  userId      String
-  gradeTaskId String
-  questionId  String
-  entryKey    String
-  mode        String
-  status      ExamTaskStatus @default(QUEUED)
-  jobId       String @unique
-  attempt     String?
-  input       Json
-  content     Json?
-  answers     Json?
-  result      Json?
-  error       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  @@index([userId, createdAt])
-  @@map("practice_sessions")
-}
-
-model GradeTask {
-  id               String         @id @default(uuid())
-  examTaskId       String
-  examTask         ExamTask       @relation(fields: [examTaskId], references: [id], onDelete: Cascade)
-  examOutputKey    String
-  status           ExamTaskStatus @default(QUEUED)
-  input            Json
-  providerSnapshot Json
-  model            String
-  promptVersion    String
-  jobId            String         @unique
-  attempt          String?
-  progress         Int            @default(0)
-  total            Int
-  phase            String         @default("queued")
-  result           Json?
-  error            String?
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-
-  @@index([examTaskId, createdAt])
-  @@map("grade_tasks")
 }
 
 model Session {
@@ -245,30 +261,103 @@ model Verification {
   @@map("verifications")
 }
 
-model Workspace {
-  id        String            @id @default(cuid())
-  name      String
-  kind      WorkspaceKind     @default(PERSONAL)
-  ownerId   String
-  owner     User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  members   WorkspaceMember[]
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-
-  @@unique([ownerId, kind])
-  @@map("workspaces")
+enum ExamAgentKind {
+  ANSWER
+  GRADING
 }
 
-model WorkspaceMember {
-  id          String        @id @default(cuid())
-  workspaceId String
-  userId      String
-  role        WorkspaceRole @default(STUDENT)
-  workspace   Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime      @default(now())
+model ExamAgentTask {
+  id               String         @id @default(uuid())
+  examId           String
+  exam             Exam           @relation(fields: [examId], references: [id], onDelete: Cascade)
+  kind             ExamAgentKind
+  name             String
+  status           ExamTaskStatus @default(QUEUED)
+  totalQuestions   Int?
+  inputFiles       String[]
+  creditsSpent     Decimal        @default(0) @db.Decimal(24, 8)
+  providerSnapshot Json
+  reference        Json           @default("[]")
+  result           Json           @default("{\"questions\":[]}")
+  jobId            String         @unique
+  attempt          String?
+  submissionId     String?        @unique
+  submission       Submission?    @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+  errorCode        String?
+  error            String?
+  createdAt        DateTime       @default(now())
 
-  @@unique([workspaceId, userId])
-  @@index([userId])
-  @@map("workspace_members")
+  @@index([examId, createdAt])
+  @@map("exam_agent_tasks")
+}
+
+model GradingWorkflow {
+  id             String         @id @default(uuid())
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceId       String
+  source         ExamTask       @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  kind           String
+  name           String
+  status         ExamTaskStatus @default(QUEUED)
+  answerTaskId   String?
+  gradingTaskId  String?
+  inputFiles     String[]
+  referenceFiles String[]       @default([])
+  modelSnapshots Json           @default("{}")
+  billAnswer     Boolean        @default(false)
+  jobId          String         @unique
+  errorCode      String?
+  error          String?
+  createdAt      DateTime       @default(now())
+
+  @@index([userId, createdAt])
+  @@map("grading_workflows")
+}
+
+model UserAiSelection {
+  userId  String
+  purpose String
+  modelId String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  model   AiModel @relation(fields: [modelId], references: [id], onDelete: Cascade)
+
+  @@id([userId, purpose])
+  @@map("user_ai_selections")
+}
+
+model CreditUsage {
+  id               String   @id
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  taskId           String
+  taskKind         String
+  attempt          String
+  providerId       String
+  providerName     String
+  modelId          String?
+  model            String
+  displayName      String   @default("")
+  creditMultiplier Decimal  @db.Decimal(12, 4)
+  inputTokens      Int
+  cachedTokens     Int
+  outputTokens     Int
+  credits          Decimal  @db.Decimal(24, 8)
+  createdAt        DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([taskKind, taskId])
+  @@map("credit_usage")
+}
+
+model CreditGrant {
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  adminId   String
+  amount    Decimal  @db.Decimal(24, 8)
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("credit_grants")
 }

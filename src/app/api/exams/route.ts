@@ -1,41 +1,31 @@
+import { presentExamTask } from "@/lib/task-presentation";
+import { isAdminUser } from "@/server/auth/authorization";
 import { requireSession } from "@/server/auth/session";
 import { createExamTask, listExamTasks } from "@/server/exams/tasks";
-import { errorResponse, RequestError } from "@/server/http/errors";
+import { errorResponse } from "@/server/http/errors";
 import { requireSameOrigin } from "@/server/http/mutations";
-
 export const runtime = "nodejs";
 export async function GET(request: Request) {
+  let isAdmin = false;
   try {
     const { user } = await requireSession(request.headers);
+    isAdmin = await isAdminUser(user.id);
     return Response.json(
-      { tasks: await listExamTasks(user.id) },
+      { tasks: (await listExamTasks(user.id)).map((task) => presentExamTask(task, isAdmin)) },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (error) {
-    return errorResponse(error);
+    return errorResponse(error, request, isAdmin);
   }
 }
 export async function POST(request: Request) {
+  let isAdmin = false;
   try {
     const { user } = await requireSession(request.headers);
+    isAdmin = await isAdminUser(user.id);
     requireSameOrigin(request);
-    const params = new URL(request.url).searchParams;
-    if (
-      params.has("generateAnswers") &&
-      !["true", "false"].includes(params.get("generateAnswers")!)
-    )
-      throw new RequestError(400, "标准答案选项无效，请重新选择。");
-    return Response.json(
-      {
-        task: await createExamTask(request, user.id, {
-          autoGrade: params.get("mode") === "quick",
-          generateAnswers: params.get("generateAnswers") !== "false",
-          templateTaskId: params.get("templateId") || undefined,
-        }),
-      },
-      { status: 202 },
-    );
+    return Response.json({ task: await createExamTask(request, user.id) }, { status: 202 });
   } catch (error) {
-    return errorResponse(error);
+    return errorResponse(error, request, isAdmin);
   }
 }

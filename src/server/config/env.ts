@@ -1,6 +1,7 @@
 import "server-only";
 import { resolve } from "node:path";
 import { z } from "zod";
+import { AppError } from "@/server/errors";
 
 const schema = z.object({
   DATABASE_URL: z.url().refine((url) => /^(postgres|postgresql):/.test(url)),
@@ -11,6 +12,10 @@ const schema = z.object({
     .refine((value) => !value.startsWith("REPLACE_")),
   STORAGE_ROOT: z.string().min(1).default("./storage"),
   TEMP_ROOT: z.string().min(1).default("./tmp"),
+  QUEUE_SCHEMA: z
+    .string()
+    .regex(/^[a-z_][a-z0-9_]{0,62}$/)
+    .default("pgboss"),
   WORKER_CONCURRENCY: z.coerce.number().int().min(1).max(16).default(2),
 });
 
@@ -22,7 +27,7 @@ export function getEnv() {
     if (!result.success) {
       // Zod issues can contain input values; only expose variable names.
       const keys = [...new Set(result.error.issues.map((issue) => issue.path[0]))];
-      throw new Error(`Invalid environment variables: ${keys.join(", ")}`);
+      throw new AppError(`Invalid environment variables: ${keys.join(", ")}`, "ENV_INVALID");
     }
     cached = result.data;
   }

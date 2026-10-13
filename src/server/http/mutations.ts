@@ -36,12 +36,16 @@ export async function readJSON<T>(
     let data: unknown;
     try {
       data = !size && allowEmpty ? {} : JSON.parse(Buffer.concat(chunks).toString("utf8"));
-    } catch {
-      throw new RequestError(400, "请求内容必须是 JSON。");
+    } catch (cause) {
+      throw new RequestError(400, "请求内容必须是 JSON。", { cause });
     }
     const result = schema.safeParse(data);
     if (!result.success)
-      throw new RequestError(400, result.error.issues[0]?.message ?? "配置内容无效。");
+      throw new RequestError(
+        400,
+        `配置字段 ${result.error.issues[0]?.path.join(".") || "根字段"}：${result.error.issues[0]?.message ?? "内容无效"}`,
+        { cause: result.error },
+      );
     return result.data;
   } finally {
     reader.releaseLock();

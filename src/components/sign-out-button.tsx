@@ -2,23 +2,25 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { reportClientError } from "@/lib/error-message";
 import { authClient } from "@/lib/auth-client";
 
 export function SignOutButton() {
   const router = useRouter();
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string>();
 
   async function signOut() {
     setPending(true);
-    setError(false);
+    setError(undefined);
     try {
       const result = await authClient.signOut();
-      if (result.error) throw new Error("Sign out failed");
+      if (result.error)
+        throw new Error(`退出失败（HTTP ${result.error.status}）：${result.error.message}`);
       router.replace("/login");
       router.refresh();
-    } catch {
-      setError(true);
+    } catch (error) {
+      setError(reportClientError("auth.signout", error));
     } finally {
       setPending(false);
     }
@@ -31,7 +33,7 @@ export function SignOutButton() {
       </button>
       {error && (
         <p role="alert" className="field-error">
-          退出失败，请重试。
+          {error}
         </p>
       )}
     </div>

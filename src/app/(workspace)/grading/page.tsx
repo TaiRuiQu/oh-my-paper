@@ -1,31 +1,26 @@
+import { userAiSettings } from "@/server/ai/user-settings";
+import { presentExamTask } from "@/lib/task-presentation";
 import { requirePageSession } from "@/server/auth/session";
 import { getDb } from "@/server/db/client";
 import { listExamTasks } from "@/server/exams/tasks";
-import { classOverview } from "@/server/learning/classes";
-import { GradingHub } from "@/components/grading-hub";
-import { getActiveProvider } from "@/server/ai/settings";
-export const metadata = { title: "批改板块" };
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<{ mode?: string; templateId?: string }>;
-}) {
+import { listWorkflows } from "@/server/exams/workflows";
+import { GradingManager } from "@/components/grading-manager";
+export default async function Page({ searchParams }: { searchParams: Promise<{ exam?: string }> }) {
   const { user } = await requirePageSession();
-  const [tasks, classes, settings, current, search] = await Promise.all([
-    listExamTasks(user.id),
-    classOverview(user.id),
-    getActiveProvider("inventory").catch(() => null),
+  const [current, tasks, flows, params] = await Promise.all([
     getDb().user.findUnique({ where: { id: user.id }, select: { role: true } }),
+    listExamTasks(user.id),
+    listWorkflows(user.id),
     searchParams,
   ]);
   return (
-    <GradingHub
-      tasks={tasks}
-      classes={classes}
-      model={settings?.model ?? null}
+    <GradingManager
+      quick={false}
+      initialTasks={tasks.map((task) => presentExamTask(task, current?.role === "ADMIN"))}
+      initialWorkflows={flows}
+      selectedExam={params.exam}
+      initialModels={await userAiSettings(user.id)}
       isAdmin={current?.role === "ADMIN"}
-      defaultMode={search.mode === "batch" ? "batch" : "student"}
-      templateTaskId={search.templateId}
     />
   );
 }

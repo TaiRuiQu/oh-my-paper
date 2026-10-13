@@ -8,7 +8,7 @@ async function main() {
   const { connectDatabase, disconnectDatabase } = await import("../src/server/db/client");
   const { initializeStorage } = await import("../src/server/storage");
   const { startWorker } = await import("../src/server/jobs/worker");
-  const { logEvent } = await import("../src/server/logger");
+  const { logEvent, logError } = await import("../src/server/logger");
   await connectDatabase();
   await initializeStorage();
   const boss = await startWorker();
@@ -26,7 +26,8 @@ async function main() {
       await disconnectDatabase();
       clearTimeout(deadline);
       process.exit(0);
-    } catch {
+    } catch (error) {
+      logError("worker.shutdown.failed", error, { signal });
       process.exit(1);
     }
   }
@@ -34,9 +35,8 @@ async function main() {
   process.once("SIGTERM", () => void shutdown("SIGTERM"));
 }
 
-main().catch(() => {
-  console.error(
-    "Worker startup failed. Check environment, database migrations, and storage permissions.",
-  );
+main().catch(async (error) => {
+  const { logError } = await import("../src/server/logger");
+  logError("worker.startup.failed", error);
   process.exit(1);
 });

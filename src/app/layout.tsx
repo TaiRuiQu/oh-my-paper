@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { Providers } from "@/components/providers";
+import "@fontsource-variable/geist";
+import "@fontsource-variable/noto-sans-sc";
+import "katex/dist/katex.min.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: "Oh My Paper · 试卷工作台", template: "%s · Oh My Paper" },
-  description: "试卷解析、批改与错题练习工作台。",
+  description: "上传试卷并解析为结构化题目。",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
