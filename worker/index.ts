@@ -13,6 +13,15 @@ async function main() {
   await initializeStorage();
   const boss = await startWorker();
   logEvent("worker.ready");
+  // Surface sandbox environment problems at boot instead of on the first exam:
+  // container runtimes or host kernels may deny the mounts bwrap needs.
+  const { verifySandboxEnvironment } = await import("../src/server/exams/python-sandbox");
+  const sandbox = verifySandboxEnvironment();
+  if (!sandbox.ok)
+    logEvent("worker.sandbox.unavailable", {
+      diagnostic: sandbox.diagnostic || "未知原因",
+      remediation: sandbox.remediation || "",
+    });
 
   let stopping = false;
   async function shutdown(signal: string) {

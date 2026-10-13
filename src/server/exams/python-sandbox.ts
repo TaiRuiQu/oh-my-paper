@@ -1,5 +1,5 @@
 import "server-only";
-import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { spawn, spawnSync, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { mkdir, access } from "node:fs/promises";
 import { join, resolve, relative } from "node:path";
 import { z } from "zod";
@@ -61,6 +61,91 @@ export async function runSandboxCommand(options: SandboxOptions & { command: str
   }
 }
 
+// Known bwrap failure signatures map to the operator action that resolves them.
+// The text reaches the model (as tool failure text) and the structured logs.
+export function sandboxRemediation(diagnostic: string): string {
+  if (/RTM_NEWADDR|uid map|creating new user namespace|new user namespaces/i.test(diagnostic))
+    return "宿主机内核限制非特权用户命名空间：在宿主机执行 sysctl kernel.apparmor_restrict_unprivileged_userns=0 并持久化（docs/deployment.zh-CN.md §8）。";
+  if (/Can't mount|Operation not permitted|EPERM/i.test(diagnostic))
+    return "容器安全配置拒绝了沙箱挂载：Worker 容器需以 seccomp:unconfined 与 apparmor:unconfined 运行，用 docker inspect --format '{{json .HostConfig.SecurityOpt}}' 确认实际生效值（docs/deployment.zh-CN.md §8）。";
+  if (/ENOENT/.test(diagnostic))
+    return "沙箱缺少 bubblewrap 可执行文件：安装 bubblewrap 或设置 BWRAP_PATH。";
+  return "";
+}
+
+// Boot-time smoke test replicating the real sandbox invocation as closely as
+// possible: a user namespace with proc/dev/tmpfs mounts, dropped privileges and
+// read-only root, i.e. exactly the layers container runtimes or host kernels
+// may deny. A minimal bwrap call can pass while this full shape fails.
+export function verifySandboxEnvironment(): { ok: boolean; diagnostic: string; remediation: string } {
+  if (globalThis.process.platform !== "linux")
+    return { ok: false, diagnostic: "本地沙箱需要 Linux 和 Bubblewrap。", remediation: "" };
+  const result = spawnSync(
+    globalThis.process.env.BWRAP_PATH ?? "bwrap",
+    [
+      "--unshare-all",
+      "--unshare-user",
+      "--disable-userns",
+      "--die-with-parent",
+      "--new-session",
+      "--uid",
+      "65534",
+      "--gid",
+      "65534",
+      "--cap-drop",
+      "ALL",
+      "--ro-bind",
+      "/usr",
+      "/usr",
+      "--symlink",
+      "usr/bin",
+      "/bin",
+      "--symlink",
+      "usr/lib",
+      "/lib",
+      "--symlink",
+      "usr/lib64",
+      "/lib64",
+      "--proc",
+      "/proc",
+      "--dev",
+      "/dev",
+      "--size",
+      "104857600",
+      "--tmpfs",
+      "/workspace",
+      "--symlink",
+      "/workspace/.tmp",
+      "/tmp",
+      "--clearenv",
+      "--setenv",
+      "PATH",
+      "/usr/bin:/bin",
+      "--chdir",
+      "/workspace",
+      "--remount-ro",
+      "/dev",
+      "--remount-ro",
+      "/",
+      "--",
+      "/usr/bin/python3",
+      "-I",
+      "-c",
+      "print('sandbox ok')",
+    ],
+    { timeout: 15_000, env: { PATH: "/usr/bin:/bin", LANG: "C.UTF-8", NODE_ENV: "production" } },
+  );
+  const diagnostic = [
+    result.error?.message ?? "",
+    result.stderr?.toString() ?? "",
+    result.status === null ? "" : `退出码 ${result.status}`,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+  return { ok: result.status === 0, diagnostic, remediation: sandboxRemediation(diagnostic) };
+}
+
 export function createSandboxSession(options: {
   pages: PageImage[];
   directory: string;
@@ -70,6 +155,14 @@ export function createSandboxSession(options: {
   let process: ChildProcessWithoutNullStreams | undefined;
   let starting: Promise<void> | undefined;
   let closed = false;
+  // A dead sandbox process no longer poisons the whole agent run: the next
+  // request respawns it and is told that /workspace was reset by the restart.
+  let crashed = false;
+  let announceReset = false;
+  // Resolves once the current process has been reaped, so a respawn decision
+  // never races the close event of a process that just died.
+  let exited: Promise<void> = Promise.resolve();
+  let settleExited: () => void = () => {};
   let pending = Promise.resolve();
   const refreshPages = new Set<number>();
   let buffer = "",
@@ -186,12 +279,17 @@ export function createSandboxSession(options: {
       env: { PATH: "/usr/bin:/bin", LANG: "C.UTF-8", NODE_ENV: "production" },
       stdio: "pipe",
     });
+    buffer = "";
+    diagnostic = "";
+    exited = new Promise<void>((resolve) => {
+      settleExited = resolve;
+    });
     process.stdout.setEncoding("utf8");
     process.stdout.on("data", (chunk: string) => {
       buffer += chunk;
       if (buffer.length > 144 * 1024 * 1024) {
         receiver?.reject(failure("沙箱输出超过大小限制。"));
-        void dispose();
+        void stop();
         return;
       }
       const newline = buffer.indexOf("\n");
@@ -208,30 +306,50 @@ export function createSandboxSession(options: {
     process.stderr.on("data", (chunk: string) => {
       diagnostic = (diagnostic + chunk).slice(-1000);
     });
-    process.stdin.on("error", (error) => receiver?.reject(error));
+    process.stdin.on("error", (error) => {
+      receiver?.reject(failure(`沙箱输入通道错误：${error.message}`));
+      receiver = undefined;
+    });
     process.on("error", (error) => {
-      closed = true;
+      settleExited();
+      if (!closed) crashed = true;
+      starting = undefined;
       receiver?.reject(failure(error.message));
+      receiver = undefined;
     });
     process.on("close", (code, signal) => {
-      closed = true;
-      receiver?.reject(failure(`沙箱进程退出（${code ?? signal}）。${diagnostic}`));
+      settleExited();
+      if (!closed) crashed = true;
+      starting = undefined;
+      const detail = diagnostic.trim();
+      const remediation = sandboxRemediation(detail);
+      receiver?.reject(
+        failure(
+          `沙箱进程退出（${code ?? signal}）。${detail ? ` ${detail}` : ""}${remediation ? ` ${remediation}` : ""}`.trim(),
+        ),
+      );
+      receiver = undefined;
     });
   };
   const abortSession = () => {
     void dispose();
   };
   options.signal?.addEventListener("abort", abortSession, { once: true });
-  async function dispose() {
-    closed = true;
-    options.signal?.removeEventListener("abort", abortSession);
-    if (starting) await starting.catch(() => {});
+  // Kill the sandbox process while keeping the session restartable; only
+  // dispose() closes it for good.
+  async function stop() {
     const child = process;
     if (!child || child.exitCode !== null || child.signalCode !== null) return;
     await new Promise<void>((resolve) => {
       child.once("close", resolve);
       child.kill("SIGKILL");
     });
+  }
+  async function dispose() {
+    closed = true;
+    options.signal?.removeEventListener("abort", abortSession);
+    if (starting) await starting.catch(() => {});
+    await stop();
   }
   return {
     dispose,
@@ -246,7 +364,16 @@ export function createSandboxSession(options: {
         runOptions.signal?.throwIfAborted();
         options.signal?.throwIfAborted();
         if (closed) throw failure("沙箱已经关闭。");
-        starting ??= start();
+        // Let a process that died a moment ago finish reaping before deciding.
+        if (!starting && process) await exited;
+        if (!starting && crashed) {
+          crashed = false;
+          announceReset = true;
+        }
+        starting ??= start().catch((error) => {
+          starting = undefined;
+          throw error;
+        });
         await starting;
         const timeoutMs = runOptions.timeoutMs ?? 60_000;
         const pageLinks = options.pages.map((page) => {
@@ -267,7 +394,7 @@ export function createSandboxSession(options: {
         });
         const abort = () => {
           receiver?.reject(runOptions.signal?.reason);
-          void dispose();
+          void stop();
         };
         let timer: ReturnType<typeof setTimeout> | undefined;
         try {
@@ -280,7 +407,7 @@ export function createSandboxSession(options: {
             }
             timer = setTimeout(() => {
               reject(failure("沙箱未响应，进程已终止。"));
-              void dispose();
+              void stop();
             }, timeoutMs + 5000);
             process!.stdin.write(JSON.stringify({ ...input, pages: pageLinks, timeoutMs }) + "\n");
           });
@@ -289,6 +416,10 @@ export function createSandboxSession(options: {
             .parse(response);
           if (envelope.failure !== undefined) throw failure(envelope.failure);
           if (!envelope.result) throw failure("沙箱返回的数据无效。");
+          if (announceReset) {
+            announceReset = false;
+            envelope.result.stdout = `[沙箱进程已重启，/workspace 已重置为初始页面，先前创建的文件已丢失]\n${envelope.result.stdout}`;
+          }
           return envelope.result;
         } finally {
           clearTimeout(timer);

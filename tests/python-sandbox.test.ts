@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, chmod, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -151,6 +151,34 @@ describe("local Python sandbox", () => {
       });
     } finally {
       await fresh.dispose();
+    }
+  });
+  it("respawns the sandbox after the process dies and announces the workspace reset", async () => {
+    const { root, pages } = await fixture();
+    // A stub bwrap reproduces a sandbox that dies at spawn (the production
+    // failure mode), then one that answers a single request before exiting.
+    const stub = join(root, "stub-bwrap");
+    await writeFile(stub, "#!/bin/sh\nexit 1\n");
+    await chmod(stub, 0o755);
+    vi.stubEnv("BWRAP_PATH", stub);
+    const session = createSandboxSession({ directory: root, pages });
+    try {
+      await expect(session.run({ command: "printf kept", images: [] })).rejects.toMatchObject({
+        code: "PYTHON_SANDBOX_FAILED",
+        message: expect.stringContaining("沙箱进程退出（1）"),
+      });
+      await writeFile(stub, `#!/bin/sh
+read line
+printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
+`);
+      const result = await session.run({ command: "printf kept", images: [] });
+      expect(result.stdout).toContain("沙箱进程已重启");
+      expect(result.stdout).toContain("ok");
+      await expect(session.run({ command: "printf kept", images: [] })).rejects.toMatchObject({
+        code: "PYTHON_SANDBOX_FAILED",
+      });
+    } finally {
+      await session.dispose();
     }
   });
   it("repeatedly exports images and reads the previous call's updated page", async () => {
