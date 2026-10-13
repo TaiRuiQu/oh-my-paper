@@ -226,6 +226,18 @@ sudo docker compose exec worker bwrap --unshare-user --unshare-net \
 
 放宽该 sysctl 会回到 Ubuntu 22.04 及更早的默认行为，属于常见做法；若必须保持宿主机收紧，可改为编写含 `userns,` 规则的 AppArmor profile 挂给 Worker 容器（将 `apparmor:unconfined` 换成 `apparmor:<profile>`）。
 
+**Python 工具报 `bwrap: Can't mount proc on /newroot/proc: Operation not permitted`** —— Worker 容器实际生效的安全配置拒绝了在容器内挂载新的 proc 文件系统。bind 挂载不受影响，所以报错通常落在 `--proc` 一步。compose.yaml 已为 Worker 配置 `seccomp:unconfined` 与 `apparmor:unconfined`；若仍报错，多半是服务器上的 compose 文件与仓库版本不一致，或容器不是由该 compose 创建的。确认与修复（宿主机执行）：
+
+```bash
+sudo docker inspect --format '{{json .HostConfig.SecurityOpt}}' \
+  $(sudo docker compose -f compose.yaml -f compose.release.yaml ps -q worker)
+# 期望输出 ["no-new-privileges:true","seccomp:unconfined","apparmor:unconfined"]；若缺失：
+git fetch origin --tags && git checkout --detach v0.1.6   # 与运行镜像同版本
+sudo docker compose -f compose.yaml -f compose.release.yaml up -d --force-recreate worker
+```
+
+Worker 启动时会用与真实调用一致的完整参数做一次沙箱自检，环境不可用时在日志输出 `worker.sandbox.unavailable`（含诊断与修复建议）；排查时先 `docker compose logs worker | grep sandbox`。工具失败信息里也会附带对应的修复指引。另注意：沙箱进程意外退出后，下一次调用会自动重建沙箱，`/workspace` 中的临时文件会重置为初始页面，返回的 stdout 会带一行 `[沙箱进程已重启…]` 提示。
+
 **上传报渲染失败** —— 仅 Worker 渲染页面。确认 Worker 存活，且 `PDFTOPPM_PATH` / `PDFINFO_PATH` 指向镜像内实际路径。
 
 **Web 启动即报 `Invalid environment variables`** —— `src/server/config/env.ts` 用 Zod 校验。`BETTER_AUTH_SECRET` 必须至少 32 字符且不以 `REPLACE_` 开头；错误信息只列出变量名，不会回显取值。`PROVIDER_KEY_ENCRYPTION_KEY` 的同类校验在 `src/server/ai/credentials.ts`。
