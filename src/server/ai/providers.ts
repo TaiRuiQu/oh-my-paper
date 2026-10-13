@@ -77,7 +77,7 @@ export function reasoningOptions(
       const compatibleGateway = new URL(config.baseURL).hostname !== "api.openai.com";
       return {
         openai: {
-          store: false,
+          store: true,
           ...(effort === "default"
             ? {}
             : {
@@ -223,7 +223,9 @@ export function createProviderExamModel(
             ? { prepareStep: ({ messages }) => ({ messages: expandToolImages(messages) }) }
             : config.apiType === "openai_responses"
               ? {
-                  prepareStep: ({ messages }) => ({ messages: prepareResponsesMessages(messages) }),
+                  prepareStep: ({ messages }) => ({
+                    messages: prepareResponsesMessages(messages, { store: true }),
+                  }),
                 }
               : {}),
           stopWhen: [isStepCount(MAX_AGENT_STEPS), request.isComplete],

@@ -7,16 +7,20 @@ function reasoningState(part: ReasoningPart) {
   return options && typeof options === "object" && !Array.isArray(options) ? options : undefined;
 }
 
-// With store=false, only encrypted reasoning can be replayed. Gateways may
-// return summaries without recoverable state; keep them in the current result,
-// but omit them from later requests, as the Responses protocol requires.
-export function prepareResponsesMessages(messages: ModelMessage[]): ModelMessage[] {
+// Prefer opaque encrypted state when provided, even if storage is enabled.
+// Otherwise stored reasoning can be replayed by item ID; unsupported summaries
+// without either recoverable state are omitted.
+export function prepareResponsesMessages(
+  messages: ModelMessage[],
+  { store = false }: { store?: boolean } = {},
+): ModelMessage[] {
   return messages.flatMap((message): ModelMessage[] => {
     if (message.role !== "assistant" || typeof message.content === "string") return [message];
+    const originalContent = message.content;
     // Streaming may attach the encrypted state only to the last summary part.
     // Retain the entire reasoning sequence when any part supplies that state.
     const encryptedIds = new Set(
-      message.content.flatMap((part) => {
+      originalContent.flatMap((part) => {
         if (part.type !== "reasoning") return [];
         const state = reasoningState(part);
         const encrypted = state?.reasoningEncryptedContent;
@@ -25,16 +29,47 @@ export function prepareResponsesMessages(messages: ModelMessage[]): ModelMessage
           : [];
       }),
     );
-    const content = message.content.filter((part) => {
-      if (part.type !== "reasoning") return true;
+    const emittedEncryptedIds = new Set<string>();
+    const content = originalContent.flatMap((part): Exclude<AssistantContent, string>[number][] => {
+      if (part.type !== "reasoning") return [part];
       const state = reasoningState(part);
       const encrypted = state?.reasoningEncryptedContent;
-      return (
+      const id = state?.itemId;
+      if (store && typeof id === "string" && encryptedIds.has(id)) {
+        if (emittedEncryptedIds.has(id)) return [];
+        emittedEncryptedIds.add(id);
+        const sequence = originalContent.filter(
+          (item): item is ReasoningPart =>
+            item.type === "reasoning" && reasoningState(item)?.itemId === id,
+        );
+        const encryptedPart = sequence.findLast((item) => {
+          const encrypted = reasoningState(item)?.reasoningEncryptedContent;
+          return encrypted !== null && encrypted !== undefined;
+        })!;
+        const options = { ...reasoningState(encryptedPart) };
+        // With store=true, an item ID would make the SDK discard encrypted
+        // content in favor of a server reference. Merge streamed summary parts
+        // before removing the ID so only one complete reasoning item is sent.
+        delete options.itemId;
+        return [
+          {
+            ...part,
+            text: sequence.map((item) => item.text).join("\n"),
+            providerOptions: { ...part.providerOptions, openai: options },
+          },
+        ];
+      }
+      return (store && typeof state?.itemId === "string") ||
         (encrypted !== null && encrypted !== undefined) ||
         (typeof state?.itemId === "string" && encryptedIds.has(state.itemId))
-      );
+        ? [part]
+        : [];
     });
-    if (content.length === message.content.length) return [message];
+    if (
+      content.length === originalContent.length &&
+      content.every((part, index) => part === originalContent[index])
+    )
+      return [message];
     return content.length ? [{ ...message, content }] : [];
   });
 }

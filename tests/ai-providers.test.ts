@@ -134,7 +134,7 @@ describe("provider models and reasoning", () => {
   it("maps reasoning to the correct API namespace", () => {
     expect(reasoningOptions({ ...config, apiType: "openai_responses" })).toEqual({
       openai: {
-        store: false,
+        store: true,
         reasoningEffort: "high",
         forceReasoning: true,
         systemMessageMode: "system",
@@ -143,14 +143,14 @@ describe("provider models and reasoning", () => {
     });
     expect(
       reasoningOptions({ ...config, apiType: "openai_responses", reasoningEffort: "default" }),
-    ).toEqual({ openai: { store: false } });
+    ).toEqual({ openai: { store: true } });
     expect(
       reasoningOptions({
         ...config,
         apiType: "openai_responses",
         baseURL: "https://api.openai.com/v1",
       }),
-    ).toEqual({ openai: { store: false, reasoningEffort: "high" } });
+    ).toEqual({ openai: { store: true, reasoningEffort: "high" } });
     expect(reasoningOptions(config)).toEqual({ exam: { reasoningEffort: "high" } });
     expect(reasoningOptions({ ...config, apiType: "anthropic" })).toEqual({
       anthropic: { thinking: { type: "adaptive" }, effort: "high" },

@@ -15,6 +15,7 @@ type ResponsesRequest = {
   stream: boolean;
   input: {
     type?: string;
+    id?: string;
     role?: string;
     call_id?: string;
     name?: string;
@@ -23,6 +24,7 @@ type ResponsesRequest = {
   }[];
   reasoning?: { effort: string };
   include?: string[];
+  tools?: unknown[];
 };
 
 describe("Responses gateway compatibility", () => {
@@ -216,17 +218,76 @@ describe("Responses gateway compatibility", () => {
     expect(messages).toEqual(original);
     expect(prepareResponsesMessages(prepared)).toEqual(prepared);
   });
+  it("replays encrypted state with store=true without losing summary parts or mutating history", () => {
+    const messages: ModelMessage[] = [
+      {
+        role: "assistant",
+        content: [
+          {
+            type: "reasoning",
+            text: "first",
+            providerOptions: { openai: { itemId: "rs_1", reasoningEncryptedContent: null } },
+          },
+          {
+            type: "reasoning",
+            text: "last",
+            providerOptions: {
+              openai: { itemId: "rs_1", reasoningEncryptedContent: "opaque-state" },
+            },
+          },
+          {
+            type: "reasoning",
+            text: "without ID",
+            providerOptions: { openai: { reasoningEncryptedContent: "another-opaque-state" } },
+          },
+          {
+            type: "reasoning",
+            text: "stored only",
+            providerOptions: { openai: { itemId: "rs_2" } },
+          },
+          { type: "reasoning", text: "not recoverable" },
+          { type: "text", text: "Continue" },
+        ],
+      },
+    ];
+    const original = structuredClone(messages);
+    const prepared = prepareResponsesMessages(messages, { store: true });
+    expect(prepared[0].content).toEqual([
+      {
+        type: "reasoning",
+        text: "first\nlast",
+        providerOptions: { openai: { reasoningEncryptedContent: "opaque-state" } },
+      },
+      original[0].content[2],
+      original[0].content[3],
+      original[0].content[5],
+    ]);
+    expect(messages).toEqual(original);
+    expect(prepareResponsesMessages(prepared, { store: true })).toEqual(prepared);
+  });
   it.each([
+    { effort: "default" as const, encrypted: "opaque-state" },
     { effort: "default" as const, encrypted: null },
     { effort: "low" as const, encrypted: null },
     { effort: "low" as const, encrypted: "opaque-state" },
   ])(
-    "runs multiple SDK tool rounds without warnings for $effort / $encrypted",
+    "preserves request prefixes and stored reasoning across three SDK rounds for $effort / $encrypted",
     async ({ effort, encrypted }) => {
       const requests: ResponsesRequest[] = [];
       const transport: typeof fetch = async (_url, init) => {
         requests.push(JSON.parse(String(init?.body)));
         const step = requests.length;
+        // Some gateways return encrypted state even with storage enabled and
+        // require that opaque state rather than a stored reasoning reference.
+        if (step > 1 && encrypted) {
+          expect(requests.at(-1)!.input).toContainEqual(
+            expect.objectContaining({ type: "reasoning", encrypted_content: encrypted }),
+          );
+          expect(requests.at(-1)!.input).not.toContainEqual({
+            type: "item_reference",
+            id: "rs_1",
+          });
+        }
         return modelStreamResponse({
           id: `resp_${step}`,
           model: "deepseek/deepseek-v4.1-flash",
@@ -236,15 +297,23 @@ describe("Responses gateway compatibility", () => {
             {
               type: "reasoning",
               id: `rs_${step}`,
-              summary: [{ type: "summary_text", text: "Inspect and solve the question" }],
+              summary: [
+                { type: "summary_text", text: "Inspect the question" },
+                { type: "summary_text", text: "Solve the question" },
+              ],
               encrypted_content: encrypted,
+            },
+            {
+              type: "message",
+              id: `msg_${step}`,
+              content: [{ type: "output_text", text: "Inspecting the next question." }],
             },
             {
               type: "function_call",
               id: `fc_${step}`,
               call_id: `call_${step}`,
-              name: step === 1 ? "read_question" : "submit_answer",
-              arguments: JSON.stringify(step === 1 ? { id: "q_1" } : { answer: "2" }),
+              name: step < 3 ? "read_question" : "submit_answer",
+              arguments: JSON.stringify(step < 3 ? { id: "q_1" } : { answer: "2" }),
             },
           ],
           usage: { input_tokens: 20, output_tokens: 30 },
@@ -291,17 +360,22 @@ describe("Responses gateway compatibility", () => {
           },
         });
         expect(complete).toBe(true);
-        expect(requests).toHaveLength(2);
+        expect(requests).toHaveLength(3);
         expect(warningLogger).not.toHaveBeenCalled();
         for (const body of requests) {
-          expect(body.store).toBe(false);
+          expect(body.store).toBe(true);
           expect(body.stream).toBe(true);
           expect(body.input[0].role).toBe("system");
           if (effort === "default") expect(body.reasoning).toBeUndefined();
           else {
             expect(body.reasoning).toEqual({ effort });
-            expect(body.include).toContain("reasoning.encrypted_content");
+            expect(body.include ?? []).not.toContain("reasoning.encrypted_content");
           }
+        }
+        for (let index = 1; index < requests.length; index++) {
+          const previous = requests[index - 1];
+          expect(requests[index].input.slice(0, previous.input.length)).toEqual(previous.input);
+          expect(requests[index].tools).toEqual(previous.tools);
         }
         const replay = requests[1].input;
         expect(replay.find((item) => item.type === "function_call")).toMatchObject({
@@ -312,9 +386,14 @@ describe("Responses gateway compatibility", () => {
           call_id: "call_1",
           output: JSON.stringify({ description: "1+1=?" }),
         });
-        const reasoning = replay.find((item) => item.type === "reasoning");
-        if (encrypted) expect(reasoning).toMatchObject({ encrypted_content: encrypted });
-        else expect(reasoning).toBeUndefined();
+        if (encrypted) {
+          expect(replay.find((item) => item.type === "reasoning")).toMatchObject({
+            encrypted_content: encrypted,
+          });
+        } else {
+          expect(replay).toContainEqual({ type: "item_reference", id: "rs_1" });
+        }
+        expect(replay).toContainEqual({ type: "item_reference", id: "msg_1" });
       } finally {
         globalThis.AI_SDK_LOG_WARNINGS = previousLogger;
       }

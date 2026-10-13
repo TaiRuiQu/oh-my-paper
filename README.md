@@ -121,7 +121,7 @@ Web 请求错误查看 Web 控制台，后台解析与工具错误查看 Worker 
 
 支持 OpenAI Responses、OpenAI 兼容 Chat Completions、Anthropic Messages 与 Google Generative AI。仅勾选实际模型支持的选项；`默认` 不发送推理参数，`关闭` 使用接口的关闭推理设置，其余选项映射至对应 API 的 reasoning/thinking 参数。模型需支持图片输入。API key 使用服务端 AES-GCM 加密，不传给浏览器。
 
-Responses 调用使用 `store: false`。第三方网关显式选择推理强度时，通过 SDK 的 `forceReasoning` 发送实际的 `reasoning.effort`，不依赖 OpenAI 模型名称白名单；保留网关原有的 `system` 角色，且不额外请求推理摘要。SDK 请求可用于后续轮次的加密推理状态；网关未返回该状态的摘要仅保留在当前响应中，不回传到后续请求。文本、工具调用及结果继续保留，已返回的加密推理状态正常回传。
+Responses 调用使用 `store: true`，允许服务商保存响应。该选项控制响应存储，不是自动提示词缓存的开关。第三方网关显式选择推理强度时，通过 SDK 的 `forceReasoning` 发送实际的 `reasoning.effort`，不依赖 OpenAI 模型名称白名单；保留网关原有的 `system` 角色，且不额外请求推理摘要。多轮调用保留已有消息和固定工具定义。提供商返回加密推理状态时，优先原样回传加密内容，即使同时有响应条目 ID 也不改用存储引用；同一推理条目的多个流式摘要合并后一起回传。未返回加密内容但有条目 ID 时，SDK 通过 ID 引用已存储的推理内容；无可恢复状态的摘要不回传。文本、工具调用及结果继续保留。
 
 所有模型请求均使用流式 API：Agent 使用 `ToolLoopAgent.stream()`，单题评分和直接 JSON 生成使用 `streamText()`。Worker 持续消费流，管理员活动记录每轮首次开始输出的时间；模型完整结束后才执行工具或校验并保存最终 JSON。Chat Completions 请求流末尾的 token 用量用于结算；流错误、中断和超时向任务层传播，不将部分输出当作完整结果。Responses 流逐事件兼容后交给 SDK，不等待整个响应体，也不因网关错误标注 Content-Type 而转为整体读取。工具调用起始事件省略 `arguments` 时补为空字符串，后续参数增量和完整参数仍由 SDK 校验。
 
@@ -209,7 +209,7 @@ pnpm run test:integration
 
 Worker 镜像使用 `pnpm run build:worker` 生成的独立运行目录，只包含编译后的入口、实际运行依赖、数据库迁移与 Python 沙箱脚本，不再复制完整 `node_modules` 和应用源码。快速批改的「标准答案（可选）」默认折叠，选中文件后仍在摘要显示数量。
 
-部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.12 部署与升级指南](docs/releases/v0.1.12.zh-CN.md)。
+部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.13 部署与升级指南](docs/releases/v0.1.13.zh-CN.md)。
 
 Word 公式转换复用 KaTeX 与 docx，新增 `mathml2omml@0.5.0`（约 67 KB 运行时代码，无运行时依赖），并直接声明已有 docx 依赖 `xml-js`。转换库以未修改的运行时模块随应用分发，其 LGPL-3.0-or-later 许可及来源见 [第三方依赖说明](docs/third-party.md)。
 
