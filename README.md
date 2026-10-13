@@ -195,8 +195,10 @@ pnpm run test:integration
 
 试卷列表和详情页支持删除：确认后试卷立即从用户列表及批改试卷选择中移除，原始文件、题目、答案和执行记录保留，管理员仍可通过记录审查访问并查看删除时间。详情页的「编辑试卷」支持修改名称、大题标题与说明、题干、选项、小问和分值，支持 Markdown 与数学公式预览，保留题号、顺序、题目 ID 和配图。保存检查版本冲突；答案生成或批改进行中时不能保存。保存后新版试题需重新生成或上传标准答案，旧答案和批改记录保留在历史记录中。接口为 `DELETE /api/exams/:id` 与 `PATCH /api/exams/:id`，均验证登录用户归属和请求来源。
 
-试卷解析完成后，详情页提供「导出 PDF」和「导出 Word」，管理员审查页也可导出。两种格式参照 `examples/数学_仅试题.pdf`，采用 210 × 148 mm 横向四栏、5 mm 页边距及 5.5 pt 宋体正文；大题说明加粗，题号与题干同行，选择题选项横排。PDF 保留可搜索中文、公式、表格、分值和配图，长题干与表格可跨栏、跨页。PDF 与 Word 中的小问题号（如 `(1)`）与正文首段同排，后续段落、独立公式和表格保留原有结构。Word 为 `.docx`，使用原生四栏，正文、标题和表格保持可编辑，所有数学公式转为三倍分辨率的 PNG 图片，使用替代文字保留 LaTeX；不会创建 Word 原生数学对象。三种公式写法 `$…$`、`$$…$$`、`\(…\)` 均受支持，代码块保持原文。普通用户仅可导出自己的试卷，管理员通过独立审查接口导出全站试卷。
+试卷解析完成后，详情页提供「导出 PDF」和「导出 Word」，管理员审查页也可导出。两种格式参照 `examples/数学_仅试题.pdf`，采用 210 × 148 mm 横向四栏、5 mm 页边距及 5.5 pt 宋体正文；大题说明加粗，题号与题干同行，选择题选项横排。PDF 保留可搜索中文、公式、表格、分值和配图，长题干与表格可跨栏、跨页。PDF 与 Word 中的小问题号（如 `(1)`）与正文首段同排，后续段落、独立公式和表格保留原有结构。Word 为 `.docx`，使用原生四栏，正文、标题和表格保持可编辑，数学公式转换为 Word 原生 Office Math（OMML）对象，可在 Word 公式编辑器中直接修改分式、根号、上下标、矩阵及其他数学结构，不生成公式图片。无法转换的公式会提示检查 LaTeX 语法，避免生成缺失内容的文档。三种公式写法 `$…$`、`$$…$$`、`\(…\)` 均受支持，代码块保持原文。普通用户仅可导出自己的试卷，管理员通过独立审查接口导出全站试卷。
 
-导出在 Web 服务中执行，需要系统 Chromium（或 Google Chrome）和中文字体。Docker Web 镜像已安装 Chromium 与 `fonts-noto-cjk`；本地 Debian/Ubuntu 可安装 `chromium fonts-noto-cjk`，其他浏览器路径可通过 `EXPORT_CHROMIUM_PATH` 指定。PDF 默认字体采用新宋体 NSimSun 5.03，字体从 `simsun.ttc` 的 NSimSun face 提取并保存于 `assets/fonts/nsimsun.ttf`，通过 `@font-face` 内嵌；无需系统安装或导出时下载。默认字体、KaTeX 字体和配图随文档内嵌，导出浏览器禁用页面脚本及外部网络加载。`node --conditions=react-server --import tsx scripts/check-exam-export.ts` 可生成测试 PDF/Word，并检查长文档分页、可搜索中文、可编辑正文及公式图片，产物位于 `tmp/exam-export-check`。
+导出在 Web 服务中执行。PDF 需要系统 Chromium（或 Google Chrome）和中文字体；Word 在 Node.js 内直接生成原生公式，不需要浏览器。Docker Web 镜像已安装 Chromium 与 `fonts-noto-cjk`；本地 Debian/Ubuntu 可安装 `chromium fonts-noto-cjk`，其他浏览器路径可通过 `EXPORT_CHROMIUM_PATH` 指定。PDF 默认字体采用新宋体 NSimSun 5.03，字体从 `simsun.ttc` 的 NSimSun face 提取并保存于 `assets/fonts/nsimsun.ttf`，通过 `@font-face` 内嵌；无需系统安装或导出时下载。默认字体、KaTeX 字体和配图随文档内嵌，导出浏览器禁用页面脚本及外部网络加载。`node --conditions=react-server --import tsx scripts/check-exam-export.ts` 可生成测试 PDF/Word，并检查长文档分页、可搜索中文、可编辑正文及原生公式，产物位于 `tmp/exam-export-check`。
 
-部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.3 部署与升级指南](docs/releases/v0.1.3.zh-CN.md)。
+部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.4 部署与升级指南](docs/releases/v0.1.4.zh-CN.md)。
+
+Word 公式转换复用 KaTeX 与 docx，新增 `mathml2omml@0.5.0`（约 67 KB 运行时代码，无运行时依赖），并直接声明已有 docx 依赖 `xml-js`。转换库以未修改的运行时模块随应用分发，其 LGPL-3.0-or-later 许可及来源见 [第三方依赖说明](docs/third-party.md)。

@@ -7,7 +7,7 @@ import JSZip from "jszip";
 import sharp from "sharp";
 import type { Exam } from "@/contracts/exams";
 import { buildExportDocument } from "@/server/exams/export/document";
-import { withExportPage, formulaImages } from "@/server/exams/export/browser";
+import { withExportPage } from "@/server/exams/export/browser";
 import { exportWord } from "@/server/exams/export/word";
 const execute = promisify(execFile);
 async function main() {
@@ -72,14 +72,7 @@ $$
     const pdf = await page.pdf({ preferCSSPageSize: true, printBackground: true });
     assert.equal(Buffer.from(pdf).subarray(0, 5).toString(), "%PDF-");
     await writeFile(join(directory, "exam.pdf"), pdf);
-    const formulas = await formulaImages(page, document);
-    assert.equal(formulas.size, document.formulas.size);
-    for (const item of formulas.values()) {
-      const info = await sharp(item.data).metadata();
-      assert.equal(info.format, "png");
-      assert.ok(info.width! >= Math.floor(item.width * 2));
-    }
-    const word = await exportWord(document, formulas);
+    const word = await exportWord(document);
     await writeFile(join(directory, "exam.docx"), word);
     const zip = await JSZip.loadAsync(word),
       xml = await zip.file("word/document.xml")!.async("string");
@@ -87,9 +80,11 @@ $$
     assert.ok(xml.includes('w:num="4"'));
     assert.ok(xml.includes("<w:tbl>"));
     assert.ok(xml.includes("<w:t"));
-    assert.equal(xml.includes("<m:oMath"), false);
+    assert.ok(xml.includes("<m:oMath"));
+    assert.ok(xml.includes("<m:f>"));
+    assert.ok(xml.includes("<m:nary>"));
     assert.equal(xml.includes("altChunk"), false);
-    assert.ok(xml.includes('title="数学公式"'));
+    assert.equal(xml.includes('title="数学公式"'), false);
     assert.ok(xml.includes('title="试卷配图"'));
     const paragraphs = xml.match(/<w:p[ >][\s\S]*?<\/w:p>/g) ?? [];
     assert.ok(
@@ -100,14 +95,10 @@ $$
     assert.ok(
       paragraphs.some(
         (paragraph) =>
-          paragraph.includes("(2)") &&
-          paragraph.includes("求值") &&
-          paragraph.includes("<w:drawing>"),
+          paragraph.includes("(2)") && paragraph.includes("求值") && paragraph.includes("<m:oMath"),
       ),
     );
-    console.log(
-      `✓ Editable Word text/tables/materials and ${formulas.size} reusable PNG formula images`,
-    );
+    console.log(`✓ Editable Word text/tables/materials and native Office Math equations`);
   });
   const { stdout } = await execute(process.env.PDFINFO_PATH ?? "pdfinfo", [
     join(directory, "exam.pdf"),

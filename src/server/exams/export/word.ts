@@ -30,24 +30,24 @@ import {
   PAGE_WIDTH_PX,
   PRINT_LAYOUT,
 } from "./document";
-export async function exportWord(document: ExportDocument, formulas: Map<string, ExportImage>) {
-  const image = (item: ExportImage, formula = false, maxWidth = PAGE_WIDTH_PX) =>
+import { wordMath, wordMathXml } from "./math";
+export async function exportWord(document: ExportDocument, signal?: AbortSignal) {
+  signal?.throwIfAborted();
+  const formulas = new Map<string, string>();
+  for (const formula of document.formulas.values()) {
+    signal?.throwIfAborted();
+    formulas.set(formula.id, wordMathXml(formula));
+  }
+  const image = (item: ExportImage, maxWidth = PAGE_WIDTH_PX) =>
     new ImageRun({
       type: item.type,
       data: item.data,
       transformation: imageDimensions(item, maxWidth),
       altText: {
-        title: formula ? "数学公式" : "试卷配图",
+        title: "试卷配图",
         description: item.description,
-        name: formula ? "formula" : "material",
+        name: "material",
       },
-      ...(formula && item.baseline
-        ? {
-            run: {
-              position: `${((-item.baseline * imageDimensions(item, maxWidth).width) / item.width) * 0.75}pt`,
-            },
-          }
-        : {}),
     });
   const inline = (
     node: Nodes,
@@ -76,17 +76,17 @@ export async function exportWord(document: ExportDocument, formulas: Map<string,
       case "math":
       case "inlineMath": {
         const item = formulas.get(document.formulaIds.get(node)!);
-        if (!item) throw new Error("Formula image was not generated");
-        return [image(item, true, maxWidth)];
+        if (!item) throw new Error("Office Math equation was not generated");
+        return [wordMath(item)];
       }
       case "image": {
         const item = resolveDocumentImage(document, node.url);
-        return item ? [image(item, false, maxWidth)] : [new TextRun(node.alt ?? "配图")];
+        return item ? [image(item, maxWidth)] : [new TextRun(node.alt ?? "配图")];
       }
       case "imageReference": {
         const definition = definitions.get(node.identifier),
           item = definition && resolveDocumentImage(document, definition.url);
-        return item ? [image(item, false, maxWidth)] : [new TextRun(node.alt ?? "配图")];
+        return item ? [image(item, maxWidth)] : [new TextRun(node.alt ?? "配图")];
       }
       case "definition":
         return [];
@@ -309,7 +309,7 @@ export async function exportWord(document: ExportDocument, formulas: Map<string,
   const file = new Document({
     title: document.title,
     creator: "Oh My Paper",
-    description: "已解析试卷，数学公式以图片保存",
+    description: "已解析试卷，数学公式使用可编辑的 Word 原生公式",
     styles: {
       default: {
         document: {
@@ -380,5 +380,8 @@ export async function exportWord(document: ExportDocument, formulas: Map<string,
       },
     ],
   });
-  return Packer.toBuffer(file);
+  signal?.throwIfAborted();
+  const result = await Packer.toBuffer(file);
+  signal?.throwIfAborted();
+  return result;
 }

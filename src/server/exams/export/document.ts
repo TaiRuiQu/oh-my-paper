@@ -18,7 +18,6 @@ export type ExportImage = {
   height: number;
   type: "png" | "jpg";
   description: string;
-  baseline?: number;
 };
 export type ExportPart =
   | { kind: "heading"; level: 1 | 2 | 3 | 4; text: string }

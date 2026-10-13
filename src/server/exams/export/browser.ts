@@ -2,13 +2,7 @@ import "server-only";
 import { access } from "node:fs/promises";
 import puppeteer, { type Page } from "puppeteer-core";
 import { AppError } from "@/server/errors";
-import {
-  PAGE_WIDTH_PX,
-  SHEET_WIDTH_PX,
-  SHEET_HEIGHT_PX,
-  type ExportDocument,
-  type ExportImage,
-} from "./document";
+import { PAGE_WIDTH_PX, SHEET_WIDTH_PX, SHEET_HEIGHT_PX, type ExportDocument } from "./document";
 import { exportHtml } from "./html";
 async function chromePath() {
   if (process.env.EXPORT_CHROMIUM_PATH) return process.env.EXPORT_CHROMIUM_PATH;
@@ -265,29 +259,4 @@ export async function paginateExportPage(page: Page) {
     },
     { width: SHEET_WIDTH_PX, height: SHEET_HEIGHT_PX },
   );
-}
-export async function formulaImages(page: Page, document: ExportDocument, signal?: AbortSignal) {
-  const images = new Map<string, ExportImage>();
-  for (const formula of document.formulas.values()) {
-    signal?.throwIfAborted();
-    const element = await page.$(`[data-formula="${formula.id}"]`);
-    if (!element) throw new AppError("数学公式渲染失败。", "EXPORT_FORMULA_FAILED", 422);
-    try {
-      const metrics = await element.evaluate((element) => {
-        const box = element.getBoundingClientRect();
-        const baseline = element.querySelector(".formula-baseline")!.getBoundingClientRect();
-        return { width: box.width, height: box.height, baseline: box.bottom - baseline.top };
-      });
-      const png = await element.screenshot({ type: "png" });
-      images.set(formula.id, {
-        data: Buffer.from(png),
-        ...metrics,
-        type: "png",
-        description: formula.latex,
-      });
-    } finally {
-      await element.dispose();
-    }
-  }
-  return images;
 }

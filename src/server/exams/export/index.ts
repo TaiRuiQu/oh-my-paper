@@ -7,7 +7,7 @@ import { AppError } from "@/server/errors";
 import { RequestError } from "@/server/http/errors";
 import { taskDirectory } from "../tasks";
 import { buildExportDocument } from "./document";
-import { withExportPage, formulaImages } from "./browser";
+import { withExportPage } from "./browser";
 import { exportWord } from "./word";
 let active = 0;
 export async function exportExam(
@@ -28,19 +28,17 @@ export async function exportExam(
       task.id,
     );
     const data =
-      format === "docx" && !document.formulas.size
-        ? await exportWord(document, new Map())
+      format === "docx"
+        ? await exportWord(document, signal)
         : await withExportPage(document, signal, async (page) =>
-            format === "pdf"
-              ? Buffer.from(
-                  await page.pdf({
-                    printBackground: true,
-                    preferCSSPageSize: true,
-                    waitForFonts: true,
-                    timeout: 60_000,
-                  }),
-                )
-              : exportWord(document, await formulaImages(page, document, signal)),
+            Buffer.from(
+              await page.pdf({
+                printBackground: true,
+                preferCSSPageSize: true,
+                waitForFonts: true,
+                timeout: 60_000,
+              }),
+            ),
           );
     signal?.throwIfAborted();
     return {

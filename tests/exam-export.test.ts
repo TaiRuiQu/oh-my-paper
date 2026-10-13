@@ -123,19 +123,10 @@ describe("printable PDF source and editable Word documents", () => {
     expect(html).toContain("<p>写出计算过程。</p>");
     expect(html).not.toContain("<h4>");
   });
-  it("stores editable paragraphs and tables, with every formula represented by PNG drawings", async () => {
+  it("stores editable paragraphs, tables and native Office Math, with drawings only for materials", async () => {
     const { exam, directory } = await fixture();
     const document = await buildExportDocument(exam, directory);
-    const png = await sharp({ create: { width: 40, height: 20, channels: 4, background: "white" } })
-      .png()
-      .toBuffer();
-    const formulas = new Map(
-      Array.from(document.formulas.values(), (formula) => [
-        formula.id,
-        { data: png, width: 40, height: 20, type: "png" as const, description: formula.latex },
-      ]),
-    );
-    const data = await exportWord(document, formulas),
+    const data = await exportWord(document),
       zip = await JSZip.loadAsync(data);
     const xml = await zip.file("word/document.xml")!.async("string");
     expect(xml).toContain("15.");
@@ -146,8 +137,11 @@ describe("printable PDF source and editable Word documents", () => {
     expect(xml).toContain("<w:t");
     expect(xml).toContain("<w:tbl>");
     expect(xml).toContain("<w:drawing>");
-    expect(xml).toContain('title="数学公式"');
-    expect(xml).not.toContain("<m:oMath");
+    expect(xml).not.toContain('title="数学公式"');
+    expect(xml.match(/<m:oMath[ >]/g)).toHaveLength(5);
+    expect(xml).toContain("<m:f>");
+    expect(xml).toContain("<m:sSup>");
+    expect(xml).not.toContain("<undefined>");
     expect(xml).not.toContain("altChunk");
     expect(xml).not.toContain("javascript:");
     const subquestion = xml
@@ -155,13 +149,13 @@ describe("printable PDF source and editable Word documents", () => {
       .find((paragraph) => paragraph.includes("(2)"));
     expect(subquestion).toContain("计算 ");
     expect(subquestion).toContain("面积");
-    expect(subquestion).toContain("<w:drawing>");
-    expect(xml.match(/<w:drawing>/g)).toHaveLength(7); // Five formula occurrences and two materials.
+    expect(subquestion).toContain("<m:oMath");
+    expect(xml.match(/<w:drawing>/g)).toHaveLength(2);
     expect(
       Object.keys(zip.files).filter(
         (name) => name.startsWith("word/media/") && name.endsWith(".png"),
       ).length,
-    ).toBeGreaterThan(0);
+    ).toBe(0);
   });
   it("uses safe Unicode download names and honors cancellation before reading files", async () => {
     expect(examExportFilename(' ../数学试卷\r\n"\\?* ', "pdf")).toBe(".. 数学试卷.pdf");
