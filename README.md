@@ -136,7 +136,7 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-当前仓库生成 `ghcr.io/tairuiqu/oh-my-paper:v1.0.0` 与 `ghcr.io/tairuiqu/oh-my-paper-worker:v1.0.0`，分别对应 Web 和 Worker（Worker 镜像也可执行迁移）。镜像路径随仓库名称变化并转为小写；tag 中不符合 Docker 命名规则的字符会被规范化。不自动生成 `latest` 标签。发布结果与构建记录可在仓库 Actions / Packages 查看。
+当前仓库生成 `ghcr.io/tairuiqu/oh-my-paper:v1.0.0` 与 `ghcr.io/tairuiqu/oh-my-paper-worker:v1.0.0`，分别对应 Web 和 Worker（Worker 镜像也可执行迁移）。镜像路径随仓库名称变化并转为小写；tag 中不符合 Docker 命名规则的字符会被规范化。同时生成 `latest` 标签，供部署端自动更新。发布结果与构建记录可在仓库 Actions / Packages 查看。
 
 ## 本地启动
 
@@ -201,7 +201,7 @@ pnpm run test:integration
 
 Worker 镜像使用 `pnpm run build:worker` 生成的独立运行目录，只包含编译后的入口、实际运行依赖、数据库迁移与 Python 沙箱脚本，不再复制完整 `node_modules` 和应用源码。快速批改的「标准答案（可选）」默认折叠，选中文件后仍在摘要显示数量。
 
-部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.5 部署与升级指南](docs/releases/v0.1.5.zh-CN.md)。
+部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.9 部署与升级指南](docs/releases/v0.1.9.zh-CN.md)。
 
 Word 公式转换复用 KaTeX 与 docx，新增 `mathml2omml@0.5.0`（约 67 KB 运行时代码，无运行时依赖），并直接声明已有 docx 依赖 `xml-js`。转换库以未修改的运行时模块随应用分发，其 LGPL-3.0-or-later 许可及来源见 [第三方依赖说明](docs/third-party.md)。
 
