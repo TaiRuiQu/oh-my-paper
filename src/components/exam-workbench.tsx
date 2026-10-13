@@ -123,8 +123,13 @@ export function ExamWorkbench({
               label="选择试卷文件或拖放到这里"
               limitsLabel="试卷与标准答案合计最多 20 个文件，共 100 MB。"
             />
-            <section className="reference-upload" aria-labelledby="exam-answer-heading">
-              <h3 id="exam-answer-heading">标准答案（可选）</h3>
+            <details className="reference-upload answer-disclosure">
+              <summary>
+                标准答案（可选）
+                {answerFiles.length > 0 && (
+                  <span className="count-label">已选 {answerFiles.length} 个文件</span>
+                )}
+              </summary>
               <p className="hint">可与试卷一起上传。系统先解析试卷，再按题号匹配并保存答案。</p>
               <FileUpload
                 id="exam-answer-files"
@@ -139,7 +144,7 @@ export function ExamWorkbench({
                 label="选择标准答案或拖放到这里"
                 limitsLabel="与试卷合计最多 20 个文件，共 100 MB。"
               />
-            </section>
+            </details>
             <TaskModelPicker
               query={modelQuery}
               purposes={answerFiles.length ? ["exam", "answer"] : ["exam"]}

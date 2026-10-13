@@ -88,7 +88,7 @@ describe("management navigation and bundled workflows", () => {
   it("quick grading needs no prior exam selection", () => {
     const page = render(createElement(GradingManager, { quick: true, isAdmin: false }));
     expect(page.querySelector("#grading-exam")).toBeNull();
-    expect(page.querySelectorAll(".task-model-fields select")).toHaveLength(3);
+    expect(page.querySelectorAll(".task-model-fields select")).toHaveLength(6);
     expect(page.querySelector<HTMLInputElement>('input[type="file"]')?.disabled).toBe(false);
     expect(page.textContent).toContain("开始批改");
     expect(page.textContent).toContain("标准答案（可选）");

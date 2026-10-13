@@ -149,7 +149,15 @@ export function ExamResult({
   );
 }
 
-export function ExamContent({ exam, taskId }: { exam: Exam; taskId: string }) {
+export function ExamContent({
+  exam,
+  taskId,
+  filesBaseURL,
+}: {
+  exam: Exam;
+  taskId: string;
+  filesBaseURL?: string;
+}) {
   return (
     <div className="exam-sections">
       {exam.sections.map((section, sectionPosition) => {
@@ -180,6 +188,7 @@ export function ExamContent({ exam, taskId }: { exam: Exam; taskId: string }) {
                   </div>
                   {question.description && <MarkdownText text={question.description} />}
                   <QuestionMaterials
+                    filesBaseURL={filesBaseURL}
                     taskId={taskId}
                     materials={question.materials}
                     position={offset + index}
@@ -197,6 +206,7 @@ export function ExamContent({ exam, taskId }: { exam: Exam; taskId: string }) {
                           </div>
                           <MarkdownText text={part.description} />
                           <QuestionMaterials
+                            filesBaseURL={filesBaseURL}
                             taskId={taskId}
                             materials={part.materials}
                             position={offset + index}
@@ -218,12 +228,14 @@ export function ExamContent({ exam, taskId }: { exam: Exam; taskId: string }) {
 }
 
 function QuestionMaterials({
+  filesBaseURL,
   taskId,
   materials,
   position,
   subquestionPosition,
   label,
 }: {
+  filesBaseURL?: string;
   taskId: string;
   materials: Material[];
   position: number;
@@ -236,7 +248,7 @@ function QuestionMaterials({
       {materials.map((material, index) => (
         <figure key={index}>
           <img
-            src={`/api/exams/${taskId}/files/${materialKey(position, index, subquestionPosition)}`}
+            src={`${filesBaseURL ?? `/api/exams/${taskId}/files`}/${materialKey(position, index, subquestionPosition)}`}
             alt={`${label}材料 ${index + 1}`}
             loading="lazy"
           />

@@ -108,6 +108,7 @@ describe("exam agent routes", () => {
       undefined,
       false,
       undefined,
+      undefined,
     );
     expect((await grade(request(), context)).status).toBe(202);
     expect(mocks.create).toHaveBeenLastCalledWith(
@@ -117,7 +118,7 @@ describe("exam agent routes", () => {
       "GRADING",
     );
     expect((await retry(request(), context)).status).toBe(202);
-    expect(mocks.retry).toHaveBeenCalledWith("owner", "source", "agent", undefined);
+    expect(mocks.retry).toHaveBeenCalledWith("owner", "source", "agent", undefined, undefined);
   });
   it.each([activity, image])(
     "restricts diagnostics to administrators before reading tasks",

@@ -134,7 +134,7 @@ describe("actual agent activity", () => {
       .toFile(path);
     const tools = createInspectionTools([{ page: 1, path, width: 100, height: 200 }], root);
     const options = { toolCallId: "test", messages: [], context: {} };
-    expect(Object.keys(tools)).toEqual(["read_pages", "inspect_image", "python"]);
+    expect(Object.keys(tools)).toEqual(["read_pages", "inspect_image", "shell", "python"]);
     const result = await tools.inspect_image.execute!(
       { region: { page: 1, x: 0.1, y: 0.2, width: 0.5, height: 0.3 }, scale: 2, sharpen: false },
       options,

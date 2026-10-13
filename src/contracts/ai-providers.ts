@@ -24,6 +24,16 @@ export const REASONING_EFFORTS = [
 ] as const;
 export const reasoningEffortSchema = z.enum(REASONING_EFFORTS);
 export type ReasoningEffort = z.infer<typeof reasoningEffortSchema>;
+export const REASONING_LABELS: Record<ReasoningEffort, string> = {
+  default: "模型默认",
+  none: "关闭推理",
+  minimal: "最低",
+  low: "低",
+  medium: "中",
+  high: "高",
+  xhigh: "超高",
+  max: "最高",
+};
 export const aiConcurrencySchema = z.number().int().min(1).max(32);
 export const creditMultiplierSchema = z.number().min(0.0001).max(1000).multipleOf(0.0001);
 const modelSchema = z.strictObject({

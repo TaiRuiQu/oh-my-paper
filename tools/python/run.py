@@ -7,6 +7,8 @@ import json
 import pathlib
 import sys
 import traceback
+import subprocess
+import tempfile
 import PIL  # Fail early if the configured runtime has no preinstalled Pillow.
 
 
@@ -25,13 +27,26 @@ class LimitedOutput(io.TextIOBase):
         return "".join(self.parts)
 
 
-request = json.loads(pathlib.Path("/runtime/request.json").read_text())
-pathlib.Path("/workspace/output").mkdir()
+request = json.load(sys.stdin)
+pathlib.Path("/workspace/output").mkdir(exist_ok=True)
 stdout, stderr = LimitedOutput(), LimitedOutput()
 exit_code = 0
 with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
     try:
-        exec(compile(request["code"], "model.py", "exec"), {"__name__": "__main__"})
+        if "command" in request:
+            # Files bound memory usage even when a command writes a large amount.
+            # prlimit also bounds their size; Bubblewrap contains every child.
+            with tempfile.TemporaryFile(dir="/tmp") as out, tempfile.TemporaryFile(dir="/tmp") as err:
+                result = subprocess.run(
+                    ["/bin/sh", "-c", request["command"]], stdout=out, stderr=err
+                )
+                exit_code = result.returncode
+                out.seek(0)
+                err.seek(0)
+                stdout.write(out.read(32_000).decode("utf-8", errors="replace"))
+                stderr.write(err.read(32_000).decode("utf-8", errors="replace"))
+        else:
+            exec(compile(request["code"], "model.py", "exec"), {"__name__": "__main__"})
     except BaseException:
         exit_code = 1
         traceback.print_exc()

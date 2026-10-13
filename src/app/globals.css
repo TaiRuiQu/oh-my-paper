@@ -1878,3 +1878,51 @@ progress {
     transform: translateX(360%);
   }
 }
+
+.task-model-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  flex: 1 1 380px;
+  min-width: 0;
+}
+.task-model-pair .field:last-child {
+  flex: 1 1 140px;
+}
+.answer-disclosure > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+.answer-disclosure > summary .count-label {
+  margin-left: 12px;
+}
+.answer-disclosure[open] > summary {
+  margin-bottom: 16px;
+}
+.admin-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 20px 24px;
+}
+.admin-user-editor {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 24px;
+}
+.admin-user-editor form {
+  max-width: 560px;
+}
+.admin-user-editor .inline-actions {
+  margin-top: 20px;
+}
+.admin-record-owner {
+  overflow-wrap: anywhere;
+}
+
+.admin-user-editor .field .hint {
+  margin-top: 8px;
+}

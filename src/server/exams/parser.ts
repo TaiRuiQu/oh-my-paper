@@ -9,7 +9,7 @@ import type { ExamModel } from "@/server/ai/providers";
 import { prepareDocuments, DEFAULT_LIMITS } from "./documents";
 import { AppError } from "@/server/errors";
 import type { AgentEventInput } from "@/contracts/activity";
-import { createInspectionTools } from "./tools";
+import { createInspectionTools, disposeInspectionTools } from "./tools";
 import { EXAM_PARSING_PROMPT } from "./prompts";
 import { examMaterials } from "@/lib/exam-materials";
 
@@ -71,54 +71,59 @@ export async function parseExam(options: {
         );
     }
   };
-  const exam = parsedExamSchema.parse(
-    await options.model.generate({
-      system: EXAM_PARSING_PROMPT,
-      content,
-      signal: options.signal,
-      tools: createInspectionTools(pages, options.outputDir, options.signal, (numbers) => {
-        if (numbers.some((page) => materialPages.has(page)))
-          throw new AppError(
-            "该页面已有保存的材料坐标，请先完成页面旋转，再识别和保存题目。",
-            "PAGE_ALREADY_USED",
-            422,
-          );
-      }),
-      onEvent: options.onEvent,
-      onQuestionProgress: options.onQuestionProgress,
-      onProgress: async (draft) => {
-        options.signal?.throwIfAborted();
-        validateMaterials(draft);
-        const previousPages = new Set(materialPages);
-        materialPages.clear();
-        for (const { box } of examMaterials(draft)) materialPages.add(box.page);
-        try {
-          const temporary = join(options.outputDir, "draft.json.tmp");
-          await writeFile(temporary, JSON.stringify(draft, null, 2), { mode: 0o600 });
-          await rename(temporary, join(options.outputDir, "draft.json"));
-        } catch (error) {
-          materialPages.clear();
-          for (const page of previousPages) materialPages.add(page);
-          throw error;
-        }
-      },
-    }),
-  );
-  options.onPhase?.("crop_materials");
-  validateMaterials(exam);
-  await mkdir(join(options.outputDir, "materials"));
-  for (const { key, box } of examMaterials(exam)) {
-    options.signal?.throwIfAborted();
-    const page = pages.find((page) => page.page === box.page)!;
-    await sharp(page.path)
-      .extract(materialPixels(box, page))
-      .jpeg({ quality: 95 })
-      .toFile(join(options.outputDir, key));
-  }
-  options.onPhase?.("save_result");
-  await writeFile(join(options.outputDir, "exam.json"), JSON.stringify(exam, null, 2), {
-    mode: 0o600,
+  const inspection = createInspectionTools(pages, options.outputDir, options.signal, (numbers) => {
+    if (numbers.some((page) => materialPages.has(page)))
+      throw new AppError(
+        "该页面已有保存的材料坐标，请先完成页面旋转，再识别和保存题目。",
+        "PAGE_ALREADY_USED",
+        422,
+      );
   });
-  await rm(join(options.outputDir, "draft.json"), { force: true });
-  return exam;
+  try {
+    const exam = parsedExamSchema.parse(
+      await options.model.generate({
+        system: EXAM_PARSING_PROMPT,
+        content,
+        signal: options.signal,
+        tools: inspection,
+        onEvent: options.onEvent,
+        onQuestionProgress: options.onQuestionProgress,
+        onProgress: async (draft) => {
+          options.signal?.throwIfAborted();
+          validateMaterials(draft);
+          const previousPages = new Set(materialPages);
+          materialPages.clear();
+          for (const { box } of examMaterials(draft)) materialPages.add(box.page);
+          try {
+            const temporary = join(options.outputDir, "draft.json.tmp");
+            await writeFile(temporary, JSON.stringify(draft, null, 2), { mode: 0o600 });
+            await rename(temporary, join(options.outputDir, "draft.json"));
+          } catch (error) {
+            materialPages.clear();
+            for (const page of previousPages) materialPages.add(page);
+            throw error;
+          }
+        },
+      }),
+    );
+    options.onPhase?.("crop_materials");
+    validateMaterials(exam);
+    await mkdir(join(options.outputDir, "materials"));
+    for (const { key, box } of examMaterials(exam)) {
+      options.signal?.throwIfAborted();
+      const page = pages.find((page) => page.page === box.page)!;
+      await sharp(page.path)
+        .extract(materialPixels(box, page))
+        .jpeg({ quality: 95 })
+        .toFile(join(options.outputDir, key));
+    }
+    options.onPhase?.("save_result");
+    await writeFile(join(options.outputDir, "exam.json"), JSON.stringify(exam, null, 2), {
+      mode: 0o600,
+    });
+    await rm(join(options.outputDir, "draft.json"), { force: true });
+    return exam;
+  } finally {
+    await disposeInspectionTools(inspection);
+  }
 }

@@ -1,8 +1,13 @@
 "use client";
 import { useState, type FormEvent } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { AI_PURPOSES, type AiPurpose } from "@/contracts/ai-providers";
-import { modelChoiceHint, type UserAiSettings } from "@/contracts/user-ai";
+import {
+  AI_PURPOSES,
+  REASONING_LABELS,
+  type ReasoningEffort,
+  type AiPurpose,
+} from "@/contracts/ai-providers";
+import { type UserAiSettings } from "@/contracts/user-ai";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { formatCredits } from "@/lib/credits";
 
@@ -26,10 +31,7 @@ export function UserModelSettings({ initialSettings }: { initialSettings: UserAi
             {settings.unlimited ? "不限量" : `${formatCredits(settings.credits)} credit`}
           </strong>
         </div>
-        <p>
-          {settings.unlimited ? "管理员额度不限量。" : "注册即赠送 100 credit。"}
-          {modelChoiceHint}
-        </p>
+        <p>{settings.unlimited ? "管理员额度不限量。" : "注册即赠送 100 credit。"}</p>
         <p className="hint">
           {settings.unlimited
             ? "模型用量仍会记录，管理员账户不扣减 credit。"
@@ -50,7 +52,7 @@ export function UserModelSettings({ initialSettings }: { initialSettings: UserAi
         )}
         {(Object.keys(AI_PURPOSES) as AiPurpose[]).map((purpose) => (
           <UserModelAssignment
-            key={`${purpose}:${settings.selections[purpose]}`}
+            key={`${purpose}:${settings.selections[purpose]}:${settings.reasoningSelections?.[purpose]}`}
             purpose={purpose}
             settings={settings}
             onSaved={(next) => {
@@ -76,6 +78,8 @@ function UserModelAssignment({
   onSaved: (next: UserAiSettings) => void;
 }) {
   const original = settings.selections[purpose] ?? "";
+  const originalEffort = settings.reasoningSelections?.[purpose] ?? "";
+  const [effort, setEffort] = useState<ReasoningEffort | "">(originalEffort);
   const [selected, setSelected] = useState(original),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
@@ -92,7 +96,7 @@ function UserModelAssignment({
       onSaved(
         await apiRequest<UserAiSettings>("/api/ai/settings", {
           method: "PUT",
-          ...jsonBody({ purpose, modelId: selected || null }),
+          ...jsonBody({ purpose, modelId: selected || null, reasoningEffort: effort || null }),
         }),
       );
     } catch (error) {
@@ -108,7 +112,10 @@ function UserModelAssignment({
         id={`user-model-${purpose}`}
         value={selected}
         disabled={busy || !settings.models.length}
-        onChange={(event) => setSelected(event.target.value)}
+        onChange={(event) => {
+          setSelected(event.target.value);
+          setEffort("");
+        }}
       >
         <option value="">
           使用默认模型
@@ -121,12 +128,32 @@ function UserModelAssignment({
           </option>
         ))}
       </select>
-      <span className="hint">{current ? `${current.creditMultiplier}× 计费` : "暂无可用模型"}</span>
+      <div className="field">
+        <label htmlFor={`user-effort-${purpose}`}>推理强度</label>
+        <select
+          id={`user-effort-${purpose}`}
+          value={effort}
+          disabled={busy || !selected || unavailable}
+          onChange={(event) => setEffort(event.target.value as ReasoningEffort | "")}
+        >
+          <option value="">使用默认推理强度</option>
+          {current?.reasoningEfforts?.map((item) => (
+            <option key={item} value={item}>
+              {REASONING_LABELS[item]}
+            </option>
+          ))}
+        </select>
+      </div>
       <button
         className="button secondary"
-        disabled={busy || unavailable || selected === original || !settings.models.length}
+        disabled={
+          busy ||
+          unavailable ||
+          (selected === original && effort === originalEffort) ||
+          !settings.models.length
+        }
       >
-        {busy ? "正在保存" : selected === original ? "已保存" : "保存"}
+        {busy ? "正在保存" : selected === original && effort === originalEffort ? "已保存" : "保存"}
       </button>
       {error && (
         <p className="form-error assignment-error" role="alert">

@@ -3,6 +3,7 @@ import { requireAdmin } from "@/server/auth/authorization";
 import { AccessError } from "@/server/http/errors";
 import { listProviders } from "@/server/ai/settings";
 import { AiProviderSettings } from "@/components/ai-provider-settings";
+import { modelChoiceHint } from "@/contracts/user-ai";
 export const metadata = { title: "AI 设置" };
 export default async function AiSettingsPage() {
   try {
@@ -21,6 +22,9 @@ export default async function AiSettingsPage() {
     <>
       <h1>AI 设置</h1>
       <p className="intro">分别选择解析、批改和答案生成使用的模型与推理程度。</p>
+      <p className="hint">
+        任务中的模型与推理强度选择仅用于本次任务，不改变账户默认值。{modelChoiceHint}
+      </p>
       <AiProviderSettings initialProviders={await listProviders()} />
     </>
   );

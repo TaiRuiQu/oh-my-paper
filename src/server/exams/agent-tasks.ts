@@ -14,7 +14,7 @@ import {
 } from "@/contracts/exam-agents";
 import { examQuestionCount } from "@/contracts/exams";
 import { WORKFLOW_QUEUE } from "@/contracts/workflows";
-import { providerSnapshotSchema } from "@/contracts/ai-providers";
+import { providerSnapshotSchema, type ReasoningEffort } from "@/contracts/ai-providers";
 import { getDb } from "@/server/db/client";
 import { getStoragePaths } from "@/server/config/env";
 import { getUserProvider } from "@/server/ai/user-settings";
@@ -154,6 +154,7 @@ export async function createAgentTask(
   workflow?: { id: string; jobId: string; files?: string[]; name?: string },
   answerUpload = false,
   explicitModelId?: string,
+  explicitReasoningEffort?: ReasoningEffort,
 ) {
   const source = await ownedExamTask(userId, sourceId),
     exam = await taskResult(source);
@@ -171,6 +172,7 @@ export async function createAgentTask(
       : null;
   const boss = await getJobProducer();
   let taskModelId = explicitModelId;
+  let taskReasoningEffort = explicitReasoningEffort;
   // Reconcile interrupted runs before taking the per-exam lock.
   await listAgentTasks(userId, sourceId);
   const id = randomUUID(),
@@ -195,13 +197,14 @@ export async function createAgentTask(
         modelPurposes: [purpose],
         onModels: (models) => {
           taskModelId = models[purpose];
+          taskReasoningEffort = models.reasoningEfforts?.[purpose];
         },
       });
   }
   try {
     const provider = planned
       ? providerSnapshotSchema.parse(planned)
-      : await getUserProvider(userId, purpose, taskModelId);
+      : await getUserProvider(userId, purpose, taskModelId, taskReasoningEffort);
     const saved = await getDb().$transaction(async (tx) => {
       await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
       await requireCredits(userId, tx);
@@ -310,6 +313,7 @@ export async function retryAgentTask(
   sourceId: string,
   id: string,
   modelId?: string,
+  reasoningEffort?: ReasoningEffort,
 ) {
   const task = await ownedAgentTask(userId, sourceId, id);
   if (task.status !== "FAILED") throw new RequestError(409, "只有失败的任务可以继续。");
@@ -319,6 +323,7 @@ export async function retryAgentTask(
       userId,
       task.kind === "ANSWER" ? "answer" : "grading",
       modelId,
+      reasoningEffort,
     ),
     boss = await getJobProducer(),
     jobId = randomUUID();

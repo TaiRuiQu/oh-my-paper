@@ -12,6 +12,7 @@ const toolNames: Record<string, string> = {
   read_pages: "查看试卷页面",
   inspect_image: "放大图像区域",
   python: "运行 Python 处理图像",
+  shell: "运行沙箱命令",
   append_questions: "保存已识别题目",
   report_question_count: "确认试卷题目总数",
   submit_exam: "完成试卷识别",

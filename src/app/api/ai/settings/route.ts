@@ -18,8 +18,8 @@ export async function PUT(request: Request) {
   try {
     const { user } = await requireSession(request.headers);
     requireSameOrigin(request);
-    const { purpose, modelId } = await readJSON(request, userModelSelectionSchema);
-    await selectUserModel(user.id, purpose, modelId);
+    const { purpose, modelId, reasoningEffort } = await readJSON(request, userModelSelectionSchema);
+    await selectUserModel(user.id, purpose, modelId, reasoningEffort);
     return Response.json(await userAiSettings(user.id), {
       headers: { "Cache-Control": "private, no-store" },
     });

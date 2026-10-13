@@ -54,7 +54,7 @@ export function ExamAgents({
       await apiRequest(`/api/exams/${taskId}/${path}`, {
         method: "POST",
         ...(path === "solutions" || path.startsWith("agents/")
-          ? jsonBody({ modelId: models.answer })
+          ? jsonBody({ modelId: models.answer, reasoningEffort: models.reasoningEfforts?.answer })
           : {}),
       });
       await client.invalidateQueries({ queryKey: ["exam-agents", taskId] });
@@ -75,7 +75,7 @@ export function ExamAgents({
     try {
       await submitExamUpload({
         files,
-        models: { answer: models.answer },
+        models: { answer: models.answer, reasoningEfforts: models.reasoningEfforts },
         endpoint: `/api/exams/${taskId}/answers/upload`,
         onProgress: setProgress,
         onRequest: (xhr) => {

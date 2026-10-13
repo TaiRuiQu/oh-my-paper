@@ -1261,6 +1261,7 @@ async function main() {
           exam: provider.models[1].id,
           answer: provider.models[0].id,
           grading: provider.models[1].id,
+          reasoningEfforts: { exam: "medium", answer: "default", grading: "low" },
         }),
       );
       const chosen = await createExamTask(
@@ -1274,6 +1275,15 @@ async function main() {
       });
       assert.equal((chosenSource.providerSnapshot as { model: string }).model, "vision-two");
       assert.equal(
+        (chosenSource.providerSnapshot as { reasoningEffort: string }).reasoningEffort,
+        "medium",
+      );
+      assert.equal(
+        (chosenFlow.modelSnapshots as { grading: { reasoningEffort: string } }).grading
+          .reasoningEffort,
+        "low",
+      );
+      assert.equal(
         (chosenFlow.modelSnapshots as { answer: { model: string }; grading: { model: string } })
           .answer.model,
         "vision-one",
@@ -1284,6 +1294,80 @@ async function main() {
       );
       assert.equal((await getUserProvider(userId)).model, "vision-one");
       assert.equal((await getUserProvider(userId, "answer")).model, "vision-two");
+      await selectUserModel(publicUser.id, "answer", provider.models[1].id, "medium");
+      assert.equal((await userAiSettings(publicUser.id)).reasoningSelections?.answer, "medium");
+      assert.equal((await getUserProvider(publicUser.id, "answer")).reasoningEffort, "medium");
+      assert.equal(
+        (await getUserProvider(publicUser.id, "answer", undefined, "low")).reasoningEffort,
+        "low",
+      );
+      await assert.rejects(getUserProvider(publicUser.id, "answer", undefined, "high"));
+      await assert.rejects(selectUserModel(publicUser.id, "answer", provider.models[1].id, "high"));
+      assert.equal(
+        (await getUserProvider(userId, "answer", provider.models[0].id, "default")).reasoningEffort,
+        "default",
+      );
+      console.log(
+        "✓ Supported account/task reasoning overrides persist and unsupported strengths are rejected",
+      );
+
+      const { listUsers, updateUser, resetUserPassword } =
+        await import("../src/server/admin/users");
+      const { listAllExams, reviewExam } = await import("../src/server/admin/exams");
+      const resetAccount = await getAuth().api.signUpEmail({
+        body: {
+          name: "密码测试用户",
+          email: "password-test@example.com",
+          password: "original-password-123",
+        },
+      });
+      assert.ok(await db.session.count({ where: { userId: resetAccount.user.id } }));
+      const oldHash = (
+        await db.account.findFirstOrThrow({
+          where: { userId: resetAccount.user.id, providerId: "credential" },
+        })
+      ).password;
+      await assert.rejects(
+        resetUserPassword(publicUser.id, resetAccount.user.id, "new-password-456"),
+      );
+      assert.equal(
+        (
+          await db.account.findFirstOrThrow({
+            where: { userId: resetAccount.user.id, providerId: "credential" },
+          })
+        ).password,
+        oldHash,
+      );
+      await resetUserPassword(userId, resetAccount.user.id, "new-password-456");
+      assert.equal(await db.session.count({ where: { userId: resetAccount.user.id } }), 0);
+      await assert.rejects(
+        getAuth().api.signInEmail({
+          body: { email: "password-test@example.com", password: "original-password-123" },
+        }),
+      );
+      await getAuth().api.signInEmail({
+        body: { email: "password-test@example.com", password: "new-password-456" },
+      });
+      await updateUser(userId, resetAccount.user.id, { name: "已更新用户", role: "ADMIN" });
+      assert.equal(await db.session.count({ where: { userId: resetAccount.user.id } }), 0);
+      assert.equal((await listUsers("password-test", 1)).items[0].role, "ADMIN");
+      await updateUser(userId, resetAccount.user.id, { name: "已更新用户", role: "USER" });
+      await assert.rejects(updateUser(userId, userId, { name: "测试老师", role: "USER" }));
+      const allExams = await listAllExams("", 1);
+      assert.ok(allExams.total >= 1);
+      assert.ok(
+        (await listAllExams("paper-test@example.com", 1)).items.every(
+          (task) => task.owner.id === userId,
+        ),
+      );
+      const reviewed = await reviewExam(id);
+      assert.equal(reviewed.task.owner.id, userId);
+      assert.ok(reviewed.exam?.sections.length);
+      assert.ok(reviewed.agents.some((agent) => agent.kind === "ANSWER"));
+      assert.equal(JSON.stringify(reviewed).includes("encryptedApiKey"), false);
+      console.log(
+        "✓ Global paper/user review, password login replacement, session revocation and last-admin protection",
+      );
       const answerOverride = await createAgentTask(
         new Request("http://localhost"),
         userId,

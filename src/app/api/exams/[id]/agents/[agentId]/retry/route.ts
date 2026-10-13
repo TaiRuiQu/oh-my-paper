@@ -15,9 +15,14 @@ export async function POST(
     isAdmin = await isAdminUser(user.id);
     requireSameOrigin(request);
     const { id, agentId } = await context.params;
-    const { modelId } = await readJSON(request, answerTaskModelSchema, 1024, true);
+    const { modelId, reasoningEffort } = await readJSON(request, answerTaskModelSchema, 1024, true);
     return Response.json(
-      { task: presentAgentTask(await retryAgentTask(user.id, id, agentId, modelId), isAdmin) },
+      {
+        task: presentAgentTask(
+          await retryAgentTask(user.id, id, agentId, modelId, reasoningEffort),
+          isAdmin,
+        ),
+      },
       { status: 202 },
     );
   } catch (error) {

@@ -8,8 +8,8 @@ import type { TaskModelSelection, UserAiSettings } from "@/contracts/user-ai";
 const settings: UserAiSettings = {
   credits: "100",
   models: [
-    { id: "one", name: "快速模型", creditMultiplier: 1 },
-    { id: "two", name: "精确模型", creditMultiplier: 3 },
+    { id: "one", name: "快速模型", creditMultiplier: 1, reasoningEfforts: ["default", "low"] },
+    { id: "two", name: "精确模型", creditMultiplier: 3, reasoningEfforts: ["medium", "high"] },
   ],
   selections: { exam: null, answer: "two", grading: null },
   defaults: { exam: "one", answer: "one", grading: "one" },
@@ -53,7 +53,7 @@ describe("model choices at task creation", () => {
       act(() => root.unmount());
       client.clear();
     };
-    const selects = container.querySelectorAll("select");
+    const selects = container.querySelectorAll<HTMLSelectElement>("select:not([id$='-reasoning'])");
     expect(selects[0].selectedOptions[0].textContent).toContain("后台默认 · 快速模型");
     expect(selects[1].selectedOptions[0].textContent).toContain("账户默认 · 精确模型");
     act(() => {
@@ -63,11 +63,24 @@ describe("model choices at task creation", () => {
     expect(changes).toHaveBeenLastCalledWith({ exam: "two" });
     expect(selects[1].value).toBe("");
     expect(settings.selections.exam).toBeNull();
+    const effort = container.querySelector<HTMLSelectElement>("select[id$='exam-reasoning']")!;
+    expect(Array.from(effort.options).map((option) => option.value)).toEqual([
+      "",
+      "medium",
+      "high",
+    ]);
+    act(() => {
+      effort.value = "high";
+      effort.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    expect(changes).toHaveBeenLastCalledWith({ exam: "two", reasoningEfforts: { exam: "high" } });
     act(() => {
       selects[0].value = "";
       selects[0].dispatchEvent(new Event("change", { bubbles: true }));
     });
     expect(changes).toHaveBeenLastCalledWith({});
     expect(container.textContent).not.toContain("输入 token");
+    expect(container.textContent).not.toContain("低倍率");
+    expect(container.textContent).not.toContain("仅用于本次任务");
   });
 });

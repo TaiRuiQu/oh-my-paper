@@ -316,11 +316,12 @@ model GradingWorkflow {
 }
 
 model UserAiSelection {
-  userId  String
-  purpose String
-  modelId String
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  model   AiModel @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  userId          String
+  purpose         String
+  modelId         String
+  reasoningEffort String?
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  model           AiModel @relation(fields: [modelId], references: [id], onDelete: Cascade)
 
   @@id([userId, purpose])
   @@map("user_ai_selections")

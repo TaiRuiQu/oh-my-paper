@@ -75,7 +75,7 @@ describe("user settings and administrator usage access", () => {
         body: JSON.stringify(value),
       });
     expect((await PUT(request(body))).status).toBe(200);
-    expect(mocks.select).toHaveBeenCalledWith("current-user", "answer", body.modelId);
+    expect(mocks.select).toHaveBeenCalledWith("current-user", "answer", body.modelId, undefined);
     mocks.select.mockClear();
     expect((await PUT(request({ ...body, userId: "other", credits: 999 }))).status).toBe(400);
     expect(mocks.select).not.toHaveBeenCalled();

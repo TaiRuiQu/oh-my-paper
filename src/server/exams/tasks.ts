@@ -166,10 +166,26 @@ export async function createExamTask(request: Request, userId: string, quick = f
   const uploaded = allUploads.filter((file) => file.field === "files");
   const referenceUploads = allUploads.filter((file) => file.field === "answerFiles");
   try {
-    const provider = await getUserProvider(userId, "exam", models.exam);
+    const provider = await getUserProvider(
+      userId,
+      "exam",
+      models.exam,
+      models.reasoningEfforts?.exam,
+    );
     if (quick || referenceUploads.length)
-      modelSnapshots.answer = await getUserProvider(userId, "answer", models.answer);
-    if (quick) modelSnapshots.grading = await getUserProvider(userId, "grading", models.grading);
+      modelSnapshots.answer = await getUserProvider(
+        userId,
+        "answer",
+        models.answer,
+        models.reasoningEfforts?.answer,
+      );
+    if (quick)
+      modelSnapshots.grading = await getUserProvider(
+        userId,
+        "grading",
+        models.grading,
+        models.reasoningEfforts?.grading,
+      );
     const task = await getDb().$transaction(async (tx) => {
       await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
       await requireCredits(userId, tx);

@@ -11,7 +11,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     const { user } = await requireSession(request.headers);
     isAdmin = await isAdminUser(user.id);
     requireSameOrigin(request);
-    const { modelId } = await readJSON(request, answerTaskModelSchema, 1024, true);
+    const { modelId, reasoningEffort } = await readJSON(request, answerTaskModelSchema, 1024, true);
     return Response.json(
       {
         task: await createAgentTask(
@@ -22,6 +22,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
           undefined,
           false,
           modelId,
+          reasoningEffort,
         ),
       },
       { status: 202 },

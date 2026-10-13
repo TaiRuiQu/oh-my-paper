@@ -10,6 +10,8 @@ import {
   ChartNoAxesCombined,
   PanelLeftClose,
   Menu,
+  Users,
+  FileSearch,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { CreditBalance } from "./credit-balance";
@@ -113,6 +115,22 @@ export function WorkspaceShell({
         </nav>
         {isAdmin && (
           <nav className="sidebar-settings" aria-label="系统管理">
+            <Link
+              href="/admin/exams"
+              aria-current={path.startsWith("/admin/exams") ? "page" : undefined}
+              onClick={() => setOpen(false)}
+            >
+              <FileSearch size={19} aria-hidden="true" />
+              试卷记录审查
+            </Link>
+            <Link
+              href="/admin/users"
+              aria-current={path.startsWith("/admin/users") ? "page" : undefined}
+              onClick={() => setOpen(false)}
+            >
+              <Users size={19} aria-hidden="true" />
+              用户管理
+            </Link>
             <Link
               href="/admin/ai"
               aria-current={path.startsWith("/admin/ai") ? "page" : undefined}

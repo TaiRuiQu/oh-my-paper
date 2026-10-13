@@ -1,22 +1,31 @@
 import "server-only";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
-import { mkdir, mkdtemp, rm, writeFile, access } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
+import { mkdir, access } from "node:fs/promises";
+import { join, resolve, relative } from "node:path";
 import { z } from "zod";
 import type { PageImage } from "./documents";
 import { AppError } from "@/server/errors";
 
-const execute = promisify(execFile);
 const imageName = z.string().regex(/^[A-Za-z0-9_-]+\.(?:png|jpe?g|webp)$/);
 export const pythonInputSchema = z.strictObject({
   code: z.string().min(1).max(60_000),
-  images: z.array(imageName).max(3),
+  images: z.array(imageName).max(3).default([]),
   replacePages: z
     .array(z.strictObject({ page: z.number().int().positive(), image: imageName }))
-    .max(3),
+    .max(3)
+    .default([])
+    .describe(
+      "Legacy page replacement. Prefer overwriting /workspace/pages/001.jpg directly; omit this field.",
+    ),
 });
 export type PythonInput = z.infer<typeof pythonInputSchema>;
+export const commandInputSchema = pythonInputSchema.omit({ code: true }).extend({
+  command: z.string().min(1).max(60_000),
+});
+const pageUpdateSchema = z.strictObject({
+  page: z.number().int().positive(),
+  data: z.string().max(12 * 1024 * 1024),
+});
 const outputSchema = z.strictObject({
   exitCode: z.number().int(),
   stdout: z.string().max(32_000),
@@ -24,31 +33,55 @@ const outputSchema = z.strictObject({
   images: z
     .array(z.strictObject({ name: imageName, data: z.string().max(12 * 1024 * 1024) }))
     .max(3),
+  pageUpdates: z.array(pageUpdateSchema).optional(),
 });
 
-export async function runSandboxPython(options: {
-  code: string;
+type SandboxOptions = {
   images: string[];
   pages: PageImage[];
   directory: string;
   signal?: AbortSignal;
   timeoutMs?: number;
-}) {
-  options.signal?.throwIfAborted();
-  if (process.platform !== "linux")
-    throw new AppError(
-      "本地 Python 沙箱需要 Linux 和 Bubblewrap。",
-      "PYTHON_SANDBOX_UNAVAILABLE",
-      503,
-    );
-  const temporaryRoot = join(options.directory, ".python");
-  await mkdir(temporaryRoot, { recursive: true, mode: 0o700 });
-  const temporary = await mkdtemp(join(temporaryRoot, "run-"));
+};
+type RequestInput = { code: string; images: string[] } | { command: string; images: string[] };
+export async function runSandboxPython(options: SandboxOptions & { code: string }) {
+  const session = createSandboxSession(options);
   try {
-    const request = join(temporary, "request.json");
-    await writeFile(request, JSON.stringify({ code: options.code, images: options.images }), {
-      mode: 0o600,
-    });
+    return await session.run({ code: options.code, images: options.images }, options);
+  } finally {
+    await session.dispose();
+  }
+}
+export async function runSandboxCommand(options: SandboxOptions & { command: string }) {
+  const session = createSandboxSession(options);
+  try {
+    return await session.run({ command: options.command, images: options.images }, options);
+  } finally {
+    await session.dispose();
+  }
+}
+
+export function createSandboxSession(options: {
+  pages: PageImage[];
+  directory: string;
+  signal?: AbortSignal;
+}) {
+  const initialPages = options.pages.map((page) => ({ ...page }));
+  let process: ChildProcessWithoutNullStreams | undefined;
+  let starting: Promise<void> | undefined;
+  let closed = false;
+  let pending = Promise.resolve();
+  const refreshPages = new Set<number>();
+  let buffer = "",
+    diagnostic = "";
+  let receiver: { resolve: (value: unknown) => void; reject: (error: unknown) => void } | undefined;
+  const failure = (message: string) => new AppError(message, "PYTHON_SANDBOX_FAILED", 422);
+  const start = async () => {
+    options.signal?.throwIfAborted();
+    if (closed) throw failure("沙箱已经关闭。");
+    if (globalThis.process.platform !== "linux")
+      throw failure("本地沙箱需要 Linux 和 Bubblewrap。");
+    await mkdir(join(options.directory, ".python"), { recursive: true, mode: 0o700 });
     const args = [
       "--unshare-all",
       "--unshare-user",
@@ -78,89 +111,196 @@ export async function runSandboxPython(options: {
       "--dev",
       "/dev",
       "--size",
-      "67108864",
-      "--tmpfs",
-      "/tmp",
-      "--size",
-      "134217728",
+      "104857600",
       "--tmpfs",
       "/workspace",
+      "--symlink",
+      "/workspace/.tmp",
+      "/tmp",
       "--dir",
-      "/workspace/pages",
+      "/inputs/pages",
       "--dir",
       "/runtime",
       "--ro-bind",
       resolve("tools/python/run.py"),
       "/runtime/run.py",
       "--ro-bind",
-      resolve(request),
-      "/runtime/request.json",
+      resolve("tools/python/session.py"),
+      "/runtime/session.py",
       "--ro-bind",
       resolve(options.directory, "agent"),
+      "/inputs/agent",
+      "--symlink",
+      "/inputs/agent",
       "/workspace/agent",
       "--clearenv",
       "--setenv",
       "PATH",
-      "/usr/bin:/bin",
+      "/python/bin:/usr/bin:/bin",
       "--setenv",
       "LANG",
       "C.UTF-8",
       "--chdir",
       "/workspace",
     ];
-    for (const page of options.pages)
+    // Numerical libraries otherwise size their thread pools from host CPU count.
+    // Thread stacks can exhaust the sandbox address-space/process limits on import.
+    for (const name of [
+      "OPENBLAS_NUM_THREADS",
+      "OMP_NUM_THREADS",
+      "MKL_NUM_THREADS",
+      "NUMEXPR_NUM_THREADS",
+      "BLIS_NUM_THREADS",
+      "OPENCV_FOR_THREADS_NUM",
+    ])
+      args.push("--setenv", name, "1");
+    for (const page of initialPages)
       args.push(
         "--ro-bind",
         resolve(page.path),
-        `/workspace/pages/${String(page.page).padStart(3, "0")}.jpg`,
+        `/inputs/pages/${String(page.page).padStart(3, "0")}.jpg`,
       );
     // Only the Python environment is mounted, never the project or its secrets.
-    const pythonEnvironment = resolve(process.env.PYTHON_SANDBOX_VENV ?? ".venv");
+    const pythonEnvironment = resolve(globalThis.process.env.PYTHON_SANDBOX_VENV ?? ".venv");
     const hasEnvironment = await access(join(pythonEnvironment, "bin/python3")).then(
       () => true,
       () => false,
     );
-    if (process.env.PYTHON_SANDBOX_VENV && !hasEnvironment)
+    if (globalThis.process.env.PYTHON_SANDBOX_VENV && !hasEnvironment)
       throw new AppError(
         "PYTHON_SANDBOX_VENV 未指向有效的 Python 虚拟环境。",
         "PYTHON_SANDBOX_UNAVAILABLE",
         503,
       );
     if (hasEnvironment) args.push("--ro-bind", pythonEnvironment, "/python");
+    // Only /workspace is writable; prevent /dev or the namespace root from
+    // providing additional tmpfs capacity outside the 100 MiB quota.
+    args.push("--remount-ro", "/dev", "--remount-ro", "/");
     args.push(
-      "/usr/bin/prlimit",
-      "--as=536870912",
-      "--cpu=30",
-      "--nproc=64",
-      "--nofile=64",
-      "--fsize=16777216",
-      "--core=0",
-      "--",
       hasEnvironment ? "/python/bin/python3" : "/usr/bin/python3",
       "-I",
-      "/runtime/run.py",
+      "/runtime/session.py",
     );
-    let stdout: string;
-    try {
-      ({ stdout } = await execute(process.env.BWRAP_PATH ?? "bwrap", args, {
-        signal: options.signal,
-        timeout: options.timeoutMs ?? 60_000,
-        killSignal: "SIGKILL",
-        maxBuffer: 36 * 1024 * 1024,
-        env: { PATH: "/usr/bin:/bin", LANG: "C.UTF-8", NODE_ENV: "production" },
-        encoding: "utf8",
-      }));
-    } catch (cause) {
-      options.signal?.throwIfAborted();
-      throw new AppError(
-        "Python 沙箱运行失败或超时。请检查 Bubblewrap、Pillow 和系统用户命名空间支持。",
-        "PYTHON_SANDBOX_FAILED",
-        422,
-        { cause },
-      );
-    }
-    return outputSchema.parse(JSON.parse(stdout));
-  } finally {
-    await rm(temporary, { recursive: true, force: true });
+
+    process = spawn(globalThis.process.env.BWRAP_PATH ?? "bwrap", args, {
+      env: { PATH: "/usr/bin:/bin", LANG: "C.UTF-8", NODE_ENV: "production" },
+      stdio: "pipe",
+    });
+    process.stdout.setEncoding("utf8");
+    process.stdout.on("data", (chunk: string) => {
+      buffer += chunk;
+      if (buffer.length > 144 * 1024 * 1024) {
+        receiver?.reject(failure("沙箱输出超过大小限制。"));
+        void dispose();
+        return;
+      }
+      const newline = buffer.indexOf("\n");
+      if (newline < 0) return;
+      const line = buffer.slice(0, newline);
+      buffer = buffer.slice(newline + 1);
+      try {
+        receiver?.resolve(JSON.parse(line));
+      } catch (error) {
+        receiver?.reject(error);
+      }
+    });
+    process.stderr.setEncoding("utf8");
+    process.stderr.on("data", (chunk: string) => {
+      diagnostic = (diagnostic + chunk).slice(-1000);
+    });
+    process.stdin.on("error", (error) => receiver?.reject(error));
+    process.on("error", (error) => {
+      closed = true;
+      receiver?.reject(failure(error.message));
+    });
+    process.on("close", (code, signal) => {
+      closed = true;
+      receiver?.reject(failure(`沙箱进程退出（${code ?? signal}）。${diagnostic}`));
+    });
+  };
+  const abortSession = () => {
+    void dispose();
+  };
+  options.signal?.addEventListener("abort", abortSession, { once: true });
+  async function dispose() {
+    closed = true;
+    options.signal?.removeEventListener("abort", abortSession);
+    if (starting) await starting.catch(() => {});
+    const child = process;
+    if (!child || child.exitCode !== null || child.signalCode !== null) return;
+    await new Promise<void>((resolve) => {
+      child.once("close", resolve);
+      child.kill("SIGKILL");
+    });
   }
+  return {
+    dispose,
+    refreshPages(numbers: number[]) {
+      numbers.forEach((page) => refreshPages.add(page));
+    },
+    run(
+      input: RequestInput,
+      runOptions: { signal?: AbortSignal; timeoutMs?: number; lockedPages?: number[] } = {},
+    ) {
+      const next = pending.then(async () => {
+        runOptions.signal?.throwIfAborted();
+        options.signal?.throwIfAborted();
+        if (closed) throw failure("沙箱已经关闭。");
+        starting ??= start();
+        await starting;
+        const timeoutMs = runOptions.timeoutMs ?? 60_000;
+        const pageLinks = options.pages.map((page) => {
+          const name = `${String(page.page).padStart(3, "0")}.jpg`;
+          const source = initialPages.find((initial) => initial.page === page.page);
+          const preview = relative(join(options.directory, "agent"), page.path);
+          const target =
+            source?.path === page.path ? `/inputs/pages/${name}` : `/inputs/agent/${preview}`;
+          if (source?.path !== page.path && (preview.startsWith("..") || preview.startsWith("/")))
+            throw failure("页面路径不属于本次沙箱。");
+          return {
+            name,
+            target,
+            page: page.page,
+            refresh: refreshPages.delete(page.page),
+            locked: runOptions.lockedPages?.includes(page.page) ?? false,
+          };
+        });
+        const abort = () => {
+          receiver?.reject(runOptions.signal?.reason);
+          void dispose();
+        };
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        try {
+          const response = await new Promise<unknown>((resolve, reject) => {
+            receiver = { resolve, reject };
+            runOptions.signal?.addEventListener("abort", abort, { once: true });
+            if (runOptions.signal?.aborted) {
+              abort();
+              return;
+            }
+            timer = setTimeout(() => {
+              reject(failure("沙箱未响应，进程已终止。"));
+              void dispose();
+            }, timeoutMs + 5000);
+            process!.stdin.write(JSON.stringify({ ...input, pages: pageLinks, timeoutMs }) + "\n");
+          });
+          const envelope = z
+            .object({ failure: z.string().optional(), result: outputSchema.optional() })
+            .parse(response);
+          if (envelope.failure !== undefined) throw failure(envelope.failure);
+          if (!envelope.result) throw failure("沙箱返回的数据无效。");
+          return envelope.result;
+        } finally {
+          clearTimeout(timer);
+          receiver = undefined;
+          runOptions.signal?.removeEventListener("abort", abort);
+        }
+      });
+      pending = next.then(
+        () => {},
+        () => {},
+      );
+      return next;
+    },
+  };
 }

@@ -67,10 +67,18 @@ export async function receiveExamUpload(
       const models = taskModelSelectionSchema.parse(JSON.parse(value));
       if (
         Object.keys(models).some(
-          (purpose) => !options.modelPurposes?.includes(purpose as AiPurpose),
+          (purpose) =>
+            purpose !== "reasoningEfforts" &&
+            !options.modelPurposes?.includes(purpose as AiPurpose),
         )
       )
         throw new Error("Unsupported purpose");
+      if (
+        Object.keys(models.reasoningEfforts ?? {}).some(
+          (purpose) => !options.modelPurposes?.includes(purpose as AiPurpose),
+        )
+      )
+        throw new Error("Unsupported reasoning purpose");
       options.onModels(models);
     } catch {
       failure = new RequestError(400, "模型选择无效，请重新选择。");

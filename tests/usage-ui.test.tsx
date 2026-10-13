@@ -125,7 +125,7 @@ describe("credit and usage interfaces", () => {
     expect(container.textContent).toContain("-0.2 credit");
     expect(container.textContent).toContain("当前处理会继续完成");
     expect(container.textContent).not.toContain("输入 token");
-    expect(container.textContent).toContain("低倍率模型通常更快");
+    expect(container.textContent).not.toContain("低倍率模型通常更快");
     const select = container.querySelector<HTMLSelectElement>("#user-model-answer")!;
     act(() => {
       select.value = "one";
@@ -138,7 +138,7 @@ describe("credit and usage interfaces", () => {
     });
     expect(request).toHaveBeenCalledWith("/api/ai/settings", {
       method: "PUT",
-      body: JSON.stringify({ purpose: "answer", modelId: "one" }),
+      body: JSON.stringify({ purpose: "answer", modelId: "one", reasoningEffort: null }),
     });
     expect(container.querySelector<HTMLSelectElement>("#user-model-exam")?.value).toBe("");
   });

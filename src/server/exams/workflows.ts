@@ -164,13 +164,23 @@ export async function createGradingWorkflow(request: Request, userId: string, so
     },
   });
   try {
-    modelSnapshots.grading = await getUserProvider(userId, "grading", models.grading);
+    modelSnapshots.grading = await getUserProvider(
+      userId,
+      "grading",
+      models.grading,
+      models.reasoningEfforts?.grading,
+    );
     if (
       !(await getDb().examAgentTask.findFirst({
         where: { examId: source.examId, kind: "ANSWER", status: "COMPLETED" },
       }))
     )
-      modelSnapshots.answer = await getUserProvider(userId, "answer", models.answer);
+      modelSnapshots.answer = await getUserProvider(
+        userId,
+        "answer",
+        models.answer,
+        models.reasoningEfforts?.answer,
+      );
     const flow = await getDb().$transaction(async (tx) => {
       await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
       await requireCredits(userId, tx);
