@@ -64,24 +64,19 @@ pnpm run doctor
 
 ## Docker 部署与升级
 
+服务器全新部署和 Ubuntu 定时器配置见 [v2 部署指南](docs/deployment.zh-CN.md)；已有 0.1.15 服务器升级见 [升级专用指南](docs/upgrade-from-v0.1.15.zh-CN.md)。
+
 使用 [compose.yaml](compose.yaml) 运行数据库、一次性迁移容器、Web、AI Worker 和 Caddy。Web 镜像包括 Python / OpenCV 扫描运行环境及扫描程序，迁移镜像独立保留 Prisma CLI；AI Worker 镜像包含打包的服务程序及追踪后的 Prisma、AI SDK、Sharp 运行依赖，与 Web 共享数据库和图片存储。按 `.env.example` 填入 `APP_DOMAIN`、`POSTGRES_PASSWORD` 和 `DEPLOY_DATABASE_URL`；生产 `BETTER_AUTH_URL` 应等于实际 HTTPS 站点地址。
 
 ```sh
 mkdir -p storage tmp
 sudo chown 1000:1000 storage tmp
-docker compose up -d --build
+sudo docker compose up -d --build
 ```
 
-`compose.release.yaml` 可覆盖为发布镜像：Web 使用 `oh-my-paper`，迁移使用 `oh-my-paper-migrate`，AI Worker 使用 `oh-my-paper-ai-worker`。`deploy/update.sh` 拉取并启动这三种镜像；`APP_VERSION` 可固定版本。
+`compose.release.yaml` 可覆盖为发布镜像：Web 使用 `oh-my-paper`，迁移使用 `oh-my-paper-migrate`，AI Worker 使用 `oh-my-paper-ai-worker`。`deploy/update.sh` 拉取并启动这三种镜像；`APP_VERSION` 可固定版本。推送到 `v2` 的每个 commit 都会在 CI 通过后发布 `sha-xxxxxxx` 和 `latest` 镜像；Ubuntu 服务器上的 systemd timer 使用 `sudo` 定时拉取 `latest`。
 
-v2 迁移删除旧试卷、旧任务、旧答题卡批次和旧积分业务表，保留账号、会话及 AI 提供商配置。升级前保存所需备份，不能用旧版 Web 直接连接迁移后的数据库。已部署 migration 不修改校验和，后续参试名单字段由独立迁移添加。
-
-```sh
-bash scripts/backup.sh /absolute/backup-directory
-docker compose up -d --build
-```
-
-备份脚本暂停 Web 和 AI Worker 写入，导出 PostgreSQL 和 `storage/`，生成 SHA-256 校验清单，然后恢复 Web 和 AI Worker。历史 `docs/releases/v0.1.*` 是旧版本档案，不作为 v2 部署步骤。
+已有 0.1.15 服务器的切换步骤见 [升级专用指南](docs/upgrade-from-v0.1.15.zh-CN.md)。旧版本发布说明已从 v2 分支移除，不作为 v2 部署步骤。
 
 ## AI 任务执行
 

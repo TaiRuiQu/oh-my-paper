@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# 定时升级脚本：拉取最新镜像 -> 按 compose 依赖顺序滚动 -> 清理旧镜像。
-# 由 deploy/oh-my-paper-update.timer 调用，也可手动执行。
+# 发布升级脚本：拉取指定版本镜像 -> 按 compose 依赖顺序滚动 -> 清理悬空镜像。
+# GitHub Actions 在 v2 每次 push 后发布镜像；timer 定时拉取，也可手动执行。
 # 私有镜像时需要 root 已执行 docker login ghcr.io（systemd 与 cron 都使用 root 凭据）。
-# 仅更新镜像；Compose 文件、部署脚本和宿主机设置需另行同步。
+# APP_VERSION 可指定 sha-xxxxxxx 或 release tag；未指定时跟踪 latest。
 set -euo pipefail
 cd "$(dirname "$0")/.."
 exec 9>./.update.lock
