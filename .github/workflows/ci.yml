@@ -55,6 +55,8 @@ jobs:
         run: |
           python3 -m venv .venv
           .venv/bin/pip install -r tools/card-scan/requirements.txt
+      - name: Install PDF runtime
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
       - name: Generate Prisma and apply migrations
         run: |
           pnpm run db:generate
