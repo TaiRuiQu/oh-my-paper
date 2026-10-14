@@ -11,6 +11,7 @@ export function FileUpload({
   student = true,
   onError,
   limitsLabel,
+  groupingLabel,
 }: {
   id: string;
   files: File[];
@@ -20,6 +21,7 @@ export function FileUpload({
   student?: boolean;
   onError: (error: string) => void;
   limitsLabel?: string;
+  groupingLabel?: string;
 }) {
   const [dragging, setDragging] = useState(false);
   function add(incoming: File[]) {
@@ -65,8 +67,8 @@ export function FileUpload({
         />
       </div>
       <p className="upload-limits hint" id={`${id}-limits`}>
-        {limitsLabel ?? "最多 20 个文件，共 100 MB。"}多页按文件列表顺序处理。
-        {student && "每次上传一位学生的答卷。"}
+        {limitsLabel ?? "最多 20 个文件，共 100 MB。"}
+        {groupingLabel ?? `多页按文件列表顺序处理。${student ? "每次上传一位学生的答卷。" : ""}`}
       </p>
       {!!files.length && (
         <ol className="file-list">

@@ -204,7 +204,7 @@ components:
 
 Oh My Paper uses the modern, concise OA/admin direction chosen by the user: a white navigation rail and header around a cool gray work area, with white bordered working surfaces and blue primary actions. Chinese system sans, compact tables and consistent fields make paper and grading tasks easy to scan.
 
-The interface has three clearly named work areas: 试卷管理, 批改管理 and 快速批改. Content and actionable results carry the hierarchy. Ordinary users see completed work, calm waiting feedback and recovery actions; administrator execution evidence sits behind collapsed disclosures.
+The interface has three clearly named work areas: 试卷管理, 作业批改 and 答题卡批改. Content and actionable results carry the hierarchy. Ordinary users see completed work, calm waiting feedback and recovery actions; administrator execution evidence sits behind collapsed disclosures.
 
 **Key Characteristics:**
 
@@ -289,7 +289,7 @@ General fields and selects use white, a 1px `field-line` border, 6px radius, 38p
 
 ### Navigation
 
-The sidebar exposes 试卷管理, 批改管理 and 快速批改 with 19px Lucide stroke icons. Links use 10px 14px padding, 12px gaps and 8px corners. Default text is muted, hover is Slate Ink on the workspace fill, and active is blue on Quiet Blue with weight 600. Administrators additionally receive AI 设置 below a separator. The white header identifies the current work area and account; mobile hides the role caption and retains avatar, name and sign-out.
+The sidebar exposes 试卷管理 (`/dashboard`), 作业批改 (`/grading`) and 答题卡批改 (`/grading/cards`) with 19px Lucide stroke icons. Links use 10px 14px padding, 12px gaps and 8px corners. Default text is muted, hover is Slate Ink on the workspace fill, and active is blue on Quiet Blue with weight 600. The existing `/quick-grading` pages and report links remain under 作业批改, without a separate navigation entry. Administrators additionally receive 试卷记录审查, 用户管理, AI 设置 and 用量统计 below a separator. The white header identifies the current work area and account; mobile hides the role caption and retains avatar, name and sign-out.
 
 ### Status badges
 
@@ -317,9 +317,21 @@ Execution evidence uses native `details` disclosures, closed by default. The out
 
 No generated or sourced shipping raster imagery was added for this visual world. Lucide SVG stroke icons and CSS loading motion are the interface assets; uploaded paper materials and administrator evidence are user content.
 
-等待区保留文档与圆点动画，并在标题后显示累计时间。题目进度使用 6px 蓝色轨道、平滑的填充宽度过渡，以及左右对齐的操作名称和「已完成 / 总题数」。总数未知时使用不显示百分比的往返动画；已知总数后仅依据已保存题目更新。快速批改依次显示解析、答案和批改三项进度。普通用户可以查看计数，草稿与工具轨迹仍在管理员调试区。所有动画遵守减少动态效果偏好。
+等待区保留文档与圆点动画，并在标题后显示累计时间。题目进度使用 6px 蓝色轨道、平滑的填充宽度过渡，以及左右对齐的操作名称和「已完成 / 总题数」。总数未知时使用不显示百分比的往返动画；已知总数后仅依据已保存题目更新。从作业识别试题的报告依次显示解析、答案和批改三项进度。普通用户可以查看计数，草稿与工具轨迹仍在管理员调试区。所有动画遵守减少动态效果偏好。
 
 AI 设置在提供商列表之前显示「功能模型」。AI 解析、AI 批改、AI 生成答案分别占一行，模型按提供商分组，推理选项随模型变化，每项单独保存并显示配置状态。桌面采用功能名称、模型、推理程度、保存按钮四列，窄屏改为单列；内容区使用现有白色边框表面与 24px 内边距，手机内边距 20px。所有日期与时间使用北京时间，服务器和浏览器渲染保持一致。
+
+### 作业批改与答题卡批改
+
+作业批改的上传表面先用原生单选按钮选择试题来源，默认「从作业中识别试题」，另一项为「使用已录入的试卷」。选择已有试卷后才显示试卷选择、答案状态与查看链接。主上传区明确每个 PDF 一位学生，图片按列表顺序合为一位学生并与 PDF 分开提交；文件列表下显示学生数与独立报告数，提交按钮带本次作业份数。上传区下方是统一的作业批改记录表，保留原有两类报告链接。
+
+答题卡批改的主要表面先选择已标记模板，显示对应试卷与标准答案链接、版式与页数要求，再上传学生答题卡。每个 PDF 自动独立分组；选择图片时显示「每位学生的图片文件数」，列表下逐组列出学生与文件，PDF 不受该设置影响。下方「新建答题卡模板」使用原生 `details`，默认收起；没有模板时主表面提示首次建立模板。模板区域预览同样默认收起，按页显示蓝色作答范围，模板进度与失败重试保留。批次报告按学生展示完整逐题反馈、分值与复核状态，失败恢复只重试未完成题目。
+
+这些表面沿用现有上传、字段、模型选择、按钮、状态、进度、额度与表格样式。文件限制与分组说明紧邻上传区；选中内容和学生分组是可读状态。较长说明可换行，手机仍使用单列控件与局部表格滚动。
+
+### 数学内容
+
+Markdown 展示公式接受 `$$` 与表达式同行或跨多行的写法，页面与导出共享解析规则。保留公式之间的文字段落；长式只在所属公式容器内横向滚动，沿用现有 KaTeX 字体与展示间距。
 
 ## Do's and Don'ts
 
@@ -339,9 +351,9 @@ AI 设置在提供商列表之前显示「功能模型」。AI 解析、AI 批�
 - **Don't** claim progress percentages or stage completion through the waiting animation.
 - **Don't** reintroduce class, batch-student, practice or analytics navigation into the documented three-module scope.
 
-上传区域与列表使用相同的内容区宽度，不设置额外的 900px 上限。添加试卷和快速批改分别在主文件上传区下方提供「标准答案（可选）」，添加试卷时提示先解析试卷再匹配答案；快速批改明确上传时采用该答案、未上传时自动生成。试卷标准答案页并列提供「上传标准答案」和「生成标准答案」，上传面板内使用现有文件列表、移除按钮、进度与提交操作；上传解析进度称为「已解析答案」。
+上传区域与列表使用相同的内容区宽度，不设置额外的 900px 上限。添加试卷和作业批改的识别模式分别在主文件上传区下方提供「标准答案（可选）」，添加试卷时提示先解析试卷再匹配答案；作业批改明确上传时共同采用该答案、未上传时自动生成，作业与答案合计的文件数和大小限制保持可见。试卷标准答案页并列提供「上传标准答案」和「生成标准答案」，上传面板内使用现有文件列表、移除按钮、进度与提交操作；上传解析进度称为「已解析答案」。
 
-试卷上传和快速批改表单中的「标准答案（可选）」使用原生 `details` 折叠区，默认收起，选中文件时在摘要中保留数量。任务模型选择按功能并列显示模型与推理强度，选项随模型变化；本次任务与倍率说明集中在管理员 AI 设置中。系统管理新增「试卷记录审查」和「用户管理」，沿用搜索、表格、分页与现有表单样式。审查详情提供试题与标准答案切换；用户编辑和密码重置以内联面板呈现，明确目标用户、错误与成功反馈，手机表格保持局部滚动。
+试卷上传和作业批改识别模式中的「标准答案（可选）」使用原生 `details` 折叠区，默认收起，选中文件时在摘要中保留数量。任务模型选择按功能并列显示模型与推理强度，选项随模型变化；本次任务与倍率说明集中在管理员 AI 设置中。系统管理新增「试卷记录审查」和「用户管理」，沿用搜索、表格、分页与现有表单样式。审查详情提供试题与标准答案切换；用户编辑和密码重置以内联面板呈现，明确目标用户、错误与成功反馈，手机表格保持局部滚动。
 
 试卷详情与管理员审查详情在标题操作区提供「导出 PDF」和「导出 Word」两个次级按钮，沿用现有图标、间距和按钮样式。导出期间两个按钮均禁用，当前格式显示「正在导出」，失败提示与按钮同组，用户可重试。手机上操作区自然换行。打印文档参照 `examples/数学_仅试题.pdf`，采用 210 × 148 mm 横向纸张、5 mm 页边距、四栏、5.5 pt 宋体正文与 1.45 倍行高。PDF 首页面标题横跨左侧两栏，页脚显示页码；大题说明加粗，阿拉伯题号和题干同行，选择题选项横排，公式、表格与配图随正文排版。小问题号与正文首段同行，题号加粗，后续段落保留结构；Word 使用原生四栏、可编辑段落与表格，数学公式使用可编辑的 Word 原生 Office Math（OMML）对象；独立公式使用居中的原生公式段落，题目配图仍为图片。
 
@@ -349,8 +361,6 @@ AI 设置在提供商列表之前显示「功能模型」。AI 解析、AI 批�
 
 所有页面左下角显示 `package.json` 中的版本号，使用 12px 次要文字。桌面导航底部预留空间，移动端与登录页面同样显示，便于定位当前部署版本。
 
-批改管理与快速批改的标题区增加「答题卡批量批改」入口，侧边栏仍保持三个工作区。答题卡页面先建立可复用模板，再上传学生答题卡；模板预览默认折叠，按页显示蓝色作答范围。图片上传明确标注每位学生的文件数并显示分组，批次报告按学生展示完整逐题反馈、分值和复核状态。失败恢复只重试未完成题目，沿用现有上传、模型选择、状态、进度、额度与表格样式。
-
-侧边栏对应工作区右侧显示进行中的任务数，仅在排队或运行中的任务数大于零时出现。使用 28px 蓝色转圈外环、12px 静止数字与等宽数字排版，每 3 秒刷新当前用户的任务数；同一操作的内部步骤合并计数，答题卡模板与批量评分归入批改管理。桌面与手机抽屉共用显示，减少动态效果时外圈静止，读屏可读出任务数。
+侧边栏对应工作区右侧显示进行中的任务数，仅在排队或运行中的任务数大于零时出现。使用 28px 蓝色转圈外环、12px 静止数字与等宽数字排版，每 3 秒刷新当前用户的任务数；同一操作的内部步骤合并计数，作业批改合并 `GRADING` 与 `QUICK` 流程，答题卡模板与批次计入独立的答题卡批改工作区。桌面与手机抽屉共用显示，减少动态效果时外圈静止，读屏可读出任务数。
 
 提供商请求设置的最大输出 tokens 默认值与允许上限为 384K（393,216），新任务使用提供商配置快照。

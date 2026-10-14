@@ -33,7 +33,7 @@ export function AnswerCardResults({ initialBatch }: { initialBatch: CardBatch })
   return (
     <>
       <Link className="back-link" href="/grading/cards">
-        返回答题卡批量批改
+        返回答题卡批改
       </Link>
       <div className="page-heading">
         <div>

@@ -15,7 +15,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
   ]);
   return (
     <GradingManager
-      quick={false}
+      quick={!params.exam}
       initialTasks={tasks.map((task) => presentExamTask(task, current?.role === "ADMIN"))}
       initialWorkflows={flows}
       selectedExam={params.exam}

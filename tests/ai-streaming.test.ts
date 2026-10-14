@@ -1,8 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { tool } from "ai";
 import { z } from "zod";
-import { createProviderExamModel } from "@/server/ai/providers";
+import { createProviderExamModel as providerModel } from "@/server/ai/providers";
 import { modelStreamResponse, eventStream } from "./model-stream-response";
+// Exercise final stream failure/timeout behavior separately from recovery tests.
+function createProviderExamModel(...args: Parameters<typeof providerModel>) {
+  return providerModel(args[0], args[1], args[2], args[3], args[4], 0);
+}
 
 const config = {
   providerId: "30000000-0000-4000-8000-000000000001",

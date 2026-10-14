@@ -1,6 +1,7 @@
 import type { ExamAgentTask } from "./exam-agents";
 import type { ExamTaskSummary, QuestionProgress } from "./exam-tasks";
 export const WORKFLOW_QUEUE = "exam.workflow.v1";
+export const MAX_PENDING_HOMEWORK = 40;
 export type GradingWorkflow = {
   id: string;
   kind: "GRADING" | "QUICK";

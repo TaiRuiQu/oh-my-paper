@@ -47,7 +47,12 @@ describe("active workspace task counts", () => {
   it("scopes active queries to the session owner and disables response caching", async () => {
     const response = await GET(request());
     expect(response.headers.get("Cache-Control")).toBe("no-store");
-    expect(await response.json()).toEqual({ exams: 0, grading: 0, quickGrading: 0 });
+    expect(await response.json()).toEqual({
+      exams: 0,
+      grading: 0,
+      quickGrading: 0,
+      answerCards: 0,
+    });
     const scope = { userId: "owner", status: { in: ["QUEUED", "RUNNING"] } };
     for (const query of [mocks.exams, mocks.workflows, mocks.templates, mocks.batches])
       expect(query).toHaveBeenCalledWith(
@@ -93,6 +98,11 @@ describe("active workspace task counts", () => {
     ]);
     mocks.templates.mockResolvedValue(1);
     mocks.batches.mockResolvedValue(2);
-    expect(await (await GET(request())).json()).toEqual({ exams: 3, grading: 6, quickGrading: 1 });
+    expect(await (await GET(request())).json()).toEqual({
+      exams: 3,
+      grading: 3,
+      quickGrading: 1,
+      answerCards: 3,
+    });
   });
 });

@@ -5,7 +5,7 @@ import {
   BookOpen,
   Files,
   ClipboardCheck,
-  Zap,
+  ScanLine,
   Settings2,
   ChartNoAxesCombined,
   PanelLeftClose,
@@ -21,8 +21,8 @@ import { CreditBalance } from "./credit-balance";
 import { SignOutButton } from "./sign-out-button";
 const navigation = [
   { href: "/dashboard", label: "试卷管理", icon: Files, taskKey: "exams" },
-  { href: "/grading", label: "批改管理", icon: ClipboardCheck, taskKey: "grading" },
-  { href: "/quick-grading", label: "快速批改", icon: Zap, taskKey: "quickGrading" },
+  { href: "/grading", label: "作业批改", icon: ClipboardCheck, taskKey: "grading" },
+  { href: "/grading/cards", label: "答题卡批改", icon: ScanLine, taskKey: "answerCards" },
 ] as const;
 export function WorkspaceShell({
   children,
@@ -77,11 +77,13 @@ export function WorkspaceShell({
     ? "AI 模型与额度"
     : path.startsWith("/admin")
       ? "系统设置"
-      : path.startsWith("/quick-grading")
-        ? "快速批改"
-        : path.startsWith("/grading") || path.startsWith("/grades")
-          ? "批改管理"
-          : "试卷管理";
+      : path.startsWith("/grading/cards")
+        ? "答题卡批改"
+        : path.startsWith("/quick-grading")
+          ? "作业批改"
+          : path.startsWith("/grading") || path.startsWith("/grades")
+            ? "作业批改"
+            : "试卷管理";
   return (
     <div className="workspace-layout">
       {open && (
@@ -110,27 +112,32 @@ export function WorkspaceShell({
           <PanelLeftClose size={20} />
         </button>
         <nav aria-label="主导航">
-          {navigation.map(({ href, label, icon: Icon, taskKey }) => (
-            <Link
-              key={href}
-              href={href}
-              aria-current={current === label ? "page" : undefined}
-              onClick={() => setOpen(false)}
-            >
-              <Icon size={19} aria-hidden="true" />
-              {label}
-              {!!activeTasks.data?.[taskKey] && (
-                <span
-                  className="sidebar-task-count"
-                  role="status"
-                  aria-label={`${activeTasks.data[taskKey]} 个任务正在进行中`}
-                  title={`${activeTasks.data[taskKey]} 个任务正在进行中`}
-                >
-                  <span aria-hidden="true">{activeTasks.data[taskKey]}</span>
-                </span>
-              )}
-            </Link>
-          ))}
+          {navigation.map(({ href, label, icon: Icon, taskKey }) => {
+            const count =
+              (activeTasks.data?.[taskKey] ?? 0) +
+              (taskKey === "grading" ? (activeTasks.data?.quickGrading ?? 0) : 0);
+            return (
+              <Link
+                key={href}
+                href={href}
+                aria-current={current === label ? "page" : undefined}
+                onClick={() => setOpen(false)}
+              >
+                <Icon size={19} aria-hidden="true" />
+                {label}
+                {!!count && (
+                  <span
+                    className="sidebar-task-count"
+                    role="status"
+                    aria-label={`${count} 个任务正在进行中`}
+                    title={`${count} 个任务正在进行中`}
+                  >
+                    <span aria-hidden="true">{count}</span>
+                  </span>
+                )}
+              </Link>
+            );
+          })}
         </nav>
         {isAdmin && (
           <nav className="sidebar-settings" aria-label="系统管理">

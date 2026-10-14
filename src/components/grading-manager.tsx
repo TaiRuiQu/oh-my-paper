@@ -10,12 +10,13 @@ import { apiRequest } from "@/lib/http-client";
 import { formatDate } from "@/lib/date-time";
 import { reportClientError, taskErrorMessage } from "@/lib/error-message";
 import { submitExamUpload, validateUploadBatch } from "@/lib/exam-upload";
+import { groupStudentUploads } from "@/lib/student-uploads";
 import type { TaskModelSelection, UserAiSettings } from "@/contracts/user-ai";
 import { TaskModelPicker, useTaskModelSettings } from "./task-model-picker";
 import { FileUpload } from "./file-upload";
 import { StatusBadge } from "./processing-state";
 export function GradingManager({
-  quick = false,
+  quick: initiallyQuick = true,
   initialTasks = [],
   initialWorkflows = [],
   selectedExam = "",
@@ -31,6 +32,8 @@ export function GradingManager({
 }) {
   const modelQuery = useTaskModelSettings(initialModels);
   const [models, setModels] = useState<TaskModelSelection>({});
+  const [useSource, setUseSource] = useState(!initiallyQuick || !!selectedExam);
+  const quick = !useSource;
   const router = useRouter(),
     request = useRef<XMLHttpRequest | null>(null);
   const [sourceId, setSourceId] = useState(
@@ -42,13 +45,13 @@ export function GradingManager({
     [answerFiles, setAnswerFiles] = useState<File[]>([]),
     [pending, setPending] = useState(false),
     [progress, setProgress] = useState(0),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    [notice, setNotice] = useState("");
   useEffect(() => () => request.current?.abort(), []);
   const exams = useQuery({
     queryKey: ["exams"],
     queryFn: () => apiRequest<{ tasks: ExamTaskSummary[] }>("/api/exams"),
     initialData: { tasks: initialTasks },
-    enabled: !quick,
   });
   const query = useQuery({
     queryKey: ["workflows"],
@@ -61,7 +64,8 @@ export function GradingManager({
   });
   const available = exams.data.tasks.filter((task) => task.status === "COMPLETED"),
     selected = available.find((task) => task.id === sourceId),
-    history = query.data.workflows.filter((flow) => flow.kind === (quick ? "QUICK" : "GRADING"));
+    history = query.data.workflows;
+  const students = groupStudentUploads(files);
   async function upload(event: FormEvent) {
     event.preventDefault();
     if (
@@ -74,20 +78,36 @@ export function GradingManager({
       return;
     setPending(true);
     setError("");
+    setNotice("");
     setProgress(0);
     try {
       const id = await submitExamUpload({
         files,
-        models,
+        models: quick
+          ? models
+          : {
+              answer: models.answer,
+              grading: models.grading,
+              reasoningEfforts: {
+                answer: models.reasoningEfforts?.answer,
+                grading: models.reasoningEfforts?.grading,
+              },
+            },
         answerFiles: quick ? answerFiles : [],
-        endpoint: quick ? "/api/quick-grade" : `/api/exams/${sourceId}/grade`,
+        endpoint: quick ? "/api/homework" : `/api/homework?exam=${sourceId}`,
         resultKey: "workflow",
         onProgress: setProgress,
         onRequest: (xhr) => {
           request.current = xhr;
         },
       });
-      router.push(quick ? `/quick-grading/${id}` : `/grades/${id}`);
+      if (students.length === 1) router.push(quick ? `/quick-grading/${id}` : `/grades/${id}`);
+      else {
+        setFiles([]);
+        setAnswerFiles([]);
+        setNotice(`已提交 ${students.length} 份作业，每位学生的进度和报告可在下方查看。`);
+        await query.refetch();
+      }
     } catch (error) {
       const message = reportClientError("grading.upload", error);
       setError(isAdmin ? message : taskErrorMessage(error, "答卷提交失败，请稍后重试。"));
@@ -100,20 +120,37 @@ export function GradingManager({
     <>
       <div className="page-heading">
         <div>
-          <h1>{quick ? "快速批改" : "批改管理"}</h1>
-          <p className="intro">
-            {quick
-              ? "直接上传有作答痕迹的试卷，一次提交即可获得批改报告。"
-              : "选择试卷，上传学生答卷，查看逐题反馈。"}
-          </p>
+          <h1>作业批改</h1>
+          <p className="intro">上传带有试题和作答痕迹的试卷，每位学生单独生成批改报告。</p>
         </div>
-        <Link className="button secondary" href="/grading/cards">
-          答题卡批量批改
-        </Link>
       </div>
       <section className="surface upload-section">
-        <h2>{quick ? "上传作答试卷" : "新建批改"}</h2>
+        <h2>上传学生作业</h2>
         <form onSubmit={upload} aria-busy={pending}>
+          <fieldset className="grading-reference-choice" disabled={pending}>
+            <legend>试题来源</legend>
+            <label>
+              <input
+                type="radio"
+                name="homework-reference"
+                checked={quick}
+                onChange={() => setUseSource(false)}
+              />
+              从作业中识别试题
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="homework-reference"
+                checked={!quick}
+                onChange={() => {
+                  setUseSource(true);
+                  setAnswerFiles([]);
+                }}
+              />
+              使用已录入的试卷
+            </label>
+          </fieldset>
           {!quick && (
             <div className="field exam-select">
               <label htmlFor="grading-exam">选择试卷</label>
@@ -139,7 +176,7 @@ export function GradingManager({
                   <p className="selection-note">
                     {selected.answerStatus === "READY"
                       ? "将使用这套试卷的标准答案进行批改。"
-                      : "系统会先自动准备标准答案，再批改这份答卷。"}
+                      : "系统会先自动准备标准答案，再分别批改学生作业。"}
                     <Link className="text-action" href={`/exams/${sourceId}`}>
                       查看试卷
                       <ArrowUpRight size={14} />
@@ -154,13 +191,21 @@ export function GradingManager({
             files={files}
             onChange={(next) => {
               validateUploadBatch([...next, ...answerFiles]);
+              groupStudentUploads(next);
               setFiles(next);
             }}
             disabled={pending || (!quick && !sourceId)}
             onError={setError}
-            label={quick ? "选择有作答痕迹的试卷" : "选择学生答卷或拖放到这里"}
+            label="选择多份作业 PDF 或拖放到这里"
             limitsLabel={quick ? "作答试卷与标准答案合计最多 20 个文件，共 100 MB。" : undefined}
+            groupingLabel="每个 PDF 对应一位学生，多页保留在同一个 PDF 中。图片按列表顺序合为一位学生的作业，请与 PDF 分开提交。"
+            student={false}
           />
+          {!!students.length && (
+            <p className="selection-note" role="status">
+              已选择 {students.length} 位学生的作业，将生成 {students.length} 份独立报告。
+            </p>
+          )}
           {quick && (
             <details className="reference-upload answer-disclosure">
               <summary>
@@ -211,7 +256,11 @@ export function GradingManager({
                 !!modelQuery.error
               }
             >
-              {pending ? `正在上传 ${progress}%` : "开始批改"}
+              {pending
+                ? `正在上传 ${progress}%`
+                : students.length > 1
+                  ? `开始批改 ${students.length} 份作业`
+                  : "开始批改"}
             </button>
             <span className="hint">提交后可以离开，结果会自动保存。</span>
           </div>
@@ -235,10 +284,15 @@ export function GradingManager({
           )}
         </form>
       </section>
+      {notice && (
+        <p className="selection-note" role="status">
+          {notice}
+        </p>
+      )}
       <section className="surface list-surface">
         <div className="list-toolbar">
           <h2>
-            {quick ? "快速批改记录" : "批改记录"}
+            作业批改记录
             <span className="count-label">{history.length}</span>
           </h2>
         </div>
@@ -253,8 +307,8 @@ export function GradingManager({
         {!history.length ? (
           <div className="empty-state">
             <ClipboardCheck size={32} aria-hidden="true" />
-            <h3>还没有批改记录</h3>
-            <p>提交答卷后，你可以在这里查看结果。</p>
+            <h3>还没有作业批改记录</h3>
+            <p>一次选择多份 PDF，每份作业将单独批改并保存报告。</p>
           </div>
         ) : (
           <div className="table-scroll">
@@ -274,7 +328,9 @@ export function GradingManager({
                     <td>
                       <Link
                         className="table-title"
-                        href={quick ? `/quick-grading/${flow.id}` : `/grades/${flow.id}`}
+                        href={
+                          flow.kind === "QUICK" ? `/quick-grading/${flow.id}` : `/grades/${flow.id}`
+                        }
                       >
                         {flow.name}
                       </Link>
@@ -289,7 +345,9 @@ export function GradingManager({
                     <td className="table-actions">
                       <Link
                         className="text-action"
-                        href={quick ? `/quick-grading/${flow.id}` : `/grades/${flow.id}`}
+                        href={
+                          flow.kind === "QUICK" ? `/quick-grading/${flow.id}` : `/grades/${flow.id}`
+                        }
                       >
                         {flow.status === "COMPLETED" ? "查看报告" : "查看"}
                         <ArrowUpRight size={14} />

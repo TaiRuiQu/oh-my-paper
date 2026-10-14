@@ -10,6 +10,7 @@ import sharp from "sharp";
 import { resolveExamLayout, type Exam, type ExamLayout } from "@/contracts/exams";
 import { materialKey, examMaterials } from "@/lib/exam-materials";
 import { remarkParentheticalMath } from "@/lib/remark-parenthetical-math";
+import { remarkDisplayMath } from "@/lib/remark-display-math";
 import { AppError } from "@/server/errors";
 
 export type ExportImage = {
@@ -44,7 +45,8 @@ const parser = unified()
   .use(remarkParse)
   .use(remarkGfm)
   .use(remarkMath)
-  .use(remarkParentheticalMath);
+  .use(remarkParentheticalMath)
+  .use(remarkDisplayMath);
 export function printLayout(source?: ExamLayout) {
   const layout = resolveExamLayout(source);
   const [short, long] = layout.paperSize === "A3" ? [297, 420] : [210, 297];

@@ -45,7 +45,7 @@ const flow: GradingWorkflow = {
 };
 function render(
   element: React.ReactElement,
-  activeTasks?: { exams: number; grading: number; quickGrading: number },
+  activeTasks?: { exams: number; grading: number; quickGrading: number; answerCards: number },
 ) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   if (activeTasks) client.setQueryData(["active-tasks"], activeTasks);
@@ -66,14 +66,15 @@ describe("management navigation and bundled workflows", () => {
         exams: 2,
         grading: 12,
         quickGrading: 1,
+        answerCards: 3,
       },
     );
     const links = page.querySelectorAll('nav[aria-label="主导航"] a');
     expect(
       Array.from(links).map((link) => link.querySelector(".sidebar-task-count")?.textContent),
-    ).toEqual(["2", "12", "1"]);
+    ).toEqual(["2", "13", "3"]);
     expect(links[1].querySelector('[role="status"]')?.getAttribute("aria-label")).toBe(
-      "12 个任务正在进行中",
+      "13 个任务正在进行中",
     );
   });
   it("hides the loading indicator for entries with no active tasks", () => {
@@ -85,6 +86,7 @@ describe("management navigation and bundled workflows", () => {
         exams: 0,
         grading: 1,
         quickGrading: 0,
+        answerCards: 0,
       },
     );
     expect(page.querySelectorAll(".sidebar-task-count")).toHaveLength(1);
@@ -101,7 +103,8 @@ describe("management navigation and bundled workflows", () => {
       Array.from(user.querySelectorAll('nav[aria-label="主导航"] a')).map(
         (link) => link.textContent,
       ),
-    ).toEqual(["试卷管理", "批改管理", "快速批改"]);
+    ).toEqual(["试卷管理", "作业批改", "答题卡批改"]);
+    expect(user.querySelector('nav a[href="/quick-grading"]')).toBeNull();
     expect(user.textContent).not.toContain("AI 设置");
     expect(
       render(
@@ -135,6 +138,8 @@ describe("management navigation and bundled workflows", () => {
       "标准答案（可选）",
     );
     expect(page.querySelector<HTMLInputElement>("#quick-answer-files")?.disabled).toBe(false);
+    expect(page.textContent).toContain("每个 PDF 对应一位学生");
+    expect(page.textContent).not.toContain("每次上传一位学生的答卷");
   });
   it("ordinary users see a patient waiting state and no internal stages or drafts", () => {
     const page = render(createElement(WorkflowResult, { initialWorkflow: flow, isAdmin: false }));

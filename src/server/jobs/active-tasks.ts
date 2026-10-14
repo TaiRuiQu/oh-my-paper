@@ -30,7 +30,12 @@ export async function getActiveTaskCounts(userId: string): Promise<ActiveTaskCou
     ],
     { isolationLevel: "RepeatableRead" },
   );
-  const counts: ActiveTaskCounts = { exams: 0, grading: templates + batches, quickGrading: 0 };
+  const counts: ActiveTaskCounts = {
+    exams: 0,
+    grading: 0,
+    quickGrading: 0,
+    answerCards: templates + batches,
+  };
   const linkedSources = new Set<string>();
   const linkedAgents = new Set<string>();
   // A user-visible operation counts once, including its internal Agent steps.

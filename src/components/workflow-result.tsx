@@ -52,8 +52,8 @@ export function WorkflowResult({
   }
   return (
     <>
-      <Link className="back-link" href={flow.kind === "QUICK" ? "/quick-grading" : "/grading"}>
-        返回{flow.kind === "QUICK" ? "快速批改" : "批改管理"}
+      <Link className="back-link" href="/grading">
+        返回作业批改
       </Link>
       <div className="page-heading">
         <div>

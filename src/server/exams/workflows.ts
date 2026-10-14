@@ -4,7 +4,12 @@ import { rm } from "node:fs/promises";
 import { join } from "node:path";
 import { z } from "zod";
 import type { GradingWorkflow as StoredWorkflow } from "@/generated/prisma/client";
-import { WORKFLOW_QUEUE, type GradingWorkflow, type WorkflowSummary } from "@/contracts/workflows";
+import {
+  WORKFLOW_QUEUE,
+  MAX_PENDING_HOMEWORK,
+  type GradingWorkflow,
+  type WorkflowSummary,
+} from "@/contracts/workflows";
 import { getDb } from "@/server/db/client";
 import { getStoragePaths } from "@/server/config/env";
 import { requireWorker } from "@/server/jobs/health";
@@ -343,8 +348,11 @@ export async function retryWorkflow(userId: string, id: string) {
   await getDb().$transaction(async (tx) => {
     await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
     await requireCredits(userId, tx);
-    if ((await tx.gradingWorkflow.count({ where: { userId, status: { in: [...active] } } })) >= 3)
-      throw new RequestError(429, "已有 3 份答卷正在处理，请稍后重试。");
+    if (
+      (await tx.gradingWorkflow.count({ where: { userId, status: { in: [...active] } } })) >=
+      MAX_PENDING_HOMEWORK
+    )
+      throw new RequestError(429, "待批改作业已达到 40 份，请稍后重试。");
     if (
       !(
         await tx.gradingWorkflow.updateMany({

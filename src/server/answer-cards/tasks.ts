@@ -1,4 +1,5 @@
 import "server-only";
+import { groupStudentUploads } from "@/lib/student-uploads";
 import { randomUUID } from "node:crypto";
 import { v7 as uuidv7 } from "uuid";
 import { mkdir, rm } from "node:fs/promises";
@@ -273,11 +274,12 @@ export async function createCardBatch(request: Request, userId: string, template
     },
   });
   try {
-    if (files.length % perStudent || (perStudent > 1 && files.some((f) => /\.pdf$/i.test(f.name))))
-      throw new RequestError(
-        400,
-        "图片按每位学生的文件数分组，不能留有余页；PDF 请每位学生合并为一个文件。",
-      );
+    let groups: (typeof files)[];
+    try {
+      groups = groupStudentUploads(files, perStudent);
+    } catch (cause) {
+      throw new RequestError(400, (cause as Error).message, { cause });
+    }
     const provider = await getUserProvider(
         userId,
         "grading",
@@ -303,12 +305,10 @@ export async function createCardBatch(request: Request, userId: string, template
         )
       )
         throw new RequestError(409, "请先在试卷详情页上传或生成覆盖全部题目的标准答案。");
-      const students = Array.from({ length: files.length / perStudent }, (_, i) => ({
-        name: basename(files[i * perStudent].name).replace(/\.[^.]+$/, ""),
+      const students = groups.map((group, i) => ({
+        name: basename(group[0].name).replace(/\.[^.]+$/, ""),
         position: i,
-        inputFiles: files
-          .slice(i * perStudent, (i + 1) * perStudent)
-          .map((f) => relative(directory, f.path)),
+        inputFiles: group.map((f) => relative(directory, f.path)),
       }));
       const b = await tx.answerCardBatch.create({
         data: {

@@ -1,5 +1,5 @@
 import { modelStreamResponse } from "./model-stream-response";
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -30,6 +30,9 @@ const exam: Exam = {
   ],
 };
 const region = { questionId: id, boxes: [{ page: 1, x: 0.2, y: 0.3, width: 0.5, height: 0.4 }] };
+afterEach(() => {
+  vi.useRealTimers();
+});
 describe("answer card grading", () => {
   it("marks template regions with concise goals, basic math formatting and tolerant tool inputs", async () => {
     const root = await mkdtemp(join(tmpdir(), "card-template-unit-"));
@@ -187,7 +190,8 @@ describe("answer card grading", () => {
     expect(active).toBe(0);
     expect(finished).toBe(4);
   });
-  it("makes no automatic API retry for one-call grading, even when the server is rate-limited", async () => {
+  it("automatically retries rate-limited question requests three times before failing", async () => {
+    vi.useFakeTimers();
     let calls = 0;
     const model = createProviderExamModel(
       {
@@ -212,13 +216,15 @@ describe("answer card grading", () => {
         );
       },
     );
-    await expect(
+    const rejected = expect(
       model.generateJson({
         system: "Grade",
         content: [{ type: "text", text: "answer" }],
         schema: z.object({ score: z.number() }),
       }),
     ).rejects.toThrow();
-    expect(calls).toBe(1);
+    await vi.runAllTimersAsync();
+    await rejected;
+    expect(calls).toBe(4);
   });
 });

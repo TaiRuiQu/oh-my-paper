@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({
   exam: vi.fn(),
   flow: vi.fn(),
   user: vi.fn(),
+  homework: vi.fn(),
 }));
 vi.mock("@/server/auth/session", () => ({ requireSession: mocks.session }));
 vi.mock("@/server/http/mutations", () => ({ requireSameOrigin: mocks.origin }));
@@ -20,6 +21,7 @@ vi.mock("@/server/exams/workflows", () => ({
   retryWorkflow: mocks.retry,
 }));
 vi.mock("@/server/exams/tasks", () => ({ createExamTask: mocks.exam }));
+vi.mock("@/server/exams/homework", () => ({ createHomeworkBatch: mocks.homework }));
 vi.mock("@/server/db/client", () => ({
   getDb: () => ({
     user: { findUnique: mocks.user },
@@ -31,6 +33,7 @@ import { GET as detail } from "@/app/api/workflows/[id]/route";
 import { POST as retry } from "@/app/api/workflows/[id]/retry/route";
 import { POST as grade } from "@/app/api/exams/[id]/grade/route";
 import { POST as quick } from "@/app/api/quick-grade/route";
+import { POST as homework } from "@/app/api/homework/route";
 const context = { params: Promise.resolve({ id: "id" }) },
   request = () => new Request("http://localhost/api/workflows/id", { method: "POST" });
 beforeEach(() => {
@@ -43,19 +46,27 @@ beforeEach(() => {
   mocks.retry.mockResolvedValue({ id: "id" });
   mocks.exam.mockResolvedValue({ id: "source" });
   mocks.flow.mockResolvedValue({ id: "workflow" });
+  mocks.homework.mockResolvedValue([
+    { id: "student-one", kind: "QUICK" },
+    { id: "student-two", kind: "QUICK" },
+  ]);
 });
 afterEach(() => {
   vi.restoreAllMocks();
   vi.resetAllMocks();
 });
 describe("bundled workflow routes", () => {
-  it.each([list, detail, retry, grade, quick])("requires authentication", async (handler) => {
-    mocks.session.mockRejectedValue(new AccessError(401, "请登录"));
-    expect((await handler(request(), context)).status).toBe(401);
-    expect(mocks.create).not.toHaveBeenCalled();
-    expect(mocks.exam).not.toHaveBeenCalled();
-  });
-  it.each([retry, grade, quick])("rejects cross-origin mutations", async (handler) => {
+  it.each([list, detail, retry, grade, quick, homework])(
+    "requires authentication",
+    async (handler) => {
+      mocks.session.mockRejectedValue(new AccessError(401, "请登录"));
+      expect((await handler(request(), context)).status).toBe(401);
+      expect(mocks.create).not.toHaveBeenCalled();
+      expect(mocks.exam).not.toHaveBeenCalled();
+      expect(mocks.homework).not.toHaveBeenCalled();
+    },
+  );
+  it.each([retry, grade, quick, homework])("rejects cross-origin mutations", async (handler) => {
     mocks.origin.mockImplementation(() => {
       throw new AccessError(403, "invalid");
     });
@@ -63,6 +74,7 @@ describe("bundled workflow routes", () => {
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.exam).not.toHaveBeenCalled();
     expect(mocks.retry).not.toHaveBeenCalled();
+    expect(mocks.homework).not.toHaveBeenCalled();
   });
   it("scopes listing and detail to the current owner", async () => {
     expect((await list(request())).status).toBe(200);
@@ -73,6 +85,18 @@ describe("bundled workflow routes", () => {
   it("starts a server-side bundled grading workflow", async () => {
     expect((await grade(request(), context)).status).toBe(202);
     expect(mocks.create).toHaveBeenCalledWith(expect.any(Request), "owner", "id");
+  });
+  it("returns every created homework workflow and uses the authenticated owner", async () => {
+    const response = await homework(request());
+    expect(response.status).toBe(202);
+    expect(await response.json()).toEqual({
+      workflow: { id: "student-one", kind: "QUICK" },
+      workflows: [
+        { id: "student-one", kind: "QUICK" },
+        { id: "student-two", kind: "QUICK" },
+      ],
+    });
+    expect(mocks.homework).toHaveBeenCalledWith(expect.any(Request), "owner");
   });
   it("starts quick recognition and returns its associated workflow", async () => {
     const response = await quick(request());

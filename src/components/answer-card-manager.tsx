@@ -9,6 +9,7 @@ import type { TaskModelSelection, UserAiSettings } from "@/contracts/user-ai";
 import { apiRequest } from "@/lib/http-client";
 import { submitExamUpload } from "@/lib/exam-upload";
 import { formatDate } from "@/lib/date-time";
+import { groupStudentUploads, isPdfUpload } from "@/lib/student-uploads";
 import { FileUpload } from "./file-upload";
 import { TaskModelPicker, useTaskModelSettings } from "./task-model-picker";
 import { StatusBadge } from "./processing-state";
@@ -112,9 +113,20 @@ export function AnswerCardManager({
     template = templates.find((t) => t.id === templateId),
     tasks = initialTasks.filter((t) => t.status === "COMPLETED"),
     canSubmit = !pending && !modelQuery.isPending && !modelQuery.error;
+  let students: File[][] = [],
+    groupingError = "";
+  try {
+    students = groupStudentUploads(studentFiles, perStudent);
+  } catch (cause) {
+    groupingError = (cause as Error).message;
+  }
   async function upload(e: FormEvent, kind: "template" | "batch") {
     e.preventDefault();
-    if (!canSubmit) return;
+    if (
+      !canSubmit ||
+      (kind === "batch" && (!students.length || groupingError || template?.status !== "COMPLETED"))
+    )
+      return;
     setPending(kind);
     setError("");
     setProgress(0);
@@ -171,13 +183,10 @@ export function AnswerCardManager({
   }
   return (
     <>
-      <Link href="/grading" className="back-link">
-        返回批改管理
-      </Link>
       <div className="page-heading">
         <div>
-          <h1>答题卡批量批改</h1>
-          <p className="intro">标记一次作答区域，为同版式答题卡逐题评分。</p>
+          <h1>答题卡批改</h1>
+          <p className="intro">上传只有作答、没有试题的答题卡，按对应试卷的标准答案批改。</p>
         </div>
       </div>
       {error && (
@@ -194,7 +203,121 @@ export function AnswerCardManager({
         </p>
       )}
       <section className="surface upload-section">
-        <h2>答题卡模板</h2>
+        <h2>上传学生答题卡</h2>
+        {!templates.length && !query.isPending && (
+          <p className="selection-note">
+            首次使用，请先在下方建立答题卡模板，关联试卷并标记作答位置。模板可重复使用。
+          </p>
+        )}
+        <form onSubmit={(e) => void upload(e, "batch")} aria-busy={pending === "batch"}>
+          <div className="field">
+            <label htmlFor="card-template">选择已标记的模板</label>
+            <select
+              id="card-template"
+              value={templateId}
+              disabled={!!pending}
+              onChange={(e) => setTemplateId(e.target.value)}
+            >
+              <option value="">请选择模板</option>
+              {templates.map((t) => (
+                <option key={t.id} value={t.id} disabled={t.status !== "COMPLETED"}>
+                  {t.name}
+                  {t.status !== "COMPLETED" ? "（尚未完成）" : `（${t.pageCount} 页）`}
+                </option>
+              ))}
+            </select>
+          </div>
+          <p className="hint">答题卡须与模板版式、页数和页面顺序一致。</p>
+          {template && (
+            <p className="selection-note">
+              对应试卷：{tasks.find((task) => task.id === template.sourceId)?.name ?? template.name}
+              。
+              <Link className="text-action" href={`/exams/${template.sourceId}`}>
+                查看试卷与标准答案
+              </Link>
+            </p>
+          )}
+          {template &&
+            tasks.find((task) => task.id === template.sourceId)?.answerStatus !== "READY" && (
+              <p className="hint">批改前，请先在对应试卷详情页上传或生成完整标准答案。</p>
+            )}
+          {template?.status === "COMPLETED" && <CardTemplatePreview template={template} />}
+          {studentFiles.some((file) => !isPdfUpload(file)) && (
+            <div className="field">
+              <label htmlFor="card-student-files">每位学生的图片文件数</label>
+              <select
+                id="card-student-files"
+                value={perStudent}
+                disabled={!!pending}
+                onChange={(e) => setPerStudent(Number(e.target.value))}
+              >
+                {Array.from({ length: 20 }, (_, i) => (
+                  <option value={i + 1} key={i}>
+                    {i + 1} 张
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          <FileUpload
+            id="card-batch-files"
+            files={studentFiles}
+            onChange={setStudentFiles}
+            onError={setError}
+            disabled={!!pending || template?.status !== "COMPLETED"}
+            label="选择多份答题卡 PDF 或拖放到这里"
+            student={false}
+            groupingLabel="每个 PDF 对应一位学生，自动独立分组。上传图片时，请设置每位学生的图片数，并按页面顺序排列。PDF 与图片请分开提交。"
+          />
+          {groupingError && (
+            <p className="form-error" role="alert">
+              {groupingError}
+            </p>
+          )}
+          {!!students.length && (
+            <div className="selection-note" role="status">
+              已选择 {students.length} 位学生的答题卡。
+              <ol className="student-upload-groups">
+                {students.map((group, index) => (
+                  <li key={index}>
+                    学生 {index + 1}：{group.map((f) => f.name).join(" + ")}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+          <TaskModelPicker
+            query={modelQuery}
+            purposes={["grading"]}
+            value={models}
+            onChange={setModels}
+            disabled={!!pending}
+          />
+          <div className="upload-actions">
+            <button
+              className="button"
+              disabled={
+                !canSubmit ||
+                template?.status !== "COMPLETED" ||
+                !studentFiles.length ||
+                !!groupingError
+              }
+            >
+              {pending === "batch"
+                ? `正在上传 ${progress}%`
+                : students.length > 0
+                  ? `开始批改 ${students.length} 份答题卡`
+                  : "开始批量批改"}
+            </button>
+            <span className="hint">提交后可以离开，结果会自动保存。</span>
+          </div>
+          {pending === "batch" && (
+            <progress value={progress} max={100} aria-label="答题卡上传进度" />
+          )}
+        </form>
+      </section>
+      <details className="surface upload-section card-template-setup" id="new-card-template">
+        <summary>新建答题卡模板</summary>
         <p className="hint">
           先选择已录入的试卷，上传一份同版式答题卡。模板可包含正反两面，也可上传多页 PDF。
         </p>
@@ -205,7 +328,10 @@ export function AnswerCardManager({
               id="card-exam"
               value={sourceId}
               disabled={!!pending}
-              onChange={(e) => setSourceId(e.target.value)}
+              onChange={(e) => {
+                setSourceId(e.target.value);
+                setFiles([]);
+              }}
             >
               <option value="">请选择试卷</option>
               {tasks.map((t) => (
@@ -228,6 +354,7 @@ export function AnswerCardManager({
             label="选择答题卡模板或拖放到这里"
             disabled={!!pending || !sourceId}
             student={false}
+            groupingLabel="这里只上传一份模板；正反面或多页属于同一张答题卡。"
           />
           <TaskModelPicker
             query={modelQuery}
@@ -242,6 +369,9 @@ export function AnswerCardManager({
             </button>
             <span className="hint">已建立的模板可以重复使用。</span>
           </div>
+          {pending === "template" && (
+            <progress value={progress} max={100} aria-label="模板上传进度" />
+          )}
         </form>
         {templates.length > 0 && (
           <div className="card-template-list">
@@ -272,92 +402,7 @@ export function AnswerCardManager({
             ))}
           </div>
         )}
-      </section>
-      <section className="surface upload-section">
-        <h2>批量上传学生答题卡</h2>
-        <form onSubmit={(e) => void upload(e, "batch")} aria-busy={pending === "batch"}>
-          <div className="field">
-            <label htmlFor="card-template">选择已标记的模板</label>
-            <select
-              id="card-template"
-              value={templateId}
-              disabled={!!pending}
-              onChange={(e) => setTemplateId(e.target.value)}
-            >
-              <option value="">请选择模板</option>
-              {templates.map((t) => (
-                <option key={t.id} value={t.id} disabled={t.status !== "COMPLETED"}>
-                  {t.name}
-                  {t.status !== "COMPLETED" ? "（尚未完成）" : `（${t.pageCount} 页）`}
-                </option>
-              ))}
-            </select>
-          </div>
-          <p className="hint">
-            评分前，请在对应试卷详情页准备完整标准答案。每个 PDF
-            对应一位学生，页数与模板一致；图片按下面的文件数连续分组，按正面、反面的顺序上传。
-          </p>
-          <div className="field">
-            <label htmlFor="card-student-files">每位学生的图片文件数</label>
-            <select
-              id="card-student-files"
-              value={perStudent}
-              disabled={!!pending}
-              onChange={(e) => setPerStudent(Number(e.target.value))}
-            >
-              {Array.from({ length: 20 }, (_, i) => (
-                <option value={i + 1} key={i}>
-                  {i + 1} 个{i === 0 ? "（单页图片或完整 PDF）" : ""}
-                </option>
-              ))}
-            </select>
-          </div>
-          <FileUpload
-            id="card-batch-files"
-            files={studentFiles}
-            onChange={setStudentFiles}
-            onError={setError}
-            disabled={!!pending || template?.status !== "COMPLETED"}
-            label="批量选择学生答题卡或拖放到这里"
-          />
-          {!!studentFiles.length && (
-            <p className="selection-note">
-              当前分组：
-              {Array.from({ length: Math.ceil(studentFiles.length / perStudent) }, (_, i) =>
-                studentFiles
-                  .slice(i * perStudent, (i + 1) * perStudent)
-                  .map((f) => f.name)
-                  .join(" + "),
-              ).join("；")}
-            </p>
-          )}
-          <TaskModelPicker
-            query={modelQuery}
-            purposes={["grading"]}
-            value={models}
-            onChange={setModels}
-            disabled={!!pending}
-          />
-          <div className="upload-actions">
-            <button
-              className="button"
-              disabled={
-                !canSubmit ||
-                template?.status !== "COMPLETED" ||
-                !studentFiles.length ||
-                studentFiles.length % perStudent !== 0 ||
-                (perStudent > 1 && studentFiles.some((f) => /\.pdf$/i.test(f.name)))
-              }
-            >
-              {pending === "batch" ? `正在上传 ${progress}%` : "开始批量批改"}
-            </button>
-            <span className="hint">同学之间、题目之间并发评分，提交后可以离开。</span>
-          </div>
-          {pending === "batch" && (
-            <progress value={progress} max={100} aria-label="答题卡上传进度" />
-          )}
-        </form>
-      </section>
+      </details>
       <section className="surface list-surface">
         <div className="list-toolbar">
           <h2>答题卡批改记录</h2>

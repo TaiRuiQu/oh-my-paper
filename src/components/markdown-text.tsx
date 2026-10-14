@@ -4,6 +4,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import { remarkDisplayMath } from "@/lib/remark-display-math";
 import { remarkParentheticalMath } from "@/lib/remark-parenthetical-math";
 import { MathFormula } from "./math-formula";
 
@@ -12,7 +13,7 @@ export function MarkdownText({ text }: { text: string }) {
   return (
     <div className="markdown-content">
       <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkMath, remarkParentheticalMath]}
+        remarkPlugins={[remarkGfm, remarkMath, remarkParentheticalMath, remarkDisplayMath]}
         components={{
           code: ({ className, children }) => {
             if (!className?.includes("language-math"))

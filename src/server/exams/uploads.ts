@@ -41,7 +41,7 @@ export async function receiveExamUpload(
     throw new RequestError(400, "文件上传表单无效，请使用 multipart/form-data。", { cause });
   }
   await mkdir(directory, { recursive: true, mode: 0o700 });
-  const files: { path: string; name: string; field: "files" | "answerFiles" }[] = [];
+  const files: { path: string; name: string; field: "files" | "answerFiles"; type?: string }[] = [];
   const writes: Promise<void>[] = [];
   let failure: Error | undefined;
   let size = 0;
@@ -149,6 +149,7 @@ export async function receiveExamUpload(
         if (!type || !["application/pdf", "image/jpeg", "image/png"].includes(type.mime)) {
           throw new RequestError(422, "仅支持有效的 PDF、JPG 和 PNG 文件，请检查后重新上传。");
         }
+        file.type = type.mime;
       } finally {
         await handle.close();
       }

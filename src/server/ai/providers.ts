@@ -4,7 +4,14 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogle } from "@ai-sdk/google";
-import { streamText, ToolLoopAgent, isStepCount, type ToolSet, type UserContent } from "ai";
+import {
+  streamText,
+  ToolLoopAgent,
+  isStepCount,
+  wrapLanguageModel,
+  type ToolSet,
+  type UserContent,
+} from "ai";
 import { parsedExamSchema, type ParsedExam } from "@/contracts/exams";
 import { providerSnapshotSchema, type ProviderSnapshot } from "@/contracts/ai-providers";
 import { AppError } from "@/server/errors";
@@ -20,6 +27,7 @@ import type { z } from "zod";
 import { randomUUID } from "node:crypto";
 import { v7 as uuidv7 } from "uuid";
 import { consumeModelStream } from "./streams";
+import { AI_MAX_RETRIES, aiRecoveryMiddleware, waitForAiRetry } from "./retry";
 
 const MAX_AGENT_STEPS = 256;
 
@@ -125,15 +133,12 @@ export function createProviderExamModel(
   fetch = globalThis.fetch,
   creditMeter?: CreditMeter,
   sessionId: string = uuidv7(),
+  maxRetries = AI_MAX_RETRIES,
 ): ExamModel & AgentModel & SingleCallModel {
   const config = providerSnapshotSchema.parse(raw);
   // Match Codex's ordinary root session: create one UUIDv7 and use it unchanged
   // for both identifiers. Workers pass the persisted task ID to resume it.
   const providerOptions = reasoningOptions(config, sessionId);
-  const streamTimeout = {
-    firstChunkMs: config.timeoutSeconds * 1000,
-    chunkMs: config.timeoutSeconds * 1000,
-  };
   // 逐个 HTTP 请求计时（等待响应头、接收响应体），供管理员活动面板按轮展示耗时。
   const requestTimings: AgentTimingRequest[] = [];
   const timedFetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -181,7 +186,7 @@ export function createProviderExamModel(
     }
   }) as typeof fetch;
   const common = { apiKey, baseURL: config.baseURL, fetch: timedFetch };
-  const model =
+  const baseModel =
     config.apiType === "openai_responses"
       ? createOpenAI({ ...common, headers: { "session-id": sessionId } }).responses(config.model)
       : config.apiType === "openai_chat"
@@ -191,6 +196,26 @@ export function createProviderExamModel(
           : config.apiType === "google_interactions"
             ? createGoogle(common).interactions(config.model)
             : createGoogle(common)(config.model);
+  const model = wrapLanguageModel({
+    model: baseModel,
+    middleware: aiRecoveryMiddleware(config.timeoutSeconds * 1000, maxRetries),
+  });
+  function streamRecovery(signal?: AbortSignal, onRetry?: (retry: number) => Promise<void>) {
+    if (!maxRetries) return {};
+    let failures = 0;
+    return {
+      streamRetries: maxRetries,
+      onStepStart: () => {
+        failures = 0;
+      },
+      onError: async ({ error }: { error: unknown }) => {
+        if (++failures <= maxRetries) {
+          await onRetry?.(failures);
+          await waitForAiRetry(error, failures, signal);
+        }
+      },
+    };
+  }
   const run = (request: AgentRequest) =>
     providerConcurrencyLimiter(config.providerId).run(
       config.maxConcurrency,
@@ -199,8 +224,17 @@ export function createProviderExamModel(
         let billingError: unknown;
         const billingAbort = new AbortController();
         const emit = request.onEvent ?? (async () => {});
+        const recovery = streamRecovery(request.signal, async (retry) => {
+          await emit({
+            type: "message",
+            step,
+            text: `AI 请求暂时失败，正在自动重试（${retry}/${maxRetries}）。`,
+          });
+        });
         const agent = new ToolLoopAgent({
           model,
+          // prepareCall forwards stream-specific recovery options to streamText.
+          prepareCall: (options) => ({ ...options, ...recovery }),
           onLanguageModelCallStart: async () => {
             requestTimings.length = 0;
             try {
@@ -242,11 +276,11 @@ export function createProviderExamModel(
                 }
               : {}),
           stopWhen: [isStepCount(MAX_AGENT_STEPS), request.isComplete],
-          timeout: streamTimeout,
           maxOutputTokens: config.maxOutputTokens,
-          maxRetries: 1,
+          maxRetries: 0,
           providerOptions,
           onStepStart: async () => {
+            recovery.onStepStart?.();
             await emit({ type: "step", step: ++step, text: `模型调用 ${step}` });
           },
           onToolExecutionStart: async ({ toolCall }) => {
@@ -367,9 +401,9 @@ export function createProviderExamModel(
             ],
             maxOutputTokens: config.maxOutputTokens,
             providerOptions,
-            // Each question makes exactly one API call. Failed questions may be retried explicitly.
+            // Retry only this model step; completed questions are already persisted.
             maxRetries: 0,
-            timeout: streamTimeout,
+            ...streamRecovery(request.signal),
             abortSignal: request.signal,
           });
           const finishReason = await consumeModelStream(result);
@@ -427,8 +461,8 @@ export function createProviderExamModel(
             ],
             maxOutputTokens: config.maxOutputTokens,
             providerOptions,
-            maxRetries: 1,
-            timeout: streamTimeout,
+            maxRetries: 0,
+            ...streamRecovery(request.signal),
             abortSignal: request.signal,
           });
           const finishReason = await consumeModelStream(result);

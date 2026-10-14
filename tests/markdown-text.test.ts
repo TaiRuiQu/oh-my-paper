@@ -30,6 +30,28 @@ async function render(text: string) {
 }
 
 describe("browser Markdown and KaTeX presentation", () => {
+  it("renders compact multiline display equations without swallowing the rest of the solution", async () => {
+    await render(String.raw`先观察
+$$f(x)+f(-x)=\frac1{\mathrm e^x+1}+x+\frac1{\mathrm e^{-x}+1}-x
+=\frac1{\mathrm e^x+1}+\frac{\mathrm e^x}{\mathrm e^x+1}=1.$$
+所以 $1-f(a)=f(-a)$。
+又
+$$f'(x)=-\frac{\mathrm e^x}{(\mathrm e^x+1)^2}+1
+=\frac{(\mathrm e^x+1)^2-\mathrm e^x}{(\mathrm e^x+1)^2}>0,$$
+故 $f(x)$ 在 $\mathbf R$ 上单调递增。
+由 $f(3a+2)+f(a)<1$ 得
+$$f(3a+2)<1-f(a)=f(-a).$$
+因为 $f$ 递增，所以
+$$3a+2<-a,$$
+即 $a<-\dfrac12$。
+答案：C。`);
+    expect(container.querySelector(".katex-error")).toBeNull();
+    expect(container.querySelectorAll(".katex-display")).toHaveLength(4);
+    expect(container.querySelectorAll(".katex")).toHaveLength(10);
+    expect(container.querySelector("annotation")?.textContent).toContain("f(x)+f(-x)");
+    expect(container.textContent).toContain("答案：C。");
+    expect(container.querySelectorAll(".math-formula")[0].textContent).not.toContain("所以");
+  });
   it("preserves LaTeX on the server and renders it only after browser hydration", async () => {
     const latex = "\\frac{x_1}{2}";
     const props = { text: `**已知** $${latex}$。\n\n| 数值 |\n| --- |\n| \\(${latex}\\) |` };
