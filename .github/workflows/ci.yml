@@ -83,7 +83,9 @@ jobs:
   docker:
     name: Docker (${{ matrix.target }})
     needs: lint
-    if: github.ref_type == 'tag' && !github.event.deleted
+    # v2 is continuously deployable: every push publishes a commit image.
+    # Tags remain supported for named releases and rollback targets.
+    if: (github.ref == 'refs/heads/v2' || github.ref_type == 'tag') && !github.event.deleted
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     permissions:
@@ -117,9 +119,12 @@ jobs:
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
         with:
           images: ghcr.io/${{ github.repository }}${{ matrix.suffix }}
-          tags: type=ref,event=tag
-          # 除 git tag 外同时推送 latest，供部署端自动跟踪（回滚可固定 APP_VERSION）。
-          flavor: latest=true
+          flavor: latest=false
+          tags: |
+            type=sha,prefix=sha-,format=short
+            type=ref,event=branch
+            type=ref,event=tag
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/v2' }}
       - name: Build and push
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
         with:
