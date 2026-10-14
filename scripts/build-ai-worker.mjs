@@ -24,13 +24,17 @@ await build({
 const trace = await nodeFileTrace([resolve(destination, "worker.mjs")], {
   base: process.cwd(),
   processCwd: process.cwd(),
-  conditions: ["node", "require", "react-server", "production"],
+  conditions: ["node", "react-server", "production"],
 });
 for (const file of trace.fileList) {
   if (file.startsWith("build/ai-worker/")) continue;
   const target = resolve(destination, file);
   await mkdir(dirname(target), { recursive: true });
-  await cp(resolve(file), target, { dereference: false, recursive: true });
+  await cp(resolve(file), target, {
+    dereference: false,
+    recursive: true,
+    verbatimSymlinks: true,
+  });
 }
 await writeFile(
   resolve(destination, "package.json"),

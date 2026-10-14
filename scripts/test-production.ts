@@ -35,12 +35,18 @@ async function main() {
       child.once("exit", (code) => resolve(code));
     });
   try {
-    await cp(".next/standalone", join(directory, "web"), { recursive: true });
+    await cp(".next/standalone", join(directory, "web"), {
+      recursive: true,
+      verbatimSymlinks: true,
+    });
     await mkdir(join(directory, "web/.next/static"), { recursive: true });
     await cp(".next/static", join(directory, "web/.next/static"), { recursive: true });
     await cp("public", join(directory, "web/public"), { recursive: true });
     await cp("tools/card-scan", join(directory, "web/tools/card-scan"), { recursive: true });
-    await cp("build/ai-worker", join(directory, "worker"), { recursive: true });
+    await cp("build/ai-worker", join(directory, "worker"), {
+      recursive: true,
+      verbatimSymlinks: true,
+    });
     const web = start(process.execPath, ["server.js"], join(directory, "web"));
     const worker = start(
       process.execPath,
