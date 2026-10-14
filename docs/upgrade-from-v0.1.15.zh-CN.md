@@ -124,6 +124,19 @@ sudo systemctl list-timers --all oh-my-paper-update.timer
 
 oneshot 服务成功后显示 `inactive (dead)` 是正常的，应看到 `status=0/SUCCESS`。timer 应为 `active (waiting)`，并显示下一次触发时间。不要 enable service 本身，只 enable timer。
 
+新的 service 直接调用当前仓库的 `deploy/update.sh`，不要沿用旧 unit 中内联的 pull/up 命令。脚本会拉取三个应用镜像，执行 `up --wait --wait-timeout 180`，在新服务就绪后自动清理本项目未使用的旧 Docker 镜像；部署失败时跳过清理。同一个 timer 已包含部署和清理，不需要再安装清理 timer。
+
+清理相当于以下命令，它只匹配本项目发布镜像的来源标签：
+
+```bash
+sudo docker image prune -a -f \
+  --filter 'label=org.opencontainers.image.source=https://github.com/TaiRuiQu/oh-my-paper'
+```
+
+Docker 会保留仍被任何容器引用的镜像，包括停止的容器；旧容器尚未移除时，对应镜像也会保留。此命令不删除数据库或文件卷，也不会清理 PostgreSQL、Caddy 或其他项目的镜像。旧版缺少来源标签的镜像需要单独检查处理。
+
+GHCR 的清理由 GitHub Actions 在三个镜像通过启动测试并全部发布后执行：Web、migrate、ai-worker 各保留最新三个有标签的版本，旧版本及不再使用的底层清单被删除。保留版本引用的多架构子清单也会保留，因此 GHCR 页面可能显示额外的无标签条目。更早的 release tag 不会永久保留；需要回滚时请选仍保留的 SHA 版本。服务器本地清理不保留三份缓存，需要回滚时从 GHCR 重新拉取。
+
 ## 6. 之后的更新
 
 `v2` 每次 push 通过 CI 后都会发布 `latest` 镜像。服务器 timer 每五分钟检查一次，并以 root 身份执行 `deploy/update.sh`：

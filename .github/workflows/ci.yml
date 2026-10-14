@@ -62,7 +62,9 @@ jobs:
           pnpm run db:generate
           pnpm run db:deploy
       - name: Format, lint, types and unit tests
-        run: pnpm run check
+        run: |
+          pnpm run check
+          node --test scripts/cleanup-ghcr.test.mjs
       - name: Build production web
         run: pnpm run build
       - name: Build production AI worker
@@ -160,3 +162,27 @@ jobs:
             docker tag "omp-runtime:${IMAGE_TARGET}" "$tag"
             docker push "$tag"
           done <<< "$IMAGE_TAGS"
+
+  cleanup:
+    name: Keep latest three GHCR versions
+    needs: docker
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24.19.0
+          package-manager-cache: false
+      - name: Delete obsolete GHCR versions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER_TYPE: ${{ github.event.repository.owner.type }}
+        run: node scripts/cleanup-ghcr.mjs
