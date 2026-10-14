@@ -135,7 +135,9 @@ jobs:
           platforms: linux/amd64
           load: true
           tags: omp-runtime:${{ matrix.target }}
+          labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.target }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.target }}
       - name: Build migration image for acceptance
         if: matrix.target != 'migrate'
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
@@ -148,15 +150,13 @@ jobs:
           cache-from: type=gha,scope=migrate
       - name: Start and verify runtime image
         run: bash scripts/test-docker-runtime.sh "${{ matrix.target }}"
-      - name: Build and push
-        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
-        with:
-          context: .
-          file: ./Dockerfile
-          target: ${{ matrix.target }}
-          platforms: linux/amd64
-          push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          cache-from: type=gha,scope=${{ matrix.target }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.target }}
+      - name: Push tested runtime image
+        env:
+          IMAGE_TAGS: ${{ steps.metadata.outputs.tags }}
+          IMAGE_TARGET: ${{ matrix.target }}
+        run: |
+          while IFS= read -r tag; do
+            [ -n "$tag" ] || continue
+            docker tag "omp-runtime:${IMAGE_TARGET}" "$tag"
+            docker push "$tag"
+          done <<< "$IMAGE_TAGS"
