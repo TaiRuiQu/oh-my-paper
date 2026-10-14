@@ -53,6 +53,8 @@ async function main() {
   }
   try {
     assert.equal((await request(null, "/api/platform")).status, 401);
+    const { rows } = await sql.query<{ count: number }>("SELECT count(*)::int AS count FROM users");
+    const needsBootstrapAdmin = rows[0].count === 0;
     for (const role of ["ADMIN", "TEACHER", "STUDENT", "STUDENT"]) {
       const response = await request(null, "/api/auth/sign-up/email", {
         method: "POST",
@@ -66,7 +68,14 @@ async function main() {
       });
       const body = await response.json();
       assert.equal(response.status, 200, JSON.stringify(body));
-      assert.equal(body.user.role, "STUDENT", "Public registration must ignore role escalation");
+      const expectedRole = needsBootstrapAdmin && accounts.length === 0 ? "ADMIN" : "STUDENT";
+      assert.equal(
+        body.user.role,
+        expectedRole,
+        expectedRole === "ADMIN"
+          ? "The first registered account must bootstrap the administrator"
+          : "Public registration must ignore role escalation",
+      );
       const cookie = response.headers
         .getSetCookie()
         .map((value) => value.split(";")[0])
