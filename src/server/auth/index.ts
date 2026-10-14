@@ -14,14 +14,21 @@ function createAuth() {
     secret: env.BETTER_AUTH_SECRET,
     trustedOrigins: [new URL(env.BETTER_AUTH_URL).origin],
     database: prismaAdapter(getDb(), { provider: "postgresql", transaction: true }),
-    emailAndPassword: { enabled: true, disableSignUp: true, minPasswordLength: 10, maxPasswordLength: 128 },
-    plugins: [username({
-      displayUsername: false,
-      minUsernameLength: 1,
-      maxUsernameLength: 254,
-      immutableUsername: true,
-      usernameValidator: (value) => /^[a-zA-Z0-9_.@+\-]+$/.test(value),
-    })],
+    emailAndPassword: {
+      enabled: true,
+      disableSignUp: true,
+      minPasswordLength: 10,
+      maxPasswordLength: 128,
+    },
+    plugins: [
+      username({
+        displayUsername: false,
+        minUsernameLength: 1,
+        maxUsernameLength: 254,
+        immutableUsername: true,
+        usernameValidator: (value) => /^[a-zA-Z0-9_.@+\-]+$/.test(value),
+      }),
+    ],
     user: {
       additionalFields: {
         role: { type: "string", defaultValue: "STUDENT", input: false },

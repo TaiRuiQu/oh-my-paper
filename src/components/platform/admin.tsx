@@ -37,8 +37,14 @@ export function Admin({
   async function save(body: unknown, creating = false) {
     setBusy(true);
     try {
-      const result = await apiRequest<{ credentials?: AccountCredentials }>("/api/platform/admin", { method: "POST", ...jsonBody(body) });
-      if (creating) { setCredentials(result.credentials); setNewRole(undefined); }
+      const result = await apiRequest<{ credentials?: AccountCredentials }>("/api/platform/admin", {
+        method: "POST",
+        ...jsonBody(body),
+      });
+      if (creating) {
+        setCredentials(result.credentials);
+        setNewRole(undefined);
+      }
       await refresh();
       const r = await apiRequest<{ providers: Provider[] }>("/api/platform/admin");
       setProviders(r.providers);
@@ -56,34 +62,124 @@ export function Admin({
         <Panel
           title="账号与角色"
           description="管理员添加账号，教师也可添加学生。教师使用账号登录，学生使用学号登录。"
-          actions={<div className="p-actions">
-            <button className="button" disabled={busy} onClick={() => {setCredentials(undefined); setNewRole("TEACHER");}}>添加教师</button>
-            <button className="button secondary" disabled={busy} onClick={() => {setCredentials(undefined); setNewRole("STUDENT");}}>添加学生</button>
-            <button className="button secondary" disabled={busy} onClick={() => {setCredentials(undefined); setNewRole("ADMIN");}}>添加管理员</button>
-          </div>}
+          actions={
+            <div className="p-actions">
+              <button
+                className="button"
+                disabled={busy}
+                onClick={() => {
+                  setCredentials(undefined);
+                  setNewRole("TEACHER");
+                }}
+              >
+                添加教师
+              </button>
+              <button
+                className="button secondary"
+                disabled={busy}
+                onClick={() => {
+                  setCredentials(undefined);
+                  setNewRole("STUDENT");
+                }}
+              >
+                添加学生
+              </button>
+              <button
+                className="button secondary"
+                disabled={busy}
+                onClick={() => {
+                  setCredentials(undefined);
+                  setNewRole("ADMIN");
+                }}
+              >
+                添加管理员
+              </button>
+            </div>
+          }
         >
           {credentials && <AccountCredentialsPanel credentials={credentials} />}
-          {newRole && <form className="p-form" key={newRole} onSubmit={(e) => {
-            const d = readForm(e);
-            void save({ type: "user.create", user: newRole === "STUDENT"
-              ? { role: newRole, name: stringField(d, "name"), studentNumber: stringField(d, "studentNumber") || undefined }
-              : { role: newRole, username: stringField(d, "username"), password: stringField(d, "password") }
-            }, true);
-          }}>
-            <div className="p-form-grid">
-              {newRole === "STUDENT" ? <>
-                <Field label="真实姓名"><input name="name" required maxLength={80} autoComplete="off" /></Field>
-                <Field label="学号（可选）" hint="留空自动生成六位学号，密码由系统生成。"><input name="studentNumber" pattern="[0-9]{1,20}" maxLength={20} inputMode="numeric" /></Field>
-              </> : <>
-                <Field label="账号" hint="字母、数字、下划线、点或短横线；不区分大小写。"><input name="username" required maxLength={64} pattern="[a-zA-Z0-9_.\-]+" autoComplete="off" /></Field>
-                <Field label="密码" hint="10 至 128 个字符。"><input type="password" name="password" required minLength={10} maxLength={128} autoComplete="new-password" /></Field>
-              </>}
-            </div>
-            <div className="p-actions">
-              <button className="button" disabled={busy}>{busy ? "正在创建…" : `创建${newRole === "STUDENT" ? "学生" : newRole === "TEACHER" ? "教师" : "管理员"}账号`}</button>
-              <button type="button" className="button secondary" disabled={busy} onClick={() => setNewRole(undefined)}>取消</button>
-            </div>
-          </form>}
+          {newRole && (
+            <form
+              className="p-form"
+              key={newRole}
+              onSubmit={(e) => {
+                const d = readForm(e);
+                void save(
+                  {
+                    type: "user.create",
+                    user:
+                      newRole === "STUDENT"
+                        ? {
+                            role: newRole,
+                            name: stringField(d, "name"),
+                            studentNumber: stringField(d, "studentNumber") || undefined,
+                          }
+                        : {
+                            role: newRole,
+                            username: stringField(d, "username"),
+                            password: stringField(d, "password"),
+                          },
+                  },
+                  true,
+                );
+              }}
+            >
+              <div className="p-form-grid">
+                {newRole === "STUDENT" ? (
+                  <>
+                    <Field label="真实姓名">
+                      <input name="name" required maxLength={80} autoComplete="off" />
+                    </Field>
+                    <Field label="学号（可选）" hint="留空自动生成六位学号，密码由系统生成。">
+                      <input
+                        name="studentNumber"
+                        pattern="[0-9]{1,20}"
+                        maxLength={20}
+                        inputMode="numeric"
+                      />
+                    </Field>
+                  </>
+                ) : (
+                  <>
+                    <Field label="账号" hint="字母、数字、下划线、点或短横线；不区分大小写。">
+                      <input
+                        name="username"
+                        required
+                        maxLength={64}
+                        pattern="[a-zA-Z0-9_.\-]+"
+                        autoComplete="off"
+                      />
+                    </Field>
+                    <Field label="密码" hint="10 至 128 个字符。">
+                      <input
+                        type="password"
+                        name="password"
+                        required
+                        minLength={10}
+                        maxLength={128}
+                        autoComplete="new-password"
+                      />
+                    </Field>
+                  </>
+                )}
+              </div>
+              <div className="p-actions">
+                <button className="button" disabled={busy}>
+                  {busy
+                    ? "正在创建…"
+                    : `创建${newRole === "STUDENT" ? "学生" : newRole === "TEACHER" ? "教师" : "管理员"}账号`}
+                </button>
+                <button
+                  type="button"
+                  className="button secondary"
+                  disabled={busy}
+                  onClick={() => setNewRole(undefined)}
+                >
+                  取消
+                </button>
+              </div>
+            </form>
+          )}
           <div className="p-table" role="region" aria-label="账号与角色列表" tabIndex={0}>
             <table>
               <thead>

@@ -263,56 +263,76 @@ export function StudentEditPage({
         description={`${c.name} · 使用真实姓名，学生以学号登录。新增学生的密码由系统生成。`}
         back={{ href: `/workspace/classes/${classroomId}/students`, label: "班级学生名单" }}
       />
-      {credentials ? <AccountCredentialsPanel credentials={credentials}>
-        <Button asChild><Link href={`/workspace/classes/${classroomId}/students`}>返回学生名单</Link></Button>
-      </AccountCredentialsPanel> : <Panel title="学生资料">
-        <form
-          className="p-form"
-          onSubmit={async (e) => {
-            const d = readForm(e);
-            const r = await mutate({
-              type: "student.save",
-              student: {
-                id: studentId,
-                classroomId,
-                name: stringField(d, "name"),
-                studentNumber: stringField(d, "studentNumber") || undefined,
-                userId: stringField(d, "userId") || undefined,
-              },
-            });
-            if (r.credentials) setCredentials(r.credentials);
-            else if (!r.error) router.push(`/workspace/classes/${classroomId}/students`);
-          }}
-        >
-          <div className="p-form-grid">
-            <Field label="真实姓名">
-              <Input name="name" required defaultValue={student?.name} />
-            </Field>
-            <Field label="学号 / 卡号（可选）" hint="留空自动生成六位学号。指定学号须为数字，答题卡建议使用六位。">
-              <Input
-                name="studentNumber"
-                pattern="[0-9]{1,20}"
-                maxLength={20}
-                readOnly={!!student?.userId}
-                inputMode="numeric"
-                defaultValue={student?.studentNumber}
-              />
-            </Field>
-            {!student?.userId && <Field label="已有学生账号（可选）" hint="已分配账号的学生可选择账号加入本班；留空则创建新账号。">
-              <select name="userId" defaultValue="">
-                <option value="">创建新学生账号</option>
-                {state.users.filter((u) => u.role === "STUDENT").map((u) => <option key={u.id} value={u.id}>{u.name}（{u.username ?? u.email}）</option>)}
-              </select>
-            </Field>}
-          </div>
-          <div className="p-actions">
-            <Button disabled={pending}>{pending ? "正在保存…" : "保存学生"}</Button>
-            <Button asChild variant="outline">
-              <Link href={`/workspace/classes/${classroomId}/students`}>取消</Link>
-            </Button>
-          </div>
-        </form>
-      </Panel>}
+      {credentials ? (
+        <AccountCredentialsPanel credentials={credentials}>
+          <Button asChild>
+            <Link href={`/workspace/classes/${classroomId}/students`}>返回学生名单</Link>
+          </Button>
+        </AccountCredentialsPanel>
+      ) : (
+        <Panel title="学生资料">
+          <form
+            className="p-form"
+            onSubmit={async (e) => {
+              const d = readForm(e);
+              const r = await mutate({
+                type: "student.save",
+                student: {
+                  id: studentId,
+                  classroomId,
+                  name: stringField(d, "name"),
+                  studentNumber: stringField(d, "studentNumber") || undefined,
+                  userId: stringField(d, "userId") || undefined,
+                },
+              });
+              if (r.credentials) setCredentials(r.credentials);
+              else if (!r.error) router.push(`/workspace/classes/${classroomId}/students`);
+            }}
+          >
+            <div className="p-form-grid">
+              <Field label="真实姓名">
+                <Input name="name" required defaultValue={student?.name} />
+              </Field>
+              <Field
+                label="学号 / 卡号（可选）"
+                hint="留空自动生成六位学号。指定学号须为数字，答题卡建议使用六位。"
+              >
+                <Input
+                  name="studentNumber"
+                  pattern="[0-9]{1,20}"
+                  maxLength={20}
+                  readOnly={!!student?.userId}
+                  inputMode="numeric"
+                  defaultValue={student?.studentNumber}
+                />
+              </Field>
+              {!student?.userId && (
+                <Field
+                  label="已有学生账号（可选）"
+                  hint="已分配账号的学生可选择账号加入本班；留空则创建新账号。"
+                >
+                  <select name="userId" defaultValue="">
+                    <option value="">创建新学生账号</option>
+                    {state.users
+                      .filter((u) => u.role === "STUDENT")
+                      .map((u) => (
+                        <option key={u.id} value={u.id}>
+                          {u.name}（{u.username ?? u.email}）
+                        </option>
+                      ))}
+                  </select>
+                </Field>
+              )}
+            </div>
+            <div className="p-actions">
+              <Button disabled={pending}>{pending ? "正在保存…" : "保存学生"}</Button>
+              <Button asChild variant="outline">
+                <Link href={`/workspace/classes/${classroomId}/students`}>取消</Link>
+              </Button>
+            </div>
+          </form>
+        </Panel>
+      )}
     </>
   );
 }

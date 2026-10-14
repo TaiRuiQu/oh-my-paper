@@ -36,7 +36,8 @@ export async function executeClassroomsCommand(
       let binding = userId;
       await lockAccounts(db);
       let credentials: AccountCredentials | undefined;
-      if (!data.studentNumber) data.studentNumber = previous?.studentNumber ?? await nextStudentNumber(db);
+      if (!data.studentNumber)
+        data.studentNumber = previous?.studentNumber ?? (await nextStudentNumber(db));
       if (previous?.userId && binding === null)
         throw new RequestError(409, "已有学生账号不能解绑。");
       binding ??= previous?.userId ?? undefined;
@@ -74,7 +75,11 @@ export async function executeClassroomsCommand(
       )
         throw new RequestError(409, "该班级已有相同卡号或账号。");
       if (!binding) {
-        const account = await insertAccount(db, { role: "STUDENT", name: data.name, studentNumber: data.studentNumber });
+        const account = await insertAccount(db, {
+          role: "STUDENT",
+          name: data.name,
+          studentNumber: data.studentNumber,
+        });
         binding = account.id;
         credentials = account.credentials;
       } else if (previous?.userId === binding) {

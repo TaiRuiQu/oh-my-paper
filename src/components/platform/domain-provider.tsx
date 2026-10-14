@@ -18,7 +18,9 @@ type DomainContext = {
   state: PlatformState;
   area: PlatformArea;
   pending: boolean;
-  mutate: (command: PlatformCommand) => Promise<{ id?: string; error?: string; credentials?: AccountCredentials }>;
+  mutate: (
+    command: PlatformCommand,
+  ) => Promise<{ id?: string; error?: string; credentials?: AccountCredentials }>;
   refresh: () => Promise<void>;
   notify: (message: string, error?: boolean) => void;
   scanFiles: ScanUploadPage[];
@@ -58,10 +60,13 @@ export function DomainProvider({
       setPending(true);
       try {
         const domain = commandDomains[command.type.split(".")[0]];
-        const result = await apiRequest<{ id: string; credentials?: AccountCredentials }>(`/api/platform/${domain}/commands`, {
-          method: "POST",
-          ...jsonBody(command),
-        });
+        const result = await apiRequest<{ id: string; credentials?: AccountCredentials }>(
+          `/api/platform/${domain}/commands`,
+          {
+            method: "POST",
+            ...jsonBody(command),
+          },
+        );
         await refresh();
         notify("已保存。");
         return result;

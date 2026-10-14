@@ -1,0 +1,81 @@
+---
+version: 1
+slug: "platform-app-router"
+primary_target: "src/components/platform/shell.tsx"
+related_targets:
+  - "src/app/(platform)"
+  - "src/contracts/navigation.ts"
+  - "src/components/platform/page-header.tsx"
+  - "src/components/platform/home-pages.tsx"
+  - "src/components/platform/paper-pages.tsx"
+  - "src/components/platform/homework-workbench.tsx"
+  - "src/components/platform/card-workbench.tsx"
+  - "src/components/platform/document-canvas.tsx"
+  - "src/components/platform/document-question.tsx"
+  - "src/components/platform/scans.tsx"
+  - "src/components/platform/review-pages.tsx"
+  - "src/components/platform/report-pages.tsx"
+  - "src/components/ui"
+  - "src/app/globals.css"
+---
+
+# App Router 教学平台
+
+Mode: Operate。教师准备练习册和试卷、组织作业与考试、录入作答、评阅并查看学习反馈；学生查看本人已发布结果。方向依据 `v2-docs/structure-refactor.md`，完整路由清单为 `v2-docs/page-map.json`。本次扩展沿用既有视觉世界。
+
+## Direction contract
+
+THESIS: 用独立任务页面连接题库、练习册、考试与学习反馈，让 URL、标题和完成动作表达用户当前正在处理的对象。
+
+OWN-WORLD: 浅灰工作区、白色面板与纸张、教学蓝主要操作；自托管 Geist 与 Noto Sans SC、紧凑中文标题和表格、细边界及柔和面板圆角。ShadCN UI 继承现有语义色，不引入新的品牌世界。题目、分值、作答和真实业务状态承担信息表达。
+
+STORY: 首页了解当前教学情况 → 题库准备题目 → 作业编排练习册并布置班级，或考试组卷并制作答题卡 → 按业务录入作答 → 批改／阅卷 → 完成后发布 → 学生查看本人报告。作业使用同一练习册中的题目与作答空间，答题卡只用于考试。
+
+FIRST VIEWPORT: 桌面保留 248px 分组侧栏和 72px 账户栏，主区先显示返回入口、当前页面标题、说明和主要动作。记录级工作台随后显示链接式页面导航。手机隐藏桌面侧栏，顶部 62px 账户栏提供主导航触发器，左侧 Sheet 展示相同导航树；页面操作、表单和属性区按可用宽度排列。
+
+FORM: 现有教学工作台的结构扩展。独立页面承载创建、详情、编辑、评阅和导出；复杂编辑在页面内完成。试卷与练习册以可编辑纸张呈现，答题卡用独立卡面和精确属性呈现；原生表单、ShadCN 基础组件与现有业务组件共同使用。
+
+FINISH: 本 brief 记录当前方向和实现机制，不给出交付结论。85 页的独立视觉与行为审查、F1–F8 的修复复核及最终 disposition 由 `v2-docs/structure-ui-review.md` 维护。
+
+## Navigation and roles
+
+| 用户   | 主入口                   | 任务范围                                                                       |
+| ------ | ------------------------ | ------------------------------------------------------------------------------ |
+| 教师   | 首页、作业、考试、题库   | 班级与学生归入首页；作业与考试分别提供布置、录入、评阅和报告入口。             |
+| 管理员 | 教师主入口，另有系统管理 | 角色首页为系统概览；系统管理包含报表、账号权限、模型接入与 AI 任务。           |
+| 学生   | 首页、我的学习           | 本人学习概览，以及成绩、学习报告、知识点、错题和巩固练习；不显示教师管理导航。 |
+
+`/workspace` 是角色首页。各模块使用 `/homework`、`/exams`、`/questions`、`/admin`、`/learning` 及其子路由。当前模块保持展开，其他主组可收起；子入口按最长匹配路径标记 `aria-current="page"`。工作台内的概览、编辑、答案、排版和导出是页面链接，支持直接访问、刷新和浏览器历史。
+
+当前 85 个 `page.tsx` 与页面清单对应：首页及班级 10 页、作业 23 页、考试 32 页、题库 10 页、学生学习 6 页、系统管理 4 页。数量是覆盖范围，不能代替功能验收。
+
+旧 `.impeccable/surfaces/src-components-platform-workspace-tsx.md` 保留为上一轮单页工作台的历史记录。其 `/workspace?tab=`、连续扁平导航、学生唯一入口、旧组件路径和旧 ship 结论不适用于本次结构；当前页面方向以本 brief 为准。
+
+## Workbench behavior
+
+- **试卷**：列表进入完整工作台；概览、可视化编辑、答案与评分标准、排版设置、导出与打印各有独立页面。在纸面修改标题、说明、题干、选项和子问，调整题序、栏目和分值；设置 A4／A3、分栏、页边距、字号、行距及逐题分页。卷内内容保存在快照中，已布置版本另存修改。
+- **练习册**：独立的作业草稿和纸面编辑状态，题目与作答空间共同排版；设置纸张、页边距、字号和行距，逐题调整作答行数、留白和分页，再进入班级布置、原图作答录入、批改与报告。当前工具栏使用单栏。没有制作或扫描独立答题卡的步骤。
+- **答题卡**：根据已保存考试试卷生成多页 A4 卡面。题区可拖动和缩放，学号填涂区与四角定位点可直接移动，旁侧提供百分比坐标、尺寸和页码属性。方向键移动元素，独立缩放手柄处理题区尺寸；卡面支持适应容器和「100% 查看」。保存前检查全题覆盖、越界与重叠，已用于扫描的模板修改后另存。
+- **共用纸张基础**：试卷和练习册复用 `DocumentCanvas`、`PaperText`、`DocumentQuestionBody` 与 `DocumentQuestionHeading`，共享正文几何、纸张缩放与分页基础；业务编辑状态分开。编辑控件置于不占打印正文高度的工具层；只读导出预览复用题目正文组件。打印 HTML 使用持久化排版及对应正文样式，实际打印的一致性仍需独立核对。
+- **离开与保存**：编辑页标明未保存修改，通过 `useUnsavedChanges` 处理页面链接、关闭／刷新和浏览器历史离开提示；保存成功后进入对象页面。该实现的取消、接受及历史分支以独立复验为准，不能只凭提示代码认定不会丢失草稿。
+- **录入与评阅**：作业指定学生并在练习册原图框选每题作答，支持精确坐标；考试使用同版式答题卡识别和切题。评阅页将题目、实际作答、评分依据与分值邻近组织；已发布结果按业务约束锁定，完整评阅后才可发布。
+
+## Responsive and component behavior
+
+白色面板继续使用 12px 圆角、细边界和现有中文层级。官方 ShadCN Button、Input、Textarea、Badge 和 Sheet 映射当前品牌语义色；既有原生字段和业务组件继续复用。链接式主要操作保持蓝底白字，只有真实请求处于执行中时才表达保存状态。
+
+宽屏纸面区使用目录、画布与题库／属性区；较窄桌面收起目录，1000px 以下堆叠。纸面与答题卡保留比例和局部滚动；手机试卷／练习册在画布外提供正常尺寸的当前题目属性工具，可切换 100% 编辑，答题卡提供全尺寸查看及精确属性。页面导航、表格、公式和纸张各自处理所需溢出，不用缩小整个应用来容纳长内容。
+
+手机导航使用 Sheet／Radix Dialog 的焦点约束、Escape 关闭和触发器恢复机制；点击入口后关闭。截图不能证明真实触摸操作，手机目标尺寸、键盘缩放和纸张编辑仍属于独立行为复核范围。
+
+## Evidence and limits
+
+2026-10-14 文档核对读取了结构契约、验收矩阵、85 页清单、现有 PRODUCT／DESIGN／sidecar、旧 surface brief 以及对应源码；直接查看 `.impeccable/review/structure/` 下 overview、paper、homework、card 的桌面与手机共 8 张截图。截图用于核对视觉延续和页面构成，不作为全页、全行为通过证据。
+
+85 页 HTTP 与当前自动验证记录见 `v2-docs/structure-acceptance.md`。reviewer 目录中包含初轮 170 张截图及后续复验材料，必须结合报告辨别候选版本；初轮 F1–F8 的发现不能被新的组件说明抹去，也不能把修复源码当成独立确认。
+
+本 brief 不重复执行构建或验收，不改独立审查报告。真实扫描仪、实体打印与触屏、复杂跨页材料和外部模型质量的限制以对应验收报告为准。
+
+## 2026-10-14 工作台修订
+
+用户明确指定排版工作台以桌面 Microsoft Word 纸面为参考，主区默认全宽，不以移动端兼容作为本轮验收目标。试卷、作业和答题卡保留独立业务界面；字体默认 NSimSun，A4/A3、横纵与1–4栏共用版面契约。选题改为主动创建、自由文字、分页逐题导入，移除整库侧栏。账户栏滚动固定，导航提供展开、箭头与页面切换动画，并遵循减少动态效果设置。答题卡参考 examples 数学实卡的清晰边框、题号及矩形填涂。最终独立复验及修复记录见 `v2-docs/workbench-v3-review.md`。

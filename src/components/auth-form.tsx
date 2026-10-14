@@ -18,8 +18,13 @@ const authErrors: Record<string, string> = {
 export function AuthForm() {
   const router = useRouter();
   const [error, setError] = useState<string>();
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<AuthFields>({
-    resolver: zodResolver(authLoginSchema), defaultValues: { username: "", password: "" },
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<AuthFields>({
+    resolver: zodResolver(authLoginSchema),
+    defaultValues: { username: "", password: "" },
   });
   const submit = handleSubmit(async (values) => {
     setError(undefined);
@@ -37,26 +42,53 @@ export function AuthForm() {
   });
   return (
     <section className="auth-panel" aria-labelledby="auth-heading">
-      <Link href="/" className="wordmark">Oh My Paper<span>教学工作台</span></Link>
+      <Link href="/" className="wordmark">
+        Oh My Paper<span>教学工作台</span>
+      </Link>
       <h1 id="auth-heading">登录工作台</h1>
       <p className="intro">从一道题到一场考试，让教学工作有序衔接。</p>
       <form onSubmit={submit} noValidate>
         <div className="field">
           <label htmlFor="username">账号 / 学号</label>
-          <input id="username" autoComplete="username" maxLength={254}
-            aria-invalid={!!errors.username} aria-describedby={errors.username ? "username-error" : undefined}
-            {...register("username")} />
-          {errors.username && <p id="username-error" className="field-error">{errors.username.message}</p>}
+          <input
+            id="username"
+            autoComplete="username"
+            maxLength={254}
+            aria-invalid={!!errors.username}
+            aria-describedby={errors.username ? "username-error" : undefined}
+            {...register("username")}
+          />
+          {errors.username && (
+            <p id="username-error" className="field-error">
+              {errors.username.message}
+            </p>
+          )}
         </div>
         <div className="field">
           <label htmlFor="password">密码</label>
-          <input id="password" type="password" autoComplete="current-password" maxLength={128}
-            aria-invalid={!!errors.password} aria-describedby={errors.password ? "password-error" : undefined}
-            {...register("password")} />
-          {errors.password && <p id="password-error" className="field-error">{errors.password.message}</p>}
+          <input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            maxLength={128}
+            aria-invalid={!!errors.password}
+            aria-describedby={errors.password ? "password-error" : undefined}
+            {...register("password")}
+          />
+          {errors.password && (
+            <p id="password-error" className="field-error">
+              {errors.password.message}
+            </p>
+          )}
         </div>
-        {error && <p className="form-error" role="alert">{error}</p>}
-        <button className="button" type="submit" disabled={isSubmitting}>{isSubmitting ? "正在登录…" : "登录"}</button>
+        {error && (
+          <p className="form-error" role="alert">
+            {error}
+          </p>
+        )}
+        <button className="button" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "正在登录…" : "登录"}
+        </button>
       </form>
       <p className="auth-switch">账号由管理员分配，学生账号也可由教师添加。学生请使用学号登录。</p>
     </section>

@@ -11,6 +11,15 @@
         ],
         "createdAt": "2026-10-13T11:37:03.918Z",
         "reason": "Agent: DESIGN.md:246 explicitly defines Geist for English and numerals in the existing office interface; this task preserves that documented typography."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "simsun",
+        "files": [
+          "tests/platform-document-export.test.ts"
+        ],
+        "createdAt": "2026-10-14T13:00:58.351Z",
+        "reason": "Agent reviewed: this fixture tests the existing user-selectable document font from DOCUMENT_FONTS, not application typography."
       }
     ]
   }

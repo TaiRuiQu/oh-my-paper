@@ -1,0 +1,342 @@
+[
+  {
+    "route": "/admin",
+    "roles": ["ADMIN"]
+  },
+  {
+    "route": "/admin/jobs",
+    "roles": ["ADMIN"]
+  },
+  {
+    "route": "/admin/models",
+    "roles": ["ADMIN"]
+  },
+  {
+    "route": "/admin/users",
+    "roles": ["ADMIN"]
+  },
+  {
+    "route": "/exams",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/[id]",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/[id]/grading",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/[id]/knowledge",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/[id]/publish",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/[id]/reports",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/[id]/roster",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/[id]/settings",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/[id]/submissions",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/assemble",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/cards",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/cards/[id]",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/cards/[id]/edit",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/cards/[id]/export",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/cards/new",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/grading",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/grading/[id]",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/grading/ai",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/grading/arbitration",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/new",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/papers",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/papers/[id]",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/papers/[id]/answers",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/papers/[id]/edit",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/papers/[id]/export",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/papers/[id]/layout",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/papers/new",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/reports",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/scanning",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/scanning/device",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/scanning/history",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/exams/scanning/upload",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/[id]",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/[id]/answers",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/[id]/edit",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/[id]/export",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/assignments",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/assignments/[id]",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/assignments/[id]/grading",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/assignments/[id]/knowledge",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/assignments/[id]/publish",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/assignments/[id]/reports",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/assignments/[id]/roster",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/assignments/[id]/settings",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/assignments/[id]/submissions",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/assignments/new",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/export",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/grading",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/grading/[id]",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/grading/ai",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/new",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/reports",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/submissions",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/homework/submissions/new",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/learning/knowledge",
+    "roles": ["STUDENT"]
+  },
+  {
+    "route": "/learning/practice",
+    "roles": ["STUDENT"]
+  },
+  {
+    "route": "/learning/reports",
+    "roles": ["STUDENT"]
+  },
+  {
+    "route": "/learning/results",
+    "roles": ["STUDENT"]
+  },
+  {
+    "route": "/learning/results/[id]",
+    "roles": ["STUDENT"]
+  },
+  {
+    "route": "/learning/wrong-questions",
+    "roles": ["STUDENT"]
+  },
+  {
+    "route": "/questions",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/questions/[id]",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/questions/[id]/answers",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/questions/[id]/edit",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/questions/[id]/usage",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/questions/analysis",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/questions/import",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/questions/import/history",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/questions/knowledge",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/questions/new",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/workspace",
+    "roles": ["ADMIN", "TEACHER", "STUDENT"]
+  },
+  {
+    "route": "/workspace/activity",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/workspace/classes",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/workspace/classes/[id]",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/workspace/classes/[id]/reports",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/workspace/classes/[id]/settings",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/workspace/classes/[id]/students",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/workspace/classes/[id]/students/[studentId]/edit",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/workspace/classes/[id]/students/new",
+    "roles": ["ADMIN", "TEACHER"]
+  },
+  {
+    "route": "/workspace/classes/new",
+    "roles": ["ADMIN", "TEACHER"]
+  }
+]
