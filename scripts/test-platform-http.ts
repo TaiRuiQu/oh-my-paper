@@ -5,6 +5,7 @@ import { rm } from "node:fs/promises";
 import pg from "pg";
 import sharp from "sharp";
 import JSZip from "jszip";
+import { hashPassword } from "better-auth/crypto";
 import { loadEnvironment } from "./load-env.mjs";
 import type { Analytics, PlatformCommand, PlatformState } from "../src/contracts/platform";
 
@@ -55,35 +56,34 @@ async function main() {
   }
   try {
     assert.equal((await request(null, "/api/platform")).status, 401);
-    const { rows } = await sql.query<{ count: number }>("SELECT count(*)::int AS count FROM users");
-    const needsBootstrapAdmin = rows[0].count === 0;
     for (const role of ["ADMIN", "TEACHER", "STUDENT", "STUDENT"]) {
-      const response = await request(null, "/api/auth/sign-up/email", {
+      const id = randomUUID();
+      const email = `${prefix}-${accounts.length}@example.invalid`;
+      const password = "HttpAcceptance2026!";
+      await sql.query(
+        `INSERT INTO users (id, name, email, role, username, "createdAt", "updatedAt")
+         VALUES ($1, $2, $3, $4, $5, NOW(), NOW())`,
+        [id, `${prefix}-${accounts.length}`, email, role, email],
+      );
+      await sql.query(
+        `INSERT INTO accounts (id, "userId", "accountId", "providerId", password, "createdAt", "updatedAt")
+         VALUES ($1, $2, $2, 'credential', $3, NOW(), NOW())`,
+        [randomUUID(), id, await hashPassword(password)],
+      );
+      const response = await request(null, "/api/auth/sign-in/email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: `${prefix}-${accounts.length}`,
-          email: `${prefix}-${accounts.length}@example.invalid`,
-          password: "HttpAcceptance2026!",
-          role: "ADMIN",
-        }),
+        body: JSON.stringify({ email, password }),
       });
       const body = await response.json();
       assert.equal(response.status, 200, JSON.stringify(body));
-      const expectedRole = needsBootstrapAdmin && accounts.length === 0 ? "ADMIN" : "STUDENT";
-      assert.equal(
-        body.user.role,
-        expectedRole,
-        expectedRole === "ADMIN"
-          ? "The first registered account must bootstrap the administrator"
-          : "Public registration must ignore role escalation",
-      );
+      assert.equal(body.user.role, role);
       const cookie = response.headers
         .getSetCookie()
         .map((value) => value.split(";")[0])
         .join("; ");
       assert(cookie);
-      accounts.push({ id: body.user.id, cookie, role });
+      accounts.push({ id, cookie, role });
     }
     const [admin, teacher, student, peer] = accounts;
     await sql.query("UPDATE users SET role='ADMIN' WHERE id=$1", [admin.id]);
@@ -111,7 +111,7 @@ async function main() {
     });
     assert.equal(csrf.status, 403);
     console.log(
-      "✓ Real HTTP signup/session, administrator role assignment, student restrictions and mutation origin checks",
+      "✓ Real HTTP managed-account sign-in/session, administrator role assignment, student restrictions and mutation origin checks",
     );
     const image = await sharp({
       create: { width: 200, height: 100, channels: 3, background: "white" },
