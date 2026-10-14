@@ -6,6 +6,7 @@ import {
   MAX_OUTPUT_TOKENS,
   type AiPurpose,
   REASONING_EFFORTS,
+  supportsReasoningEffort,
   providerInputSchema,
   type ProviderInput,
   type ProviderSummary,
@@ -256,9 +257,7 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
                     models: draft.models.map((model) => ({
                       ...model,
                       reasoningEfforts: model.reasoningEfforts.filter((effort) =>
-                        apiType === "google"
-                          ? !["xhigh", "max"].includes(effort)
-                          : apiType !== "anthropic" || effort !== "minimal",
+                        supportsReasoningEffort(apiType, effort),
                       ),
                     })),
                   });
@@ -278,6 +277,11 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
                 type="url"
                 required
                 value={draft.baseURL}
+                placeholder={
+                  draft.apiType === "google" || draft.apiType === "google_interactions"
+                    ? "https://generativelanguage.googleapis.com/v1beta"
+                    : undefined
+                }
                 onChange={(event) => setDraft({ ...draft, baseURL: event.target.value })}
               />
             </div>
@@ -377,9 +381,7 @@ export function AiProviderSettings({ initialProviders }: { initialProviders: Pro
                 <p className="hint">选择此模型支持的推理选项。</p>
                 <div className="effort-options">
                   {REASONING_EFFORTS.filter((effort) =>
-                    draft.apiType === "google"
-                      ? !["xhigh", "max"].includes(effort)
-                      : draft.apiType !== "anthropic" || effort !== "minimal",
+                    supportsReasoningEffort(draft.apiType, effort),
                   ).map((effort) => (
                     <label key={effort}>
                       <input

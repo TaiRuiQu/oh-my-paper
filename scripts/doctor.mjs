@@ -75,7 +75,7 @@ await check("Poppler 页面检查和渲染工具", () => {
   ];
   return versions.map((text) => text.split("\n")[0]).join(" / ");
 });
-await check("本地 Python 沙箱 / Pillow", () =>
+await check("本地 Python 沙箱 / 图像与数值计算库", () =>
   run(process.execPath, [
     "--conditions=react-server",
     "--import",

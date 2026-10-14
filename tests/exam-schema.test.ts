@@ -145,6 +145,9 @@ describe("hierarchical exam contracts", () => {
     const examId = "10000000-0000-4000-8000-000000000001",
       questionId = "10000000-0000-4000-8000-000000000002";
     const answer = { questionId, solution: "$x=\\pm 2$", gradingCriteria: "每个根 1 分。" };
+    expect(
+      examAnswerSchema.parse({ examId, questions: [{ questionId, solution: "A" }] }).questions[0],
+    ).not.toHaveProperty("gradingCriteria");
     expect(examAnswerSchema.parse({ examId, questions: [answer] }).questions[0]).toEqual(answer);
     expect(examAnswerSchema.safeParse({ examId, questions: [answer, answer] }).success).toBe(false);
     const submitted = { questionId, answer: "$x=2$", correct: false, score: 1 };

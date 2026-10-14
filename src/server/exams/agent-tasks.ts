@@ -320,24 +320,12 @@ export async function createAgentTask(
     throw error;
   }
 }
-export async function retryAgentTask(
-  userId: string,
-  sourceId: string,
-  id: string,
-  modelId?: string,
-  reasoningEffort?: ReasoningEffort,
-) {
+export async function retryAgentTask(userId: string, sourceId: string, id: string) {
   const task = await ownedAgentTask(userId, sourceId, id);
   if (task.status !== "FAILED") throw new RequestError(409, "只有失败的任务可以继续。");
   await requireCredits(userId);
   await requireWorker();
-  const provider = await getUserProvider(
-      userId,
-      task.kind === "ANSWER" ? "answer" : "grading",
-      modelId,
-      reasoningEffort,
-    ),
-    boss = await getJobProducer(),
+  const boss = await getJobProducer(),
     jobId = randomUUID();
   const saved = await getDb().$transaction(async (tx) => {
     await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
@@ -361,7 +349,7 @@ export async function retryAgentTask(
       throw new RequestError(409, "该试卷已有答案任务运行中。");
     const changed = await tx.examAgentTask.updateMany({
       where: { id, jobId: task.jobId, status: "FAILED" },
-      data: { jobId, status: "QUEUED", error: null, errorCode: null, providerSnapshot: provider },
+      data: { jobId, status: "QUEUED", error: null, errorCode: null },
     });
     if (!changed.count) throw new RequestError(409, "任务状态已变化，请刷新后重试。");
     await enqueueInTransaction(tx, boss, EXAM_AGENT_QUEUE, { taskId: id }, jobId);
@@ -446,8 +434,8 @@ export async function processAgentTask(id: string, jobId: string, workerSignal: 
         for (const item of z.array(generatedAnswerSchema).parse(result.questions)) {
           await tx.questionAnswer.upsert({
             where: { questionId: item.questionId },
-            create: { ...item, examId: task.examId },
-            update: { solution: item.solution, gradingCriteria: item.gradingCriteria },
+            create: { ...item, gradingCriteria: item.gradingCriteria ?? "", examId: task.examId },
+            update: { solution: item.solution, gradingCriteria: item.gradingCriteria ?? "" },
           });
         }
       } else {

@@ -136,7 +136,7 @@ export const examAnswerSchema = z.strictObject({
       z.strictObject({
         questionId: z.uuid(),
         solution: z.string(),
-        gradingCriteria: z.string(),
+        gradingCriteria: z.string().optional(),
       }),
     )
     .refine(

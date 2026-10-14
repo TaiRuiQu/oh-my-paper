@@ -11,7 +11,7 @@ async function main() {
     for (let call = 1; call <= 5; call++) {
       const result = await session.run({
         images: [],
-        code: 'import PIL, importlib.util\nfrom PIL import Image\nassert Image.new("RGB", (1, 1)).size == (1, 1)\nprint("Pillow", PIL.__version__)\nif importlib.util.find_spec("numpy"):\n    import numpy as np\n    print("NumPy", np.ones((100, 100)).sum())\nif importlib.util.find_spec("cv2"):\n    import cv2, numpy as np\n    print("OpenCV", cv2.connectedComponentsWithStats(np.zeros((300, 500), dtype=np.uint8), 8)[0])',
+        code: 'import PIL, cv2, numpy as np, scipy, sympy as sp, mpmath as mp\nfrom PIL import Image\nfrom scipy.integrate import quad\nassert Image.new("RGB", (1, 1)).size == (1, 1)\nassert np.allclose(np.linalg.solve([[2, 1], [1, 2]], [3, 3]), [1, 1])\nassert abs(quad(lambda x: x*x, 0, 1)[0] - 1/3) < 1e-12\nx = sp.symbols("x")\nassert sp.solve(x*x - 4, x) == [-2, 2]\nassert mp.almosteq(mp.sqrt(2)**2, 2)\nprint("Pillow", PIL.__version__)\nprint("NumPy", np.__version__)\nprint("SciPy", scipy.__version__)\nprint("SymPy", sp.__version__)\nprint("mpmath", mp.__version__)\nprint("OpenCV", cv2.connectedComponentsWithStats(np.zeros((300, 500), dtype=np.uint8), 8)[0])',
       });
       if (result.exitCode !== 0) throw new Error(result.stderr);
       console.log(`Call ${call}: ${result.stdout.trim()}`);

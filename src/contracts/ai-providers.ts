@@ -11,6 +11,7 @@ export const API_TYPES = {
   openai_chat: "Chat Completions（OpenAI 兼容）",
   anthropic: "Anthropic Messages",
   google: "Google Generative AI",
+  google_interactions: "Gemini Interactions API",
 } as const;
 export const REASONING_EFFORTS = [
   "default",
@@ -24,6 +25,11 @@ export const REASONING_EFFORTS = [
 ] as const;
 export const reasoningEffortSchema = z.enum(REASONING_EFFORTS);
 export type ReasoningEffort = z.infer<typeof reasoningEffortSchema>;
+export function supportsReasoningEffort(apiType: keyof typeof API_TYPES, effort: ReasoningEffort) {
+  if (apiType === "google_interactions") return !["none", "xhigh", "max"].includes(effort);
+  if (apiType === "google") return !["xhigh", "max"].includes(effort);
+  return apiType !== "anthropic" || effort !== "minimal";
+}
 export const MAX_OUTPUT_TOKENS = 384 * 1024;
 export const REASONING_LABELS: Record<ReasoningEffort, string> = {
   default: "模型默认",
@@ -56,7 +62,13 @@ const modelSchema = z.strictObject({
 export const providerSchema = z
   .strictObject({
     name: z.string().trim().min(1, "请输入提供商名称。").max(80),
-    apiType: z.enum(["openai_responses", "openai_chat", "anthropic", "google"]),
+    apiType: z.enum([
+      "openai_responses",
+      "openai_chat",
+      "anthropic",
+      "google",
+      "google_interactions",
+    ]),
     baseURL: z
       .url()
       .max(500)
@@ -84,10 +96,8 @@ export const providerSchema = z
     if (new Set(ids).size !== ids.length)
       ctx.addIssue({ code: "custom", path: ["models"], message: "模型 ID 不能重复。" });
     value.models.forEach((model, index) => {
-      const invalid = model.reasoningEfforts.some((effort) =>
-        value.apiType === "google"
-          ? ["xhigh", "max"].includes(effort)
-          : value.apiType === "anthropic" && effort === "minimal",
+      const invalid = model.reasoningEfforts.some(
+        (effort) => !supportsReasoningEffort(value.apiType, effort),
       );
       if (invalid)
         ctx.addIssue({
@@ -108,7 +118,13 @@ export const activateModelSchema = z.strictObject({
 export const providerSnapshotSchema = z.strictObject({
   providerId: z.uuid(),
   name: z.string(),
-  apiType: z.enum(["openai_responses", "openai_chat", "anthropic", "google"]),
+  apiType: z.enum([
+    "openai_responses",
+    "openai_chat",
+    "anthropic",
+    "google",
+    "google_interactions",
+  ]),
   baseURL: z.url(),
   encryptedApiKey: z.string().min(1),
   structuredOutputs: z.boolean(),

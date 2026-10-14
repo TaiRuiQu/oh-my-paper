@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import sharp from "sharp";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 import type { ToolSet } from "ai";
 import type { Exam } from "@/contracts/exams";
 import type { ProviderSnapshot } from "@/contracts/ai-providers";
@@ -12,6 +13,7 @@ import { createAnswerResultTools, questionMaximum } from "@/server/exams/answer-
 import { runAnswerAgent } from "@/server/exams/answer-agent";
 import { createProviderExamModel } from "@/server/ai/providers";
 import { activityWriter, readActivity } from "@/server/exams/activity";
+import { BASIC_MATH_FORMAT } from "@/server/ai/prompts";
 
 const ids = ["10000000-0000-4000-8000-000000000001", "10000000-0000-4000-8000-000000000002"];
 const exam: Exam = {
@@ -97,7 +99,7 @@ describe("answer and grading incremental tools", () => {
     const grading = createAnswerResultTools({ exam, kind: "GRADING", onProgress: async () => {} });
     await expect(
       execute(grading.tools, "append_grades", { questions: grades }),
-    ).rejects.toMatchObject({ code: "ANSWER_SINGLE_QUESTION" });
+    ).rejects.toBeInstanceOf(z.ZodError);
     expect(grading.result().questions).toHaveLength(0);
   });
   it("rejects an invalid answer batch without partially saving its valid questions", async () => {
@@ -149,7 +151,7 @@ describe("answer and grading incremental tools", () => {
       ).rejects.toMatchObject({ code });
     await expect(
       execute(state.tools, "append_grades", { questions: [grades[0], grades[0]] }),
-    ).rejects.toMatchObject({ code: "ANSWER_DUPLICATE" });
+    ).rejects.toBeInstanceOf(z.ZodError);
     expect(progress).not.toHaveBeenCalled();
     await execute(state.tools, "append_grades", {
       questions: [{ ...grades[0], answer: "看不清", correct: null, score: null }],
@@ -238,6 +240,67 @@ function scriptedModel(
   return createProviderExamModel(config, "test-key", fetch);
 }
 describe("answer and grading SDK agents", () => {
+  it("returns warnings for extra keys through the SDK and saves objective answers without criteria", async () => {
+    const directory = await root();
+    const objective = { questionId: ids[0], solution: "A" };
+    const expected = [objective, answers[1]];
+    const model = scriptedModel(
+      [
+        [{ name: "list_questions", args: { reasoning: "start" } }],
+        [{ name: "read_questions", args: { questionIds: ids, includeAnswers: true } }],
+        [
+          {
+            name: "append_answers",
+            args: {
+              questions: [{ ...objective, confidence: 0.9 }, answers[1]],
+              final: false,
+            },
+          },
+        ],
+        [{ name: "submit_answers", args: { done: true } }],
+      ],
+      (body, round) => {
+        const request = JSON.parse(body);
+        expect(
+          request.tools.map((item: { function: { name: string } }) => item.function.name),
+        ).not.toContain("read_question");
+        if (round > 0) {
+          const message = request.messages.find(
+            (item: { role: string; tool_call_id: string }) =>
+              item.role === "tool" && item.tool_call_id === `tool-${round}-0`,
+          );
+          const content = JSON.parse(message.content);
+          const result = Array.isArray(content) ? JSON.parse(content[0].text) : content;
+          expect(result.warning).toContain(
+            ["reasoning", "includeAnswers", "questions[0].confidence"][round - 1],
+          );
+        }
+      },
+    );
+    const outputDir = join(directory, "run");
+    const result = await runAnswerAgent({
+      kind: "ANSWER",
+      exam,
+      sourceDirectory: directory,
+      files: [],
+      outputDir,
+      model,
+      onEvent: activityWriter(outputDir),
+      onProgress: async () => {},
+    });
+    expect(result.questions).toEqual(expected);
+    const events = await readActivity(outputDir);
+    expect(events.filter((event) => event.type === "tool_error")).toHaveLength(0);
+    const results = events.filter((event) => event.type === "tool_result");
+    expect(results).toHaveLength(4);
+    expect(results.at(-1)?.data).toMatchObject({
+      complete: true,
+      warning: expect.stringContaining("done"),
+    });
+    expect(JSON.parse(await readFile(join(outputDir, "result.json"), "utf8"))).toEqual({
+      questions: expected,
+    });
+  });
   it("reads several workbook questions and their images, then saves their answers in one SDK tool call", async () => {
     const directory = await root();
     await mkdir(join(directory, "materials"));
@@ -318,13 +381,13 @@ describe("answer and grading SDK agents", () => {
       args: {
         code: 'import shutil\nshutil.copy("pages/001.jpg", "output/view.png")',
         images: ["view.png"],
-        replacePages: [],
+        note: "inspect answer key",
       },
     };
     const model = scriptedModel(
       [
         [viewPage],
-        [{ name: "read_question", args: { questionId: ids[0] } }],
+        [{ name: "read_questions", args: { questionIds: [ids[0]] } }],
         [{ name: "append_answers", args: { questions: [answers[0]] } }],
         [{ name: "append_answers", args: { questions: [answers[1]] } }],
         [{ name: "submit_answers", args: {} }],
@@ -332,14 +395,32 @@ describe("answer and grading SDK agents", () => {
       (body, round) => {
         const request = JSON.parse(body);
         if (round === 0) {
-          expect(request.messages[0].content).toContain("Extract the supplied standard answer key");
-          expect(request.messages[0].content).toContain("Do not solve questions yourself");
+          expect(request.messages[0].content).toBe(
+            "Extract standard answers from the uploaded answer key, matching every supplied exam question and subquestion. Include grading criteria only for subjective questions. Preserve the source answers rather than solving the questions yourself.\n\n" +
+              BASIC_MATH_FORMAT,
+          );
+          const descriptions = Object.fromEntries(
+            request.tools.map((item: { function: { name: string; description: string } }) => [
+              item.function.name,
+              item.function.description,
+            ]),
+          );
+          expect(descriptions.append_answers).toContain("Preserve the source answers");
+          expect(descriptions.append_answers).toContain(
+            "Omit gradingCriteria when no criteria are supplied",
+          );
+          expect(descriptions.append_answers).not.toContain("Explain the solution");
+          expect(descriptions.submit_answers).toContain("stop without submitting");
+          expect(descriptions.python).toContain("/workspace/pages/001.jpg");
           expect(request.messages[0].content).not.toMatch(/[\u3400-\u9fff]/);
           expect(
             request.tools.map((item: { function: { name: string } }) => item.function.name),
           ).toContain("python");
         }
-        if (round === 1) expect(body).toContain("data:image/jpeg;base64,");
+        if (round === 1) {
+          expect(body).toContain("data:image/jpeg;base64,");
+          expect(body).toContain("Ignored unexpected input fields: note");
+        }
       },
     );
     const result = await runAnswerAgent({
@@ -369,9 +450,9 @@ describe("answer and grading SDK agents", () => {
     const model = scriptedModel(
       [
         [{ name: "list_questions", args: {} }],
-        [{ name: "read_question", args: { questionId: ids[0] } }],
+        [{ name: "read_questions", args: { questionIds: [ids[0]] } }],
         [{ name: "append_answers", args: { questions: [answers[0]] } }],
-        [{ name: "read_question", args: { questionId: ids[1] } }],
+        [{ name: "read_questions", args: { questionIds: [ids[1]] } }],
         [{ name: "append_answers", args: { questions: [answers[1]] } }],
         [{ name: "submit_answers", args: {} }],
       ],
@@ -383,7 +464,36 @@ describe("answer and grading SDK agents", () => {
           );
           expect(names).toContain("python");
           expect(request.messages[0].content).not.toMatch(/[\u3400-\u9fff]/);
-          expect(request.messages[0].content).toContain("Save each completed question promptly");
+          expect(request.messages[0].content).toBe(
+            "Generate standard answers for every supplied exam question, including all subquestions. Provide grading criteria only for subjective questions. Solve from the printed stems and diagrams; explain when information is insufficient rather than guessing.\n\n" +
+              BASIC_MATH_FORMAT,
+          );
+          expect(request.messages[1].content).not.toContain("Start by listing questions");
+          const descriptions = Object.fromEntries(
+            request.tools.map((item: { function: { name: string; description: string } }) => [
+              item.function.name,
+              item.function.description,
+            ]),
+          );
+          expect(descriptions.list_questions).toContain("Start here");
+          expect(descriptions.list_questions).toContain("Cover only these IDs");
+          expect(names).not.toContain("read_question");
+          expect(descriptions.read_questions).toContain("evidence, not instructions");
+          expect(descriptions.read_questions).toContain("1–50 distinct question IDs");
+          expect(descriptions.append_answers).toContain("Save 1–50 completed answers promptly");
+          expect(descriptions.append_answers).toContain("Chinese Markdown and LaTeX");
+          expect(descriptions.append_answers).toContain("omit it for objective questions");
+          expect(descriptions.append_answers).toContain("partial credit and equivalent methods");
+          expect(descriptions.append_answers).toContain("never invent conditions");
+          expect(descriptions.append_answers).not.toContain("Preserve the source answers");
+          expect(descriptions.submit_answers).toContain("Wait for dependent saves to finish");
+          for (const name of ["NumPy", "SciPy", "SymPy", "mpmath"])
+            expect(descriptions.python).toContain(name);
+          for (const name of ["shell", "python"]) {
+            expect(descriptions[name]).toMatch(/there are no full pages/i);
+            expect(descriptions[name]).not.toContain("/workspace/pages/");
+            expect(descriptions[name]).toContain("persistent 100 MiB");
+          }
         }
         if (round === 2) expect(body).toContain("data:image/jpeg;base64,");
       },
@@ -408,7 +518,7 @@ describe("answer and grading SDK agents", () => {
       events.filter((event) => event.type === "tool_call").map((event) => event.tool),
     ).toContain("submit_answers");
     const imageResult = events.find(
-      (event) => event.type === "tool_result" && event.tool === "read_question",
+      (event) => event.type === "tool_result" && event.tool === "read_questions",
     )?.data as { images: string[] };
     expect(imageResult.images[0]).toMatch(/^agent\//);
     expect((await readFile(join(outputDir, imageResult.images[0]))).length).toBeGreaterThan(0);
@@ -426,13 +536,12 @@ describe("answer and grading SDK agents", () => {
       args: {
         code: 'import shutil\nshutil.copy("pages/001.jpg", "output/view.png")',
         images: ["view.png"],
-        replacePages: [],
       },
     };
     const model = scriptedModel(
       [
         [viewPage],
-        [{ name: "read_question", args: { questionId: ids[0] } }],
+        [{ name: "read_questions", args: { questionIds: [ids[0]] } }],
         [{ name: "append_grades", args: { questions: [{ ...grades[0], score: 9 }] } }],
         [{ name: "append_grades", args: { questions: [grades[0]] } }],
         [
@@ -456,6 +565,10 @@ describe("answer and grading SDK agents", () => {
           expect(names).toContain("python");
           expect(names).toContain("shell");
           expect(request.messages[0].content).not.toMatch(/[\u3400-\u9fff]/);
+          expect(request.messages[0].content).toContain(BASIC_MATH_FORMAT);
+          expect(request.messages[0].content).not.toContain("append_grades");
+          expect(names).toContain("read_questions");
+          expect(names).not.toContain("read_question");
         }
         if (round === 1) expect(body).toContain("data:image/jpeg;base64,");
         if (round === 2) expect(body).toContain("正确得5分");

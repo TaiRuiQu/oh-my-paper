@@ -5,10 +5,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import sharp from "sharp";
 import type { Exam } from "@/contracts/exams";
-import { validateCardRegions } from "@/server/answer-cards/layout";
+import { markCardTemplate, validateCardRegions } from "@/server/answer-cards/layout";
 import { gradeCardQuestion, mapConcurrent } from "@/server/answer-cards/grading";
 import { createProviderExamModel } from "@/server/ai/providers";
 import { z } from "zod";
+import { BASIC_MATH_FORMAT } from "@/server/ai/prompts";
 const id = "10000000-0000-4000-8000-000000000001";
 const exam: Exam = {
   id,
@@ -30,6 +31,39 @@ const exam: Exam = {
 };
 const region = { questionId: id, boxes: [{ page: 1, x: 0.2, y: 0.3, width: 0.5, height: 0.4 }] };
 describe("answer card grading", () => {
+  it("marks template regions with concise goals, basic math formatting and tolerant tool inputs", async () => {
+    const root = await mkdtemp(join(tmpdir(), "card-template-unit-"));
+    try {
+      const path = join(root, "template.jpg");
+      await sharp({ create: { width: 100, height: 200, channels: 3, background: "white" } })
+        .jpeg()
+        .toFile(path);
+      const result = await markCardTemplate({
+        exam,
+        files: [path],
+        outputDir: join(root, "run"),
+        signal: new AbortController().signal,
+        model: {
+          run: async (request) => {
+            expect(request.system).toContain(BASIC_MATH_FORMAT);
+            expect(request.system).not.toContain("save_region");
+            expect(request.tools.save_region.description).toContain("full blank writing areas");
+            const context = { toolCallId: "save", messages: [], context: {} };
+            const saved = await request.tools.save_region.execute!(
+              { ...region, note: "ready" },
+              context,
+            );
+            expect(saved).toMatchObject({ saved: 1, warning: expect.stringContaining("note") });
+            const submitted = await request.tools.submit_regions.execute!({}, context);
+            expect(submitted).toMatchObject({ complete: true });
+          },
+        },
+      });
+      expect(result.regions).toEqual([region]);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
   it("blocks an API request when credit validation fails and rejects a failed settlement", async () => {
     let calls = 0;
     const config = {
@@ -104,8 +138,9 @@ describe("answer card grading", () => {
       let calls = 0,
         score = 2;
       const model = {
-        generateJson: async <T>(request: { content: import("ai").UserContent }) => {
+        generateJson: async <T>(request: { system: string; content: import("ai").UserContent }) => {
           calls++;
+          expect(request.system).toContain(BASIC_MATH_FORMAT);
           if (!Array.isArray(request.content)) throw new Error("Expected image parts");
           const file = request.content.find((p) => p.type === "file");
           expect(file?.type).toBe("file");

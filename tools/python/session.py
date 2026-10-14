@@ -22,7 +22,7 @@ for line in sys.stdin:
         pages = request.pop('pages')
         for page in pages:
             path = workspace / 'pages' / page['name']
-            if page['name'] not in versions or page['refresh']:
+            if page['name'] not in versions:
                 shutil.copyfile(page['target'], path)
                 versions[page['name']] = hashlib.sha256(path.read_bytes()).digest()
         timeout = request.pop('timeoutMs') / 1000

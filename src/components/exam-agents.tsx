@@ -55,7 +55,7 @@ export function ExamAgents({
     try {
       await apiRequest(`/api/exams/${taskId}/${path}`, {
         method: "POST",
-        ...(path === "solutions" || path.startsWith("agents/")
+        ...(path === "solutions"
           ? jsonBody({ modelId: models.answer, reasoningEffort: models.reasoningEfforts?.answer })
           : {}),
       });
@@ -303,10 +303,12 @@ export function AgentResultContent({ task, exam }: { task: ExamAgentTask; exam: 
                   <h4>参考解答</h4>
                   <MarkdownText text={item.solution} />
                 </div>
-                <div className="criteria-column">
-                  <h4>评分标准</h4>
-                  <MarkdownText text={item.gradingCriteria} />
-                </div>
+                {item.gradingCriteria && (
+                  <div className="criteria-column">
+                    <h4>评分标准</h4>
+                    <MarkdownText text={item.gradingCriteria} />
+                  </div>
+                )}
               </div>
             ) : (
               <div className="answer-columns">

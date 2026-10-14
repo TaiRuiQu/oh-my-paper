@@ -511,10 +511,10 @@ async function main() {
       await import("../src/server/exams/agent-tasks");
     const answerId = randomUUID(),
       answerJob = randomUUID();
-    const answerItems = questions.map((question) => ({
+    const answerItems = questions.map((question, index) => ({
       questionId: question.id,
       solution: `第${question.number}题解答`,
-      gradingCriteria: "正确得5分，步骤错误酌情扣分。",
+      ...(index ? { gradingCriteria: "正确得5分，步骤错误酌情扣分。" } : {}),
     }));
     let agentCalls = 0;
     function installAgentModel(
@@ -596,9 +596,9 @@ async function main() {
     installAgentModel(
       [
         { name: "list_questions", args: {} },
-        { name: "read_question", args: { questionId } },
+        { name: "read_questions", args: { questionIds: [questionId] } },
         { name: "append_answers", args: { questions: [answerItems[0]] } },
-        { name: "read_question", args: { questionId: questions[1].id } },
+        { name: "read_questions", args: { questionIds: [questions[1].id] } },
         { name: "append_answers", args: { questions: [answerItems[1]] } },
         { name: "submit_answers", args: {} },
       ],
@@ -622,6 +622,10 @@ async function main() {
     assert.equal(
       (await db.questionAnswer.findUniqueOrThrow({ where: { questionId } })).solution,
       answerItems[0].solution,
+    );
+    assert.equal(
+      (await db.questionAnswer.findUniqueOrThrow({ where: { questionId } })).gradingCriteria,
+      "",
     );
     assert.equal(await db.questionAnswer.count({ where: { examId: exam.id } }), 2);
     await processAgentTask(answerId, answerJob, new AbortController().signal);
@@ -656,7 +660,7 @@ async function main() {
     });
     installAgentModel([
       { name: "read_pages", args: { pages: [1] } },
-      { name: "read_question", args: { questionId } },
+      { name: "read_questions", args: { questionIds: [questionId] } },
       { name: "append_grades", args: { questions: [gradeItems[0]] } },
       { name: "append_grades", args: { questions: [gradeItems[1]] } },
       { name: "submit_grading", args: {} },
@@ -873,12 +877,16 @@ async function main() {
             (await db.gradingWorkflow.findUniqueOrThrow({ where: { id: waiting.id } })).status,
             "FAILED",
           );
+          const originalExamProvider = uploadedTask.providerSnapshot;
           const { retryExamTask } = await import("../src/server/exams/tasks");
+          await activateModel(providerId, provider.models[1].id, "medium", "exam");
           await retryExamTask(userId, uploadedTask.id);
           waiting = await db.gradingWorkflow.findUniqueOrThrow({ where: { id: waiting.id } });
           assert.equal(waiting.status, "QUEUED");
           assert.equal(waiting.referenceFiles.length, 1);
           uploadedTask = await db.examTask.findUniqueOrThrow({ where: { id: uploadedTask.id } });
+          assert.deepEqual(uploadedTask.providerSnapshot, originalExamProvider);
+          await activateModel(providerId, provider.models[0].id, "default", "exam");
         }
         installAgentModel([
           { name: "report_exam_meta", args: { total: 2, paperSize: "A3", columns: 2 } },
@@ -920,22 +928,28 @@ async function main() {
           questionId: question.id,
           solution: suppliedReference ? `上传标准答案 ${index + 1}` : answerItems[index].solution,
         }));
-        // A retry picks the current answer configuration and leaves other purposes intact.
+        // Retrying keeps the complete original model snapshot despite changed defaults.
+        const originalAnswerProvider = newAnswer.providerSnapshot;
         await db.examAgentTask.update({ where: { id: newAnswer.id }, data: { status: "FAILED" } });
         await activateModel(providerId, provider.models[0].id, "default", "answer");
         const { retryAgentTask } = await import("../src/server/exams/agent-tasks");
         await retryAgentTask(userId, uploadedTask.id, newAnswer.id);
         newAnswer = await db.examAgentTask.findUniqueOrThrow({ where: { id: newAnswer.id } });
-        assert.equal((newAnswer.providerSnapshot as { model: string }).model, "vision-one");
+        assert.deepEqual(newAnswer.providerSnapshot, originalAnswerProvider);
+        assert.equal((newAnswer.providerSnapshot as { model: string }).model, "vision-two");
         assert.equal((await getActiveProvider("grading")).model, "grading-vision");
-        installAgentModel([
-          ...(suppliedReference ? [{ name: "read_pages", args: { pages: [1] } }] : []),
-          ...matchedAnswers.map((item) => ({
-            name: "append_answers",
-            args: { questions: [item] },
-          })),
-          { name: "submit_answers", args: {} },
-        ]);
+        installAgentModel(
+          [
+            ...(suppliedReference ? [{ name: "read_pages", args: { pages: [1] } }] : []),
+            ...matchedAnswers.map((item) => ({
+              name: "append_answers",
+              args: { questions: [item] },
+            })),
+            { name: "submit_answers", args: {} },
+          ],
+          undefined,
+          "vision-two",
+        );
         await processAgentTask(newAnswer.id, newAnswer.jobId, new AbortController().signal);
         await processWorkflow(bundled.id, bundled.jobId);
         bundled = await db.gradingWorkflow.findUniqueOrThrow({ where: { id: bundled.id } });
@@ -955,11 +969,18 @@ async function main() {
           continue;
         }
         assert.ok(bundled.gradingTaskId);
-        const newGrade = await db.examAgentTask.findUniqueOrThrow({
+        let newGrade = await db.examAgentTask.findUniqueOrThrow({
           where: { id: bundled.gradingTaskId! },
         });
         assert.equal((newGrade.providerSnapshot as { model: string }).model, "grading-vision");
         assert.deepEqual(newGrade.reference, matchedAnswers);
+        const originalGradingProvider = newGrade.providerSnapshot;
+        await db.examAgentTask.update({ where: { id: newGrade.id }, data: { status: "FAILED" } });
+        await activateModel(providerId, provider.models[0].id, "default", "grading");
+        await retryAgentTask(userId, uploadedTask.id, newGrade.id);
+        newGrade = await db.examAgentTask.findUniqueOrThrow({ where: { id: newGrade.id } });
+        assert.deepEqual(newGrade.providerSnapshot, originalGradingProvider);
+        await activateModel(gradingProvider.id, gradingProvider.models[0].id, "high", "grading");
         assert.deepEqual(
           await readFile(join(agentTaskDirectory(newGrade.id), newGrade.inputFiles[0])),
           await readFile(join(taskDirectory(id), "inputs/1.upload")),
@@ -1218,7 +1239,11 @@ async function main() {
       assert.equal(dashboard.users.find((item) => item.id === publicUser.id)!.credits, "0");
       assert.equal(
         dashboard.models.find((item) => item.id === provider.models[1].id)!.credits,
-        "1.00500000",
+        creditAmount(
+          allRows
+            .filter((row) => row.modelId === provider.models[1].id)
+            .reduce((sum, row) => sum + creditUnits(row.credits.toFixed(8)), 0n),
+        ),
       );
       assert.equal(
         dashboard.models.reduce((sum, row) => sum + creditUnits(row.credits), 0n),

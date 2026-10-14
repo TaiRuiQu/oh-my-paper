@@ -1,5 +1,6 @@
 import "server-only";
-import { tool, type ToolSet } from "ai";
+import type { ToolSet } from "ai";
+import { agentTool as tool } from "@/server/ai/agent-tool";
 import { z } from "zod";
 import type { Exam } from "@/contracts/exams";
 import {
@@ -16,6 +17,7 @@ import { AppError } from "@/server/errors";
 export function createAnswerResultTools(options: {
   exam: Exam;
   kind: ExamAgentKind;
+  answerSource?: "UPLOAD" | "GENERATED";
   initial?: AgentResult;
   onProgress: (result: AgentResult) => Promise<void>;
 }) {
@@ -85,7 +87,12 @@ export function createAnswerResultTools(options: {
     });
   const finish = tool({
     description:
-      "Finish only after saving every question, including every subquestion. Missing questions are rejected; saved work is retained.",
+      options.kind === "ANSWER"
+        ? "Submit as soon as every supplied question, including all subquestions, is saved. Wait for dependent saves to finish. Missing questions are rejected; drafts are retained." +
+          (options.answerSource === "UPLOAD"
+            ? " If a source answer is missing or unreadable, stop without submitting and identify the affected question; never guess."
+            : "")
+        : "Finish only after saving every question, including every subquestion. Missing questions are rejected; saved work is retained.",
     inputSchema: z.strictObject({}),
     execute: () =>
       serialize(async () => {
@@ -108,7 +115,10 @@ export function createAnswerResultTools(options: {
       ? {
           append_answers: tool({
             description:
-              "Save 1–50 completed answers promptly in one call. Each answer includes its questionId, solution and grading criteria for all subquestions. Batch independent ready questions instead of making one call per question. Resend IDs to correct earlier answers; never wait for the whole document.",
+              "Save 1–50 completed answers promptly, covering every subquestion in solution, in Chinese Markdown and LaTeX. Include optional gradingCriteria only for subjective questions or subjective parts of mixed questions; omit it for objective questions, including single-choice, multiple-choice and true/false. Batch ready answers; never wait for a whole section or paper. Resend IDs to correct drafts. Independent reads and saves may share a response; keep dependent calls separate. Use only explicit scores; never invent conditions, maxima or a grading scale. " +
+              (options.answerSource === "UPLOAD"
+                ? "Match section and question numbers to the supplied IDs. Preserve the source answers and any printed criteria for subjective questions without substituting your own solutions. Omit gradingCriteria when no criteria are supplied."
+                : "Explain the solution; subjective grading criteria should include partial credit and equivalent methods. For incomplete questions, explain insufficient information instead of guessing."),
             inputSchema: answerBatchSchema,
             execute: ({ questions }) => append(questions),
           }),
@@ -117,7 +127,7 @@ export function createAnswerResultTools(options: {
       : {
           append_grades: tool({
             description:
-              "Save exactly one graded question promptly; several append calls may run alongside inspecting the next question: student transcription, correctness, score and feedback for all subquestions. Resend its ID to correct it.",
+              "Save exactly one graded question promptly, covering every subquestion: transcribe actual student work, correctness, score and feedback in Chinese Markdown. Accept equivalent methods and explain partial credit. Confirmed blanks use correct=false and score=0 when the maximum is known. Unreadable or uncertain work uses correct=null and score=null with a review reason; unknown maxima use score=null. Never invent work, scores or a grading scale, and never exceed the explicit maximum. Independent reads and saves may share a response; keep dependent calls separate. Resend its ID to correct a draft.",
             inputSchema: gradingBatchSchema,
             execute: ({ questions }) => append(questions),
           }),

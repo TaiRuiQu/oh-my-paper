@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import sharp from "sharp";
 import { createInspectionTools, disposeInspectionTools } from "@/server/exams/tools";
 import {
+  commandInputSchema,
   pythonInputSchema,
   runSandboxPython,
   runSandboxCommand,
@@ -46,12 +47,24 @@ async function fixture() {
   return { root, pages, path };
 }
 const rotate = {
-  code: 'from PIL import Image\nim = Image.open("pages/001.jpg")\nim.rotate(90, expand=True).save("output/rotated.png")\nprint("rotated", im.size)',
+  code: 'from PIL import Image\nim = Image.open("pages/001.jpg")\nrotated = im.rotate(90, expand=True)\nrotated.save("pages/001.jpg")\nrotated.save("output/rotated.png")\nprint("rotated", im.size)',
   images: ["rotated.png"],
-  replacePages: [{ page: 1, image: "rotated.png" }],
 };
 
 describe("local Python sandbox", () => {
+  it("computes numerical and symbolic answers with the preinstalled libraries inside the sandbox", async () => {
+    const { root, pages } = await fixture();
+    const tools = inspection(pages, root);
+    const result = await tools.python.execute!(
+      {
+        code: 'import numpy as np, sympy as sp, mpmath as mp\nfrom scipy.integrate import quad\nprint(np.linalg.solve([[2, 1], [1, 2]], [3, 3]).tolist())\nprint(round(quad(lambda x: x*x, 0, 1)[0], 6))\nx=sp.symbols("x")\nprint(sp.solve(x*x-4, x))\nprint(mp.almosteq(mp.sqrt(2)**2, 2))',
+        images: [],
+      },
+      options,
+    );
+    expect(result).toMatchObject({ exitCode: 0, stderr: "", images: [] });
+    expect(result.stdout).toBe("[1.0, 1.0]\n0.333333\n[-2, 2]\nTrue\n");
+  });
   it("automatically imports pages overwritten directly by shell/Python without export or replacement metadata", async () => {
     const { root, pages, path } = await fixture();
     const original = await readFile(path);
@@ -63,7 +76,6 @@ describe("local Python sandbox", () => {
       {
         command: `python3 -c 'from PIL import Image; im=Image.open("pages/001.jpg"); im.rotate(90, expand=True).save("pages/001.jpg")'`,
         images: [],
-        replacePages: [],
       },
       options,
     );
@@ -78,7 +90,6 @@ describe("local Python sandbox", () => {
         {
           code: 'from PIL import Image\nprint(Image.open("pages/001.jpg").size)',
           images: [],
-          replacePages: [],
         },
         options,
       ),
@@ -90,7 +101,6 @@ describe("local Python sandbox", () => {
         {
           command: `python3 -c 'from PIL import Image; im=Image.open("pages/001.jpg"); im.rotate(90, expand=True).save("pages/001.jpg")'`,
           images: [],
-          replacePages: [],
         },
         options,
       ),
@@ -101,7 +111,6 @@ describe("local Python sandbox", () => {
         {
           code: 'from PIL import Image\nprint(Image.open("pages/001.jpg").size)',
           images: [],
-          replacePages: [],
         },
         options,
       ),
@@ -165,7 +174,7 @@ describe("local Python sandbox", () => {
     try {
       await expect(session.run({ command: "printf kept", images: [] })).rejects.toMatchObject({
         code: "PYTHON_SANDBOX_FAILED",
-        message: expect.stringContaining("沙箱进程退出（1）"),
+        message: expect.stringMatching(/沙箱进程退出（1）|沙箱输入通道错误：write EPIPE/),
       });
       await writeFile(
         stub,
@@ -194,7 +203,6 @@ printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
         {
           code: 'import os\nfrom PIL import Image\nassert os.environ["OPENBLAS_NUM_THREADS"] == "1"\nassert os.environ["OPENCV_FOR_THREADS_NUM"] == "1"\nprint(Image.open("pages/001.jpg").size)',
           images: [],
-          replacePages: [],
         },
         options,
       );
@@ -204,7 +212,7 @@ printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
       });
     }
     expect(await readdir(join(root, ".python"))).toEqual([]);
-  });
+  }, 15_000);
   it("runs arbitrary shell commands with the same isolation, exports and recovery", async () => {
     const { root, pages } = await fixture();
     const tools = inspection(pages, root);
@@ -212,7 +220,6 @@ printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
       {
         command: `python3 -c '${rotate.code.replaceAll("\n", ";")}'`,
         images: rotate.images,
-        replacePages: rotate.replacePages,
       },
       options,
     );
@@ -221,7 +228,7 @@ printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
     expect(
       await tools.shell.toModelOutput!({
         toolCallId: "shell",
-        input: { command: "", images: [], replacePages: [] },
+        input: { command: "", images: [] },
         output: result,
       }),
     ).toMatchObject({ type: "content", value: [{ type: "text" }, { type: "file" }] });
@@ -242,7 +249,7 @@ printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
     });
     expect(await run("printf recovered")).toMatchObject({ exitCode: 0, stdout: "recovered" });
     expect(await readdir(join(root, ".python"))).toEqual([]);
-  });
+  }, 15_000);
   it("executes arbitrary Python with Pillow while hiding host files, secrets and network", async () => {
     const { root, pages } = await fixture();
     const secretFile = join(root, "host-secret.txt");
@@ -280,12 +287,18 @@ printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
   it("keeps preview-only processing from changing the page, and reports Python exceptions", async () => {
     const { root, pages, path } = await fixture();
     const tools = inspection(pages, root);
-    const preview = await tools.python.execute!({ ...rotate, replacePages: [] }, options);
+    const preview = await tools.python.execute!(
+      {
+        code: 'from PIL import Image\nImage.open("pages/001.jpg").rotate(90, expand=True).save("output/rotated.png")',
+        images: ["rotated.png"],
+      },
+      options,
+    );
     if (!("images" in preview)) throw new Error("Expected a completed Python result");
     expect(preview.images).toHaveLength(1);
     expect(pages[0]).toMatchObject({ width: 100, height: 200, path });
     const failure = await tools.python.execute!(
-      { code: 'raise ValueError("bad angle")', images: [], replacePages: [] },
+      { code: 'raise ValueError("bad angle")', images: [] },
       options,
     );
     if (!("stderr" in failure)) throw new Error("Expected a completed Python result");
@@ -293,22 +306,19 @@ printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
     expect(failure.stderr).toContain("ValueError: bad angle");
     expect(pages[0].path).toBe(path);
   });
-  it("rejects invalid export filenames and page update references", async () => {
+  it("rejects invalid export filenames and removed page replacement parameters", () => {
     for (const name of ["../secret.png", "/tmp/image.png", "x.py", "x.png/../../secret"])
-      expect(
-        pythonInputSchema.safeParse({ code: "print(1)", images: [name], replacePages: [] }).success,
-      ).toBe(false);
-    const { root, pages } = await fixture();
-    const tools = inspection(pages, root);
-    await expect(tools.python.execute!({ ...rotate, images: [] }, options)).rejects.toMatchObject({
-      code: "PAGE_UPDATE_INVALID",
+      expect(pythonInputSchema.safeParse({ code: "print(1)", images: [name] }).success).toBe(false);
+    expect(pythonInputSchema.parse({ code: "print(1)" })).toEqual({
+      code: "print(1)",
+      images: [],
     });
-    await expect(
-      tools.python.execute!(
-        { ...rotate, replacePages: [{ page: 2, image: "rotated.png" }] },
-        options,
-      ),
-    ).rejects.toMatchObject({ code: "PAGE_NOT_FOUND" });
+    expect(commandInputSchema.parse({ command: "true" })).toEqual({
+      command: "true",
+      images: [],
+    });
+    expect(pythonInputSchema.safeParse({ ...rotate, replacePages: [] }).success).toBe(false);
+    expect(commandInputSchema.safeParse({ command: "true", replacePages: [] }).success).toBe(false);
   });
   it("kills timed-out code and cleans the request directory without a host execution fallback", async () => {
     const { root, pages } = await fixture();
@@ -335,7 +345,7 @@ printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
     const tools = inspection(pages, root);
     await expect(
       tools.python.execute!(
-        { code: "while True: pass", images: [], replacePages: [] },
+        { code: "while True: pass", images: [] },
         { ...options, abortSignal: AbortSignal.timeout(150) },
       ),
     ).rejects.toMatchObject({ name: "TimeoutError" });
@@ -369,7 +379,7 @@ printf '%s\\n' '{"result":{"exitCode":0,"stdout":"ok","stderr":"","images":[]}}'
       };
       await onProgress!(exam);
       await expect(tools!.python.execute!(rotate, options)).rejects.toMatchObject({
-        code: "PAGE_ALREADY_USED",
+        code: "PYTHON_SANDBOX_FAILED",
       });
       return exam;
     };

@@ -118,7 +118,21 @@ describe("exam agent routes", () => {
       "GRADING",
     );
     expect((await retry(request(), context)).status).toBe(202);
-    expect(mocks.retry).toHaveBeenCalledWith("owner", "source", "agent", undefined, undefined);
+    expect(mocks.retry).toHaveBeenCalledWith("owner", "source", "agent");
+  });
+  it("retries with the original task configuration even when an older client sends a model override", async () => {
+    mocks.json.mockResolvedValue({ modelId: "another-model", reasoningEffort: "high" });
+    const response = await retry(
+      new Request("http://localhost/api/exams/source/agents/agent/retry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ modelId: "another-model", reasoningEffort: "high" }),
+      }),
+      context,
+    );
+    expect(response.status).toBe(202);
+    expect(mocks.retry).toHaveBeenCalledWith("owner", "source", "agent");
+    expect(mocks.json).not.toHaveBeenCalled();
   });
   it.each([activity, image])(
     "restricts diagnostics to administrators before reading tasks",

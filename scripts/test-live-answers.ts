@@ -133,7 +133,6 @@ async function main() {
     assert.equal(answers.length, 2);
     assert(answers.find((a) => a.questionId === questionIds[0])?.solution.includes("56"));
     assert(answers.find((a) => a.questionId === questionIds[1])?.solution.includes("4"));
-    assert(answers.every((a) => a.gradingCriteria.length > 0));
     const usage = await db.creditUsage.findMany({ where: { taskId } });
     assert.equal(usage.length, calls);
     assert(usage.every((u) => u.inputTokens > 0 && u.outputTokens > 0));

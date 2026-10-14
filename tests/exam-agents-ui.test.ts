@@ -62,6 +62,20 @@ function render(tasks: ExamAgentTask[], isAdmin = false) {
   return container;
 }
 describe("reference answers and role-specific presentation", () => {
+  it("hides grading criteria when answers omit them or persist an empty value", () => {
+    const objective = task({
+      result: {
+        questions: [
+          { questionId: "q1", solution: "A" },
+          { questionId: "q2", solution: "B", gradingCriteria: "" },
+        ],
+      },
+    });
+    const output = render([objective]);
+    expect(output.textContent).toContain("参考解答");
+    expect(output.textContent).not.toContain("评分标准");
+    expect(output.querySelector(".criteria-column")).toBeNull();
+  });
   it("provides a clear generation action and published answers", () => {
     expect(render([]).textContent).toContain("生成标准答案");
     expect(render([]).textContent).toContain("上传标准答案");

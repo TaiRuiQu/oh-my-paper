@@ -8,7 +8,12 @@ export type ExamAgentKind = z.infer<typeof agentKindSchema>;
 export const generatedAnswerSchema = z.strictObject({
   questionId: z.uuid(),
   solution: z.string().trim().min(1).max(60_000),
-  gradingCriteria: z.string().trim().min(1).max(30_000),
+  gradingCriteria: z
+    .string()
+    .trim()
+    .max(30_000)
+    .optional()
+    .describe("Only for subjective questions or subjective parts; omit for objective questions."),
 });
 export const gradedAnswerSchema = z.strictObject({
   questionId: z.uuid(),

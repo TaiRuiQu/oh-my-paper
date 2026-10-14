@@ -110,6 +110,10 @@ export function reasoningOptions(
               thinkingConfig: effort === "none" ? { thinkingBudget: 0 } : { thinkingLevel: effort },
             },
           };
+    case "google_interactions":
+      return {
+        google: { store: true, ...(effort === "default" ? {} : { thinkingLevel: effort }) },
+      };
   }
 }
 export function createProviderExamModel(
@@ -177,7 +181,9 @@ export function createProviderExamModel(
         ? createOpenAICompatible({ ...common, name: "exam", includeUsage: true })(config.model)
         : config.apiType === "anthropic"
           ? createAnthropic({ ...common, baseURL: anthropicBaseURL(config.baseURL) })(config.model)
-          : createGoogle(common)(config.model);
+          : config.apiType === "google_interactions"
+            ? createGoogle(common).interactions(config.model)
+            : createGoogle(common)(config.model);
   const run = (request: AgentRequest) =>
     providerConcurrencyLimiter(config.providerId).run(
       config.maxConcurrency,
@@ -337,10 +343,21 @@ export function createProviderExamModel(
           await creditMeter?.beforeCall();
           const result = streamText({
             model,
-            system:
-              request.system +
-              `\nReturn only JSON matching: ${JSON.stringify(request.schema.toJSONSchema())}`,
-            messages: [{ role: "user", content: request.content }],
+            system: request.system,
+            messages: [
+              {
+                role: "user",
+                content: [
+                  ...(typeof request.content === "string"
+                    ? [{ type: "text" as const, text: request.content }]
+                    : request.content),
+                  {
+                    type: "text" as const,
+                    text: `Return only JSON matching: ${JSON.stringify(request.schema.toJSONSchema())}`,
+                  },
+                ],
+              },
+            ],
             maxOutputTokens: config.maxOutputTokens,
             providerOptions: reasoningOptions(config),
             // Each question makes exactly one API call. Failed questions may be retried explicitly.
@@ -367,9 +384,6 @@ export function createProviderExamModel(
         const result = createResultTools(request.onProgress, request.onQuestionProgress);
         await run({
           ...request,
-          system:
-            request.system +
-            "\nIn your first response call report_exam_meta with A3/A4 paper size, 1–4 text columns, orientation and the count of visible parent questions (total=null if uncertain). Uploaded workbook excerpts are valid; only uploaded pages define the task scope. Save recognized questions promptly with append_questions while independently inspecting the next. Rotate pages before saving material coordinates. Submit after all visible content is inspected and saved; enforce the reported total only when it is known. Keep absent scores null.",
           tools: { ...request.tools, ...result.tools },
           isComplete: result.isComplete,
         });
@@ -389,10 +403,21 @@ export function createProviderExamModel(
           await creditMeter?.beforeCall();
           const result = streamText({
             model,
-            system:
-              request.system +
-              `\nRequired JSON schema: ${JSON.stringify(parsedExamSchema.toJSONSchema())}`,
-            messages: [{ role: "user", content: request.content }],
+            system: request.system,
+            messages: [
+              {
+                role: "user",
+                content: [
+                  ...(typeof request.content === "string"
+                    ? [{ type: "text" as const, text: request.content }]
+                    : request.content),
+                  {
+                    type: "text" as const,
+                    text: `Return only JSON matching: ${JSON.stringify(parsedExamSchema.toJSONSchema())}`,
+                  },
+                ],
+              },
+            ],
             maxOutputTokens: config.maxOutputTokens,
             providerOptions: reasoningOptions(config),
             maxRetries: 1,

@@ -2,7 +2,8 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { tool, type ToolExecutionOptions } from "ai";
+import type { ToolExecutionOptions } from "ai";
+import { agentTool as tool } from "@/server/ai/agent-tool";
 import sharp from "sharp";
 import { AppError } from "@/server/errors";
 import type { PageImage } from "./documents";
@@ -51,22 +52,11 @@ export function createInspectionTools(
     ],
   });
   const executeSandbox = async (
-    input:
-      | PythonInput
-      | { command: string; images: string[]; replacePages: PythonInput["replacePages"] },
+    input: PythonInput | { command: string; images: string[] },
     { abortSignal }: ToolExecutionOptions<unknown>,
   ) => {
     const executionSignal =
       signal && abortSignal ? AbortSignal.any([signal, abortSignal]) : (signal ?? abortSignal);
-    const numbers = input.replacePages.map((update) => update.page);
-    if (new Set(numbers).size !== numbers.length)
-      throw new AppError("同一页面不能在一次调用中替换多次。", "PAGE_UPDATE_INVALID", 422);
-    for (const update of input.replacePages) {
-      findPage(update.page);
-      if (!input.images.includes(update.image))
-        throw new AppError("替换页面的图像必须包含在 images 中。", "PAGE_UPDATE_INVALID", 422);
-    }
-    validatePageUpdates?.(numbers);
     const lockedPages = pages
       .filter((page) => {
         try {
@@ -113,26 +103,20 @@ export function createInspectionTools(
     );
     executionSignal?.throwIfAborted();
     // Recognition and Python may run concurrently in the same SDK round.
-    validatePageUpdates?.(numbers);
-    const updates = input.replacePages.map((update) => {
-      const preview = previews.find((image) => image.name === update.image);
-      if (!preview) throw new AppError("Python 未返回替换页面的图像。", "PAGE_UPDATE_INVALID", 422);
-      return { page: findPage(update.page), preview };
-    });
-    for (const { page, preview } of [...automatic, ...updates])
+    validatePageUpdates?.(pageUpdates.map((update) => update.page));
+    for (const { page, preview } of automatic)
       Object.assign(page, {
         path: join(directory, preview.image),
         width: preview.width,
         height: preview.height,
       });
-    session.refreshPages(numbers);
     return {
       exitCode: result.exitCode,
       stdout: result.stdout,
       stderr: result.stderr,
       images: previews.map((preview) => preview.image),
       previews,
-      pages: [...automatic, ...updates].map(({ page, preview }) => ({
+      pages: automatic.map(({ page, preview }) => ({
         page: page.page,
         width: page.width,
         height: page.height,
@@ -150,7 +134,7 @@ export function createInspectionTools(
     }),
     python: tool({
       description:
-        "Run Python with Pillow in a local sandbox without network. Pages are at /workspace/pages/001.jpg; previews at /workspace/agent/<UUID>.jpg. Use print() for text. To view a page or zoom into a region, copy or crop it to output/<name>.png and list the filename in images. Python and shell share a persistent 100 MiB workspace for this agent run. Files persist automatically across calls. Each command has 60s wall time and 512 MiB memory. To rotate a page, overwrite /workspace/pages/001.jpg directly before saving material coordinates; later calls and final crops use the updated page automatically. Omit images unless you want an extra preview.",
+        "Run Python with NumPy, SciPy, SymPy, mpmath and Pillow in a local sandbox without network. Use these libraries for numerical or symbolic computation and print() for results. Pages are at /workspace/pages/001.jpg; previews at /workspace/agent/<UUID>.jpg. Use print() for text. To view a page or zoom into a region, copy or crop it to output/<name>.png and list the filename in images. Python and shell share a persistent 100 MiB workspace for this agent run. Files persist automatically across calls. Each command has 60s wall time and 512 MiB memory. To rotate a page, overwrite /workspace/pages/001.jpg directly before saving material coordinates; later calls and final crops use the updated page automatically. Omit images unless you want an extra preview.",
       inputSchema: pythonInputSchema,
       execute: executeSandbox,
       toModelOutput: ({ output }) => imageOutput(output),

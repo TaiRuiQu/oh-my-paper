@@ -57,21 +57,21 @@
 
 各层 `score` 只保存明确印出的满分，未知值使用 `null`；“每小题5分”可确定对应小题分值，小题总分不能自动拆分给小问。`description` 使用 Markdown，公式使用 LaTeX，文字表格使用 Markdown 表格。`materials` 可属于小题或小问，共用图形只保存于父小题；`page` 从 1 开始，坐标为渲染页面宽高的 0–1 比例，原点在左上角。跨页内容按同一大题、小题和小问合并。识别 Agent 只录入题目；答案生成与批改由独立 Agent 处理。
 
-数据库独立保存 `Exam`、`ExamSection` 和 `ExamQuestion`，小问以 JSON 保存于所属小题；程序分配 ID 与阅读顺序，印刷题号另行保留。`Exam` 可有一份 `ExamAnswer`，每道小题的 `QuestionAnswer` 只保存 Markdown 文本 `solution` 和 `gradingCriteria`。`Exam` 可有多份 `Submission`，每道小题的 `SubmissionAnswer` 保存文本 `answer`、`feedback`、`correct` 和 `score`；无法确认正确性或分值时使用 `null`，并说明待复核原因。提交总分由逐题分数计算，不重复保存。复合外键保证小题只能属于同一试卷的大题，答案和提交不能引用其他试卷的题目。答案生成与批改均在 Worker 中执行，完成后分别发布到 `ExamAnswer` / `QuestionAnswer` 与 `Submission` / `SubmissionAnswer`。
+数据库独立保存 `Exam`、`ExamSection` 和 `ExamQuestion`，小问以 JSON 保存于所属小题；程序分配 ID 与阅读顺序，印刷题号另行保留。`Exam` 可有一份 `ExamAnswer`，每道小题的 `QuestionAnswer` 保存 Markdown 文本 `solution` 和可选的 `gradingCriteria`；未提供评分标准时数据库保存空字符串。`Exam` 可有多份 `Submission`，每道小题的 `SubmissionAnswer` 保存文本 `answer`、`feedback`、`correct` 和 `score`；无法确认正确性或分值时使用 `null`，并说明待复核原因。提交总分由逐题分数计算，不重复保存。复合外键保证小题只能属于同一试卷的大题，答案和提交不能引用其他试卷的题目。答案生成与批改均在 Worker 中执行，完成后分别发布到 `ExamAnswer` / `QuestionAnswer` 与 `Submission` / `SubmissionAnswer`。
 
 数学公式由浏览器中的 KaTeX 渲染，支持 `$...$` 行内公式和 `$$...$$` 独立公式，以及 Markdown 表格中的公式。服务端仅传递原始 LaTeX 文本，不生成公式图片；无法解析的公式保留原文。
 
 ## 答案生成与学生答卷批改
 
-识别完成后，试卷的「标准答案」页提供「上传标准答案」与「生成标准答案」两个独立入口。试卷解析与答案解析为独立的 Agent 任务，各自拥有模型上下文、草稿和进度；答案解析不会调用试卷识别 Agent。添加试卷时也可通过 multipart `answerFiles` 附带标准答案，后台持久化依次执行试卷解析、答案解析，到答案准备好即结束，不触发批改。页面关闭或刷新不会影响执行，重试会保留原有文件。上传使用 `POST /api/exams/:id/answers/upload` 接收 PDF、JPG、PNG，并在 Worker 中按试卷题号匹配答案；它只解析上传内容，不自行求解。答案缺失或模糊时不会提交完整结果，请重新上传覆盖全部题目的清晰答案。上传解析和自动生成均使用「AI 生成答案」的模型配置。答案 Agent 使用 `list_questions`、`read_question`／`read_questions` 自主读取大题公共说明、完整题干、小问与材料截图，必要时调用 Python 检查计算或处理配图。`read_questions` 一次读取 1–50 道题及其材料，`append_answers` 一次保存 1–50 道题的 `solution` 与 `gradingCriteria`，全部题目保存后调用 `submit_answers`。评分标准须包含全部小问及部分分规则；未知满分不臆造。
+识别完成后，试卷的「标准答案」页提供「上传标准答案」与「生成标准答案」两个独立入口。试卷解析与答案解析为独立的 Agent 任务，各自拥有模型上下文、草稿和进度；答案解析不会调用试卷识别 Agent。添加试卷时也可通过 multipart `answerFiles` 附带标准答案，后台持久化依次执行试卷解析、答案解析，到答案准备好即结束，不触发批改。页面关闭或刷新不会影响执行，重试会保留原有文件。上传使用 `POST /api/exams/:id/answers/upload` 接收 PDF、JPG、PNG，并在 Worker 中按试卷题号匹配答案；它只解析上传内容，不自行求解。答案缺失或模糊时不会提交完整结果，请重新上传覆盖全部题目的清晰答案。上传解析和自动生成均使用「AI 生成答案」的模型配置。答案 Agent 使用 `list_questions`、`read_questions` 自主读取大题公共说明、完整题干、小问与材料截图，必要时调用 Python 的 NumPy、SciPy、SymPy、mpmath 完成数值或符号计算，也可处理配图。`read_questions` 一次读取 1–50 道题及其材料，`append_answers` 一次保存 1–50 道题的 `solution` 与可选的 `gradingCriteria`，全部题目保存后调用 `submit_answers`。评分标准只用于主观题或混合题中的主观小问，包含部分分规则；单选、多选、判断等客观题省略该字段，界面不展示空评分标准。未知满分不臆造。
 
-标准答案完成后，可上传一位学生的 PDF、JPG 或 PNG 答卷；文件和页数限制与识别相同，多页按上传顺序处理。批改 Agent 通过沙箱 `shell` / `python` 读取、放大或旋转答卷，`read_question` 获取原题与标准答案，`append_grades` 逐题保存作答转录、正确性、得分和反馈，再通过 `submit_grading` 完成。漏题会阻止提交；明确空白题按未作答处理；无法辨认或匹配不确定的题目使用 `correct=null`、`score=null` 并标记复核。已知分值不得超分，原题满分未知时不自动评分；若全部小问有明确分值，可求和作为该题满分。
+标准答案完成后，可上传一位学生的 PDF、JPG 或 PNG 答卷；文件和页数限制与识别相同，多页按上传顺序处理。批改 Agent 通过沙箱 `shell` / `python` 读取、放大或旋转答卷，`read_questions` 获取原题与标准答案，`append_grades` 逐题保存作答转录、正确性、得分和反馈，再通过 `submit_grading` 完成。漏题会阻止提交；明确空白题按未作答处理；无法辨认或匹配不确定的题目使用 `correct=null`、`score=null` 并标记复核。已知分值不得超分，原题满分未知时不自动评分；若全部小问有明确分值，可求和作为该题满分。
 
-两种任务共用识别 Agent 的 SDK `ToolLoopAgent`、提供商配置、并发限制、256 轮调用上限、25 分钟总超时和工具活动记录。每次保存一题后将完整草稿写入 `ExamAgentTask.result`，管理员可展开查看已保存题目；普通用户显示已完成题数和进度条。中断后可点击重试，使用当前提供商配置从数据库草稿续跑。批改使用入队时的标准答案快照，后续重新生成答案不会改变该次批改依据。仅完整提交后发布业务结果，重新生成失败时已有标准答案仍有效。活动和工具预览继续只向试卷所属管理员开放。
+两种任务共用识别 Agent 的 SDK `ToolLoopAgent`、提供商配置、并发限制、256 轮调用上限、25 分钟总超时和工具活动记录。每次保存一题后将完整草稿写入 `ExamAgentTask.result`，管理员可展开查看已保存题目；普通用户显示已完成题数和进度条。中断后可点击重试，沿用原任务保存的模型、提供商和推理配置，从数据库草稿续跑；修改后台默认模型、用户偏好或页面当前选择不会改变重试任务。批改使用入队时的标准答案快照，后续重新生成答案不会改变该次批改依据。仅完整提交后发布业务结果，重新生成失败时已有标准答案仍有效。活动和工具预览继续只向试卷所属管理员开放。
 
 接口以识别任务 ID 为路径：`POST /api/exams/:id/solutions` 启动答案生成；`POST /api/exams/:id/grading` 接收 `files` multipart 学生答卷；`GET /api/exams/:id/agents` 获取任务和完整结果（逐题草稿仅管理员可见）；`POST /api/exams/:id/agents/:agentId/retry` 继续失败任务。同一试卷只允许一个答案生成任务运行，用户最多同时运行三个答案或批改任务。
 
-答案和批改的总题数使用已识别题目数量，不依赖原始文档是否标注完整卷面总题数。答案 Agent 可通过 `read_questions` 一次读取多道题，使用 `append_answers` 一次保存多道答案（每批 1–50 道）；单题 `read_question` 继续可用。批改 Agent 的 `append_grades` 每次保存一题。两类 Agent 均可在一轮中并发调用独立工具，并通过共享的沙箱 `python` / `shell` 裁剪和查看图片。答案与批改均支持无分值的练习册题目，缺失满分不推断；照片中缺失题干或作答证据时明确说明信息不足。上传答案或学生答卷时，沙箱页面仅来自该任务上传的文件。快速批改页面分别显示解析、答案和批改进度；计数向普通用户公开，草稿内容仅管理员可见。
+答案和批改的总题数使用已识别题目数量，不依赖原始文档是否标注完整卷面总题数。答案 Agent 可通过 `read_questions` 一次读取多道题，使用 `append_answers` 一次保存多道答案（每批 1–50 道）；读取单题时在 `questionIds` 中传一个 ID。批改 Agent 的 `append_grades` 每次保存一题。两类 Agent 均可在一轮中并发调用独立工具，并通过共享的沙箱 `python` / `shell` 裁剪和查看图片。所有 Agent 工具都会忽略输入中未声明的字段（包括嵌套字段），在工具结果的 `warning` 中列出被忽略的字段路径；必填项、类型、数值范围和业务规则仍严格校验。答案与批改均支持无分值的练习册题目，缺失满分不推断；照片中缺失题干或作答证据时明确说明信息不足。上传答案或学生答卷时，沙箱页面仅来自该任务上传的文件。快速批改页面分别显示解析、答案和批改进度；计数向普通用户公开，草稿内容仅管理员可见。
 
 OpenAI 兼容 Chat 接口的工具图片会通过 `prepareStep` 转成真正的用户图片消息，避免图片以 base64 文本进入模型上下文。原始工具调用和结果仍保留关联，其他接口使用各自的原生多模态工具结果。
 
@@ -107,9 +107,9 @@ credit = [(输入 token - 缓存命中输入 token) × 0.1 / 1000
 
 解析页的「识别 Agent」仅对管理员显示，每轮模型调用默认折叠为一行摘要，展开后可查看模型消息、真实工具调用、工具输入/结果、执行耗时及图像预览。执行中和报错的轮次也保持默认折叠。识别 Agent 第一轮调用 `report_exam_meta` 上报 A3/A4 纸型、1–4 栏、页面方向和上传页面可见的独立题目总数，小问不重复计数，最高题号不等于题数。无法可靠确定题数时可报告 `total=null`，练习册片段无需凑成完整试卷或上传整本书；缺失分值保持 `null`。纸型与分栏保存在结果中，编辑页可以校正并用于 PDF/Word 导出。已知总数必须与保存题数对齐；未知总数允许在读完上传页面、保存全部可见题目后提交。Agent 使用沙箱 `shell` / `python` 查看和裁剪图像，使用 `append_questions` 增量保存题目；程序按分组与题号合并，练习册不同章节重启题号时保留独立分组。使用 `submit_exam` 提交最终名称和明确总分或 `null`，无需重新输出整篇内容。最多 256 次模型调用，任务整体仍受 25 分钟超时限制。
 
-每次追加成功后，累计题目原子写入本次任务目录的 `draft.json`。识别中断或失败时保留最近的有效草稿；草稿不表示整卷完成，也不会直接发布到数据库。完成后生成材料裁剪和 `exam.json`、删除草稿，再发布完整试卷。工具执行和页面准备记录保存在同目录的 `agent.jsonl`，不加入下载的题目 JSON。识别仅使用页面图像，不提取 PDF 文字层。
+每次追加成功后，累计题目原子写入本次任务目录的 `draft.json`。识别中断或失败时保留最近的有效草稿；草稿不表示整卷完成，也不会直接发布到数据库。完成后生成材料裁剪和 `exam.json`、删除草稿，再发布完整试卷。工具执行和页面准备记录保存在同目录的 `agent.jsonl`，不加入下载的题目 JSON。识别仅使用页面图像，不提取 PDF 文字层。所有 Agent 的系统提示词只描述目标与任务，操作规则放在工具描述中。所有 Agent 统一限制 LaTeX 只用于基本数学公式，不使用布局环境或对齐、间距、字体、字号、颜色控制命令；说明文字和表格使用 Markdown。
 
-Agent 可调用 `shell` 执行沙箱命令，也可调用 `python` 执行任意 Python 代码，使用预装的 Pillow 旋转、纠偏、裁剪或增强图像。图像结果会直接回传给模型，活动记录中也能预览。直接覆盖 `/workspace/pages/001.jpg` 即可更新页面，后续 `read_pages`、`inspect_image` 和最终材料裁剪自动使用更新后的文件与尺寸，不需要 `replacePages` 元数据。需要额外给模型看预览时，可用 `images` 列出保存在 `output/` 的图像文件名。页面一旦被已保存的材料坐标引用，就禁止替换，以防已有材料错位；应先纠正页面方向，再保存题目。
+Agent 可调用 `shell` 执行沙箱命令，也可调用 `python` 执行任意 Python 代码，使用预装的 Pillow 旋转、纠偏、裁剪或增强图像。图像结果会直接回传给模型，活动记录中也能预览。直接覆盖 `/workspace/pages/001.jpg` 即可更新页面，后续工具调用和最终材料裁剪自动使用更新后的文件与尺寸。需要额外给模型看预览时，可用 `images` 列出保存在 `output/` 的图像文件名。页面一旦被已保存的材料坐标引用，就禁止替换，以防已有材料错位；应先纠正页面方向，再保存题目。
 
 普通用户的 API 失败返回公开恢复提示；管理员响应保留具体提示、`code`、`errorId`，并通过 `X-Error-Id` 响应头关联服务器日志。任务失败保存具体原因、处理阶段和错误编号；活动记录也保留失败事件。Web/Worker 输出 JSON 格式诊断：时间、操作、任务/队列、阶段、异常类型、状态码、异常调用链和调用位置。认证失败、权限不足、额度限制、超时、格式校验、数据库和文件/工具错误分别给出提示。浏览器记录网络、资源加载、页面渲染和未处理异常。可通过错误编号或任务 ID 搜索日志。
 
@@ -119,7 +119,9 @@ Web 请求错误查看 Web 控制台，后台解析与工具错误查看 Worker 
 
 管理员在 `/admin/ai` 配置提供商。每个提供商可以添加多个模型，每个模型分别填写「API 模型代码」与可选的「显示名称」，显示名称用于模型选项、列表与排行榜，留空时显示代码；实际 API 请求继续发送模型代码。每个模型单独列出支持的推理选项。「功能默认模型」分别为 AI 解析、AI 批改、AI 生成答案选择模型与推理程度，每项独立保存，也可选择不同提供商。后台配置仅作默认值。用户在创建任务时可以指定公开模型，即使后台未设置默认模型也可使用自己的选择；未自行选择时才读取账户偏好或后台默认。运行中的任务保留提交时的配置快照。
 
-支持 OpenAI Responses、OpenAI 兼容 Chat Completions、Anthropic Messages 与 Google Generative AI。仅勾选实际模型支持的选项；`默认` 不发送推理参数，`关闭` 使用接口的关闭推理设置，其余选项映射至对应 API 的 reasoning/thinking 参数。模型需支持图片输入。API key 使用服务端 AES-GCM 加密，不传给浏览器。
+支持 OpenAI Responses、OpenAI 兼容 Chat Completions、Anthropic Messages、Google Generative AI（Generate Content）与 Gemini Interactions API。仅勾选实际模型支持的选项；`默认` 不发送推理参数，`关闭` 使用接口的关闭推理设置，其余选项映射至对应 API 的 reasoning/thinking 参数。模型需支持图片输入。API key 使用服务端 AES-GCM 加密，不传给浏览器。
+
+Gemini Interactions 在 API 类型中选择「Gemini Interactions API」（`google_interactions`）。官方 Base URL 为 `https://generativelanguage.googleapis.com/v1beta`，兼容供应商填写其 API 根地址，请求会追加 `/interactions`。支持流式输出、图片与多轮工具调用；推理选项可选 `default`、`minimal`、`low`、`medium`、`high`，具体按模型能力勾选。Interactions 使用 `store: true` 并随每轮发送完整会话历史。现有 Google Generative AI 配置继续使用 Generate Content。
 
 Responses 调用使用 `store: true`，允许服务商保存响应。该选项控制响应存储，不是自动提示词缓存的开关。第三方网关显式选择推理强度时，通过 SDK 的 `forceReasoning` 发送实际的 `reasoning.effort`，不依赖 OpenAI 模型名称白名单；保留网关原有的 `system` 角色，且不额外请求推理摘要。多轮调用保留已有消息和固定工具定义。提供商返回加密推理状态时，优先原样回传加密内容，即使同时有响应条目 ID 也不改用存储引用；同一推理条目的多个流式摘要合并后一起回传。未返回加密内容但有条目 ID 时，SDK 通过 ID 引用已存储的推理内容；无可恢复状态的摘要不回传。文本、工具调用及结果继续保留。
 
@@ -157,9 +159,9 @@ python3 -m venv .venv
 .venv/bin/pip install -r tools/python/requirements.txt
 ```
 
-沙箱优先使用 `PYTHON_SANDBOX_VENV` 指定的虚拟环境，默认检查项目的 `.venv`；没有默认虚拟环境时使用系统 Python（也须安装 Pillow）。每个 Agent 运行期间独享一个 100 MiB 的可写文件系统，`python` 与 `shell` 工具共享 `/workspace`，文件修改自动保留到后续调用，不需要显式同步。`/tmp` 也位于该配额内；任务完成、失败或取消后销毁沙箱，任务重试会获得新的工作区。每次执行启动新进程，变量和后台进程不会保留；单次超时会终止命令，工作区仍能复用。沙箱隔离网络、进程和用户命名空间，清空宿主环境变量、禁用继续创建用户命名空间，并只读挂载运行环境、本次任务页面与工具预览，不挂载项目或凭据。数值库线程数限制为 1，避免 NumPy/OpenCV 的线程池耗尽资源。单次调用限制为 60 秒、30 秒 CPU、512 MiB 地址空间、64 个进程和 64 个文件描述符；最多回传 3 张各 8 MiB 的图像。`shell` 可以执行任意已安装的命令，以 `command` 传入命令，使用相同的 `images` 与 `replacePages` 图像协议。异常、进程崩溃和超时会分别返回诊断，不改用宿主环境执行。
+沙箱优先使用 `PYTHON_SANDBOX_VENV` 指定的虚拟环境，默认检查项目的 `.venv`；没有默认虚拟环境时使用系统 Python（也须安装 Pillow）。每个 Agent 运行期间独享一个 100 MiB 的可写文件系统，`python` 与 `shell` 工具共享 `/workspace`，文件修改自动保留到后续调用，不需要显式同步。`/tmp` 也位于该配额内；任务完成、失败或取消后销毁沙箱，任务重试会获得新的工作区。每次执行启动新进程，变量和后台进程不会保留；单次超时会终止命令，工作区仍能复用。沙箱隔离网络、进程和用户命名空间，清空宿主环境变量、禁用继续创建用户命名空间，并只读挂载运行环境、本次任务页面与工具预览，不挂载项目或凭据。数值库线程数限制为 1，避免 NumPy/OpenCV 的线程池耗尽资源。单次调用限制为 60 秒、30 秒 CPU、512 MiB 地址空间、64 个进程和 64 个文件描述符；最多回传 3 张各 8 MiB 的图像。`shell` 可以执行任意已安装的命令，以 `command` 传入命令，使用相同的 `images` 图像预览参数；更新页面时直接覆盖页面文件。异常、进程崩溃和超时会分别返回诊断，不改用宿主环境执行。
 
-Worker Docker 镜像预装 Bubblewrap 与 Pillow 12.3.0。`compose.yaml` 仅对 worker 取消 Docker 默认的 seccomp/AppArmor 配置，以允许 Bubblewrap 创建嵌套命名空间和挂载；worker 同时移除所有 Linux capabilities 并启用 `no-new-privileges`。宿主内核仍须支持非特权用户命名空间。`pnpm doctor` 会实际运行一次隔离 Python，检查 Bubblewrap 和 Pillow；沙箱测试也需要同样的运行环境。
+Worker Docker 镜像预装 Bubblewrap，以及 `tools/python/requirements.txt` 中固定版本的 Pillow、OpenCV、NumPy、SciPy、SymPy 和 mpmath。`compose.yaml` 仅对 worker 取消 Docker 默认的 seccomp/AppArmor 配置，以允许 Bubblewrap 创建嵌套命名空间和挂载；worker 同时移除所有 Linux capabilities 并启用 `no-new-privileges`。宿主内核仍须支持非特权用户命名空间。`pnpm doctor` 会实际运行一次隔离 Python，检查 Bubblewrap 与上述图像、数值计算库；沙箱测试也需要同样的运行环境。
 
 ```bash
 pnpm install --frozen-lockfile
@@ -209,7 +211,7 @@ pnpm run test:integration
 
 Worker 镜像使用 `pnpm run build:worker` 生成的独立运行目录，只包含编译后的入口、实际运行依赖、数据库迁移与 Python 沙箱脚本，不再复制完整 `node_modules` 和应用源码。快速批改的「标准答案（可选）」默认折叠，选中文件后仍在摘要显示数量。
 
-部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.13 部署与升级指南](docs/releases/v0.1.13.zh-CN.md)。
+部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.14 部署与升级指南](docs/releases/v0.1.14.zh-CN.md)。
 
 Word 公式转换复用 KaTeX 与 docx，新增 `mathml2omml@0.5.0`（约 67 KB 运行时代码，无运行时依赖），并直接声明已有 docx 依赖 `xml-js`。转换库以未修改的运行时模块随应用分发，其 LGPL-3.0-or-later 许可及来源见 [第三方依赖说明](docs/third-party.md)。
 

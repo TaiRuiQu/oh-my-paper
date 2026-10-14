@@ -403,8 +403,7 @@ export async function retryExamTask(userId: string, id: string) {
   if (task.status !== "FAILED") throw new RequestError(409, "只有失败的试卷可以重试。");
   await requireCredits(userId);
   await requireWorker();
-  const provider = await getUserProvider(userId),
-    boss = await getJobProducer(),
+  const boss = await getJobProducer(),
     jobId = randomUUID();
   return getDb().$transaction(async (tx) => {
     await tx.$queryRaw`SELECT id FROM users WHERE id = ${userId} FOR UPDATE`;
@@ -422,7 +421,6 @@ export async function retryExamTask(userId: string, id: string) {
             jobId,
             error: null,
             errorCode: null,
-            providerSnapshot: provider,
             totalQuestions: null,
             parsedQuestions: 0,
           },

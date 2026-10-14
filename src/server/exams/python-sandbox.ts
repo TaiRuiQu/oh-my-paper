@@ -10,13 +10,6 @@ const imageName = z.string().regex(/^[A-Za-z0-9_-]+\.(?:png|jpe?g|webp)$/);
 export const pythonInputSchema = z.strictObject({
   code: z.string().min(1).max(60_000),
   images: z.array(imageName).max(3).default([]),
-  replacePages: z
-    .array(z.strictObject({ page: z.number().int().positive(), image: imageName }))
-    .max(3)
-    .default([])
-    .describe(
-      "Legacy page replacement. Prefer overwriting /workspace/pages/001.jpg directly; omit this field.",
-    ),
 });
 export type PythonInput = z.infer<typeof pythonInputSchema>;
 export const commandInputSchema = pythonInputSchema.omit({ code: true }).extend({
@@ -170,7 +163,6 @@ export function createSandboxSession(options: {
   let exited: Promise<void> = Promise.resolve();
   let settleExited: () => void = () => {};
   let pending = Promise.resolve();
-  const refreshPages = new Set<number>();
   let buffer = "",
     diagnostic = "";
   let receiver: { resolve: (value: unknown) => void; reject: (error: unknown) => void } | undefined;
@@ -359,9 +351,6 @@ export function createSandboxSession(options: {
   }
   return {
     dispose,
-    refreshPages(numbers: number[]) {
-      numbers.forEach((page) => refreshPages.add(page));
-    },
     run(
       input: RequestInput,
       runOptions: { signal?: AbortSignal; timeoutMs?: number; lockedPages?: number[] } = {},
@@ -394,7 +383,6 @@ export function createSandboxSession(options: {
             name,
             target,
             page: page.page,
-            refresh: refreshPages.delete(page.page),
             locked: runOptions.lockedPages?.includes(page.page) ?? false,
           };
         });

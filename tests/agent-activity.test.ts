@@ -4,13 +4,15 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import sharp from "sharp";
-import { tool } from "ai";
+import { asSchema, tool } from "ai";
 import { z } from "zod";
 import type { AgentEventInput } from "@/contracts/activity";
 import type { ProviderSnapshot } from "@/contracts/ai-providers";
 import { activityWriter, readActivity } from "@/server/exams/activity";
 import { createInspectionTools } from "@/server/exams/tools";
 import { createProviderExamModel } from "@/server/ai/providers";
+import { EXAM_PARSING_PROMPT } from "@/server/exams/prompts";
+import { BASIC_MATH_FORMAT } from "@/server/ai/prompts";
 const roots: string[] = [];
 afterEach(async () => {
   vi.restoreAllMocks();
@@ -126,7 +128,7 @@ describe("actual agent activity", () => {
     expect(await readActivity(target)).toMatchObject([{ sequence: 2, text: "specific failure" }]);
     expect(String(write.mock.calls[0][0])).toContain("activity.write.failed");
   });
-  it("inspection tools expose shell and python and never accept nonexistent pages", async () => {
+  it("inspection tools expose shell and python with only execution and preview parameters", async () => {
     const root = await directory();
     await mkdir(join(root, "agent"));
     await mkdir(join(root, "pages"));
@@ -135,20 +137,20 @@ describe("actual agent activity", () => {
       .jpeg()
       .toFile(path);
     const tools = createInspectionTools([{ page: 1, path, width: 100, height: 200 }], root);
-    const options = { toolCallId: "test", messages: [], context: {} };
     expect(Object.keys(tools)).toEqual(["shell", "python"]);
-    await expect(
-      tools.python.execute!(
-        { code: "print(1)", images: [], replacePages: [{ page: 2, image: "x.png" }] },
-        options,
-      ),
-    ).rejects.toThrow("页面 2 不存在");
+    const pythonSchema = await asSchema(tools.python.inputSchema).jsonSchema;
+    const shellSchema = await asSchema(tools.shell.inputSchema).jsonSchema;
+    expect(Object.keys(pythonSchema.properties!)).toEqual(["code", "images"]);
+    expect(Object.keys(shellSchema.properties!)).toEqual(["images", "command"]);
   });
   it("records tool calls and returns only the minimal exam submitted through the SDK loop", async () => {
     const events: AgentEventInput[] = [];
     let requests = 0;
     const fetch: typeof globalThis.fetch = async (_url, init) => {
       const body = JSON.parse(String(init?.body));
+      expect(body.messages[0].content).toBe(EXAM_PARSING_PROMPT);
+      expect(body.messages[0].content).toContain(BASIC_MATH_FORMAT);
+      expect(body.messages[0].content).not.toContain("append_questions");
       expect(
         body.tools.some(
           (tool: { function: { name: string } }) => tool.function.name === "read_text",
@@ -188,7 +190,7 @@ describe("actual agent activity", () => {
     };
     const model = createProviderExamModel(config, "test-key", fetch);
     const output = await model.generate({
-      system: "Extract",
+      system: EXAM_PARSING_PROMPT,
       content: [{ type: "text", text: "source" }],
       tools: {
         read_pages: tool({
