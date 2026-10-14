@@ -1,1 +1,1 @@
--r tools/python/requirements.txt
+-r tools/card-scan/requirements.txt

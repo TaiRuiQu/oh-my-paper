@@ -11,8 +11,8 @@ import { getEnv } from "@/server/config/env";
  * and there is no in-app way to grant the role. Deployments that already have an
  * account keep their current roles.
  */
-export async function roleForNewAccount(): Promise<"ADMIN" | "USER"> {
-  return (await getDb().user.count()) === 0 ? "ADMIN" : "USER";
+export async function roleForNewAccount(): Promise<"ADMIN" | "STUDENT"> {
+  return (await getDb().user.count()) === 0 ? "ADMIN" : "STUDENT";
 }
 
 function createAuth() {
@@ -26,7 +26,7 @@ function createAuth() {
     emailAndPassword: { enabled: true, minPasswordLength: 10, maxPasswordLength: 128 },
     user: {
       additionalFields: {
-        role: { type: "string", defaultValue: "USER", input: false },
+        role: { type: "string", defaultValue: "STUDENT", input: false },
       },
     },
     databaseHooks: {
@@ -36,7 +36,7 @@ function createAuth() {
           // rather than promoted afterwards.
           before: async (user) => {
             const role = await roleForNewAccount();
-            if (role === "USER") return;
+            if (role === "STUDENT") return;
             logEvent("auth.first_account.promoted");
             return { data: { ...user, role } };
           },

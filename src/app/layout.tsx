@@ -8,8 +8,8 @@ import "./globals.css";
 const { version } = packageInfo;
 
 export const metadata: Metadata = {
-  title: { default: "Oh My Paper · 试卷工作台", template: "%s · Oh My Paper" },
-  description: "上传试卷并解析为结构化题目。",
+  title: { default: "Oh My Paper · 教学工作台", template: "%s · Oh My Paper" },
+  description: "从题库、组卷和考试阅卷，到成绩与学情分析的一站式教学工作台。",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -20,7 +20,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           跳转到主要内容
         </a>
         <Providers>{children}</Providers>
-        <small className="site-version" aria-label={`网站版本 ${version}`}>
+        <small className="site-version" title={`网站版本 ${version}`}>
           v{version}
         </small>
       </body>

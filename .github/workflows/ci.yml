@@ -14,9 +14,27 @@ concurrency:
 
 jobs:
   lint:
-    name: Lint
+    name: Validate
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
+    env:
+      DATABASE_URL: postgresql://paper:paper@127.0.0.1:5432/paper_ci
+      BETTER_AUTH_URL: http://localhost:3000
+      BETTER_AUTH_SECRET: ci-auth-secret-for-isolated-test-environment-2026
+      PROVIDER_KEY_ENCRYPTION_KEY: ci-provider-secret-for-isolated-test-environment-2026
+    services:
+      postgres:
+        image: postgres:18.6-bookworm
+        env:
+          POSTGRES_USER: paper
+          POSTGRES_PASSWORD: paper
+          POSTGRES_DB: paper_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U paper -d paper_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -33,8 +51,34 @@ jobs:
           cache: true
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Lint
-        run: pnpm run lint
+      - name: Install scanner runtime
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -r tools/card-scan/requirements.txt
+      - name: Generate Prisma and apply migrations
+        run: |
+          pnpm run db:generate
+          pnpm run db:deploy
+      - name: Format, lint, types and unit tests
+        run: pnpm run check
+      - name: Build production web
+        run: pnpm run build
+      - name: Build production AI worker
+        run: pnpm run build:ai-worker
+      - name: AI domain atomicity acceptance
+        run: pnpm run test:ai-domain
+      - name: Durable AI job queue acceptance
+        run: pnpm run test:ai-jobs
+      - name: Non-AI domain acceptance
+        run: pnpm run test:integration
+      - name: Image scanning acceptance
+        run: pnpm run test:scan
+      - name: Scanner bridge protocol tests
+        run: python3 -m unittest discover -s scripts/scanner-bridge -p 'test_*.py'
+      - name: Runtime diagnostics
+        run: pnpm run doctor
+      - name: Independent production Web and AI Worker acceptance
+        run: pnpm run test:production
 
   docker:
     name: Docker (${{ matrix.target }})
@@ -51,8 +95,10 @@ jobs:
         include:
           - target: web
             suffix: ""
-          - target: worker
-            suffix: "-worker"
+          - target: migrate
+            suffix: "-migrate"
+          - target: ai-worker
+            suffix: "-ai-worker"
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

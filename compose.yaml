@@ -16,13 +16,12 @@ services:
   migrate:
     build:
       context: .
-      target: worker
+      target: migrate
     env_file: .env
     environment: &app-env
       DATABASE_URL: ${DEPLOY_DATABASE_URL:?Set postgresql URL using db as the host}
       STORAGE_ROOT: /data/storage
       TEMP_ROOT: /data/tmp
-    command: [node, node_modules/prisma/build/index.js, migrate, deploy]
     depends_on:
       db:
         condition: service_healthy
@@ -50,33 +49,20 @@ services:
       interval: 20s
       timeout: 10s
       retries: 5
-  worker:
+  ai-worker:
+    stop_grace_period: 5m
     build:
       context: .
-      target: worker
+      target: ai-worker
     env_file: .env
     environment: *app-env
-    # Bubblewrap creates the restricted Python namespaces inside this container.
-    # Docker's profiles and masked /proc paths block its private proc mount.
-    security_opt:
-      - no-new-privileges:true
-      - seccomp:unconfined
-      - apparmor:unconfined
-      - systempaths=unconfined
-    cap_drop: [ALL]
     volumes:
       - ./storage:/data/storage
       - ./tmp:/data/tmp
     restart: unless-stopped
-    stop_grace_period: 40s
     depends_on:
       migrate:
         condition: service_completed_successfully
-    healthcheck:
-      test: [CMD, node, --conditions=react-server, scripts/worker-health.mjs]
-      interval: 20s
-      timeout: 10s
-      retries: 5
   proxy:
     image: caddy:2.10.2
     ports: ["80:80", "443:443"]

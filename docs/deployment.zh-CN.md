@@ -1,280 +1,107 @@
-# 部署手册
+# Oh My Paper v2 部署手册
 
-面向单机 Docker 部署。仓库根目录的 `compose.yaml` 是部署的唯一事实来源，本手册只解释其中隐含的约束。
+v2 使用 PostgreSQL、Next.js Web 服务、独立 AI Worker 和本地 Python/OpenCV 扫描程序。旧 Worker / pg-boss 已移除，新的 AI Worker 使用 PostgreSQL AiJob 持久队列。本文对应当前仓库；`docs/releases/v0.1.*` 保留为旧版本档案。
 
-## 1. 前置条件
+## 配置
 
-| 项目       | 要求                                                                |
-| ---------- | ------------------------------------------------------------------- |
-| Docker     | 带 Compose v2（使用覆盖文件发布镜像需 v2.24 以上）                  |
-| CPU / 内存 | 至少 2 核 / 4 GB。识别与批改由 Worker 执行，内存不足会导致任务超时  |
-| 磁盘       | 试卷原文件、页面渲染图与裁剪材料都写入 `storage/`，按每月试卷量预留 |
-| 端口       | 80 与 443 需对外可达，Caddy 依赖它们自动签发证书                    |
-| 域名       | `APP_DOMAIN` 需已解析到本机公网 IP                                  |
-| 架构       | CI 只发布 `linux/amd64`。ARM 主机需自行用源码构建                   |
+复制 `.env.example` 为 `.env`，设置以下项目：
 
-只有 Worker 镜像需要 `poppler-utils`（`pdftoppm` / `pdfinfo`）、`bubblewrap` 和预装 Pillow、OpenCV、NumPy、SciPy、SymPy 和 mpmath 的 `/opt/python-sandbox` 虚拟环境。Web 镜像只负责接收上传与投递队列，不做页面渲染。
+| 配置                          | 用途                                     |
+| ----------------------------- | ---------------------------------------- |
+| `DATABASE_URL`                | 本地启动和 Prisma 的 PostgreSQL 连接     |
+| `BETTER_AUTH_URL`             | 实际网站地址，生产应为 HTTPS             |
+| `BETTER_AUTH_SECRET`          | 至少 32 个字符的随机认证密钥             |
+| `PROVIDER_KEY_ENCRYPTION_KEY` | AI 提供商密钥的持久加密密钥              |
+| `STORAGE_ROOT` / `TEMP_ROOT`  | 原图、逐题截图和临时文件目录             |
+| `CARD_SCAN_PYTHON`            | 扫描 Python，默认优先 `.venv/bin/python` |
 
-Worker 的 Node.js 运行目录由 `pnpm run build:worker` 生成到 `build/worker`：编译 Worker、健康检查和 Prisma 配置，追踪实际依赖，并保留迁移文件与 Python 沙箱脚本。镜像仅复制该目录，不复制完整 `node_modules` 或应用源码，也不需要运行时 TypeScript 加载器。Worker 构建独立于 Next.js 构建；数据库迁移仍使用同一个 Worker 镜像，Compose 的启动方式无需调整。
+Docker Compose 还需要 `APP_DOMAIN`、`POSTGRES_PASSWORD` 和 `DEPLOY_DATABASE_URL`；后者必须以 Compose 服务 `db` 为主机名。`POSTGRES_USER` 和 `POSTGRES_DB` 默认分别为 `paper` 和 `oh_my_paper`。已有加密密钥应继续使用，否则原提供商密钥无法解密。
 
-## 2. 配置 `.env`
+## Docker Compose
 
-从 `.env.example` 复制后按部署场景增补。**注意 `compose.yaml` 使用的数据库变量名与 `.env.example` 不同**：容器内 `DATABASE_URL` 由 `DEPLOY_DATABASE_URL` 覆盖（`compose.yaml:22`），主机名必须是服务名 `db`。
-
-```bash
+```sh
 cp .env.example .env
+# 编辑 .env 后：
 mkdir -p storage tmp
+sudo chown 1000:1000 storage tmp
+docker compose up -d --build
+docker compose ps
+docker compose logs --tail=100 migrate web ai-worker
 ```
 
-### 必填
+部署包含五个服务：
 
-| 变量                                                  | 说明                                                                                                                 |
-| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | 仅 compose 使用。缺省为 `paper` / 无 / `oh_my_paper`；密码为空时 compose 会直接报错中止                              |
-| `DEPLOY_DATABASE_URL`                                 | compose 使用。形如 `postgresql://paper:<密码>@db:5432/oh_my_paper`                                                   |
-| `APP_DOMAIN`                                          | 指向本机的域名，用于 Caddy 自动 HTTPS                                                                                |
-| `BETTER_AUTH_URL`                                     | 站点对外完整地址，如 `https://paper.example.com`。登录校验的 `trustedOrigins` 由它推导，必须与用户实际访问的地址一致 |
-| `BETTER_AUTH_SECRET`                                  | 至少 32 字符随机值                                                                                                   |
-| `PROVIDER_KEY_ENCRYPTION_KEY`                         | 至少 32 字符随机值。Web 与 Worker 必须相同                                                                           |
+- `db`：固定版本 PostgreSQL，数据保存于 named volume。
+- `migrate`：独立 Docker target，使用 Prisma CLI 执行全部迁移；完成后退出。
+- `web`：standalone Next.js、Python venv、OpenCV、扫描程序及持久存储挂载，以 uid 1000 运行。
+- `ai-worker`：打包的 AI Agent 任务执行器，使用同一数据库、加密密钥与 storage 挂载，持续领取持久化任务。
+- `proxy`：Caddy 负责域名、HTTPS 和反向代理，只有代理公开端口。
 
-生成两个密钥：
+数据库健康后运行迁移，迁移成功后启动 Web 和 AI Worker，Web 健康后启动代理。`GET /api/health` 检查数据库，作为容器健康检查。Web 镜像中的 `CARD_SCAN_PYTHON` 为 `/opt/card-scan/bin/python`，扫描脚本路径为 `/app/tools/card-scan/scan.py`。
 
-```bash
-openssl rand -base64 32
-```
+从仓库发布镜像部署：
 
-### 可选
-
-`PDFTOPPM_PATH`、`PDFINFO_PATH`、`BWRAP_PATH` 在镜像内默认就是 `/usr/bin/*`，无需修改。`QUEUE_SCHEMA` 默认 `pgboss`，**Web 与 Worker 必须一致**，否则 Worker 收不到任务。`WORKER_CONCURRENCY` 默认为 2，取值 1–16；它决定同时处理的试卷数量，也直接决定 LLM 并发与 credit 消耗速度。
-
-### 关于 `PROVIDER_KEY_ENCRYPTION_KEY`
-
-后台保存的 AI API key 使用该密钥做 AES-GCM 加密。**上线后不要更换**：更换后已保存的密钥全部无法解密，只能在 `/admin/ai` 逐个重新录入。它需要和数据库备份一起单独留存。
-
-## 3. 发布：使用 GHCR 镜像（推荐）
-
-每次推送 `v*` tag 且 Lint 通过后，CI 会构建并推送 Web 与 Worker 两个镜像（`linux/amd64`），并同时打上 git tag 与 `latest` 两个标签：
-
-```text
-ghcr.io/tairuiqu/oh-my-paper:<tag> 与 :latest
-ghcr.io/tairuiqu/oh-my-paper-worker:<tag> 与 :latest
-```
-
-仓库已提供 `compose.release.yaml`，覆盖构建行为改为拉取已发布镜像。版本号由 `.env` 中的 `APP_VERSION` 控制，**缺省跟随 `latest`**——配合 §6 的定时器即可全自动升级；需要回滚或固定版本时才设置它：
-
-```bash
-# 可选，默认 latest
-APP_VERSION=v0.1.2
-```
-
-启动：
-
-```bash
+```sh
 docker compose -f compose.yaml -f compose.release.yaml up -d
 ```
 
-> 若服务器上曾手工创建过 `compose.release.yaml`，请先删除再用仓库内的版本，避免 `git pull` 冲突。
+Web 镜像为 `ghcr.io/tairuiqu/oh-my-paper`，迁移镜像为 `ghcr.io/tairuiqu/oh-my-paper-migrate`，AI Worker 为 `ghcr.io/tairuiqu/oh-my-paper-ai-worker`。`.env` 中的 `APP_VERSION` 可固定 v2 release tag；缺省跟踪 `latest`。`deploy/update.sh` 仅拉取这三个应用镜像，数据库和代理版本由运维明确更新。定时器的启用方式仍见 `deploy/oh-my-paper-update.*`。
 
-镜像拉取本身就是增量的：Docker 按 layer 内容寻址，基础镜像、apt 软件包、Chromium、Python 虚拟环境等层不变就不会重复下载，通常只有应用层（构建产物与源码）随版本更新。CI 构建也启用了 GitHub Actions 缓存（`cache-from/cache-to: type=gha`），依赖不变时 `pnpm install` 等重头步骤直接复用缓存。
+## 原生部署
 
-若镜像为私有仓库，先登录 GHCR（定时器与 cron 都使用 root 的凭据）：
+安装 Node.js 24.x、pnpm 11、PostgreSQL、Python 3.11+。
 
-```bash
-echo "$GHCR_TOKEN" | docker login ghcr.io -u <用户名> --password-stdin
+```sh
+pnpm install --frozen-lockfile
+python3 -m venv .venv
+.venv/bin/pip install -r tools/card-scan/requirements.txt
+pnpm db:generate
+pnpm db:deploy
+pnpm run doctor
+pnpm build
+pnpm build:ai-worker
+pnpm start
+# 在另一个进程运行：
+pnpm start:ai-worker
 ```
 
-`!reset` 需要 Compose v2.24 以上。版本更旧时，直接把 `compose.yaml` 中三个服务的 `build:` 段替换为 `image:` 即可。
+使用进程管理器保持 Web 与 AI Worker 运行，以反向代理提供 HTTPS。Web 进程对 `STORAGE_ROOT`、`TEMP_ROOT` 有写权限；扫描子进程使用同一账号及临时目录。打印页面由用户浏览器生成 PDF，不需要在 Web 服务器安装 Chromium。
 
-## 4. 发布：从源码构建
+## 升级与备份
 
-不需要 `compose.release.yaml`，也不需要 `APP_VERSION`：
+迁移 `20261014010000_full_exam_platform` 删除旧试卷、任务、答题卡批次、积分和旧分析业务表，创建题库、组卷、班级、考试、扫描和评阅模型；保留账号、会话及 AI 提供商配置。`20261014020000_assessment_roster` 保存考试参试名单，旧普通账号归为学生。升级后使用 v2 页面重新建立业务数据，旧 Web 不可连接新数据库。
 
-```bash
+升级前备份数据库及上传存储：
+
+```sh
+bash scripts/backup.sh /absolute/backup-directory
 docker compose up -d --build
 ```
 
-镜像会在本机构建，比拉取慢，但可验证当前源码。`compose.yaml` 已为每个服务声明好 `target`（`web` / `worker`），无需额外指定。
+脚本暂停 Web 和 AI Worker 写入，导出 `database.dump` 和 `storage.tar.gz`，生成 `SHA256SUMS`，再恢复 Web 和 AI Worker。备份路径应位于独立持久存储。发布镜像部署应使用 `compose.release.yaml` 更新；旧 Worker 可由 `docker compose up -d --remove-orphans` 清理。
 
-## 5. 首次部署
+恢复时暂停 Web 和 AI Worker，将 PostgreSQL dump 和存储目录恢复到同一备份点，核对校验和及文件权限，再启动与该数据库版本匹配的 Web 和 AI Worker。恢复旧版数据库时也必须使用旧版应用，不能仅回滚容器镜像。
 
-启动后按顺序确认：
+## 初始化和验证
 
-```bash
-docker compose ps          # migrate 应已 Exited(0)，web / worker 为 healthy
-docker compose logs migrate
-curl -fsS http://localhost:3000/api/health   # {"status":"ok","database":"ready"}
+第一个注册账号为管理员；后续账号默认学生。管理员在工作台「系统管理」授予教师权限。教师创建班级并绑定学生，随后维护题库、组卷、答题卡、考试和阅卷。
+
+```sh
+pnpm check
+pnpm build
+pnpm test:integration
+pnpm test:scan
+python3 -m unittest discover -s scripts/scanner-bridge -p 'test_*.py'
 ```
 
-健康检查的判定标准：
+数据库集成测试使用临时独立 schema，不改正式考试。扫描测试使用有真实像素的答题卡与练习册图像。扫描仪接入见 [本机桥接说明](../scripts/scanner-bridge/README.md)；当前缺少真实扫描仪硬件，模拟 eSCL 协议测试不视为硬件验收。
 
-- `web` 每 20 秒请求 `/api/health`，该接口会执行一次数据库查询，迁移未完成时不会返回 `ok`。
-- `worker` 每 20 秒检查最近 45 秒内是否有心跳。Worker 停止或卡住会转为 `unhealthy`。
+AI 第二阶段已在非 AI 软件流程确认后接入；具体真实模型验收结果见 `v2-docs/acceptance-ai.md`。待验证的扫描硬件不描述为已通过。
 
-### 创建第一个管理员
+## AI 与运行验收
 
-**第一个注册的账号自动成为管理员。** 应用在写入用户记录之前检查账号总数，为零时将该账号的 `role` 直接存为 `ADMIN`；此后再注册的账号一律是 `USER`。
+六类 AI 任务为图片试题导入、参考答案／解析／评分标准／知识点补全、按题型与知识点分布组卷、答题卡布局、逐题阅卷及薄弱知识点推题。Agent 自主调用查询、图片检查和结果提交工具；业务提交使用相同权限与数据校验。任务存入 AiJob，Web 轮询事件与状态；Worker 原子领取、限制供应商并发并写心跳，90 秒未更新的任务标为失败。重试必须用户明确操作。
 
-因此首次启动的顺序是：
+`pnpm test:integration`、`pnpm test:http`、`pnpm test:scan` 验证人工流程、真实 HTTP 与图像持久化；`pnpm test:ai-jobs` 验证真实 PostgreSQL 队列与权限，`pnpm test:ai-domain` 验证 AI 工具持久化，`pnpm test:ai-live` 使用实际配置模型验证六项任务。模拟 runner 和工具响应不能替代真实模型质量验收。当前真实 AI 证据以本轮验收记录为准。
 
-1. 浏览器打开 `https://<APP_DOMAIN>/register` 注册**你自己的**账号。
-2. 该账号即为管理员，登录后侧边栏会出现「AI 配置」与「用量」入口。
-3. 在 `/admin/ai` 添加提供商与模型。模型需支持图片输入，并按需配置「对公众开放」与扣费倍率——**没有公开模型，普通用户无法创建任何任务**。
-
-> **务必在站点对外可访问前完成注册。** 注册是开放的，而管理员归属于「第一个」账号：在这之前被任何人注册，该账号就会获得管理员权限，且应用内没有任何修改角色的入口，只能直接改库：
->
-> ```bash
-> docker compose exec db psql -U paper -d oh_my_paper \
->   -c "UPDATE users SET role='USER' WHERE email='<抢注的邮箱>';"
-> ```
-
-已有账号的部署不受影响：该逻辑只在账号总数为零时触发，不会改变任何现有用户的角色。
-
-## 6. 升级
-
-### 自动升级（推荐）
-
-安装 systemd 定时器，服务器每五分钟检查一次 GHCR：
-
-```bash
-# 部署目录不是 /opt/oh-my-paper 时，先修改两个 unit 文件中的路径
-sudo cp deploy/oh-my-paper-update.service deploy/oh-my-paper-update.timer /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable --now oh-my-paper-update.timer
-journalctl -u oh-my-paper-update.service -f   # 观察拉取与滚动日志
-```
-
-`deploy/update.sh` 依次执行 `pull` → `up -d` → `docker image prune -f`：
-
-- 镜像没有变化时 `up -d` 不做任何事，开销只有几次 manifest 请求；
-- 有新版本时，compose 先重建并运行 `migrate`（`prisma migrate deploy`），成功后才滚动重启 `web` 与 `worker`，数据库结构与代码版本始终配套；
-- 被 `latest` 抛弃的旧镜像由 `docker image prune -f` 清理；
-- `db` 与 `proxy` 使用固定版本镜像，不在自动更新范围内，升级它们应当显式进行。
-
-定时任务只更新镜像，不执行 `git pull`，也不会同步服务器上的 Compose 文件、部署脚本或内核配置。涉及这些文件的版本更新，需要先在服务器上同步对应配置；之后仍可继续使用原定时任务。仅有应用代码和数据库迁移变化时，不需要手动更新。
-
-因此日常发布只需要：
-
-```bash
-git tag v0.2.0 && git push origin v0.2.0
-```
-
-CI 推送 `:v0.2.0` 与 `:latest` 后，服务器在五分钟内自动跟进。
-
-> 不建议使用 Watchtower 之类的容器自动更新器：它们绕过 compose 直接重建容器，`migrate` 不会在 `web` / `worker` 之前重跑，数据库结构可能与新代码脱节。
-
-不便使用 systemd 时，用 cron 等价替代：
-
-```cron
-*/5 * * * * cd /opt/oh-my-paper && ./deploy/update.sh
-```
-
-### 手动升级
-
-```bash
-docker compose -f compose.yaml -f compose.release.yaml pull
-docker compose -f compose.yaml -f compose.release.yaml up -d
-docker image prune -f
-```
-
-### 回滚
-
-在 `.env` 中临时固定版本，执行一次 `deploy/update.sh`（或上面的手动命令），恢复后再删除该行：
-
-```bash
-APP_VERSION=v0.1.2
-```
-
-Worker 配置了 40 秒 `stop_grace_period` 与 35 秒优雅退出期限，正在处理的任务会等当前批次结束。**但强杀 `docker compose down` 仍可能中断试卷解析**——中断的任务在数据库中保留草稿，重试会从草稿续跑，已消耗的 credit 不退还。
-
-## 7. 备份
-
-需要同时备份三项，缺一不可：
-
-| 对象             | 位置                                      |
-| ---------------- | ----------------------------------------- |
-| PostgreSQL       | compose 卷 `postgres`                     |
-| 试卷文件与材料图 | 宿主机 `./storage`                        |
-| AI 密钥加密密钥  | `.env` 中的 `PROVIDER_KEY_ENCRYPTION_KEY` |
-
-```bash
-docker compose exec db pg_dump -U paper -d oh_my_paper -Fc > backup.dump
-tar czf storage-$(date +%F).tar.gz storage/
-```
-
-`./tmp` 是临时目录，不必备份。恢复时必须三份一起还原，且顺序为：数据库 → storage → 保持原加密密钥。**用新密钥解密旧备份会导致所有已保存的 AI 密钥失效。**
-
-## 8. 故障排查
-
-**任务一直排队，Worker 无日志** —— `QUEUE_SCHEMA` 在 Web 与 Worker 之间不一致。两者从同一个 `.env` 读取，若手工覆盖过环境变量，检查 `docker compose exec web printenv QUEUE_SCHEMA` 与 Worker 的输出是否相同。
-
-**Python 工具报 `bwrap` 失败（`bwrap: loopback: Failed RTM_NEWADDR: Operation not permitted` 或 `setting up uid map: Permission denied`）** —— 宿主机是 Ubuntu 24.04 及以上时，内核默认开启 `kernel.apparmor_restrict_unprivileged_userns`。它允许创建用户命名空间，但会在其中叠加受限的 AppArmor 标签，拒绝内部的能力使用（配置回环网卡、写 uid_map），即使容器已配置 `apparmor:unconfined` 也一样。沙箱依赖非特权用户命名空间（compose 已为 Worker 配置 `no-new-privileges` / `seccomp:unconfined` / `apparmor:unconfined` 与 `cap_drop: [ALL]`），因此 `python` / `shell` 工具会持续失败，其余功能不受影响。
-
-确认与修复（宿主机执行）：
-
-```bash
-sysctl kernel.apparmor_restrict_unprivileged_userns          # 输出 = 1 即中招
-sudo sysctl kernel.apparmor_restrict_unprivileged_userns=0   # 立即生效
-echo 'kernel.apparmor_restrict_unprivileged_userns = 0' | sudo tee /etc/sysctl.d/99-oh-my-paper-userns.conf
-sudo sysctl --system                                          # 重启后仍生效
-```
-
-验证（容器内执行，无输出且退出码为 0 即恢复）：
-
-```bash
-sudo docker compose exec worker bwrap --unshare-user --unshare-net \
-  --ro-bind /usr /usr --symlink usr/bin /bin --symlink usr/lib /lib --symlink usr/lib64 /lib64 \
-  --proc /proc --dev /dev -- /usr/bin/true
-```
-
-放宽该 sysctl 会回到 Ubuntu 22.04 及更早的默认行为，属于常见做法；若必须保持宿主机收紧，可改为编写含 `userns,` 规则的 AppArmor profile 挂给 Worker 容器（将 `apparmor:unconfined` 换成 `apparmor:<profile>`）。
-
-**Python 工具报 `bwrap: Can't mount proc on /newroot/proc: Operation not permitted`** —— Docker 默认会屏蔽 `/proc` 下的部分路径。即使 `seccomp:unconfined`、`apparmor:unconfined` 和宿主机用户命名空间配置已经生效，这些覆盖挂载仍可能使内核拒绝 Bubblewrap 在自己的 PID 命名空间内挂载新的 proc 文件系统。先检查实际容器配置（在部署目录执行）：
-
-```bash
-sudo docker inspect --format 'SecurityOpt={{json .HostConfig.SecurityOpt}} MaskedPaths={{json .HostConfig.MaskedPaths}} ReadonlyPaths={{json .HostConfig.ReadonlyPaths}}' \
-  $(sudo docker compose -f compose.yaml -f compose.release.yaml ps -q worker)
-```
-
-若 `MaskedPaths` 或 `ReadonlyPaths` 不是空数组，在服务器 `compose.yaml` 的 **worker** 服务中补齐以下配置：
-
-```yaml
-security_opt:
-  - no-new-privileges:true
-  - seccomp:unconfined
-  - apparmor:unconfined
-  - systempaths=unconfined
-cap_drop: [ALL]
-```
-
-`systempaths=unconfined` 必须使用等号。Compose 将它转换成空的 `MaskedPaths` 和 `ReadonlyPaths`，因此它不会出现在 `docker inspect` 的 `SecurityOpt` 数组中。[Docker 文档](https://docs.docker.com/reference/cli/docker/container/run/#optional-security-options---security-opt)说明了该选项；[Compose 修复记录](https://github.com/docker/compose/pull/10110)说明了客户端处理方式。
-
-此设置仅适用于执行 Bubblewrap 的 Worker，保留 `cap_drop: [ALL]` 和 `no-new-privileges`；模型代码仍在 Bubblewrap 的独立用户、PID、网络命名空间和受限文件系统中执行。
-
-修改后需重建容器，单纯 `restart` 不会应用新的安全配置：
-
-```bash
-sudo docker compose -f compose.yaml -f compose.release.yaml up -d --no-deps --force-recreate worker
-sudo docker inspect --format 'MaskedPaths={{json .HostConfig.MaskedPaths}} ReadonlyPaths={{json .HostConfig.ReadonlyPaths}}' \
-  $(sudo docker compose -f compose.yaml -f compose.release.yaml ps -q worker)
-# 期望输出 MaskedPaths=[] ReadonlyPaths=[]
-sudo docker compose -f compose.yaml -f compose.release.yaml logs --since 2m worker
-```
-
-重建后不应再出现 `worker.sandbox.unavailable`，并可用上面的 `bwrap` 命令验证实际挂载。旧定时任务会继续使用已修改的 Compose 文件；只拉取新镜像不会自动修复这项配置。
-
-Worker 启动时会用与真实调用一致的完整参数做一次沙箱自检，环境不可用时在日志输出 `worker.sandbox.unavailable`（含诊断与修复建议）；排查时先 `docker compose logs worker | grep sandbox`。工具失败信息里也会附带对应的修复指引。另注意：沙箱进程意外退出后，下一次调用会自动重建沙箱，`/workspace` 中的临时文件会重置为初始页面，返回的 stdout 会带一行 `[沙箱进程已重启…]` 提示。
-
-**上传报渲染失败** —— 仅 Worker 渲染页面。确认 Worker 存活，且 `PDFTOPPM_PATH` / `PDFINFO_PATH` 指向镜像内实际路径。
-
-**Web 启动即报 `Invalid environment variables`** —— `src/server/config/env.ts` 用 Zod 校验。`BETTER_AUTH_SECRET` 必须至少 32 字符且不以 `REPLACE_` 开头；错误信息只列出变量名，不会回显取值。`PROVIDER_KEY_ENCRYPTION_KEY` 的同类校验在 `src/server/ai/credentials.ts`。
-
-**排查日志** —— Web 与 Worker 均输出 JSON 格式诊断记录，已过滤凭据。浏览器侧另有 `instrumentation-client.ts` 记录网络、资源与未处理异常。面向用户的接口失败会返回 `X-Error-Id` 响应头，可直接用它关联服务端日志。
-
-## 9. 安全须知
-
-- **注册是开放的**，`/register` 无需邀请即可创建账号，每个新账号初始获得 100 credit。若部署在公网且不希望开放注册，需要自行在反向代理层拦截该路由。
-- **管理员归属于第一个注册的账号。** 公网部署应在开放访问前完成管理员注册，否则先到者获得管理员权限。补救方式见 §5。
-- 用户角色无法通过客户端请求伪造（`role` 标记为 `input: false`），管理员判定每次都实时读库。
-- 试卷文件、页面图像与工具轨迹仅对试卷所属管理员开放；普通用户的接口响应中不包含工具调用与草稿内容。
-- API key 使用服务端 AES-GCM 加密存储，不下发到浏览器。
-- `PROVIDER_KEY_ENCRYPTION_KEY` 与 `BETTER_AUTH_SECRET` 不应提交进版本库，`.gitignore` 已排除 `.env`。
+Worker 打包命令 `pnpm build:ai-worker` 生成可独立部署的 `build/ai-worker`，包含 Prisma、AI SDK、Sharp 及追踪依赖。Web standalone 与 Worker 可复制到独立目录验证启动；该验证不能替代 Docker 容器构建与运行。当前环境未安装 Docker，镜像及 Compose 实际部署尚未验收。

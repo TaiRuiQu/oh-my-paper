@@ -1,16 +1,10 @@
-import { errorResponse } from "@/server/http/errors";
 import { getDb } from "@/server/db/client";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-
-export async function GET(request: Request) {
-  const headers = { "Cache-Control": "no-store" };
+export async function GET() {
   try {
-    // Checks both connectivity and whether the foundation migration has been applied.
-    await getDb().user.count();
-    return Response.json({ status: "ok", database: "ready" }, { headers });
-  } catch (error) {
-    return errorResponse(error, request);
+    await getDb().$queryRaw`SELECT 1`;
+    return Response.json({ status: "ok", version: "2.0.0" });
+  } catch {
+    return Response.json({ status: "unavailable" }, { status: 503 });
   }
 }

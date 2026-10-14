@@ -27,7 +27,7 @@ export function MarkdownText({ text }: { text: string }) {
             </a>
           ),
           img: ({ src, alt }) => {
-            if (typeof src !== "string" || !/^\/api\/exams\//.test(src))
+            if (typeof src !== "string" || !/^\/api\/platform\/assets\/[a-f0-9-]{36}$/.test(src))
               return <span>{alt || "图片请参照题目配图"}</span>;
             return <img src={src} alt={alt || "题目配图"} loading="lazy" />;
           },

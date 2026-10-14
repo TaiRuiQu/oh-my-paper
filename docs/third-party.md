@@ -1,10 +1,7 @@
-# Word 公式转换依赖
+# 当前第三方运行组件
 
-Word 导出复用项目已有的 KaTeX 和 docx，并使用以下依赖：
+v2 使用 Next.js / React、Prisma PostgreSQL adapter、Better Auth 和 AI SDK。数学预览与试卷打印使用 KaTeX，打印输出为 MathML；图像处理使用 Sharp；答题卡定位、透视矫正与涂卡读取使用 OpenCV 和 NumPy。
 
-| 依赖                | 用途                                                            | 许可与来源                                                                                                                     |
-| ------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `mathml2omml@0.5.0` | MathML 转 Office Math（OMML），无运行时依赖，运行时代码约 67 KB | LGPL-3.0-or-later；[项目源码](https://github.com/fiduswriter/mathml2omml)、[npm 包](https://www.npmjs.com/package/mathml2omml) |
-| `xml-js@1.6.11`     | 解析并序列化生成的 XML，修正伸缩括号、无横线分式和重复属性      | MIT；[项目源码](https://github.com/nashwaan/xml-js)。此前已由 docx 间接依赖，本次直接声明并复用同一版本                        |
+各依赖许可随相应 npm / Python 包分发。部署镜像保留运行依赖及其包内许可文件，独立 AI Worker 的运行依赖由 `@vercel/nft` 追踪复制。
 
-`mathml2omml` 以未修改、未打包压缩的独立运行时模块随 Web 应用分发。项目的兼容处理位于 `src/server/exams/export/math.ts`；Web 独立部署产物同时包含转换库的 `LICENSE` 与 `README.md`，其中保留原作者和源码链接。Worker 不执行文档导出，不包含该库。
+旧版 Word / OMML 导出、浏览器服务器端 PDF 导出、Python 沙箱和 DocCornerNet 模型已从 v2 移除；历史发布文档描述旧版本能力，不代表当前运行依赖。当前打印由浏览器完成，服务器无需 Chromium 或专用宋体资产。

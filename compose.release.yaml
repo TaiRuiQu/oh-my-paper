@@ -1,13 +1,11 @@
-# 部署覆盖文件：从 GHCR 拉取已发布镜像，而不是本地构建。
-# APP_VERSION 缺省时跟踪 latest（配合 deploy/update.sh 自动升级）；
-# 回滚或固定版本时在 .env 中设为某个 git tag，如 APP_VERSION=v0.1.2。
+# Published v2 images. APP_VERSION may pin a v2 release tag.
 services:
   migrate:
     build: !reset null
-    image: ghcr.io/tairuiqu/oh-my-paper-worker:${APP_VERSION:-latest}
+    image: ghcr.io/tairuiqu/oh-my-paper-migrate:${APP_VERSION:-latest}
   web:
     build: !reset null
     image: ghcr.io/tairuiqu/oh-my-paper:${APP_VERSION:-latest}
-  worker:
+  ai-worker:
     build: !reset null
-    image: ghcr.io/tairuiqu/oh-my-paper-worker:${APP_VERSION:-latest}
+    image: ghcr.io/tairuiqu/oh-my-paper-ai-worker:${APP_VERSION:-latest}

@@ -48,7 +48,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         setError(reportClientError("auth.submit", new Error(message)));
         return;
       }
-      router.replace("/dashboard");
+      router.replace("/workspace");
       router.refresh();
     } catch (error) {
       setError(reportClientError("auth.submit", error));
@@ -58,11 +58,13 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
   return (
     <section className="auth-panel" aria-labelledby="auth-heading">
       <Link href="/" className="wordmark">
-        Oh My Paper<span>试卷工作台</span>
+        Oh My Paper<span>教学工作台</span>
       </Link>
       <h1 id="auth-heading">{registering ? "创建你的账号" : "登录工作台"}</h1>
       <p className="intro">
-        {registering ? "准备好你的试卷，接下来的事交给工作台。" : "上传试卷，查看结构化题目。"}
+        {registering
+          ? "建立题库，组织考试，了解每一次学习的进步。"
+          : "从一道题到一场考试，让教学工作有序衔接。"}
       </p>
       <form onSubmit={submit} noValidate>
         {registering && (

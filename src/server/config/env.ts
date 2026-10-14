@@ -12,11 +12,6 @@ const schema = z.object({
     .refine((value) => !value.startsWith("REPLACE_")),
   STORAGE_ROOT: z.string().min(1).default("./storage"),
   TEMP_ROOT: z.string().min(1).default("./tmp"),
-  QUEUE_SCHEMA: z
-    .string()
-    .regex(/^[a-z_][a-z0-9_]{0,62}$/)
-    .default("pgboss"),
-  WORKER_CONCURRENCY: z.coerce.number().int().min(1).max(16).default(2),
 });
 
 let cached: z.infer<typeof schema> | undefined;

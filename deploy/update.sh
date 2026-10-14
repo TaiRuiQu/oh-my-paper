@@ -9,6 +9,6 @@ exec 9>./.update.lock
 flock -n 9 || exit 0
 compose=(docker compose -f compose.yaml -f compose.release.yaml)
 # db 与 proxy 使用固定版本镜像，升级应显式进行，不在自动更新范围内。
-"${compose[@]}" pull migrate web worker
+"${compose[@]}" pull migrate web ai-worker
 "${compose[@]}" up -d --remove-orphans
 docker image prune -f
