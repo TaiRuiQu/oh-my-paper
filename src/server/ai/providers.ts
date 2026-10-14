@@ -18,6 +18,7 @@ import type { CreditMeter } from "./credits";
 import { createResultTools } from "@/server/exams/result-tools";
 import type { z } from "zod";
 import { randomUUID } from "node:crypto";
+import { v7 as uuidv7 } from "uuid";
 import { consumeModelStream } from "./streams";
 
 const MAX_AGENT_STEPS = 256;
@@ -70,6 +71,7 @@ export interface SingleCallModel {
 }
 export function reasoningOptions(
   config: Pick<ProviderSnapshot, "apiType" | "reasoningEffort" | "baseURL">,
+  sessionId?: string,
 ): NonNullable<Parameters<typeof streamText>[0]["providerOptions"]> {
   const effort = config.reasoningEffort;
   switch (config.apiType) {
@@ -78,6 +80,7 @@ export function reasoningOptions(
       return {
         openai: {
           store: true,
+          ...(sessionId ? { promptCacheKey: sessionId } : {}),
           ...(effort === "default"
             ? {}
             : {
@@ -121,8 +124,12 @@ export function createProviderExamModel(
   apiKey: string,
   fetch = globalThis.fetch,
   creditMeter?: CreditMeter,
+  sessionId: string = uuidv7(),
 ): ExamModel & AgentModel & SingleCallModel {
   const config = providerSnapshotSchema.parse(raw);
+  // Match Codex's ordinary root session: create one UUIDv7 and use it unchanged
+  // for both identifiers. Workers pass the persisted task ID to resume it.
+  const providerOptions = reasoningOptions(config, sessionId);
   const streamTimeout = {
     firstChunkMs: config.timeoutSeconds * 1000,
     chunkMs: config.timeoutSeconds * 1000,
@@ -176,7 +183,7 @@ export function createProviderExamModel(
   const common = { apiKey, baseURL: config.baseURL, fetch: timedFetch };
   const model =
     config.apiType === "openai_responses"
-      ? createOpenAI(common).responses(config.model)
+      ? createOpenAI({ ...common, headers: { "session-id": sessionId } }).responses(config.model)
       : config.apiType === "openai_chat"
         ? createOpenAICompatible({ ...common, name: "exam", includeUsage: true })(config.model)
         : config.apiType === "anthropic"
@@ -238,7 +245,7 @@ export function createProviderExamModel(
           timeout: streamTimeout,
           maxOutputTokens: config.maxOutputTokens,
           maxRetries: 1,
-          providerOptions: reasoningOptions(config),
+          providerOptions,
           onStepStart: async () => {
             await emit({ type: "step", step: ++step, text: `模型调用 ${step}` });
           },
@@ -359,7 +366,7 @@ export function createProviderExamModel(
               },
             ],
             maxOutputTokens: config.maxOutputTokens,
-            providerOptions: reasoningOptions(config),
+            providerOptions,
             // Each question makes exactly one API call. Failed questions may be retried explicitly.
             maxRetries: 0,
             timeout: streamTimeout,
@@ -419,7 +426,7 @@ export function createProviderExamModel(
               },
             ],
             maxOutputTokens: config.maxOutputTokens,
-            providerOptions: reasoningOptions(config),
+            providerOptions,
             maxRetries: 1,
             timeout: streamTimeout,
             abortSignal: request.signal,

@@ -1,5 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
+import { v7 as uuidv7 } from "uuid";
 import { rm, mkdir } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { z } from "zod";
@@ -156,7 +157,7 @@ export async function createExamTask(request: Request, userId: string, quick = f
   const boss = await getJobProducer();
   const modelSnapshots: Record<string, import("@/contracts/ai-providers").ProviderSnapshot> = {};
   let models: TaskModelSelection = {};
-  const id = randomUUID(),
+  const id = uuidv7(),
     jobId = randomUUID(),
     directory = taskDirectory(id);
   const allUploads = await receiveExamUpload(request, join(directory, "inputs"), {
@@ -298,6 +299,7 @@ async function runExamTask(id: string, jobId: string, signal: AbortSignal) {
           displayName: provider.displayName,
           multiplier: provider.creditMultiplier ?? 1,
         }),
+        id,
       ),
       onEvent: emit,
       onQuestionProgress: async (progress) => {

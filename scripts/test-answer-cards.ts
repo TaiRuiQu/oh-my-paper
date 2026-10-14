@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
+import { version as uuidVersion } from "uuid";
 import { mkdtemp, readdir, readFile, rm, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -210,6 +211,7 @@ async function main() {
       sourceId,
     );
     const storedTemplate = await ownedTemplate(user.id, template.id);
+    assert.equal(uuidVersion(template.id), 7);
     await processCardTemplate(template.id, storedTemplate.jobId, new AbortController().signal);
     const ready = await ownedTemplate(user.id, template.id);
     assert.equal(ready.status, "COMPLETED");
@@ -227,6 +229,7 @@ async function main() {
       template.id,
     );
     let stored = await db.answerCardBatch.findUniqueOrThrow({ where: { id: batch.id } });
+    assert.equal(uuidVersion(batch.id), 7);
     await processCardBatch(batch.id, stored.jobId, new AbortController().signal);
     let detail = await cardBatchDetail(user.id, batch.id);
     assert.equal(detail.status, "FAILED");

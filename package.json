@@ -1,6 +1,6 @@
 {
   "name": "oh-my-paper",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "private": true,
   "description": "试卷上传与结构化解析",
   "packageManager": "pnpm@11.21.0",
@@ -42,6 +42,7 @@
     "server-only": "0.0.1",
     "sharp": "0.35.5",
     "unified": "11.0.5",
+    "uuid": "14.0.3",
     "xml-js": "1.6.11",
     "zod": "4.6.5"
   },

@@ -1,5 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
+import { v7 as uuidv7 } from "uuid";
 import { mkdir, rm, copyFile } from "node:fs/promises";
 import { join } from "node:path";
 import { z } from "zod";
@@ -177,7 +178,7 @@ export async function createAgentTask(
   let taskReasoningEffort = explicitReasoningEffort;
   // Reconcile interrupted runs before taking the per-exam lock.
   await listAgentTasks(userId, sourceId);
-  const id = randomUUID(),
+  const id = uuidv7(),
     jobId = randomUUID(),
     directory = agentTaskDirectory(id);
   let uploaded: { name: string }[] = [];
@@ -406,6 +407,7 @@ export async function processAgentTask(id: string, jobId: string, workerSignal: 
           displayName: provider.displayName,
           multiplier: provider.creditMultiplier ?? 1,
         }),
+        id,
       ),
       signal,
       onEvent: emit,

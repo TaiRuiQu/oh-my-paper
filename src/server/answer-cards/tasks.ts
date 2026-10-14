@@ -1,5 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
+import { v7 as uuidv7 } from "uuid";
 import { mkdir, rm } from "node:fs/promises";
 import { basename, join, relative } from "node:path";
 import sharp from "sharp";
@@ -200,7 +201,7 @@ export async function createCardTemplate(request: Request, userId: string, sourc
   if (source.deletedAt || !exam) throw new RequestError(409, "请先完成试卷识别。");
   await requireCredits(userId);
   await requireWorker();
-  const id = randomUUID(),
+  const id = uuidv7(),
     jobId = randomUUID(),
     directory = cardDirectory("templates", id);
   let models: TaskModelSelection = {};
@@ -261,7 +262,7 @@ export async function createCardBatch(request: Request, userId: string, template
     throw new RequestError(400, "每位学生的文件数必须为 1–20。");
   await requireCredits(userId);
   await requireWorker();
-  const id = randomUUID(),
+  const id = uuidv7(),
     jobId = randomUUID(),
     directory = cardDirectory("batches", id);
   let models: TaskModelSelection = {};
@@ -400,6 +401,7 @@ function cardModel(
       displayName: p.displayName,
       multiplier: p.creditMultiplier ?? 1,
     }),
+    task.id,
   );
 }
 export async function processCardTemplate(id: string, jobId: string, workerSignal: AbortSignal) {

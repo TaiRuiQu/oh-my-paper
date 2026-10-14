@@ -117,6 +117,8 @@ Web 请求错误查看 Web 控制台，后台解析与工具错误查看 Worker 
 
 ## AI 配置
 
+OpenAI Responses 按 Codex 普通会话的规则生成标识：新任务使用当前时间与随机数生成的 UUIDv7，以同一个小写、带连字符的 UUID 原样设置 `session-id` 请求头和 `prompt_cache_key` 请求体字段。同一任务的多轮调用、SDK 自动重试和失败后重试保持相同标识，不同任务使用不同标识；适用于试卷识别、答案生成与批改、答题卡任务。已有任务恢复时保留原 ID，独立创建模型实例时默认生成一次 UUIDv7。缓存命中量仍使用提供商实际报告的值。
+
 管理员在 `/admin/ai` 配置提供商。每个提供商可以添加多个模型，每个模型分别填写「API 模型代码」与可选的「显示名称」，显示名称用于模型选项、列表与排行榜，留空时显示代码；实际 API 请求继续发送模型代码。每个模型单独列出支持的推理选项。「功能默认模型」分别为 AI 解析、AI 批改、AI 生成答案选择模型与推理程度，每项独立保存，也可选择不同提供商。后台配置仅作默认值。用户在创建任务时可以指定公开模型，即使后台未设置默认模型也可使用自己的选择；未自行选择时才读取账户偏好或后台默认。运行中的任务保留提交时的配置快照。
 
 支持 OpenAI Responses、OpenAI 兼容 Chat Completions、Anthropic Messages、Google Generative AI（Generate Content）与 Gemini Interactions API。仅勾选实际模型支持的选项；`默认` 不发送推理参数，`关闭` 使用接口的关闭推理设置，其余选项映射至对应 API 的 reasoning/thinking 参数。模型需支持图片输入。API key 使用服务端 AES-GCM 加密，不传给浏览器。
@@ -211,7 +213,7 @@ pnpm run test:integration
 
 Worker 镜像使用 `pnpm run build:worker` 生成的独立运行目录，只包含编译后的入口、实际运行依赖、数据库迁移与 Python 沙箱脚本，不再复制完整 `node_modules` 和应用源码。快速批改的「标准答案（可选）」默认折叠，选中文件后仍在摘要显示数量。
 
-部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.14 部署与升级指南](docs/releases/v0.1.14.zh-CN.md)。
+部署说明：[通用部署手册](docs/deployment.zh-CN.md) · [v0.1.15 部署与升级指南](docs/releases/v0.1.15.zh-CN.md)。
 
 Word 公式转换复用 KaTeX 与 docx，新增 `mathml2omml@0.5.0`（约 67 KB 运行时代码，无运行时依赖），并直接声明已有 docx 依赖 `xml-js`。转换库以未修改的运行时模块随应用分发，其 LGPL-3.0-or-later 许可及来源见 [第三方依赖说明](docs/third-party.md)。
 

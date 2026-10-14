@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
+import { version as uuidVersion } from "uuid";
 import { mkdtemp, readdir, readFile, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -857,6 +858,7 @@ async function main() {
         let uploadedTask = await db.examTask.findUniqueOrThrow({
           where: { id: uploadedSource.id },
         });
+        assert.equal(uuidVersion(uploadedSource.id), 7);
         assert.equal((uploadedTask.providerSnapshot as { model: string }).model, "vision-one");
         assert.equal(uploadedTask.inputFiles.length, 1);
         if (!quick) {
@@ -1031,6 +1033,7 @@ async function main() {
         true,
       );
       assert.equal(manual.answerSource, "UPLOAD");
+      assert.equal(uuidVersion(manual.id), 7);
       const manualTask = await db.examAgentTask.findUniqueOrThrow({ where: { id: manual.id } });
       assert.deepEqual(
         await readFile(join(agentTaskDirectory(manual.id), manualTask.inputFiles[0])),
