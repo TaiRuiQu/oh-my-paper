@@ -1,5 +1,6 @@
 FROM node:24.19.0-bookworm-slim AS dependencies
 WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN corepack enable && corepack prepare pnpm@11.21.0 --activate
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 RUN pnpm install --frozen-lockfile
@@ -29,7 +30,7 @@ EXPOSE 3000
 CMD ["node", "server.js"]
 
 FROM dependencies AS build-ai-worker
-RUN pnpm run build:ai-worker
+RUN DATABASE_URL=postgresql://build:build@localhost:5432/build pnpm run build:ai-worker
 
 FROM node:24.19.0-bookworm-slim AS ai-worker
 WORKDIR /app
