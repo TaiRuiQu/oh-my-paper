@@ -39,7 +39,7 @@ export async function executeClassroomsCommand(
       if (!data.studentNumber)
         data.studentNumber = previous?.studentNumber ?? (await nextStudentNumber(db));
       if (previous?.userId && binding === null)
-        throw new RequestError(409, "已有学生账号不能解绑。");
+        throw new RequestError(409, "已有学生账号不能解绑，已参与考试的学生身份不能更改。");
       binding ??= previous?.userId ?? undefined;
       if (binding) {
         const account = await db.user.findUnique({ where: { id: binding } });
@@ -47,6 +47,9 @@ export async function executeClassroomsCommand(
           throw new RequestError(400, "只能绑定学生账号。");
       }
       if (previous) {
+        const previousAccount = previous.userId
+          ? await db.user.findUnique({ where: { id: previous.userId }, select: { email: true } })
+          : null;
         const hasHistory =
           (await db.scanSubmission.count({ where: { studentId: previous.id } })) > 0 ||
           (await db.assessment.count({ where: { studentIds: { has: previous.id } } })) > 0;
@@ -56,8 +59,10 @@ export async function executeClassroomsCommand(
             previous.studentNumber === data.studentNumber &&
             previous.classroomId === data.classroomId;
           const unchangedBinding = binding === undefined || binding === previous.userId;
-          const firstBinding = previous.userId === null && !!binding;
-          if (!unchangedIdentity || (!unchangedBinding && !firstBinding))
+          const firstBinding =
+            !!binding &&
+            (previous.userId === null || previousAccount?.email.endsWith("@accounts.invalid"));
+          if ((!unchangedIdentity || !unchangedBinding) && !firstBinding)
             throw new RequestError(
               409,
               "已参与考试的学生身份不能更改；尚未绑定账号的学生可补绑定本人账号。",
@@ -74,7 +79,9 @@ export async function executeClassroomsCommand(
         })
       )
         throw new RequestError(409, "该班级已有相同卡号或账号。");
-      if (!binding) {
+      // Omitted userId creates a managed account; explicit null keeps a roster
+      // entry unbound until an existing student account is attached later.
+      if (binding === undefined) {
         const account = await insertAccount(db, {
           role: "STUDENT",
           name: data.name,

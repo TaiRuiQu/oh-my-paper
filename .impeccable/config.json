@@ -20,6 +20,15 @@
         ],
         "createdAt": "2026-10-14T13:00:58.351Z",
         "reason": "Agent reviewed: this fixture tests the existing user-selectable document font from DOCUMENT_FONTS, not application typography."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "simsun",
+        "files": [
+          "scripts/test-platform.ts"
+        ],
+        "createdAt": "2026-10-14T14:45:48.737Z",
+        "reason": "Agent reviewed: this fixture tests the existing user-selectable document font from DOCUMENT_FONTS, not application typography."
       }
     ]
   }

@@ -325,7 +325,12 @@ async function main() {
     const lateStudent = (
       await cmd({
         type: "student.save",
-        student: { classroomId: classId, name: "新转入", studentNumber: "000003" },
+        student: {
+          classroomId: classId,
+          name: "新转入",
+          studentNumber: "000003",
+          userId: null,
+        },
       })
     ).id;
     assert.equal(
@@ -726,7 +731,12 @@ async function main() {
     const unboundStudent = (
       await cmd({
         type: "student.save",
-        student: { classroomId: unboundClass, name: "已考试未注册", studentNumber: "000020" },
+        student: {
+          classroomId: unboundClass,
+          name: "已考试未注册",
+          studentNumber: "000020",
+          userId: null,
+        },
       })
     ).id;
     const unboundAssessment = (
