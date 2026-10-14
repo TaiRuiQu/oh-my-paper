@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { MockLanguageModelV4 } from "ai/test";
 import { aiInputSchemas } from "@/contracts/platform-ai";
+import { questionInputSchema } from "@/server/platform/schemas";
 import type { BankQuestion, PlatformState } from "@/contracts/platform";
 const mocked = vi.hoisted(() => ({
   loadState: vi.fn(),
@@ -208,6 +209,63 @@ const assemble = () =>
     knowledgeDistribution: [{ tag: "代数", percent: 100 }],
   });
 describe("AI autonomous tools and constraints", () => {
+  it("imports complete image evidence directly into an editable homework without manual assembly", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 120, height: 160, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    mocked.readOwnedAsset.mockResolvedValue({ buffer });
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "IMPORT",
+      status: "RUNNING",
+    });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: {
+        assetUrls: ["/api/platform/assets/source"],
+        kind: "HOMEWORK",
+        name: "图片作业",
+        subject: "数学",
+        grade: "高一",
+      },
+      jobId: "job",
+    });
+    await expect(call(f, "finish", { summary: "完成" })).rejects.toThrow(/全部导入/);
+    await call(f, "inspect_image", { url: "/api/platform/assets/source" });
+    const draft = questionInputSchema.parse({ ...question, id: undefined });
+    await call(f, "propose_question", { sourceKey: "p1-q1", score: 7, question: draft });
+    await call(f, "record_source_inventory", {
+      sources: [{ url: "/api/platform/assets/source", totalQuestions: 2 }],
+    });
+    await expect(call(f, "finish", { summary: "完成" })).rejects.toThrow(/完整覆盖/);
+    await call(f, "propose_question", {
+      sourceKey: "p1-q2",
+      score: 3,
+      question: { ...draft, content: { ...draft.content, stem: "2+2=___", answers: ["4"] } },
+    });
+    await call(f, "finish", { summary: "已识别两题" });
+    const output = await f.commit();
+    expect(mocked.executeCommand).toHaveBeenCalledTimes(1);
+    expect(mocked.executeCommand.mock.calls[0][1]).toMatchObject({
+      type: "paper.save",
+      paper: {
+        kind: "HOMEWORK",
+        name: "图片作业",
+        layout: { paperSize: "A4", columns: 1 },
+        items: [
+          { score: 7, question: { content: { answers: ["2"] } } },
+          { score: 3, question: { content: { answers: ["4"] } } },
+        ],
+      },
+    });
+    expect(output.result).toMatchObject({ paperId: "saved", paperKind: "HOMEWORK" });
+  });
   it("preserves an established one-answer-per-blank count during enrichment", async () => {
     const s = state();
     s.questions[0] = { ...question, content: { ...question.content, answers: ["2", "4"] } };

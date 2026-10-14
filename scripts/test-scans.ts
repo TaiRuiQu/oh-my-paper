@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import sharp from "sharp";
@@ -11,9 +11,11 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { Client } from "pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { executeCommand, loadState } from "../src/server/platform/service";
-import { saveImage, readOwnedAsset } from "../src/server/platform/assets";
+import { saveImage, readOwnedAsset, saveUploadedDocument } from "../src/server/platform/assets";
 import { uploadScans } from "../src/server/platform/scan-upload";
 import { generateCardTemplate, choiceBubbles } from "../src/server/platform/cards";
+import { resolveScanSources } from "../src/server/platform/scan-sources";
+import { processCardScan } from "../src/server/platform/scan";
 import { renderCardSvg } from "../src/server/platform/print";
 import type { CardTemplate, Paper } from "../src/server/platform/types";
 
@@ -164,11 +166,11 @@ async function main() {
       let fills = Array.from(
         studentNumber,
         (value, column) =>
-          `<circle cx="${(n.x + column * n.cellWidth) * 794}" cy="${(n.y + Number(value) * n.cellHeight) * 1123}" r="5" fill="black"/>`,
+          `<circle cx="${(n.x + column * n.cellWidth) * card.layout.width}" cy="${(n.y + Number(value) * n.cellHeight) * card.layout.height}" r="5" fill="black"/>`,
       ).join("");
       for (const region of card.layout.regions.filter((r) => r.page === page)) {
         const item = p.items.find((item) => item.id === region.itemId)!;
-        fills += choiceBubbles(region)
+        fills += choiceBubbles(region, card.layout)
           .filter((b) => item.snapshot.content.answers.includes(b.value))
           .map((b) => `<circle cx="${b.x}" cy="${b.y}" r="7" fill="black"/>`)
           .join("");
@@ -336,6 +338,89 @@ async function main() {
     const image = await readOwnedAsset(teacherId, work.answers[0].images[0]);
     assert.equal((await sharp(image.buffer).metadata()).width, 700);
     report.push("非规范练习册 → 人工坐标裁切 → 学生与题目绑定持久化");
+    const pdfPath = join(temp, "答题卡扫描.pdf");
+    const pdfImages = [];
+    for (let page = 1; page <= template.layout.pageCount; page++) {
+      const pagePath = join(temp, `pdf-source-${page}.png`);
+      await writeFile(pagePath, Buffer.from(await allCards[page - 1].arrayBuffer()));
+      pdfImages.push(pagePath);
+    }
+    await promisify(execFile)(resolve(".venv/bin/python"), [
+      "-c",
+      "from PIL import Image; import sys; pages=[Image.open(p).convert('RGB') for p in sys.argv[2:]]; pages[0].save(sys.argv[1], 'PDF', save_all=True, append_images=pages[1:], resolution=300.0, quality=100)",
+      pdfPath,
+      ...pdfImages,
+    ]);
+    const pdfBuffer = await readFile(pdfPath),
+      pdfForm = form();
+    pdfForm.append(
+      "files",
+      new File([new Uint8Array(pdfBuffer)], "答题卡扫描.pdf", { type: "application/pdf" }),
+    );
+    const pdfImport = await uploadScans(teacherId, pdfForm);
+    assert.equal(pdfImport.imported, 1, JSON.stringify(pdfImport.issues));
+    assert.deepEqual(pdfImport.issues, []);
+    const importedPdf = (await loadState(actor)).submissions.find(
+      (s) => s.id === pdfImport.ids[0],
+    )!;
+    assert.equal(importedPdf.sourceFiles.length, template.layout.pageCount);
+    assert.equal(importedPdf.answers.length, paper.items.length);
+    for (const answer of importedPdf.answers) {
+      const item = paper.items.find((item) => item.id === answer.itemId)!;
+      if (["SINGLE", "MULTIPLE"].includes(item.snapshot.type))
+        assert.equal(answer.text, item.snapshot.content.answers.join(","));
+    }
+    report.push("多页 PDF 答题卡 → 按页顺序栅格化 → 考号匹配、全题裁切、选择题识别与答卷保存");
+    const document = await saveUploadedDocument(teacherId, pdfBuffer, "预览扫描.pdf");
+    const prepared = form();
+    prepared.set("sources", JSON.stringify(document.pages.map((page) => ({ assetUrl: page.url }))));
+    const preparedImport = await uploadScans(teacherId, prepared);
+    assert.equal(preparedImport.imported, 1, JSON.stringify(preparedImport.issues));
+    const preparedSub = (await loadState(actor)).submissions.find(
+      (s) => s.id === preparedImport.ids[0],
+    )!;
+    assert.deepEqual(
+      preparedSub.sourceFiles,
+      document.pages.map((page) => page.url),
+    );
+    const unknownUser = `outside-${randomUUID()}`;
+    await db.user.create({
+      data: {
+        id: unknownUser,
+        name: "外部教师",
+        email: `${unknownUser}@test.invalid`,
+        role: "TEACHER",
+      },
+    });
+    await assert.rejects(resolveScanSources(unknownUser, prepared), /不存在/);
+    const workbookPdf = new FormData();
+    workbookPdf.set("assessmentId", workAssessmentId);
+    workbookPdf.set("paperId", paperId);
+    workbookPdf.set("kind", "WORKBOOK");
+    workbookPdf.set("studentId", students[0].id);
+    workbookPdf.set(
+      "boxes",
+      JSON.stringify(
+        paper.items.map((item, index) => ({
+          itemId: item.id,
+          page: 2,
+          x: 0.1,
+          y: 0.05 + index * 0.14,
+          width: 0.7,
+          height: 0.12,
+        })),
+      ),
+    );
+    workbookPdf.set(
+      "sources",
+      JSON.stringify(document.pages.map((page) => ({ assetUrl: page.url }))),
+    );
+    const pdfWork = await uploadScans(teacherId, workbookPdf);
+    assert.equal(pdfWork.imported, 1, JSON.stringify(pdfWork.issues));
+    const pdfWorkSub = (await loadState(actor)).submissions.find((s) => s.id === pdfWork.ids[0])!;
+    assert(pdfWorkSub.answers.every((a) => a.box?.page === 2));
+    assert.equal(pdfWorkSub.sourceFiles.length, document.pageCount);
+    report.push("PDF 逐页预览资产复用 → 练习册第二页人工切题 → 完整保存；他人 PDF 页面引用被拒绝");
     await command({
       type: "review.save",
       review: {
@@ -363,6 +448,30 @@ async function main() {
     lateForm.append("files", allCards[0]);
     await assert.rejects(uploadScans(teacherId, lateForm), /不在本次考试/);
     report.push("考试后新增学生 → 扫描层遵守参试名单快照");
+    for (const size of ["A4", "A3"] as const)
+      for (const orientation of ["portrait", "landscape"] as const) {
+        const variant = generateCardTemplate({
+          ...paper,
+          items: paper.items.slice(0, 2),
+          layout: { paperSize: size, orientation, columns: 4 },
+        });
+        const pixels = await filled(variant, paper, "654321", 1),
+          source = join(temp, `${size}-${orientation}.png`);
+        await import("node:fs/promises").then((fs) => fs.writeFile(source, pixels));
+        const scan = await processCardScan({
+          inputPath: source,
+          template: variant,
+          page: 1,
+          outputDir: join(temp, `${size}-${orientation}-out`),
+        });
+        assert.equal(scan.studentNumber, "654321", `${size} ${orientation}`);
+        for (const answer of scan.answers) {
+          const item = paper.items.find((item) => item.id === answer.itemId)!;
+          if (["SINGLE", "MULTIPLE"].includes(item.snapshot.type))
+            assert.equal(answer.text, item.snapshot.content.answers.join(","));
+        }
+      }
+    report.push("A4/A3 × 横向/纵向四栏：矩形框打印像素 → 考号及选项 OMR 全部正确");
     console.log(JSON.stringify({ ok: true, evidence: report }, null, 2));
   } finally {
     const assets = await db.platformAsset.findMany({

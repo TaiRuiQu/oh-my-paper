@@ -6,6 +6,7 @@ import { z } from "zod";
 import { AccessError, RequestError } from "@/server/http/errors";
 import { loadState, executeCommand } from "./service";
 import { logError } from "@/server/logger";
+import { resolveScanSources } from "./scan-sources";
 import { saveImage } from "./assets";
 import { cropWorkbook, processCardScan } from "./scan";
 import { boxSchema } from "./schemas";
@@ -29,15 +30,12 @@ export async function uploadScans(actorId: string, form: FormData) {
   if (!["CARD", "WORKBOOK"].includes(String(form.get("kind"))))
     throw new RequestError(400, "扫描类型无效。");
   const kind = form.get("kind") === "WORKBOOK" ? "WORKBOOK" : "CARD";
+  if (assessment.kind === "HOMEWORK" && kind !== "WORKBOOK")
+    throw new RequestError(400, "作业必须使用练习册录入。");
   const template = state.templates.find(
     (template) => template.id === form.get("templateId") && template.paperId === paperId,
   );
   if (kind === "CARD" && !template) throw new RequestError(400, "请选择这套试卷的答题卡模板。");
-  const files = form.getAll("files").filter((file): file is File => file instanceof File);
-  if (!files.length || files.length > 100)
-    throw new RequestError(400, "请上传 1 至 100 张扫描图片。");
-  if (files.reduce((sum, file) => sum + file.size, 0) > 150_000_000)
-    throw new RequestError(413, "本批扫描图片不能超过 150 MB。");
   const students = state.classrooms
     .filter((classroom) => assessment.classroomIds.includes(classroom.id))
     .flatMap((classroom) => classroom.students)
@@ -45,6 +43,7 @@ export async function uploadScans(actorId: string, form: FormData) {
   const override = String(form.get("studentId") || "");
   if (override && !students.some((student) => student.id === override))
     throw new RequestError(400, "学生不在本次考试班级中。");
+  const files = await resolveScanSources(actorId, form);
   let boxes: z.infer<typeof workbookBoxes> = [];
   if (kind === "WORKBOOK") {
     if (!override) throw new RequestError(400, "练习册扫描需要选择学生。");
@@ -88,7 +87,9 @@ export async function uploadScans(actorId: string, form: FormData) {
     for (const [index, file] of files.entries()) {
       let sourceUrl: string | undefined;
       try {
-        const source = await saveImage(actorId, Buffer.from(await file.arrayBuffer()), file.name);
+        const source = file.assetUrl
+          ? { url: file.assetUrl, buffer: file.buffer }
+          : await saveImage(actorId, file.buffer, file.name);
         sourceUrl = source.url;
         const inputPath = join(temporary, `input-${index}.png`);
         await writeFile(inputPath, source.buffer);

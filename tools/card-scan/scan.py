@@ -49,7 +49,7 @@ def align(image, layout):
     return corrected, {'corrected':True,'orientationQuarterTurns':orientation,'sourceCorners':source.tolist(),'transform':transform.tolist(),'width':layout['width'],'height':layout['height']}
 
 def darkness(gray, x, y, radius):
-    # Ignore circle outlines and labels around the edge; central fill survives pencil variance.
+    # Ignore rectangle outlines and labels around the edge; central fill survives pencil variance.
     mask = np.zeros(gray.shape,np.uint8)
     cv2.circle(mask,(round(x),round(y)),max(2,round(radius*.7)),255,-1)
     values = gray[mask>0]
@@ -103,7 +103,11 @@ def scan(image, layout, page, output, expected_code=None):
         ambiguous = False
         if region['kind'] == 'CHOICE':
             for index,label in enumerate(region.get('options',[])):
-                score = darkness(gray,region['x']*layout['width']+85+index*46,region['y']*layout['height']+29,7)
+                modern = layout.get('omrVersion') == 2
+                columns = max(1, int((region['width']*layout['width']-60)//32))
+                x = region['x']*layout['width'] + (54+(index%columns)*32 if modern else 85+index*46)
+                y = region['y']*layout['height'] + (44+(index//columns)*22 if modern else 29)
+                score = darkness(gray,x,y,7)
                 scores[label] = score
                 if score > .65: selected.append(label)
                 elif score > .3: ambiguous = True

@@ -1,78 +1,11 @@
 "use client";
+import { reviewRule } from "@/lib/document-layout";
 import Image from "next/image";
 import { useState } from "react";
 import type { FinalGrade, PlatformState, Review, ScanSubmission } from "@/contracts/platform";
-import { Empty, Field, Panel, Submit, readForm, stringField, numberField } from "./primitives";
+import { Field, Submit, readForm, stringField, numberField } from "./primitives";
 import { QuestionBody, type Mutate } from "./questions";
-export function Reviews({
-  state,
-  mutate,
-  pending,
-}: {
-  state: PlatformState;
-  mutate: Mutate;
-  pending: boolean;
-}) {
-  const [assessmentId, setAssessmentId] = useState(""),
-    [submissionId, setSubmissionId] = useState("");
-  const submissions = state.submissions.filter(
-      (s) => !assessmentId || s.assessmentId === assessmentId,
-    ),
-    submission = submissions.find((s) => s.id === submissionId);
-  return (
-    <Panel
-      title="阅卷工作台"
-      description="逐题查看作答、参考答案与评分标准。双评由不同教师独立提交，分差超阈值后进入仲裁三评。"
-    >
-      <div className="p-toolbar">
-        <select
-          aria-label="选择考试"
-          value={assessmentId}
-          onChange={(e) => {
-            setAssessmentId(e.target.value);
-            setSubmissionId("");
-          }}
-        >
-          <option value="">全部考试 / 作业</option>
-          {state.assessments.map((a) => (
-            <option key={a.id} value={a.id}>
-              {a.name}
-            </option>
-          ))}
-        </select>
-        <select
-          aria-label="选择学生答卷"
-          value={submissionId}
-          onChange={(e) => setSubmissionId(e.target.value)}
-        >
-          <option value="">选择学生答卷</option>
-          {submissions.map((s) => (
-            <option key={s.id} value={s.id}>
-              {state.classrooms.flatMap((c) => c.students).find((st) => st.id === s.studentId)
-                ?.name ?? "待匹配"}{" "}
-              · {state.papers.find((p) => p.id === s.paperId)?.subject} ·{" "}
-              {{ PENDING: "待阅卷", REVIEW: "待复核", GRADED: "已阅卷" }[s.status]}
-            </option>
-          ))}
-        </select>
-      </div>
-      {submission ? (
-        <SubmissionReview
-          key={submission.id}
-          submission={submission}
-          state={state}
-          mutate={mutate}
-          pending={pending}
-        />
-      ) : (
-        <Empty>
-          {submissions.length ? "选择一份学生答卷开始阅卷。" : "先在扫描录入中上传学生答卷。"}
-        </Empty>
-      )}
-    </Panel>
-  );
-}
-function SubmissionReview({
+export function SubmissionReview({
   submission,
   state,
   mutate,
@@ -113,7 +46,7 @@ function SubmissionReview({
             answer={answer}
             reviews={reviews}
             grade={grade}
-            double={settings?.gradingMode === "DOUBLE"}
+            double={settings ? reviewRule(settings, item.id).doubleReview : false}
             state={state}
             submission={submission}
             mutate={mutate}
@@ -147,13 +80,18 @@ function ReviewItem({
   mutate: Mutate;
   pending: boolean;
 }) {
+  const existingOwn = reviews.find((r) => r.reviewerId === state.actor.id);
   const next: Review["round"] =
-    grade?.status === "ARBITRATION"
+    existingOwn?.round ??
+    (grade?.status === "ARBITRATION"
       ? "ARBITRATION"
       : reviews.some((r) => r.round === "FIRST") && double
         ? "SECOND"
-        : "FIRST";
+        : "FIRST");
   const [round, setRound] = useState<Review["round"]>(next);
+  const history = (state.reviewHistory ?? state.reviews).filter(
+    (r) => r.submissionId === submission.id && r.itemId === item.id,
+  );
   const ownReview = reviews.find((r) => r.reviewerId === state.actor.id && r.round === round);
   return (
     <article className="p-review-work">
@@ -171,6 +109,12 @@ function ReviewItem({
                 : "等待评分"}
         </span>
       </div>
+      {double && reviews.some((r) => r.round === "FIRST" && r.source === "AI") && (
+        <p className="p-notice">
+          本题启用双评，AI 分数作为建议。第一评教师须确认评分，另一位教师独立完成第二评。
+        </p>
+      )}
+      {grade?.calculation && <p className="p-muted">计分依据：{grade.calculation}</p>}
       <details>
         <summary>查看题目、参考答案与评分标准</summary>
         <QuestionBody question={item.snapshot} />
@@ -202,25 +146,40 @@ function ReviewItem({
           )}
         </div>
         <div>
-          <ReviewForm
-            key={`${round}-${ownReview?.id ?? "new"}`}
-            item={item}
-            submissionId={submission.id}
-            round={round}
-            setRound={setRound}
-            ownReview={ownReview}
-            double={double}
-            arbitration={grade?.status === "ARBITRATION"}
-            mutate={mutate}
-            pending={pending}
-          />
-          {reviews.length > 0 && (
+          {state.assessments.find((a) => a.id === submission.assessmentId)?.published ? (
+            <div className="p-answers">
+              <h3>已发布评分 · 只读</h3>
+              <p>
+                最终得分：{grade?.score ?? "待评分"} / {item.score}
+              </p>
+              <p className="p-muted">{grade?.feedback || "暂无文字反馈"}</p>
+              <button className="button secondary" disabled>
+                成绩已发布
+              </button>
+            </div>
+          ) : (
+            <ReviewForm
+              key={`${round}-${ownReview?.id ?? "new"}`}
+              item={item}
+              submissionId={submission.id}
+              round={round}
+              setRound={setRound}
+              ownReview={ownReview}
+              double={double}
+              arbitration={grade?.status === "ARBITRATION"}
+              mutate={mutate}
+              pending={pending}
+            />
+          )}
+          {history.length > 0 && (
             <details>
-              <summary>评阅记录（{reviews.length}）</summary>
-              {reviews.map((r) => (
+              <summary>评阅记录（{history.length}）</summary>
+              {history.map((r) => (
                 <p key={r.id} className="p-muted">
                   {{ FIRST: "第一评", SECOND: "第二评", ARBITRATION: "仲裁" }[r.round]} · {r.score}{" "}
-                  分 · {r.feedback}
+                  分 · {state.users.find((u) => u.id === r.reviewerId)?.name ?? r.reviewerId} ·{" "}
+                  {new Date(r.createdAt).toLocaleString("zh-CN")} ·{" "}
+                  {r.source === "AI" ? "AI" : "人工"} · {r.feedback}
                 </p>
               ))}
             </details>
@@ -285,7 +244,9 @@ function ReviewForm({
         <select value={round} onChange={(e) => setRound(e.target.value as Review["round"])}>
           <option value="FIRST">第一评</option>
           {double && <option value="SECOND">第二评</option>}
-          {double && arbitration && <option value="ARBITRATION">仲裁三评</option>}
+          {double && (arbitration || ownReview?.round === "ARBITRATION") && (
+            <option value="ARBITRATION">仲裁三评</option>
+          )}
         </select>
       </Field>
       {mixed ? (

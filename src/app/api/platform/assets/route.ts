@@ -4,6 +4,7 @@ import { requireSameOrigin } from "@/server/http/mutations";
 import { getDb } from "@/server/db/client";
 import { saveImage } from "@/server/platform/assets";
 
+export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
     const session = await requireSession(request.headers);

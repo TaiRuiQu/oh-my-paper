@@ -1,10 +1,13 @@
 import "server-only";
+import { managedAccountSchema } from "@/contracts/auth";
+import { createManagedAccount } from "@/server/auth/accounts";
 import { z } from "zod";
 import { getDb } from "@/server/db/client";
 import { AccessError, RequestError } from "@/server/http/errors";
 import { encryptApiKey } from "@/server/ai/credentials";
 
 export const adminCommandSchema = z.discriminatedUnion("type", [
+  z.strictObject({ type: z.literal("user.create"), user: managedAccountSchema }),
   z.object({
     type: z.literal("user.role"),
     id: z.string().min(1),
@@ -47,6 +50,7 @@ export async function loadAdmin(id: string) {
 
 export async function executeAdmin(id: string, input: z.infer<typeof adminCommandSchema>) {
   await assertAdmin(id);
+  if (input.type === "user.create") return createManagedAccount(id, input.user);
   if (input.type === "user.role") {
     await getDb().$transaction(async (tx) => {
       // Serialize role changes so two administrators cannot demote each other concurrently.

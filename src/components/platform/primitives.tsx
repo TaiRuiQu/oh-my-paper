@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode, FormEvent } from "react";
+import { Button } from "@/components/ui/button";
 
 export function Field({
   label,
@@ -49,11 +50,19 @@ export function Empty({ children }: { children: ReactNode }) {
   return <p className="p-empty">{children}</p>;
 }
 
-export function Submit({ pending, children = "保存" }: { pending: boolean; children?: ReactNode }) {
+export function Submit({
+  pending,
+  disabled = false,
+  children = "保存",
+}: {
+  pending: boolean;
+  disabled?: boolean;
+  children?: ReactNode;
+}) {
   return (
-    <button type="submit" className="button" disabled={pending}>
+    <Button type="submit" disabled={pending || disabled} aria-busy={pending}>
       {pending ? "正在保存…" : children}
-    </button>
+    </Button>
   );
 }
 

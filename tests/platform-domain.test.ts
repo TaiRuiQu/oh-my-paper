@@ -195,7 +195,10 @@ describe("platform domain grading and analytics", () => {
     };
     expect(
       finalGrades(mixed, config, submission, [first, divergent, arbitrate])[0].partScores,
-    ).toEqual(arbitrate.partScores);
+    ).toMatchObject([
+      { partId: "1", score: 4 },
+      { partId: "2", score: 1.5 },
+    ]);
   });
 
   it("aggregates authorized knowledge statistics rather than duplicating each student's tag", () => {
@@ -219,7 +222,7 @@ describe("platform domain grading and analytics", () => {
     });
     expect(
       finalGrades(paper, config, submission, [...rows, review("ARBITRATION", 5)])[0],
-    ).toMatchObject({ score: 5, status: "FINAL" });
+    ).toMatchObject({ score: 4, status: "FINAL" });
   });
   it("supports single grading and does not grade missing students or missing subjects", () => {
     const single = { ...assessment, papers: [{ ...config, gradingMode: "SINGLE" as const }] };

@@ -11,6 +11,7 @@ model User {
   id String @id
   name String
   email String @unique
+  username String? @unique
   emailVerified Boolean @default(false)
   image String?
   role String @default("STUDENT")
@@ -121,6 +122,7 @@ model Question {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@index([ownerId, subject])
+  @@index([ownerId, createdAt, id])
   @@map("questions")
 }
 model Paper {
@@ -202,6 +204,7 @@ model AssessmentPaper {
   subject String
   gradingMode String
   arbitrationThreshold Float
+  questionRules Json @default("{}")
   conversion Json
   @@id([assessmentId, paperId])
   @@map("assessment_papers")
@@ -293,4 +296,21 @@ model AiJob {
   @@index([status, createdAt])
   @@index([userId, createdAt])
   @@map("ai_jobs")
+}
+
+// Immutable snapshots of every submitted score, including revisions.
+model ReviewEvent {
+  id String @id @default(uuid())
+  submissionId String
+  itemId String
+  reviewerId String
+  round String
+  score Float
+  feedback String @db.Text
+  source String
+  aiJobId String?
+  partScores Json
+  createdAt DateTime @default(now())
+  @@index([submissionId, itemId, createdAt])
+  @@map("review_events")
 }

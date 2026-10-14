@@ -1,19 +1,10 @@
 import "server-only";
-import { logError, logEvent } from "@/server/logger";
+import { logError } from "@/server/logger";
 import { betterAuth } from "better-auth";
+import { username } from "better-auth/plugins";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { getDb } from "@/server/db/client";
 import { getEnv } from "@/server/config/env";
-
-/**
- * The first account to register owns the deployment: without an ADMIN nobody can
- * reach /admin/ai to add the providers and public models every task depends on,
- * and there is no in-app way to grant the role. Deployments that already have an
- * account keep their current roles.
- */
-export async function roleForNewAccount(): Promise<"ADMIN" | "STUDENT"> {
-  return (await getDb().user.count()) === 0 ? "ADMIN" : "STUDENT";
-}
 
 function createAuth() {
   const env = getEnv();
@@ -23,24 +14,17 @@ function createAuth() {
     secret: env.BETTER_AUTH_SECRET,
     trustedOrigins: [new URL(env.BETTER_AUTH_URL).origin],
     database: prismaAdapter(getDb(), { provider: "postgresql", transaction: true }),
-    emailAndPassword: { enabled: true, minPasswordLength: 10, maxPasswordLength: 128 },
+    emailAndPassword: { enabled: true, disableSignUp: true, minPasswordLength: 10, maxPasswordLength: 128 },
+    plugins: [username({
+      displayUsername: false,
+      minUsernameLength: 1,
+      maxUsernameLength: 254,
+      immutableUsername: true,
+      usernameValidator: (value) => /^[a-zA-Z0-9_.@+\-]+$/.test(value),
+    })],
     user: {
       additionalFields: {
         role: { type: "string", defaultValue: "STUDENT", input: false },
-      },
-    },
-    databaseHooks: {
-      user: {
-        create: {
-          // Runs before the insert, so the first account is stored as ADMIN
-          // rather than promoted afterwards.
-          before: async (user) => {
-            const role = await roleForNewAccount();
-            if (role === "STUDENT") return;
-            logEvent("auth.first_account.promoted");
-            return { data: { ...user, role } };
-          },
-        },
       },
     },
     session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24 },

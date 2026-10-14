@@ -53,6 +53,37 @@ export type PaperItem = {
   section: string;
   snapshot: BankQuestion;
 };
+export type DocumentTextBlock = {
+  id: string;
+  text: string;
+  beforeQuestionId?: string;
+  pageBreakBefore?: boolean;
+};
+export const DOCUMENT_FONTS = [
+  "NSimSun",
+  "SimSun",
+  "SimHei",
+  "Microsoft YaHei",
+  "Noto Serif SC",
+  "Arial",
+  "Times New Roman",
+] as const;
+export type DocumentFont = (typeof DOCUMENT_FONTS)[number];
+export type DocumentLayout = {
+  orientation?: "portrait" | "landscape";
+  fontFamily?: DocumentFont;
+  textBlocks?: DocumentTextBlock[];
+  paperSize: "A4" | "A3";
+  columns: number;
+  marginMm?: number;
+  fontSizePt?: number;
+  lineHeight?: number;
+  showScores?: boolean;
+  questionLayouts?: Record<
+    string,
+    { pageBreakBefore?: boolean; answerLines?: number; spaceAfterMm?: number }
+  >;
+};
 export type Paper = {
   id: string;
   ownerId: string;
@@ -61,7 +92,7 @@ export type Paper = {
   subject: string;
   grade: string;
   instructions: string;
-  layout: { paperSize: "A4" | "A3"; columns: number };
+  layout: DocumentLayout;
   items: PaperItem[];
   createdAt: string;
   updatedAt: string;
@@ -83,7 +114,13 @@ export type Classroom = {
 };
 export type GradeBand = { upperPercent: number; min: number; max: number };
 export type GradeConversion = { enabled: boolean; bands: GradeBand[] };
+export type QuestionReviewRule = {
+  doubleReview: boolean;
+  arbitrationEnabled: boolean;
+  maxDifference: number;
+};
 export type AssessmentPaper = {
+  questionRules?: Record<string, QuestionReviewRule>;
   paperId: string;
   subject: string;
   gradingMode: "SINGLE" | "DOUBLE";
@@ -110,6 +147,12 @@ export type CardRegion = Box & {
   image?: string;
 };
 export type CardLayout = {
+  annotations?: (Box & { id: string; text: string })[];
+  omrVersion?: 2;
+  paperSize?: "A4" | "A3";
+  orientation?: "portrait" | "landscape";
+  columns?: number;
+  fontFamily?: DocumentFont;
   width: number;
   height: number;
   pageCount: number;
@@ -162,6 +205,7 @@ export type Review = {
   createdAt: string;
 };
 export type FinalGrade = {
+  calculation?: string;
   itemId: string;
   score: number | null;
   maxScore: number;
@@ -231,14 +275,16 @@ export type Analytics = {
 export type PlatformState = {
   actor: { id: string; name: string; role: Role };
   questions: BankQuestion[];
+  questionCount?: number;
   papers: Paper[];
   classrooms: Classroom[];
   assessments: Assessment[];
   templates: CardTemplate[];
   submissions: ScanSubmission[];
   reviews: Review[];
+  reviewHistory?: Review[];
   analytics: Analytics;
-  users: { id: string; name: string; email: string; role: Role }[];
+  users: { id: string; name: string; email: string; username?: string | null; role: Role }[];
 };
 export type PlatformCommand =
   | {
@@ -254,7 +300,16 @@ export type PlatformCommand =
       type: "paper.save";
       paper: Omit<Partial<Paper>, "items"> &
         Pick<Paper, "name" | "kind" | "subject" | "grade" | "instructions" | "layout"> & {
-          items: { questionId: string; score: number; section: string }[];
+          items: {
+            questionId: string;
+            score: number;
+            section: string;
+            content?: QuestionContent;
+            question?: Pick<
+              BankQuestion,
+              "type" | "subject" | "grade" | "difficulty" | "knowledgeTags" | "content"
+            >;
+          }[];
         };
     }
   | { type: "paper.delete"; id: string }
@@ -267,10 +322,9 @@ export type PlatformCommand =
       student: {
         id?: string;
         classroomId: string;
-        studentNumber: string;
+        studentNumber?: string;
         name: string;
         userId?: string | null;
-        email?: string;
       };
     }
   | { type: "student.delete"; id: string }
@@ -315,3 +369,12 @@ export type PlatformCommand =
         feedback: string;
       };
     };
+
+export type QuestionStatistics = {
+  total: number;
+  subjects: Record<string, number>;
+  types: Record<string, number>;
+  missingAnswers: number;
+  missingExplanations: number;
+  tags: { tag: string; count: number; subjects: string[]; difficulty: number }[];
+};

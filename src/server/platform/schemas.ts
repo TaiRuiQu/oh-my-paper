@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { studentNumberSchema } from "@/contracts/auth";
+import { DOCUMENT_FONTS } from "@/contracts/platform";
 const id = z.string().trim().min(1).max(128);
 const text = z.string().trim().max(100000);
 const subject = z.string().trim().min(1).max(40);
@@ -82,11 +84,45 @@ export const paperInputSchema = z
     instructions: text,
     layout: z.strictObject({
       paperSize: z.enum(["A4", "A3"]),
-      columns: z.number().int().min(1).max(3),
+      columns: z.number().int().min(1).max(4),
+      orientation: z.enum(["portrait", "landscape"]).optional(),
+      fontFamily: z.enum(DOCUMENT_FONTS).optional(),
+      textBlocks: z
+        .array(
+          z.strictObject({
+            id,
+            text,
+            beforeQuestionId: id.optional(),
+            pageBreakBefore: z.boolean().optional(),
+          }),
+        )
+        .max(500)
+        .optional(),
+      marginMm: z.number().min(8).max(40).optional(),
+      fontSizePt: z.number().min(9).max(24).optional(),
+      lineHeight: z.number().min(1).max(3).optional(),
+      showScores: z.boolean().optional(),
+      questionLayouts: z
+        .record(
+          id,
+          z.strictObject({
+            pageBreakBefore: z.boolean().optional(),
+            answerLines: z.number().int().min(0).max(30).optional(),
+            spaceAfterMm: z.number().min(0).max(60).optional(),
+          }),
+        )
+        .optional(),
     }),
     items: z
-      .array(z.strictObject({ questionId: id, score, section: text.max(100) }))
-      .min(1)
+      .array(
+        z.strictObject({
+          questionId: id,
+          score,
+          section: text.max(100),
+          content: questionContentSchema.optional(),
+          question: questionInputSchema.optional(),
+        }),
+      )
       .max(500),
   })
   .superRefine((p, c) => {
@@ -118,6 +154,15 @@ export const regionSchema = z
   .refine((b) => b.x + b.width <= 1.000001 && b.y + b.height <= 1.000001, "区域必须位于页面内。");
 export const cardLayoutSchema = z
   .strictObject({
+    annotations: z
+      .array(boxSchema.safeExtend({ id, text: text.max(2000) }))
+      .max(100)
+      .optional(),
+    omrVersion: z.literal(2).optional(),
+    paperSize: z.enum(["A4", "A3"]).optional(),
+    orientation: z.enum(["portrait", "landscape"]).optional(),
+    columns: z.number().int().min(1).max(4).optional(),
+    fontFamily: z.enum(DOCUMENT_FONTS).optional(),
     width: z.number().positive().max(10000),
     height: z.number().positive().max(10000),
     pageCount: z.number().int().min(1).max(100),
@@ -183,6 +228,16 @@ export const assessmentInputSchema = z
           subject,
           gradingMode: z.enum(["SINGLE", "DOUBLE"]),
           arbitrationThreshold: score,
+          questionRules: z
+            .record(
+              id,
+              z.strictObject({
+                doubleReview: z.boolean(),
+                arbitrationEnabled: z.boolean(),
+                maxDifference: score,
+              }),
+            )
+            .optional(),
           conversion: conversionSchema,
         }),
       )
@@ -242,10 +297,9 @@ export const commandSchema = z.discriminatedUnion("type", [
     student: z.strictObject({
       id: id.optional(),
       classroomId: id,
-      studentNumber: z.string().regex(/^\d{1,20}$/),
+      studentNumber: studentNumberSchema.optional(),
       name: text.min(1).max(80),
       userId: id.nullable().optional(),
-      email: z.email().optional(),
     }),
   }),
   z.strictObject({ type: z.literal("student.delete"), id }),

@@ -1,4 +1,5 @@
 "use client";
+import type { ScanUploadPage } from "@/contracts/uploads";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { Box, Paper } from "@/contracts/platform";
@@ -11,7 +12,7 @@ export function WorkbookCrop({
   onChange,
   onAdd,
 }: {
-  files: File[];
+  files: ScanUploadPage[];
   paper: Paper;
   boxes: ScanBox[];
   onChange: (boxes: ScanBox[]) => void;
@@ -20,7 +21,7 @@ export function WorkbookCrop({
   const [page, setPage] = useState(1),
     [itemId, setItemId] = useState(paper.items[0]?.id ?? ""),
     [preview, setPreview] = useState<{
-      file: File;
+      file: ScanUploadPage;
       url: string;
       width: number;
       height: number;
@@ -33,7 +34,7 @@ export function WorkbookCrop({
   useEffect(() => {
     if (!file) return;
     let alive = true;
-    const url = URL.createObjectURL(file);
+    const url = "assetUrl" in file ? file.assetUrl : URL.createObjectURL(file);
     const img = new window.Image();
     img.onload = () => {
       if (alive) setPreview({ file, url, width: img.naturalWidth, height: img.naturalHeight });
@@ -44,7 +45,7 @@ export function WorkbookCrop({
     img.src = url;
     return () => {
       alive = false;
-      URL.revokeObjectURL(url);
+      if (!("assetUrl" in file)) URL.revokeObjectURL(url);
     };
   }, [file]);
   const point = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -75,7 +76,7 @@ export function WorkbookCrop({
     if (event.currentTarget.hasPointerCapture(event.pointerId))
       event.currentTarget.releasePointerCapture(event.pointerId);
   }
-  if (!files.length) return <p className="p-muted">先选择扫描图片，再在原图上逐题框选。</p>;
+  if (!files.length) return <p className="p-muted">先选择扫描图片或 PDF，再按页逐题框选。</p>;
   return (
     <div className="p-crop-editor">
       <div className="p-form-grid">

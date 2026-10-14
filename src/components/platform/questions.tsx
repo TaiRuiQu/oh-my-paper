@@ -1,7 +1,7 @@
 "use client";
+import { GradeSelect } from "./grade-select";
 import Image from "next/image";
 import { useState } from "react";
-import { Plus, Pencil, Trash2 } from "lucide-react";
 import {
   SUBJECTS,
   type BankQuestion,
@@ -12,7 +12,7 @@ import {
 } from "@/contracts/platform";
 import { apiRequest } from "@/lib/http-client";
 import { MarkdownText } from "@/components/markdown-text";
-import { Empty, Field, Panel, Submit, splitList } from "./primitives";
+import { Field, Panel, Submit, splitList } from "./primitives";
 export type Mutate = (command: PlatformCommand) => Promise<{ id?: string; error?: string }>;
 export const QUESTION_LABELS: Record<QuestionType, string> = {
   SINGLE: "单选题",
@@ -104,130 +104,14 @@ export function QuestionBody({ question }: { question: BankQuestion }) {
     </>
   );
 }
-export function Questions({
-  questions,
-  mutate,
-  pending,
-}: {
-  questions: BankQuestion[];
-  mutate: Mutate;
-  pending: boolean;
-}) {
-  const [query, setQuery] = useState(""),
-    [subject, setSubject] = useState(""),
-    [editing, setEditing] = useState<BankQuestion | null | undefined>();
-  const filtered = questions.filter(
-    (q) =>
-      (!subject || q.subject === subject) &&
-      `${q.content.stem} ${q.knowledgeTags.join(" ")} ${q.grade}`.includes(query),
-  );
-  return (
-    <>
-      {editing !== undefined && (
-        <QuestionEditor
-          key={editing?.id ?? "new"}
-          question={editing}
-          mutate={mutate}
-          pending={pending}
-          close={() => setEditing(undefined)}
-        />
-      )}
-      <Panel
-        title="题库"
-        description="原创题与导入题统一管理，保留答案、评分标准和知识点。"
-        actions={
-          <button className="button" onClick={() => setEditing(null)}>
-            <Plus size={16} />
-            创建试题
-          </button>
-        }
-      >
-        <div className="p-toolbar">
-          <input
-            aria-label="搜索题目或知识点"
-            placeholder="搜索题目、知识点或年级"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <select
-            aria-label="筛选学科"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-          >
-            <option value="">全部学科</option>
-            {SUBJECTS.map((s) => (
-              <option key={s}>{s}</option>
-            ))}
-          </select>
-          <span className="p-muted">共 {filtered.length} 道题</span>
-        </div>
-        {!filtered.length ? (
-          <Empty>还没有符合条件的试题。创建第一道题，开始建立可复用的题库。</Empty>
-        ) : (
-          filtered.map((q) => (
-            <article className="p-question" key={q.id}>
-              <div className="p-question-head">
-                <div className="p-actions">
-                  <span className="p-status">{QUESTION_LABELS[q.type]}</span>
-                  <span className="p-muted">
-                    {q.subject} · {q.grade} · 难度 {(q.difficulty * 100).toFixed(0)}%
-                  </span>
-                </div>
-                <div className="p-actions">
-                  <button
-                    className="icon-button"
-                    aria-label="编辑试题"
-                    onClick={() => setEditing(q)}
-                  >
-                    <Pencil size={17} />
-                  </button>
-                  <button
-                    className="icon-button"
-                    aria-label="删除试题"
-                    disabled={pending}
-                    onClick={() => {
-                      if (window.confirm("删除此试题？已组卷的题目快照仍会保留。"))
-                        void mutate({ type: "question.delete", id: q.id });
-                    }}
-                  >
-                    <Trash2 size={17} />
-                  </button>
-                </div>
-              </div>
-              <QuestionBody question={q} />
-              <div className="p-tags">
-                {q.knowledgeTags.map((t) => (
-                  <span className="p-tag" key={t}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <details>
-                <summary>标准答案与评分标准</summary>
-                <p className="p-question-content">
-                  答案：{q.content.answers.join("；") || "待填写"}
-                </p>
-                <MarkdownText text={q.content.explanation || "暂无解析"} />
-                <p className="p-muted">评分标准：{q.content.rubric || "待填写"}</p>
-                {q.content.parts.map((p, i) => (
-                  <p key={p.id}>
-                    （{i + 1}）{p.answers.join("；")} · {p.rubric}
-                  </p>
-                ))}
-              </details>
-            </article>
-          ))
-        )}
-      </Panel>
-    </>
-  );
-}
-function QuestionEditor({
+export function QuestionEditor({
   question,
   mutate,
   pending,
   close,
+  defaults,
 }: {
+  defaults?: { subject: string; grade: string };
   question: BankQuestion | null;
   mutate: Mutate;
   pending: boolean;
@@ -272,6 +156,7 @@ function QuestionEditor({
         className="p-form"
         onSubmit={async (e) => {
           e.preventDefault();
+          e.stopPropagation();
           const d = new FormData(e.currentTarget);
           const result = await mutate({
             type: "question.save",
@@ -291,14 +176,18 @@ function QuestionEditor({
       >
         <div className="p-form-grid">
           <Field label="学科">
-            <select name="subject" defaultValue={question?.subject ?? "数学"}>
-              {SUBJECTS.map((s) => (
+            <select name="subject" defaultValue={question?.subject ?? defaults?.subject ?? "数学"}>
+              {SUBJECTS.filter((s) => !defaults || s === defaults.subject).map((s) => (
                 <option key={s}>{s}</option>
               ))}
             </select>
           </Field>
           <Field label="年级">
-            <input name="grade" required defaultValue={question?.grade ?? "高一"} />
+            <GradeSelect
+              name="grade"
+              required
+              defaultValue={question?.grade ?? defaults?.grade ?? "高中一年级"}
+            />
           </Field>
           <Field label="题型">
             <select value={type} onChange={(e) => setType(e.target.value as QuestionType)}>

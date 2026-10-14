@@ -1,6 +1,8 @@
 import "server-only";
+import type { DocumentUploadResult } from "@/contracts/uploads";
+import { decodeUploadedPages, isPdfUpload } from "./uploaded-pages";
 import { randomUUID } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import { join, resolve, sep } from "node:path";
 import sharp from "sharp";
 import { getDb } from "@/server/db/client";
@@ -13,6 +15,8 @@ export function assetId(url: string) {
 }
 
 export async function saveImage(ownerId: string, input: Buffer, name: string) {
+  if (isPdfUpload(input, ""))
+    throw new RequestError(400, "配图只支持 PNG、JPEG 或 WebP；PDF 请从扫描材料入口上传。");
   if (input.length > 30_000_000) throw new RequestError(413, "每张图片不能超过 30 MB。");
   let buffer: Buffer;
   try {
@@ -20,15 +24,56 @@ export async function saveImage(ownerId: string, input: Buffer, name: string) {
   } catch {
     throw new RequestError(400, "图片无法读取，请上传 PNG、JPEG 或 WebP。");
   }
+  return persistImage(ownerId, buffer, name);
+}
+async function persistImage(ownerId: string, buffer: Buffer, name: string) {
   const id = randomUUID();
   const directory = join(getStoragePaths().storage, "platform-assets");
   await mkdir(directory, { recursive: true, mode: 0o700 });
   const path = join(directory, `${id}.png`);
   await writeFile(path, buffer, { mode: 0o600 });
-  await getDb().platformAsset.create({
-    data: { id, ownerId, name: name.slice(0, 200), path, contentType: "image/png" },
-  });
+  try {
+    await getDb().platformAsset.create({
+      data: { id, ownerId, name: name.slice(0, 200), path, contentType: "image/png" },
+    });
+  } catch (error) {
+    await rm(path, { force: true });
+    throw error;
+  }
   return { id, url: `/api/platform/assets/${id}`, buffer };
+}
+
+export async function saveUploadedDocument(
+  ownerId: string,
+  input: Buffer,
+  name: string,
+  maxPages = 100,
+): Promise<DocumentUploadResult> {
+  const decoded = await decodeUploadedPages(input, name, maxPages);
+  const pages: DocumentUploadResult["pages"] = [];
+  try {
+    for (const page of decoded) {
+      const asset = await persistImage(ownerId, page.buffer, page.name);
+      pages.push({
+        id: asset.id,
+        url: asset.url,
+        name: page.name,
+        size: page.buffer.length,
+        page: page.page,
+      });
+    }
+    return { id: pages[0].id, url: pages[0].url, pages, pageCount: pages.length };
+  } catch (error) {
+    const rows = await getDb().platformAsset.findMany({
+      where: { id: { in: pages.map((page) => page.id) }, ownerId },
+      select: { id: true, path: true },
+    });
+    await getDb().platformAsset.deleteMany({
+      where: { id: { in: rows.map((row) => row.id) }, ownerId },
+    });
+    await Promise.all(rows.map((row) => rm(row.path, { force: true })));
+    throw error;
+  }
 }
 
 export async function readOwnedAsset(ownerId: string, url: string) {

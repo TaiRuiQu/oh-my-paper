@@ -2,15 +2,15 @@
 
 `loadState(actor: { id: string }) -> Promise<PlatformState>`；`executeCommand(actor, command) -> Promise<{id: string}>`。actor 只以账号 id 识别，数据库当前 role 为权限权威。接口层取得登录用户并传入；不能接受客户端 ownerId/reviewerId。
 
-类型定义位于 `types.ts`。写命令均为 `{type, question|paper|classroom|student|assessment|template|submission|review}`；删除和发布命令用 `{type,id}`。创建省略 id，修改带 id。执行后前端重新 GET state。
+共享类型位于 `src/contracts/platform.ts`，`types.ts` 仅提供服务端导出入口。写命令均为 `{type, question|paper|classroom|student|assessment|template|submission|review}`；删除和发布命令用 `{type,id}`。创建省略 id，修改带 id。执行后前端按当前页面模块重新读取 state。
 
 - question.save 支持 SINGLE/MULTIPLE/BLANK/SUBJECTIVE/MIXED，混合题 parts 各自记录题型、答案、标签、分值。answers 数组分别表达正确选项或各空答案。
-- paper.save items 按数组顺序排列，引用 questionId，包含 score 和 section；服务端保存题目快照。
+- paper.save items 按数组顺序排列，引用 questionId，包含 score、section 和可选 content／question；question 允许卷内独立创建，无需题库记录。可视化编辑只修改当前卷内快照，不改动题库原题。layout 保存 A4/A3、横纵方向、1–4 栏、字体（默认 NSimSun）、自由文字块、页边距、字号、行距和逐题分页／作答行数，画布与打印使用同一份版面数据。
 - classroom.save 后 student.save 可用 studentNumber、name 创建学生；userId 或 email 可绑定已注册 STUDENT 账号，不接受任意角色账号。
-- assessment.save papers 为 paperId、subject、gradingMode、arbitrationThreshold、conversion（enabled,bands）。bands 为从高分到低分的累计百分比区间，例如 upperPercent=15,min=86,max=100。
+- assessment.save papers 为 paperId、subject、questionRules（按 PaperItem.id 的 doubleReview/arbitrationEnabled/maxDifference）、兼容原有 gradingMode/arbitrationThreshold、conversion（enabled,bands）。bands 为从高分到低分的累计百分比区间，例如 upperPercent=15,min=86,max=100。
 - template.save 使用规范化坐标 CardLayout；regions 引用 PaperItem.id。system presets 只读，选用后按当前题目生成或另存。
 - submission.save answers 引用 PaperItem.id，包含 text、images 及可选 box/sourcePage，sourceFiles 保存服务器受控资产 URL。人工没有模板的作业使用 WORKBOOK。
-- review.save FIRST/SECOND/ARBITRATION；SECOND 必须不同评阅者，分差超阈值自动等待 ARBITRATION；仲裁须第三评阅者。
+- review.save FIRST/SECOND/ARBITRATION；FIRST/SECOND 可独立先后提交，必须不同教师。逐题启用仲裁且分差严格超过阈值时等待第三教师 ARBITRATION，最终为仲裁与较近原评分的均分，等距以原两评均分为基准。双评 AI 建议须教师确认。ReviewEvent 不可变追加记录每次提交与修订。
 - assessment.publish 仅在全部参试学生各科完成评阅后允许发布。学生只能看已发布的本人成绩、错题、分析。
 
 Teacher loadState 返回自己的题库、班级、考试及其评阅，管理员返回全站；学生没有 users、reviews 和他人数据。analytics 包含多科/班级排名、原始分/赋分、知识点及错题。
@@ -19,7 +19,7 @@ Teacher loadState 返回自己的题库、班级、考试及其评阅，管理�
 
 班级 owner/admin 可以编辑班级与学生，`reviewerIds` 仅授予该班级的读取、扫描与评阅权限。跨班联考排名在服务端按完整名单计算，再按当前教师的授权班级或当前学生身份过滤；共享教师不能读取或评阅同一场次内未共享班级的答卷。学生 state 中的班级成员、参试 ID、成绩和错题都仅含本人。
 
-`sourceFiles`、作答 `images`/`sourcePage`、题目 `content.images` 和模板区域图片均须引用 `/api/platform/assets/{id}`；命令验证资产所属账号或管理员权限。文件系统路径与外部 URL 不能通过业务命令注入。答题卡模板写入还验证 A4 四定位点、六位学号、题区不重叠并完整覆盖卷内题目。
+`sourceFiles`、作答 `images`/`sourcePage`、题目 `content.images` 和模板区域图片均须引用 `/api/platform/assets/{id}`；命令验证资产所属账号或管理员权限。文件系统路径与外部 URL 不能通过业务命令注入。答题卡模板写入还验证 A4/A3 横纵版式、1–4 栏、四定位点、六位学号、题区不重叠并完整覆盖卷内题目。
 
 验证入口：`pnpm test:integration` 使用独立 PostgreSQL schema，覆盖五题型、两科两学生、题库快照、双评仲裁、排名赋分、并列排名、完整发布条件、资产授权、共享班级边界以及后续转入学生的历史隔离；`tests/platform-domain.test.ts` 覆盖评分、知识点、推荐与命令约束。扫描像素与上传验收由 `pnpm test:scan` 独立执行。
 
@@ -34,6 +34,10 @@ AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列，不
 所有写入候选在内存中暂存，`finish` 校验完整覆盖后才在同一数据库事务写入业务数据、AI 评阅来源及 `AiJob.COMPLETED/result`。任务行锁和领域锁防止竞争提交；题目更新、作答变更、已有评阅或权限撤回会拒绝过期提交。中途失败不留下半套题库、组卷或评分。模型输出不能直接修改所属用户或跳过现有业务校验。
 
 - IMPORT 先查看全部来源、记录逐页题数，再逐题提出候选；必须逐页完整覆盖。图表通过 `crop_material` 实际裁切成独立资产，禁止将整页来源图片作为题目配图。裁图文件和资产行随业务提交，失败删除已写文件。无参考答案来源时仍须生成标准答案、解析、考点及主观题评分标准。
+- IMPORT 可指定 `kind: HOMEWORK / EXAM`，直接保存含卷内题目快照的练习册／试卷；未指定时仍导入题库。作业入口为 `/homework/import`，完成记录包含 `paperId`、`paperKind`，可继续核对与排版。题目分值来自 `propose_question.score`，综合题使用子题分值总和。
+
+`/api/platform/print` 默认返回附件 PDF，试卷／作业可用 `format=docx` 下载可编辑 Word；答题卡保留 `format=svg&page=1`。PDF 用 Chromium 按已保存版式渲染，禁止外部网络访问，配图经现有资产权限读取，字体从本地 `public/print-fonts` 加载。Word 保留纸张、方向、分栏、边距、字体、字号、行距、分页、材料图像和练习作答线，公式转换为 Office Math。Docker Web 镜像安装 Chromium；本地可安装系统 Chromium 或设置 `CHROMIUM_EXECUTABLE_PATH`，`pnpm run doctor` 检查运行环境。Word 的最终分页由打开文档的软件与已安装字体决定。
+
 - ENRICH 仅可读取和修改指定题的考点、答案、解析及评分标准；保留题干、选项、配图和混合子题编号，已有逐空答案保留空数。配图须先查看。
 - ASSEMBLE 从真实题库选择并读取题目，验证学科、年级、准确题型数量、平均难度与知识点分布。百分比通过最大余数法分配整数题数，多标签题使用容量匹配且每题只贡献一次。无法满足时明确失败，不编造题目。
 - TEMPLATE 自主读取整卷题型摘要，按需读取题目正文，生成、调整并提交布局；最终仍受题区覆盖、坐标及重叠校验。
@@ -43,3 +47,23 @@ AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列，不
 `pnpm run test:ai-domain` 在真实隔离 PostgreSQL 验证裁图持久化、AI 首评来源、人工独立第二评、过期数据保护和原子失败回滚；不调用外部模型。`tests/platform-ai.test.ts` 验证工具边界、完整性和真实 SDK 自主多轮执行。真实模型质量另由 `scripts/test-ai-live.ts` 及其最新证据验证；不可用模拟工具或旧版本运行结果替代当前代码的外部模型验收。
 
 迁移 `20261014040000_review_part_scores` 新增结构化混合题小问评分。`review.save.partScores=[{partId,score,feedback}]` 对混合题必填，完整覆盖各子题；每问上限为卷内题分乘该子题权重占比，总分必须等于各小问之和。双评平均及仲裁保存对应逐问结果；学情按实际小问标签统计，`wrongPartIds` 仅标记失分小问，正确小问不会因整题失分被误算为薄弱。AI 推题只使用失分小问标签。
+
+## App Router 与业务分层
+
+`src/app/(platform)` 使用真实嵌套路由，85 个功能页面分别有自己的 `page.tsx`。平台 layout 负责会话与主导航；六个模块 layout 分别装载经过角色检查的初始数据。客户端导航使用 Next.js Link，页面 URL 可直接打开和刷新，不再使用查询参数切换整个应用。
+
+试卷工作台 (`paper-pages.tsx`)、练习册工作台 (`homework-workbench.tsx`) 和答题卡工作台 (`card-workbench.tsx`) 分别维护自己的业务编辑状态与操作。仅复用纸张几何／分页渲染、基础表单与 ShadCN UI 组件。作业不会使用答题卡，接口和命令层均验证此约束。
+
+- `access.ts`：当前角色、资源归属、班级协作与素材权限。
+- `queries.ts`：权限限定的教学数据与正式统计；`page-state.ts`：按考试／作业范围构造页面数据。
+- `commands/*.ts`：题目、试卷、班级学生、教学安排、答题卡、作答、评阅七个领域的写入逻辑。
+- `service.ts`：命令验证、AI 来源验证和统一数据库事务。
+- `/api/platform/[area]/state`：按界面模块读取状态。
+- `/api/platform/[area]/commands`：按业务域提交写操作，拒绝命令类型与域不匹配的请求。
+- `page-layout.tsx`：服务端页面装载，学生／教师／管理员入口验证。
+
+完整页面清单见 `v2-docs/page-map.json`。新增文档版面测试见 `tests/platform-document-layout.test.ts`，真实数据库快照编辑／作业答题卡拒绝覆盖在 `scripts/test-platform.ts`。
+
+题库分页接口 `/api/platform/questions` 按 createdAt/id 倒序每页20题，支持搜索与筛选，`id` 单题读取、`stats` 服务端全库统计。页面工作台不携带整库题体，真实数量由 questionCount 返回。专项验收记录见 `v2-docs/workbench-v3-review.md`。
+
+扫描材料入口 `/api/platform/materials` 支持图片和 PDF，按原页码转换为私有 PNG 页面；`/api/platform/assets` 为配图入口并拒绝 PDF。扫描 `sources` 可按顺序引用已上传私有页面或 multipart 文件编号，也可直接上传原始多页 PDF；PDF 页面数量用于作答框页码与多页卡合并。源文件 30MB，扫描批次展开后最多100页／150MB，AI试卷识别保持20页上限。Web运行环境须提供 `pdfinfo`／`pdftoppm`（Docker已安装poppler-utils），`pnpm run doctor` 可检查。验收见 `v2-docs/pdf-scan-upload-review.md`。

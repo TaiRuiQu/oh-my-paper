@@ -1,8 +1,10 @@
+import { makeTextPdf } from "./pdf-test-fixtures";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { rm } from "node:fs/promises";
 import pg from "pg";
 import sharp from "sharp";
+import JSZip from "jszip";
 import { loadEnvironment } from "./load-env.mjs";
 import type { Analytics, PlatformCommand, PlatformState } from "../src/contracts/platform";
 
@@ -125,6 +127,52 @@ async function main() {
     assert.equal(assetResponse.status, 200);
     const asset = (await assetResponse.json()) as { url: string };
     assert.equal((await request(student, asset.url)).status, 404);
+    const pdfUpload = new FormData();
+    pdfUpload.set(
+      "file",
+      new File([new Uint8Array(makeTextPdf())], "试卷扫描.pdf", { type: "application/pdf" }),
+    );
+    const pdfResponse = await request(teacher, "/api/platform/materials", {
+      method: "POST",
+      body: pdfUpload,
+    });
+    assert.equal(pdfResponse.status, 200);
+    const pdf = (await pdfResponse.json()) as {
+      pageCount: number;
+      pages: { url: string; page: number }[];
+    };
+    assert.equal(pdf.pageCount, 2);
+    assert.deepEqual(
+      pdf.pages.map((p) => p.page),
+      [1, 2],
+    );
+    assert.equal((await request(teacher, pdf.pages[1].url)).status, 200);
+    assert.equal((await request(student, pdf.pages[1].url)).status, 404);
+    assert.equal(
+      (await request(student, "/api/platform/materials", { method: "POST", body: pdfUpload }))
+        .status,
+      403,
+    );
+    const forbiddenPdf = await request(teacher, "/api/platform/assets", {
+      method: "POST",
+      body: pdfUpload,
+    });
+    assert.equal(forbiddenPdf.status, 400);
+    const limitedPdf = new FormData();
+    limitedPdf.set(
+      "file",
+      new File([new Uint8Array(makeTextPdf())], "试卷.pdf", { type: "application/pdf" }),
+    );
+    limitedPdf.set("maxPages", "1");
+    assert.equal(
+      (await request(teacher, "/api/platform/materials", { method: "POST", body: limitedPdf }))
+        .status,
+      413,
+    );
+    console.log(
+      "✓ Scanned-material PDF upload returns ordered private pages; decoration assets reject PDF; teacher permissions and page limits apply",
+    );
+
     const classroomId = (
       await command(teacher, {
         type: "classroom.save",
@@ -206,10 +254,37 @@ async function main() {
     const templateId = ((await templateResponse.json()) as { id: string }).id;
     const card = await request(teacher, `/api/platform/print?templateId=${templateId}`);
     assert.equal(card.status, 200);
-    assert((await card.text()).includes("六位学号"));
+    assert.equal(card.headers.get("content-type"), "application/pdf");
+    assert(
+      Buffer.from(await card.arrayBuffer())
+        .subarray(0, 5)
+        .toString() === "%PDF-",
+    );
+    const cardSvg = await request(
+      teacher,
+      `/api/platform/print?templateId=${templateId}&format=svg`,
+    );
+    assert.equal(cardSvg.status, 200);
+    assert((await cardSvg.text()).includes("六位学号"));
     const printed = await request(teacher, `/api/platform/print?paperId=${paperId}`);
     assert.equal(printed.status, 200);
-    assert((await printed.text()).includes("x + 2 = 3"));
+    assert.equal(printed.headers.get("content-type"), "application/pdf");
+    assert(printed.headers.get("content-disposition")?.startsWith("attachment;"));
+    assert(
+      Buffer.from(await printed.arrayBuffer())
+        .subarray(0, 5)
+        .toString() === "%PDF-",
+    );
+    const word = await request(teacher, `/api/platform/print?paperId=${paperId}&format=docx`);
+    assert.equal(word.status, 200);
+    const zip = await JSZip.loadAsync(await word.arrayBuffer());
+    assert((await zip.file("word/document.xml")!.async("string")).includes("x + 2 = 3"));
+    assert.equal((await request(peer, `/api/platform/print?paperId=${paperId}`)).status, 404);
+    assert.equal((await request(null, `/api/platform/print?paperId=${paperId}`)).status, 401);
+    assert.equal(
+      (await request(teacher, `/api/platform/print?templateId=${templateId}&format=docx`)).status,
+      400,
+    );
     const paper = (await state(teacher)).papers.find((paper) => paper.id === paperId)!;
     for (const [id, score] of [
       [studentId, 4],

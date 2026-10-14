@@ -319,6 +319,25 @@ async function main() {
     );
     assert.equal(
       (await db.scanSubmission.findUniqueOrThrow({ where: { id: submissionId } })).status,
+      "REVIEW",
+      "Double marking still needs human confirmation of the AI suggestion",
+    );
+    await executeCommand(actor, {
+      type: "review.save",
+      review: {
+        submissionId,
+        itemId: paper.items[0].id,
+        round: "FIRST",
+        score: first.score,
+        feedback: "第一评教师已核对AI建议",
+        partScores: [
+          { partId: "1", score: 4, feedback: "两个空正确" },
+          { partId: "2", score: 1, feedback: "解释错误" },
+        ],
+      },
+    });
+    assert.equal(
+      (await db.scanSubmission.findUniqueOrThrow({ where: { id: submissionId } })).status,
       "GRADED",
     );
     assert.equal(
@@ -338,7 +357,7 @@ async function main() {
       [4, 1],
     );
     console.log(
-      "✓ Mixed part scores persist through AI FIRST and independent human SECOND; correct subpart stays mastered and only the failed subpart enters weaknesses",
+      "✓ Mixed part scores persist through AI suggestion, human FIRST confirmation and independent human SECOND; correct subpart stays mastered and only the failed subpart enters weaknesses",
     );
     const beforeQuestions = await db.question.count(),
       beforeAssets = await db.platformAsset.count(),

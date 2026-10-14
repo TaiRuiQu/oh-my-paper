@@ -1,6 +1,11 @@
 "use client";
+import Link from "next/link";
+import { DOCUMENT_UPLOAD_ACCEPT } from "@/contracts/uploads";
+import { uploadDocument } from "@/lib/document-upload";
+import { useQuestionPage } from "./question-bank-picker";
+import { GradeSelect } from "./grade-select";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { AiJobDTO, AiKind } from "@/contracts/platform-ai";
+import { MAX_AI_IMPORT_PAGES, type AiJobDTO, type AiKind } from "@/contracts/platform-ai";
 import { SUBJECTS, type PlatformState, type QuestionType } from "@/contracts/platform";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { Empty, Field, Panel, readForm, stringField, numberField } from "./primitives";
@@ -19,7 +24,11 @@ export function PlatformAI({
   tab,
   refresh,
   notify,
+  fixedKind,
+  importKind,
 }: {
+  fixedKind?: "EXAM" | "HOMEWORK";
+  importKind?: "EXAM" | "HOMEWORK";
   state: PlatformState;
   tab: string;
   refresh: () => Promise<void>;
@@ -91,7 +100,11 @@ export function PlatformAI({
     <>
       {mode && (
         <Panel
-          title={names[mode]}
+          title={
+            mode === "IMPORT" && importKind
+              ? `图片识别${importKind === "HOMEWORK" ? "作业" : "试卷"}`
+              : names[mode]
+          }
           description="AI 自主查看材料并调用工具完成任务。生成内容保留可编辑，阅卷结果进入既定的复核流程。"
         >
           <div className="p-form">
@@ -117,9 +130,16 @@ export function PlatformAI({
               <p className="p-muted">尚无可用模型，请联系管理员配置 AI 提供商。</p>
             )}
             {mode === "IMPORT" && (
-              <AIImport state={state} start={start} busy={busy || !models.length} />
+              <AIImport
+                state={state}
+                start={start}
+                busy={busy || !models.length}
+                importKind={importKind}
+              />
             )}{" "}
-            {mode === "ASSEMBLE" && <AIAssembly start={start} busy={busy || !models.length} />}{" "}
+            {mode === "ASSEMBLE" && (
+              <AIAssembly start={start} busy={busy || !models.length} fixedKind={fixedKind} />
+            )}{" "}
             {(mode === "TEMPLATE" || mode === "GRADE" || mode === "RECOMMEND") && (
               <AISelect mode={mode} state={state} start={start} busy={busy || !models.length} />
             )}
@@ -149,29 +169,44 @@ export function PlatformAI({
   );
 }
 type Start = (kind: AiKind, input: unknown) => Promise<{ id: string } | undefined>;
-function AIImport({ state, start, busy }: { state: PlatformState; start: Start; busy: boolean }) {
+function AIImport({
+  start,
+  busy,
+  importKind,
+}: {
+  state: PlatformState;
+  start: Start;
+  busy: boolean;
+  importKind?: "EXAM" | "HOMEWORK";
+}) {
+  const [bankQuery, setBankQuery] = useState(""),
+    [bankPage, setBankPage] = useState(1);
+  const { questions, total, loading: bankLoading } = useQuestionPage({ q: bankQuery }, bankPage);
   const [selected, setSelected] = useState<string[]>([]),
     [files, setFiles] = useState<File[]>([]),
     [uploading, setUploading] = useState(false),
     [subject, setSubject] = useState("数学"),
-    [grade, setGrade] = useState("高一"),
+    [grade, setGrade] = useState("高中一年级"),
+    [name, setName] = useState(""),
     [error, setError] = useState("");
   async function upload() {
     setUploading(true);
     setError("");
     try {
-      if (!files.length) throw new Error("请选择试卷图片。");
+      if (!files.length) throw new Error("请选择试卷扫描图片或 PDF。");
       const urls = [];
       for (const file of files) {
-        const d = new FormData();
-        d.set("file", file);
-        const r = await apiRequest<{ url: string }>("/api/platform/assets", {
-          method: "POST",
-          body: d,
-        });
-        urls.push(r.url);
+        if (urls.length >= MAX_AI_IMPORT_PAGES)
+          throw new Error("一次识别最多 20 页，请拆分材料后上传。");
+        const document = await uploadDocument(file, MAX_AI_IMPORT_PAGES - urls.length);
+        urls.push(...document.pages.map((page) => page.url));
       }
-      await start("IMPORT", { assetUrls: urls, subject, grade });
+      await start("IMPORT", {
+        assetUrls: urls,
+        subject,
+        grade,
+        ...(importKind ? { kind: importKind, name: name.trim() } : {}),
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "图片上传失败");
     } finally {
@@ -180,6 +215,17 @@ function AIImport({ state, start, busy }: { state: PlatformState; start: Start; 
   }
   return (
     <>
+      {importKind && (
+        <Field label={importKind === "HOMEWORK" ? "作业名称" : "试卷名称"}>
+          <input
+            value={name}
+            maxLength={200}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={importKind === "HOMEWORK" ? "例如：函数课后练习" : "例如：期中考试试卷"}
+            disabled={uploading || busy}
+          />
+        </Field>
+      )}
       <div className="p-form-grid">
         <Field label="导入学科">
           <select value={subject} onChange={(e) => setSubject(e.target.value)}>
@@ -189,18 +235,22 @@ function AIImport({ state, start, busy }: { state: PlatformState; start: Start; 
           </select>
         </Field>
         <Field label="适用年级">
-          <input value={grade} onChange={(e) => setGrade(e.target.value)} />
+          <GradeSelect value={grade} onChange={(e) => setGrade(e.target.value)} />
         </Field>
       </div>
-      <Field label="试卷图片（支持批量）">
+      <Field
+        label={`${importKind === "HOMEWORK" ? "作业" : "试卷"}扫描材料（图片或 PDF，支持批量）`}
+        hint="PDF 按页码逐页识别，一次最多 20 页。"
+      >
         <input
           type="file"
           multiple
-          accept="image/png,image/jpeg"
+          accept={DOCUMENT_UPLOAD_ACCEPT}
+          disabled={uploading || busy}
           onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
         />
       </Field>
-      {files.length > 0 && <p className="p-muted">已选择 {files.length} 张图片</p>}
+      {files.length > 0 && <p className="p-muted">已选择 {files.length} 个扫描文件</p>}
       {error && (
         <p role="alert" className="field-error">
           {error}
@@ -211,44 +261,90 @@ function AIImport({ state, start, busy }: { state: PlatformState; start: Start; 
         disabled={busy || uploading || !files.length}
         onClick={() => void upload()}
       >
-        {uploading ? "正在上传试卷图片…" : "识别并导入题库"}
+        {uploading
+          ? "正在读取扫描材料…"
+          : importKind
+            ? `识别并创建${importKind === "HOMEWORK" ? "作业" : "试卷"}`
+            : "识别并导入题库"}
       </button>
-      <details>
-        <summary>为已有试题生成知识点、标准答案与评分标准</summary>
-        <div className="p-form">
-          {state.questions.length ? (
-            state.questions.map((q) => (
-              <label key={q.id} className="p-check">
-                <input
-                  type="checkbox"
-                  checked={selected.includes(q.id)}
-                  onChange={(e) =>
-                    setSelected(
-                      e.target.checked ? [...selected, q.id] : selected.filter((id) => id !== q.id),
-                    )
-                  }
-                />
-                <span>
-                  {q.subject} · {q.content.stem.slice(0, 80)}
-                </span>
-              </label>
-            ))
-          ) : (
-            <Empty>先创建或导入试题。</Empty>
-          )}
-          <button
-            className="button"
-            disabled={busy || !selected.length}
-            onClick={() => void start("ENRICH", { questionIds: selected })}
-          >
-            生成已选 {selected.length} 道题的答案与知识点
-          </button>
-        </div>
-      </details>
+      {!importKind && (
+        <details>
+          <summary>为已有试题生成知识点、标准答案与评分标准</summary>
+          <div className="p-form">
+            <Field label="检索题目">
+              <input
+                value={bankQuery}
+                onChange={(e) => {
+                  setBankQuery(e.target.value);
+                  setBankPage(1);
+                }}
+              />
+            </Field>
+            {questions.length ? (
+              questions.map((q) => (
+                <label key={q.id} className="p-check">
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(q.id)}
+                    onChange={(e) =>
+                      setSelected(
+                        e.target.checked
+                          ? [...selected, q.id]
+                          : selected.filter((id) => id !== q.id),
+                      )
+                    }
+                  />
+                  <span>
+                    {q.subject} · {q.content.stem.slice(0, 80)}
+                  </span>
+                </label>
+              ))
+            ) : (
+              <Empty>先创建或导入试题。</Empty>
+            )}
+            <button
+              className="button"
+              disabled={busy || !selected.length}
+              onClick={() => void start("ENRICH", { questionIds: selected })}
+            >
+              生成已选 {selected.length} 道题的答案与知识点
+            </button>
+            <div className="p-actions">
+              <button
+                type="button"
+                className="button secondary"
+                disabled={bankLoading || bankPage === 1}
+                onClick={() => setBankPage(bankPage - 1)}
+              >
+                上一页
+              </button>
+              <span>
+                第 {bankPage} 页 · {total} 题
+              </span>
+              <button
+                type="button"
+                className="button secondary"
+                disabled={bankLoading || bankPage * 20 >= total}
+                onClick={() => setBankPage(bankPage + 1)}
+              >
+                下一页
+              </button>
+            </div>
+          </div>
+        </details>
+      )}
     </>
   );
 }
-function AIAssembly({ start, busy }: { start: Start; busy: boolean }) {
+function AIAssembly({
+  start,
+  busy,
+  fixedKind,
+}: {
+  start: Start;
+  busy: boolean;
+  fixedKind?: "EXAM" | "HOMEWORK";
+}) {
   const [counts, setCounts] = useState<
       { type: QuestionType; count: number; score: number; section: string }[]
     >([{ type: "SINGLE", count: 3, score: 5, section: "选择题" }]),
@@ -262,7 +358,7 @@ function AIAssembly({ start, busy }: { start: Start; busy: boolean }) {
           name: stringField(d, "name"),
           subject: stringField(d, "subject"),
           grade: stringField(d, "grade"),
-          kind: stringField(d, "kind"),
+          kind: fixedKind ?? stringField(d, "kind"),
           difficulty: numberField(d, "difficulty"),
           difficultyTolerance: numberField(d, "difficultyTolerance"),
           counts,
@@ -274,12 +370,14 @@ function AIAssembly({ start, busy }: { start: Start; busy: boolean }) {
         <Field label="试卷 / 作业名称">
           <input required name="name" />
         </Field>
-        <Field label="用途">
-          <select name="kind">
-            <option value="EXAM">考试试卷</option>
-            <option value="HOMEWORK">日常作业</option>
-          </select>
-        </Field>
+        {!fixedKind && (
+          <Field label="用途">
+            <select name="kind">
+              <option value="EXAM">考试试卷</option>
+              <option value="HOMEWORK">日常作业</option>
+            </select>
+          </Field>
+        )}
         <Field label="学科">
           <select name="subject" defaultValue="数学">
             {SUBJECTS.map((s) => (
@@ -288,7 +386,7 @@ function AIAssembly({ start, busy }: { start: Start; busy: boolean }) {
           </select>
         </Field>
         <Field label="年级">
-          <input required name="grade" defaultValue="高一" />
+          <GradeSelect required name="grade" defaultValue="高中一年级" />
         </Field>
         <Field label="目标难度（0–1）">
           <input type="number" name="difficulty" min={0} max={1} step={0.05} defaultValue={0.5} />
@@ -556,7 +654,12 @@ function AIJobs({
   const relevant = jobs.filter(
     (j) => !mode || j.kind === mode || (mode === "IMPORT" && j.kind === "ENRICH"),
   );
-  if (!relevant.length && !failure) return null;
+  if (!relevant.length && !failure)
+    return (
+      <Panel title="AI 任务记录">
+        <Empty>暂无任务。提交任务后可在这里查看执行进度与结果。</Empty>
+      </Panel>
+    );
   return (
     <Panel title="AI 任务" description="后台任务会保留进度与结果，页面每三秒更新。">
       {failure && (
@@ -569,7 +672,11 @@ function AIJobs({
           job.result && typeof job.result === "object"
             ? (job.result as {
                 summary?: string;
-                result?: { recommendations?: unknown[] };
+                result?: {
+                  recommendations?: unknown[];
+                  paperId?: string;
+                  paperKind?: "EXAM" | "HOMEWORK";
+                };
                 recommendations?: unknown[];
               })
             : null;
@@ -595,6 +702,14 @@ function AIJobs({
               {new Date(job.createdAt).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" })}
             </p>
             {result?.summary && <p>{result.summary}</p>}
+            {job.status === "COMPLETED" && result?.result?.paperId && (
+              <Link
+                className="button secondary"
+                href={`${result.result.paperKind === "HOMEWORK" ? "/homework" : "/exams/papers"}/${result.result.paperId}/edit`}
+              >
+                核对并编辑{result.result.paperKind === "HOMEWORK" ? "作业" : "试卷"}
+              </Link>
+            )}
             {job.error && (
               <p role="alert" className="field-error">
                 {job.error}

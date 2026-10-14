@@ -85,7 +85,7 @@ async function main() {
           classroomId: classId,
           name: "乙",
           studentNumber: "000002",
-          email: "student2@test.invalid",
+          userId: ids.student2,
         },
       })
     ).id;
@@ -225,6 +225,58 @@ async function main() {
     );
     console.log(
       "✓ All five question types persist, blank answers and mixed parts remain structured, selected order and paper snapshots survive question edits",
+    );
+    // Paper edits belong to this document snapshot, leaving the reusable bank untouched.
+    const documentQuestion = state.questions.find((q) => q.id === chemistry[0])!;
+    const edited = await cmd({
+      type: "paper.save",
+      paper: {
+        name: "可视化编辑验收",
+        kind: "HOMEWORK",
+        subject: "化学",
+        grade: "高一",
+        instructions: "在本页作答",
+        layout: {
+          paperSize: "A4",
+          columns: 1,
+          marginMm: 22,
+          fontSizePt: 12,
+          lineHeight: 2,
+          questionLayouts: { [documentQuestion.id]: { answerLines: 8, pageBreakBefore: true } },
+        },
+        items: [
+          {
+            questionId: documentQuestion.id,
+            score: 6,
+            section: "练习",
+            content: { ...documentQuestion.content, stem: "本练习册独立题干", answers: ["B"] },
+          },
+        ],
+      },
+    });
+    const documentState = await loadState(actor);
+    const editedPaper = documentState.papers.find((p) => p.id === edited.id)!;
+    assert.equal(editedPaper.items[0].snapshot.content.stem, "本练习册独立题干");
+    assert.deepEqual(editedPaper.items[0].snapshot.content.answers, ["B"]);
+    assert.equal(editedPaper.layout.questionLayouts?.[documentQuestion.id].answerLines, 8);
+    assert.equal(
+      documentState.questions.find((q) => q.id === documentQuestion.id)!.content.stem,
+      "题库已更新",
+    );
+    await assert.rejects(
+      cmd({
+        type: "template.save",
+        template: {
+          paperId: edited.id,
+          name: "无效作业答题卡",
+          subject: editedPaper.subject,
+          layout: generateCardTemplate(editedPaper).layout,
+        },
+      }),
+      /作业使用练习册/,
+    );
+    console.log(
+      "✓ Visual document edits persist independent question snapshots and print geometry; homework rejects answer cards",
     );
     const generated = generateCardTemplate(chem);
     const templateId = (
@@ -471,7 +523,7 @@ async function main() {
       results.map((r) => r.classRank),
       [1, 1],
     );
-    assert.equal(results[0].subjects.find((s) => s.subject === "化学")!.rawScore, 24);
+    assert.equal(results[0].subjects.find((s) => s.subject === "化学")!.rawScore, 24.5);
     assert.equal(results[0].subjects.find((s) => s.subject === "化学")!.score, 40);
     assert.equal(results[1].subjects.find((s) => s.subject === "化学")!.score, 100);
     assert(
@@ -737,7 +789,7 @@ async function main() {
         classroomId: unboundClass,
         name: "已考试未注册",
         studentNumber: "000020",
-        email: boundAccount.email,
+        userId: boundAccount.id,
       },
     });
     const boundState = await loadState({ id: boundAccount.id });
@@ -800,6 +852,204 @@ async function main() {
     );
     console.log(
       "✓ An existing unbound examinee can bind a newly registered student account and read their historic published scores; rename, renumber, rebind and unbind remain blocked",
+    );
+    const bankCount = await db.question.count();
+    const localQuestion = {
+      type: "SUBJECTIVE" as const,
+      subject: "数学",
+      grade: "初中四年级",
+      difficulty: 0.5,
+      knowledgeTags: ["写作"],
+      content: {
+        stem: "自主编写一道解答题",
+        options: [],
+        answers: [],
+        parts: [],
+        images: [],
+        explanation: "",
+        rubric: "按步骤评分",
+      },
+    };
+    const localPaperId = (
+      await cmd({
+        type: "paper.save",
+        paper: {
+          name: "独立题目与逐题双评",
+          kind: "EXAM",
+          subject: "数学",
+          grade: "初中四年级",
+          instructions: "",
+          layout: {
+            paperSize: "A3",
+            orientation: "landscape",
+            columns: 4,
+            fontFamily: "NSimSun",
+            textBlocks: [{ id: "reading", text: "阅读材料", beforeQuestionId: "local-question" }],
+          },
+          items: [
+            { questionId: "local-question", question: localQuestion, score: 10, section: "解答" },
+            { questionId: "local-single", question: localQuestion, score: 10, section: "单评" },
+          ],
+        },
+      })
+    ).id;
+    assert.equal(
+      await db.question.count(),
+      bankCount,
+      "Paper-only questions must not create bank records",
+    );
+    const localPaper = (await loadState(actor)).papers.find((p) => p.id === localPaperId)!;
+    const doubleItem = localPaper.items[0],
+      singleItem = localPaper.items[1];
+    const localExamId = (
+      await cmd({
+        type: "assessment.save",
+        assessment: {
+          name: "逐题规则验证",
+          kind: "EXAM",
+          classroomIds: [classId],
+          papers: [
+            {
+              paperId: localPaperId,
+              subject: "数学",
+              gradingMode: "SINGLE",
+              arbitrationThreshold: 0,
+              questionRules: {
+                [doubleItem.id]: { doubleReview: true, arbitrationEnabled: true, maxDifference: 2 },
+                [singleItem.id]: {
+                  doubleReview: false,
+                  arbitrationEnabled: false,
+                  maxDifference: 0,
+                },
+              },
+              conversion: { enabled: false, bands: [] },
+            },
+          ],
+        },
+      })
+    ).id;
+    const localSubmissionId = (
+      await cmd({
+        type: "submission.save",
+        submission: {
+          assessmentId: localExamId,
+          paperId: localPaperId,
+          studentId: student1,
+          kind: "WORKBOOK",
+          sourceFiles: [],
+          answers: [],
+        },
+      })
+    ).id;
+    const scoreLocal = (
+      userId: string,
+      round: "FIRST" | "SECOND" | "ARBITRATION",
+      score: number,
+      itemId = doubleItem.id,
+    ) =>
+      executeCommand(
+        { id: userId },
+        {
+          type: "review.save",
+          review: {
+            submissionId: localSubmissionId,
+            itemId,
+            round,
+            score,
+            feedback: `评分 ${score}`,
+          },
+        },
+      );
+    await scoreLocal(ids.second, "SECOND", 1);
+    await assert.rejects(scoreLocal(ids.second, "FIRST", 9), /不同教师/);
+    await scoreLocal(ids.teacher, "FIRST", 8);
+    await scoreLocal(ids.teacher, "FIRST", 9);
+    assert.equal(
+      await db.reviewEvent.count({
+        where: { submissionId: localSubmissionId, itemId: doubleItem.id },
+      }),
+      3,
+    );
+    assert.equal(
+      await db.review.count({ where: { submissionId: localSubmissionId, itemId: doubleItem.id } }),
+      2,
+    );
+    await scoreLocal(ids.arbiter, "ARBITRATION", 7);
+    await scoreLocal(ids.teacher, "FIRST", 6, singleItem.id);
+    await assert.rejects(scoreLocal(ids.second, "SECOND", 6, singleItem.id), /无需第二评/);
+    const localState = await loadState(actor),
+      localResult = localState.analytics.results.find(
+        (r) => r.assessmentId === localExamId && r.studentId === student1,
+      )!;
+    assert.equal(localResult.subjects[0].grades[0].score, 8);
+    assert.equal(localResult.subjects[0].grades[1].score, 6);
+    assert.equal(
+      localState.reviewHistory!.filter((r) => r.submissionId === localSubmissionId).length,
+      5,
+    );
+    assert.equal((await loadState({ id: ids.student })).reviewHistory!.length, 0);
+    console.log(
+      "✓ Paper-only questions/text, A3 landscape four-column storage, second-before-first, independent teachers, per-question arbitration, closer-score average and immutable revisions pass",
+    );
+    const bankBefore = await db.question.count({ where: { ownerId: ids.teacher } });
+    await db.question.createMany({
+      data: Array.from({ length: 10000 }, (_, i) => ({
+        id: `scale-${String(i).padStart(5, "0")}`,
+        ownerId: ids.teacher,
+        ...localQuestion,
+        content: { ...localQuestion.content, stem: `规模验证 ${i}` },
+        createdAt: new Date(2000000000000 + i * 1000),
+        updatedAt: new Date(2000000000000 + i * 1000),
+      })),
+    });
+    await db.question.update({
+      where: { id: "scale-00000" },
+      data: { updatedAt: new Date(2100000000000) },
+    });
+    const { queryQuestionBank } = await import("../src/server/platform/question-bank");
+    const { loadPageState } = await import("../src/server/platform/page-state");
+    const { questionStatistics } = await import("../src/server/platform/question-stats");
+    const started = performance.now();
+    const page1 = await queryQuestionBank(
+        db,
+        (await loadState(actor, db, { questionLimit: 0 })).actor,
+        {},
+      ),
+      page2 = await queryQuestionBank(
+        db,
+        { id: ids.teacher, role: "TEACHER", name: "Teacher" },
+        {},
+        2,
+      );
+    assert.equal(page1.total, bankBefore + 10000);
+    assert.equal(page1.questions.length, 20);
+    assert.equal(page1.questions[0].id, "scale-09999");
+    assert.equal(page1.questions[19].id, "scale-09980");
+    assert.equal(page2.questions[0].id, "scale-09979");
+    assert(
+      !page1.questions.some((q) => q.id === "scale-00000"),
+      "Editing an old question must not move it to the top",
+    );
+    const isolated = await queryQuestionBank(
+      db,
+      { id: ids.outside, role: "TEACHER", name: "Outside" },
+      { q: "规模验证" },
+    );
+    assert.equal(isolated.total, 0);
+    const filtered = await queryQuestionBank(
+      db,
+      { id: ids.teacher, role: "TEACHER", name: "Teacher" },
+      { q: "规模验证 9999", grade: "初中四年级" },
+    );
+    assert.equal(filtered.total, 1);
+    const pageState = await loadPageState(actor, "exams");
+    assert.equal(pageState.questions.length, 0);
+    assert.equal(pageState.questionCount, bankBefore + 10000);
+    const stats = await questionStatistics(db, ids.teacher);
+    assert.equal(stats.total, bankBefore + 10000);
+    assert(stats.tags.some((t) => t.tag === "写作" && t.count === 10000));
+    console.log(
+      `✓ 10,000-question bank: 20-row descending creation pagination, edit stability, search/grade, ownership, exact statistics, zero bank bodies in workbench state (${Math.round(performance.now() - started)}ms)`,
     );
     console.log("Platform non-AI domain acceptance passed.");
   } finally {

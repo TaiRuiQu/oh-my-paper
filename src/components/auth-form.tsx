@@ -7,45 +7,26 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { reportClientError } from "@/lib/error-message";
 import { authClient } from "@/lib/auth-client";
-import { authFormSchema, type AuthFields } from "@/contracts/auth";
+import { authLoginSchema, type AuthFields } from "@/contracts/auth";
 
 const authErrors: Record<string, string> = {
-  INVALID_EMAIL_OR_PASSWORD: "邮箱或密码不正确，请重新输入。",
-  USER_ALREADY_EXISTS: "此邮箱已注册，请登录。",
-  USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL: "此邮箱已注册，请登录。",
-  PASSWORD_TOO_SHORT: "密码至少需要 10 个字符。",
-  PASSWORD_TOO_LONG: "密码最多 128 个字符。",
+  INVALID_USERNAME_OR_PASSWORD: "账号或密码不正确，请重新输入。",
+  INVALID_USERNAME: "账号格式不正确，请检查后重新输入。",
   TOO_MANY_REQUESTS: "尝试次数过多，请稍后再试。",
 };
 
-export function AuthForm({ mode }: { mode: "login" | "register" }) {
-  const registering = mode === "register";
+export function AuthForm() {
   const router = useRouter();
   const [error, setError] = useState<string>();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<AuthFields>({
-    resolver: zodResolver(authFormSchema(mode)),
-    defaultValues: { name: "", email: "", password: "" },
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<AuthFields>({
+    resolver: zodResolver(authLoginSchema), defaultValues: { username: "", password: "" },
   });
-
   const submit = handleSubmit(async (values) => {
     setError(undefined);
     try {
-      const result = registering
-        ? await authClient.signUp.email({
-            name: values.name,
-            email: values.email,
-            password: values.password,
-          })
-        : await authClient.signIn.email({ email: values.email, password: values.password });
+      const result = await authClient.signIn.username(values);
       if (result.error) {
-        const message =
-          authErrors[result.error.code ?? ""] ??
-          `认证失败（${result.error.code ?? `HTTP ${result.error.status}`}）：${result.error.message ?? "请稍后重试。"}`;
-        setError(reportClientError("auth.submit", new Error(message)));
+        setError(authErrors[result.error.code ?? ""] ?? "登录失败，请稍后重试。");
         return;
       }
       router.replace("/workspace");
@@ -54,93 +35,30 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       setError(reportClientError("auth.submit", error));
     }
   });
-
   return (
     <section className="auth-panel" aria-labelledby="auth-heading">
-      <Link href="/" className="wordmark">
-        Oh My Paper<span>教学工作台</span>
-      </Link>
-      <h1 id="auth-heading">{registering ? "创建你的账号" : "登录工作台"}</h1>
-      <p className="intro">
-        {registering
-          ? "建立题库，组织考试，了解每一次学习的进步。"
-          : "从一道题到一场考试，让教学工作有序衔接。"}
-      </p>
+      <Link href="/" className="wordmark">Oh My Paper<span>教学工作台</span></Link>
+      <h1 id="auth-heading">登录工作台</h1>
+      <p className="intro">从一道题到一场考试，让教学工作有序衔接。</p>
       <form onSubmit={submit} noValidate>
-        {registering && (
-          <div className="field">
-            <label htmlFor="name">姓名</label>
-            <input
-              id="name"
-              autoComplete="name"
-              maxLength={80}
-              aria-invalid={!!errors.name}
-              aria-describedby={errors.name ? "name-error" : undefined}
-              {...register("name")}
-            />
-            {errors.name && (
-              <p id="name-error" className="field-error">
-                {errors.name.message}
-              </p>
-            )}
-          </div>
-        )}
         <div className="field">
-          <label htmlFor="email">邮箱</label>
-          <input
-            id="email"
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            aria-invalid={!!errors.email}
-            aria-describedby={errors.email ? "email-error" : undefined}
-            {...register("email")}
-          />
-          {errors.email && (
-            <p id="email-error" className="field-error">
-              {errors.email.message}
-            </p>
-          )}
+          <label htmlFor="username">账号 / 学号</label>
+          <input id="username" autoComplete="username" maxLength={254}
+            aria-invalid={!!errors.username} aria-describedby={errors.username ? "username-error" : undefined}
+            {...register("username")} />
+          {errors.username && <p id="username-error" className="field-error">{errors.username.message}</p>}
         </div>
         <div className="field">
           <label htmlFor="password">密码</label>
-          <input
-            id="password"
-            type="password"
-            autoComplete={registering ? "new-password" : "current-password"}
-            aria-invalid={!!errors.password}
-            aria-describedby={
-              errors.password ? "password-error" : registering ? "password-hint" : undefined
-            }
-            {...register("password")}
-          />
-          {errors.password ? (
-            <p id="password-error" className="field-error">
-              {errors.password.message}
-            </p>
-          ) : (
-            registering && (
-              <p id="password-hint" className="hint">
-                至少 10 个字符
-              </p>
-            )
-          )}
+          <input id="password" type="password" autoComplete="current-password" maxLength={128}
+            aria-invalid={!!errors.password} aria-describedby={errors.password ? "password-error" : undefined}
+            {...register("password")} />
+          {errors.password && <p id="password-error" className="field-error">{errors.password.message}</p>}
         </div>
-        {error && (
-          <p className="form-error" role="alert">
-            {error}
-          </p>
-        )}
-        <button className="button" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "正在处理…" : registering ? "创建账号" : "登录"}
-        </button>
+        {error && <p className="form-error" role="alert">{error}</p>}
+        <button className="button" type="submit" disabled={isSubmitting}>{isSubmitting ? "正在登录…" : "登录"}</button>
       </form>
-      <p className="auth-switch">
-        {registering ? "已有账号？" : "还没有账号？"}{" "}
-        <Link href={registering ? "/login" : "/register"}>
-          {registering ? "去登录" : "创建账号"}
-        </Link>
-      </p>
+      <p className="auth-switch">账号由管理员分配，学生账号也可由教师添加。学生请使用学号登录。</p>
     </section>
   );
 }

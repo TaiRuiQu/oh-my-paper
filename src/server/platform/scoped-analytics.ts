@@ -7,7 +7,12 @@ import { buildAnalytics, mergeKnowledgeStats } from "./analytics";
 
 export async function loadScopedAnalytics(
   actor: Actor,
-  scope: { assessmentId?: string; classroomId?: string; studentId?: string },
+  scope: {
+    assessmentId?: string;
+    classroomId?: string;
+    studentId?: string;
+    kind?: "EXAM" | "HOMEWORK";
+  },
 ): Promise<Analytics> {
   const state = await loadState(actor);
   if (scope.assessmentId && !state.assessments.some((exam) => exam.id === scope.assessmentId))
@@ -25,7 +30,9 @@ export async function loadScopedAnalytics(
   )
     throw new AccessError(404, "学生不存在。");
   const assessments = state.assessments.filter(
-    (exam) => !scope.assessmentId || exam.id === scope.assessmentId,
+    (exam) =>
+      (!scope.assessmentId || exam.id === scope.assessmentId) &&
+      (!scope.kind || exam.kind === scope.kind),
   );
   const assessmentIds = new Set(assessments.map((exam) => exam.id));
   const classrooms = state.classrooms

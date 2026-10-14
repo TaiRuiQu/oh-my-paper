@@ -1,7 +1,8 @@
 "use client";
+import { reviewRule } from "@/lib/document-layout";
 import { useState } from "react";
 import type { Assessment, AssessmentPaper, PlatformState } from "@/contracts/platform";
-import { Empty, Field, Panel, Submit, readForm, stringField } from "./primitives";
+import { Field, Panel, Submit, readForm, stringField } from "./primitives";
 import type { Mutate } from "./questions";
 const bands = [
   { upperPercent: 15, min: 86, max: 100 },
@@ -10,121 +11,37 @@ const bands = [
   { upperPercent: 98, min: 41, max: 55 },
   { upperPercent: 100, min: 30, max: 40 },
 ];
-export function Assessments({
-  state,
-  mutate,
-  pending,
-}: {
-  state: PlatformState;
-  mutate: Mutate;
-  pending: boolean;
-}) {
-  const [editing, setEditing] = useState<Assessment | null | undefined>();
-  return (
-    <>
-      {editing !== undefined && (
-        <AssessmentEditor
-          key={editing?.id ?? "new"}
-          assessment={editing}
-          state={state}
-          mutate={mutate}
-          pending={pending}
-          close={() => setEditing(undefined)}
-        />
-      )}
-      <Panel
-        title="考试与作业安排"
-        description="一场考试可以包含多个科目。批改完成后按班级与全体学生联合排名。"
-        actions={
-          <button className="button" onClick={() => setEditing(null)}>
-            安排考试 / 作业
-          </button>
-        }
-      >
-        {state.assessments.length ? (
-          <div className="p-table" role="region" aria-label="考试与作业安排列表" tabIndex={0}>
-            <table>
-              <thead>
-                <tr>
-                  <th>名称</th>
-                  <th>用途</th>
-                  <th>参与班级</th>
-                  <th>科目 / 阅卷</th>
-                  <th>发布状态</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody>
-                {state.assessments.map((a) => (
-                  <tr key={a.id}>
-                    <td>
-                      <strong>{a.name}</strong>
-                    </td>
-                    <td>{a.kind === "EXAM" ? "考试" : "作业"}</td>
-                    <td>
-                      {a.classroomIds
-                        .map((id) => state.classrooms.find((c) => c.id === id)?.name)
-                        .join("、")}
-                    </td>
-                    <td>
-                      {a.papers.map((p) => (
-                        <div key={p.paperId}>
-                          {p.subject} · {p.gradingMode === "DOUBLE" ? "双评" : "单评"}
-                          {p.conversion.enabled ? " · 排名赋分" : ""}
-                        </div>
-                      ))}
-                    </td>
-                    <td>
-                      <span className={`p-status${a.published ? " success" : ""}`}>
-                        {a.published ? "成绩已发布" : "未发布成绩"}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="p-actions">
-                        <button className="button secondary" onClick={() => setEditing(a)}>
-                          编辑安排
-                        </button>
-                        <button
-                          className="button secondary"
-                          disabled={pending}
-                          onClick={() =>
-                            void mutate({
-                              type: "assessment.publish",
-                              id: a.id,
-                              published: !a.published,
-                            })
-                          }
-                        >
-                          {a.published ? "撤回成绩" : "发布成绩"}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <Empty>选择参与班级与试卷，安排第一场考试或作业。</Empty>
-        )}
-      </Panel>
-    </>
-  );
-}
-function AssessmentEditor({
+export function AssessmentEditor({
   assessment,
   state,
   mutate,
   pending,
   close,
+  fixedKind,
+  initialPaperId,
 }: {
+  fixedKind?: Assessment["kind"];
+  initialPaperId?: string;
   assessment: Assessment | null;
   state: PlatformState;
   mutate: Mutate;
   pending: boolean;
   close: () => void;
 }) {
-  const [papers, setPapers] = useState<AssessmentPaper[]>(assessment?.papers ?? []);
+  const [papers, setPapers] = useState<AssessmentPaper[]>(
+    assessment?.papers ??
+      (initialPaperId && state.papers.some((p) => p.id === initialPaperId)
+        ? [
+            {
+              paperId: initialPaperId,
+              subject: state.papers.find((p) => p.id === initialPaperId)!.subject,
+              gradingMode: "SINGLE",
+              arbitrationThreshold: 2,
+              conversion: { enabled: false, bands },
+            },
+          ]
+        : []),
+  );
   const patch = (index: number, value: Partial<AssessmentPaper>) =>
     setPapers(papers.map((p, i) => (i === index ? { ...p, ...value } : p)));
   return (
@@ -145,7 +62,7 @@ function AssessmentEditor({
             assessment: {
               id: assessment?.id,
               name: stringField(d, "name"),
-              kind: stringField(d, "kind") as Assessment["kind"],
+              kind: fixedKind ?? (stringField(d, "kind") as Assessment["kind"]),
               classroomIds: d.getAll("classroomIds").map(String),
               papers,
             },
@@ -158,12 +75,14 @@ function AssessmentEditor({
           <Field label="名称">
             <input required name="name" defaultValue={assessment?.name} />
           </Field>
-          <Field label="用途">
-            <select name="kind" defaultValue={assessment?.kind ?? "EXAM"}>
-              <option value="EXAM">考试</option>
-              <option value="HOMEWORK">作业</option>
-            </select>
-          </Field>
+          {!fixedKind && (
+            <Field label="用途">
+              <select name="kind" defaultValue={assessment?.kind ?? "EXAM"}>
+                <option value="EXAM">考试</option>
+                <option value="HOMEWORK">作业</option>
+              </select>
+            </Field>
+          )}
         </div>
         <div>
           <h3>参与班级</h3>
@@ -203,7 +122,10 @@ function AssessmentEditor({
           >
             <option value="">选择试卷</option>
             {state.papers
-              .filter((p) => !papers.some((i) => i.paperId === p.id))
+              .filter(
+                (p) =>
+                  (!fixedKind || p.kind === fixedKind) && !papers.some((i) => i.paperId === p.id),
+              )
               .map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name} · {p.subject}
@@ -223,28 +145,79 @@ function AssessmentEditor({
                 移除
               </button>
             </div>
-            <div className="p-form-grid">
-              <Field label="阅卷方式">
-                <select
-                  value={p.gradingMode}
-                  onChange={(e) =>
-                    patch(i, { gradingMode: e.target.value as AssessmentPaper["gradingMode"] })
-                  }
-                >
-                  <option value="SINGLE">单评</option>
-                  <option value="DOUBLE">双评，分差超阈值进入仲裁</option>
-                </select>
-              </Field>
-              <Field label="仲裁分差阈值">
-                <input
-                  type="number"
-                  min={0}
-                  step={0.5}
-                  value={p.arbitrationThreshold}
-                  onChange={(e) => patch(i, { arbitrationThreshold: Number(e.target.value) })}
-                />
-              </Field>
+            <p className="p-muted">
+              逐题选择双评。两位老师独立评分，默认取平均分；启用仲裁后，分差严格大于最大分差才进入三评。
+            </p>
+            <div className="p-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>题目</th>
+                    <th>双评</th>
+                    <th>仲裁</th>
+                    <th>最大分差</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {state.papers
+                    .find((t) => t.id === p.paperId)
+                    ?.items.map((item, n) => {
+                      const rule = reviewRule(p, item.id);
+                      const change = (value: Partial<typeof rule>) =>
+                        patch(i, {
+                          questionRules: {
+                            ...Object.fromEntries(
+                              (state.papers.find((t) => t.id === p.paperId)?.items ?? []).map(
+                                (it) => [it.id, reviewRule(p, it.id)],
+                              ),
+                            ),
+                            [item.id]: { ...rule, ...value },
+                          },
+                        });
+                      return (
+                        <tr key={item.id}>
+                          <td>
+                            第 {n + 1} 题 · {item.score} 分<br />
+                            <small>{item.snapshot.content.stem.slice(0, 55)}</small>
+                          </td>
+                          <td>
+                            <input
+                              type="checkbox"
+                              aria-label={`第 ${n + 1} 题双评`}
+                              checked={rule.doubleReview}
+                              onChange={(e) => change({ doubleReview: e.target.checked })}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="checkbox"
+                              aria-label={`第 ${n + 1} 题仲裁`}
+                              disabled={!rule.doubleReview}
+                              checked={rule.arbitrationEnabled}
+                              onChange={(e) => change({ arbitrationEnabled: e.target.checked })}
+                            />
+                          </td>
+                          <td>
+                            <input
+                              type="number"
+                              aria-label={`第 ${n + 1} 题最大分差`}
+                              min={0}
+                              max={item.score}
+                              step={0.5}
+                              disabled={!rule.doubleReview || !rule.arbitrationEnabled}
+                              value={rule.maxDifference}
+                              onChange={(e) => change({ maxDifference: Number(e.target.value) })}
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
             </div>
+            <p className="p-muted">
+              仲裁成绩取仲裁员与较接近的一位老师的平均分；两位老师与仲裁员等距时，采用两位老师的均分与仲裁分的平均。所有提交与修改均记录。
+            </p>
             <label className="p-check">
               <input
                 type="checkbox"
@@ -306,7 +279,9 @@ function AssessmentEditor({
           </section>
         ))}
         <div className="p-actions">
-          <Submit pending={pending}>保存安排</Submit>
+          <Submit pending={pending} disabled={!papers.length || !state.classrooms.length}>
+            保存安排
+          </Submit>
           <button type="button" className="button secondary" onClick={close}>
             取消
           </button>

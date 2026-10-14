@@ -15,6 +15,7 @@ import type {
   StudentResult,
   SubjectResult,
 } from "./types";
+import { reviewRule, scoresNearlyEqual, exceedsReviewDifference } from "@/lib/document-layout";
 export function finalGrades(
   paper: Paper,
   config: AssessmentPaper,
@@ -32,43 +33,84 @@ export function finalGrades(
       status: FinalGrade["status"] = "PENDING",
       feedback = "";
     let partScores: PartScore[] = [];
-    if (first) {
-      feedback = first.feedback;
-      if (config.gradingMode === "SINGLE") {
-        score = first.score;
-        partScores = first.partScores ?? [];
-        status = "FINAL";
-      } else if (!second) {
-        status = "SECOND";
-      } else if (Math.abs(first.score - second.score) > config.arbitrationThreshold) {
-        if (third) {
-          score = third.score;
-          partScores = third.partScores ?? [];
-          status = "FINAL";
-          feedback = third.feedback;
-        } else status = "ARBITRATION";
-      } else {
-        score = Math.round((first.score + second.score) * 50) / 100;
-        if (
-          item.snapshot.type === "MIXED" &&
-          first.partScores?.length &&
-          second.partScores?.length
-        ) {
-          partScores = first.partScores.map((part) => {
-            const other = second.partScores!.find((p) => p.partId === part.partId)!;
-            return {
-              partId: part.partId,
-              score: (part.score + other.score) / 2,
-              feedback: [part.feedback, other.feedback].filter(Boolean).join("；"),
-            };
-          });
-          score = partScores.reduce((n, part) => n + part.score, 0);
+    const policy = reviewRule(config, item.id);
+    let counted: Review[] = [];
+    let calculation = "";
+    if (policy.doubleReview && first?.source === "AI") feedback = "AI 首评建议待教师确认";
+    else if (first && !policy.doubleReview) counted = [first];
+    else if (first && second) {
+      if (
+        policy.arbitrationEnabled &&
+        exceedsReviewDifference(first.score, second.score, policy.maxDifference)
+      ) {
+        if (!third) status = "ARBITRATION";
+        else {
+          const d1 = Math.abs(first.score - third.score),
+            d2 = Math.abs(second.score - third.score);
+          // A tie uses the mean of the two equally close original scores.
+          counted = scoresNearlyEqual(d1, d2)
+            ? [
+                third,
+                {
+                  ...first,
+                  score: (first.score + second.score) / 2,
+                  partScores: first.partScores?.map((part) => ({
+                    ...part,
+                    score:
+                      (part.score +
+                        (second.partScores?.find((p) => p.partId === part.partId)?.score ??
+                          part.score)) /
+                      2,
+                  })),
+                },
+              ]
+            : [third, d1 < d2 ? first : second];
         }
-        status = "FINAL";
-        feedback = [first.feedback, second.feedback].filter(Boolean).join("；");
+      } else counted = [first, second];
+    } else if (first) status = "SECOND";
+    if (counted.length) {
+      score = counted.reduce((sum, row) => sum + row.score, 0) / counted.length;
+      calculation =
+        counted.length === 1
+          ? `单评 ${counted[0].score}`
+          : third &&
+              policy.arbitrationEnabled &&
+              first &&
+              second &&
+              exceedsReviewDifference(first.score, second.score, policy.maxDifference)
+            ? `仲裁 ${counted[0].score} 与较近原评分 ${counted[1].score} 的平均分`
+            : `双评 (${counted[0].score} + ${counted[1].score}) ÷ 2`;
+      if (item.snapshot.type === "MIXED" && counted.every((row) => row.partScores?.length)) {
+        partScores = counted[0].partScores!.map((part) => ({
+          partId: part.partId,
+          score:
+            counted.reduce(
+              (sum, row) =>
+                sum + (row.partScores!.find((p) => p.partId === part.partId)?.score ?? 0),
+              0,
+            ) / counted.length,
+          feedback: counted
+            .map((row) => row.partScores!.find((p) => p.partId === part.partId)?.feedback)
+            .filter(Boolean)
+            .join("；"),
+        }));
+        score = partScores.reduce((sum, part) => sum + part.score, 0);
       }
+      status = "FINAL";
+      feedback = counted
+        .map((row) => row.feedback)
+        .filter(Boolean)
+        .join("；");
     }
-    return { itemId: item.id, score, maxScore: item.score, status, feedback, partScores };
+    return {
+      itemId: item.id,
+      score,
+      maxScore: item.score,
+      status,
+      feedback,
+      partScores,
+      calculation,
+    };
   });
 }
 function setRanks<T>(rows: T[], value: (r: T) => number | null, set: (r: T, rank: number) => void) {

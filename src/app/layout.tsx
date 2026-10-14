@@ -20,7 +20,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           跳转到主要内容
         </a>
         <Providers>{children}</Providers>
-        <small className="site-version" title={`网站版本 ${version}`}>
+        <small role="contentinfo" className="site-version" title={`网站版本 ${version}`}>
           v{version}
         </small>
       </body>

@@ -1,4 +1,11 @@
-import { SUBJECTS, type CardTemplate, type Paper, type CardRegion } from "@/contracts/platform";
+import {
+  SUBJECTS,
+  type CardTemplate,
+  type Paper,
+  type CardRegion,
+  type CardLayout,
+} from "@/contracts/platform";
+import { pageDimensions } from "./document-layout";
 export type CardPreset = { objectiveHeight: number; blankHeight: number; subjectiveHeight: number };
 export const CARD_PRESETS = SUBJECTS.map((subject) => ({
   id: `gaokao-${subject}`,
@@ -8,23 +15,42 @@ export const CARD_PRESETS = SUBJECTS.map((subject) => ({
   blankHeight: 110,
   subjectiveHeight: subject === "语文" ? 300 : 190,
 }));
-function baseLayout(): CardTemplate["layout"] {
+function baseLayout(
+  format: Pick<CardLayout, "paperSize" | "orientation" | "columns" | "fontFamily" | "annotations"> &
+    Partial<Pick<CardLayout, "width" | "height">> = {},
+): CardLayout {
+  const { width, height } = pageDimensions(format.paperSize, format.orientation);
   return {
-    width: 794,
-    height: 1123,
+    paperSize: format.paperSize ?? "A4",
+    orientation: format.orientation ?? "portrait",
+    columns: format.columns ?? 1,
+    fontFamily: format.fontFamily ?? "NSimSun",
+    omrVersion: 2,
+    annotations: format.annotations?.map((a) => {
+      const aw = Math.min(a.width * (format.width ?? width), width - 120);
+      const ah = Math.min(a.height * (format.height ?? height), height - 120);
+      const x = Math.max(60, Math.min(width - 60 - aw, a.x * (format.width ?? width)));
+      const y = Math.max(60, Math.min(height - 60 - ah, a.y * (format.height ?? height)));
+      return fitAnnotationText(
+        { ...a, x: x / width, y: y / height, width: aw / width, height: ah / height },
+        { width, height },
+      );
+    }),
+    width,
+    height,
     pageCount: 1,
     markers: [
-      { x: 28 / 794, y: 28 / 1123 },
-      { x: 766 / 794, y: 28 / 1123 },
-      { x: 766 / 794, y: 1095 / 1123 },
-      { x: 28 / 794, y: 1095 / 1123 },
+      { x: 28 / width, y: 28 / height },
+      { x: (width - 28) / width, y: 28 / height },
+      { x: (width - 28) / width, y: (height - 28) / height },
+      { x: 28 / width, y: (height - 28) / height },
     ],
     studentNumber: {
       digits: 6,
-      x: 470 / 794,
-      y: 86 / 1123,
-      cellWidth: 29 / 794,
-      cellHeight: 16 / 1123,
+      x: (width - 270) / width,
+      y: 86 / height,
+      cellWidth: 29 / width,
+      cellHeight: 16 / height,
     },
     regions: [],
   };
@@ -43,6 +69,8 @@ export function defaultCardPresets(): CardTemplate[] {
 export function generateCardTemplate(
   paper: Paper,
   overrides: Partial<CardPreset> = {},
+  format: Pick<CardLayout, "paperSize" | "orientation" | "columns" | "fontFamily" | "annotations"> &
+    Partial<Pick<CardLayout, "width" | "height">> = paper.layout,
 ): CardTemplate {
   const preset = {
     ...(CARD_PRESETS.find((entry) => entry.subject === paper.subject) ?? CARD_PRESETS[1]),
@@ -55,10 +83,14 @@ export function generateCardTemplate(
     name: `${paper.name}答题卡`,
     subject: paper.subject,
     preset: false,
-    layout: baseLayout(),
+    layout: baseLayout(format),
   };
   let y = 275,
-    page = 1;
+    page = 1,
+    column = 0;
+  const { width, height } = template.layout;
+  const columns = template.layout.columns ?? 1;
+  const columnWidth = (width - 110 - (columns - 1) * 12) / columns;
   for (const item of paper.items) {
     const kind =
       item.snapshot.type === "SINGLE" || item.snapshot.type === "MULTIPLE"
@@ -74,18 +106,33 @@ export function generateCardTemplate(
           : preset.subjectiveHeight;
     if (!Number.isFinite(regionHeight) || regionHeight < 40 || regionHeight > 760)
       throw new Error("答题区域高度须在 40 至 760 之间");
-    const actualHeight = Math.max(regionHeight, item.snapshot.content.images.length ? 180 : 0);
-    if (y + actualHeight > 1050) {
-      page++;
+    const optionColumns = Math.max(1, Math.floor((columnWidth - 60) / 32));
+    const choiceHeight = 42 + Math.ceil(item.snapshot.content.options.length / optionColumns) * 22;
+    const actualHeight = Math.min(
+      height - 340,
+      Math.max(
+        regionHeight,
+        kind === "CHOICE" ? choiceHeight : 0,
+        item.snapshot.content.images.length
+          ? Math.max(180, kind === "CHOICE" ? choiceHeight + 112 : 180)
+          : 0,
+      ),
+    );
+    if (y + actualHeight > height - 73) {
+      column++;
+      if (column >= columns) {
+        page++;
+        column = 0;
+      }
       y = 275;
     }
     template.layout.regions.push({
       itemId: item.id,
       page,
-      x: 55 / 794,
-      y: y / 1123,
-      width: 684 / 794,
-      height: actualHeight / 1123,
+      x: (55 + column * (columnWidth + 12)) / width,
+      y: y / height,
+      width: columnWidth / width,
+      height: actualHeight / height,
       kind,
       ...(item.snapshot.content.images[0] ? { image: item.snapshot.content.images[0] } : {}),
       options: kind === "CHOICE" ? item.snapshot.content.options.map((option) => option.label) : [],
@@ -94,20 +141,34 @@ export function generateCardTemplate(
     y += actualHeight + 12;
   }
   template.layout.pageCount = page;
+  template.layout.annotations = template.layout.annotations?.map((a) => ({
+    ...a,
+    page: Math.min(a.page, page),
+  }));
   return validateCardTemplate(template, paper);
 }
 export function validateCardTemplate(template: CardTemplate, paper?: Paper): CardTemplate {
   const { layout } = template;
   if (
-    layout.width !== 794 ||
-    layout.height !== 1123 ||
+    !["794:1123", "1123:794", "1123:1587", "1587:1123"].includes(
+      `${layout.width}:${layout.height}`,
+    ) ||
+    (layout.paperSize !== undefined &&
+      (() => {
+        const d = pageDimensions(layout.paperSize, layout.orientation);
+        return d.width !== layout.width || d.height !== layout.height;
+      })()) ||
+    !Number.isInteger(layout.columns ?? 1) ||
+    (layout.columns ?? 1) < 1 ||
+    (layout.columns ?? 1) > 4 ||
     layout.markers.length !== 4 ||
     layout.studentNumber.digits !== 6 ||
     !Number.isInteger(layout.pageCount) ||
     layout.pageCount < 1 ||
     layout.pageCount > 100
   )
-    throw new Error("答题卡必须包含 A4 页面、四个定位点和六位学号");
+    throw new Error("答题卡必须包含 A4/A3 横向或纵向页面、1–4 栏、四个定位点和六位学号");
+  const { width, height } = layout;
   const within = (x: number, y: number, w = 0, h = 0) =>
     [x, y, w, h].every(Number.isFinite) &&
     x >= 0 &&
@@ -117,20 +178,20 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
     x + w <= 1 &&
     y + h <= 1;
   for (const marker of layout.markers)
-    if (!within(marker.x - 7 / 794, marker.y - 7 / 1123, 14 / 794, 14 / 1123))
+    if (!within(marker.x - 7 / width, marker.y - 7 / height, 14 / width, 14 / height))
       throw new Error("定位点坐标无效");
   if (new Set(layout.markers.map((m) => `${m.x}:${m.y}`)).size !== 4)
     throw new Error("定位点不能重复");
   const number = layout.studentNumber;
   if (
     !within(
-      number.x - 5 / 794,
-      number.y - 5 / 1123,
-      number.cellWidth * 5 + 10 / 794,
-      number.cellHeight * 9 + 10 / 1123,
+      number.x - 5 / width,
+      number.y - 5 / height,
+      number.cellWidth * 5 + 10 / width,
+      number.cellHeight * 9 + 10 / height,
     ) ||
-    number.cellWidth < 16 / 794 ||
-    number.cellHeight < 12 / 1123
+    number.cellWidth < 16 / width ||
+    number.cellHeight < 12 / height
   )
     throw new Error("学号涂卡坐标无效");
   for (const region of layout.regions) {
@@ -144,12 +205,12 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
       region.height < 0.02
     )
       throw new Error("题目答题区域坐标无效");
-    if (region.y < 245 / 1123 || region.y + region.height > 1060 / 1123)
-      throw new Error("题目答题区域须避开页眉识别区和页脚，Y 不低于 0.219，底边不超过 0.944");
-    const studentLeft = number.x - 5 / 794,
-      studentTop = number.y - 5 / 1123,
-      studentWidth = number.cellWidth * 5 + 10 / 794,
-      studentHeight = number.cellHeight * 9 + 10 / 1123;
+    if (region.y < 245 / height || region.y + region.height > (height - 63) / height)
+      throw new Error("题目答题区域须避开页眉识别区和页脚");
+    const studentLeft = number.x - 5 / width,
+      studentTop = number.y - 5 / height,
+      studentWidth = number.cellWidth * 5 + 10 / width,
+      studentHeight = number.cellHeight * 9 + 10 / height;
     if (
       region.x < studentLeft + studentWidth &&
       region.x + region.width > studentLeft &&
@@ -159,10 +220,10 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
       throw new Error("题目答题区域不能覆盖学号涂卡");
     for (const marker of layout.markers)
       if (
-        region.x < marker.x + 7 / 794 &&
-        region.x + region.width > marker.x - 7 / 794 &&
-        region.y < marker.y + 7 / 1123 &&
-        region.y + region.height > marker.y - 7 / 1123
+        region.x < marker.x + 7 / width &&
+        region.x + region.width > marker.x - 7 / width &&
+        region.y < marker.y + 7 / height &&
+        region.y + region.height > marker.y - 7 / height
       )
         throw new Error("题目答题区域不能覆盖定位点");
     if (
@@ -186,15 +247,55 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
       throw new Error("客观题须有 1 至 12 个唯一选项");
   }
   for (const region of layout.regions) {
-    for (const bubble of choiceBubbles(region)) {
+    if (region.image && cardMaterialBox(region, layout).height <= 0)
+      throw new Error("请扩大答题区域以容纳配图");
+    for (const bubble of choiceBubbles(region, layout)) {
       if (
-        bubble.x - bubble.radius < region.x * 794 ||
-        bubble.x + bubble.radius > (region.x + region.width) * 794 ||
-        bubble.y - bubble.radius < region.y * 1123 ||
-        bubble.y + bubble.radius > (region.y + region.height) * 1123
+        bubble.x - bubble.radius < region.x * width ||
+        bubble.x + bubble.radius > (region.x + region.width) * width ||
+        bubble.y - bubble.radius < region.y * height ||
+        bubble.y + bubble.radius > (region.y + region.height) * height
       )
         throw new Error("选项涂卡必须完整位于对应答题区域内");
     }
+  }
+  for (const annotation of layout.annotations ?? []) {
+    if (annotation.width * width < 14) throw new Error("附加文字宽度过小，请增大文字区域");
+    if (
+      annotationTextLines(annotation.text, annotation.width * width).length * 19.6 >
+      annotation.height * height + 0.01
+    )
+      throw new Error("附加文字高度不足，请增大文字区域或缩短内容");
+    if (
+      !within(annotation.x, annotation.y, annotation.width, annotation.height) ||
+      annotation.page < 1 ||
+      annotation.page > layout.pageCount
+    )
+      throw new Error("文字必须位于有效页面内");
+    const intersects = (x: number, y: number, w: number, h: number) =>
+      annotation.x < x + w &&
+      annotation.x + annotation.width > x &&
+      annotation.y < y + h &&
+      annotation.y + annotation.height > y;
+    if (
+      intersects(
+        number.x - 10 / width,
+        number.y - 25 / height,
+        number.cellWidth * 5 + 20 / width,
+        number.cellHeight * 9 + 35 / height,
+      ) ||
+      intersects(60 / width, 185 / height, 380 / width, 22 / height) ||
+      layout.markers.some((m) =>
+        intersects(m.x - 9 / width, m.y - 9 / height, 18 / width, 18 / height),
+      ) ||
+      layout.regions.some(
+        (r) =>
+          r.kind === "CHOICE" &&
+          r.page === annotation.page &&
+          intersects(r.x, r.y, r.width, r.height),
+      )
+    )
+      throw new Error("文字不能覆盖学号、页面识别码、定位点或选择题填涂区");
   }
   const corners = layout.markers;
   if (!(
@@ -214,11 +315,88 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
     throw new Error("答题卡必须完整且唯一地覆盖试卷题目");
   return template;
 }
-export function choiceBubbles(region: CardRegion) {
+export function choiceBubbles(
+  region: CardRegion,
+  layout?: Pick<CardLayout, "width" | "height" | "omrVersion">,
+) {
+  const width = layout?.width ?? 794,
+    height = layout?.height ?? 1123;
+  const modern = !layout || layout.omrVersion === 2;
+  const columns = Math.max(1, Math.floor((region.width * width - 60) / 32));
   return (region.options ?? []).map((value, i) => ({
     value,
-    x: region.x * 794 + 85 + i * 46,
-    y: region.y * 1123 + 29,
+    x: region.x * width + (modern ? 54 + (i % columns) * 32 : 85 + i * 46),
+    y: region.y * height + (modern ? 44 + Math.floor(i / columns) * 22 : 29),
     radius: 7,
+    width: 18,
+    height: 10,
   }));
+}
+
+/** Printed machine code binds each page to its persisted template and page number. */
+export function cardPageCode(templateId: string, page: number): string {
+  let signature = 2166136261;
+  for (let i = 0; i < templateId.length; i++)
+    signature = Math.imul(signature ^ templateId.charCodeAt(i), 16777619);
+  return `101${(signature >>> 0).toString(2).padStart(32, "0")}${page.toString(2).padStart(8, "0")}110`;
+}
+
+/** Plain card text uses one deterministic wrapping model in SVG preview and print. */
+export function annotationTextLines(text: string, width: number): string[] {
+  const lines: string[] = [];
+  for (const paragraph of text.split("\n")) {
+    let line = "",
+      used = 0;
+    for (const character of paragraph) {
+      const advance = /[\u0000-\u00ff]/.test(character) ? 7 : 14;
+      if (used + advance > width && line) {
+        lines.push(line);
+        line = "";
+        used = 0;
+      }
+      line += character;
+      used += advance;
+    }
+    lines.push(line);
+  }
+  return lines;
+}
+export function fitAnnotationText(
+  annotation: NonNullable<CardLayout["annotations"]>[number],
+  layout: Pick<CardLayout, "width" | "height">,
+) {
+  return {
+    ...annotation,
+    height: Math.max(
+      annotation.height,
+      (annotationTextLines(annotation.text, annotation.width * layout.width).length * 19.6) /
+        layout.height,
+    ),
+  };
+}
+
+export function annotationLineWidth(line: string) {
+  return [...line].reduce(
+    (width, character) => width + (/[\u0000-\u00ff]/.test(character) ? 7 : 14),
+    0,
+  );
+}
+
+export function cardMaterialBox(
+  region: CardRegion,
+  layout: Pick<CardLayout, "width" | "height" | "omrVersion">,
+) {
+  const y =
+    region.kind === "CHOICE"
+      ? Math.max(
+          72,
+          ...choiceBubbles(region, layout).map((b) => b.y - region.y * layout.height + 16),
+        )
+      : 32;
+  return {
+    x: 12,
+    y,
+    width: Math.min(135, region.width * layout.width - 24),
+    height: Math.min(100, region.height * layout.height - y - 8),
+  };
 }

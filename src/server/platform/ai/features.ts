@@ -138,6 +138,7 @@ export async function createTaskFeatures(options: {
   const crops = new Map<string, { id: string; url: string; buffer: Buffer }>();
   const sourceInventory = new Map<string, number>();
   const sourceQuestions = new Map<string, string>();
+  const importScores = new Map<string, number>();
   const ensureOpen = () => {
     if (complete) throw new RequestError(409, "任务已完成，不能继续修改。");
   };
@@ -294,13 +295,14 @@ export async function createTaskFeatures(options: {
     });
     tools.propose_question = tool({
       description:
-        "Stage one completely transcribed source question with detected type, subject, tags, correct answers, explanation and rubric. Use a stable sourceKey (page and printed number) so corrections replace drafts; never split choices or a passage into questions. Include source image references only where needed.",
+        "Stage one completely transcribed source question with detected type, subject, tags, correct answers, explanation and rubric. Use a stable sourceKey (page and printed number) so corrections replace drafts; never split choices or a passage into questions. Propose questions in source order. Include the printed score if available; otherwise choose an appropriate positive score. Include source image references only where needed.",
       inputSchema: z.object({
         sourceKey: z.string().min(1).max(100),
         sourceUrl: z.string().optional(),
+        score: z.number().positive().max(10000).optional(),
         question: z.object({ ...questionInputSchema.shape, id: z.never().optional() }),
       }),
-      execute: async ({ sourceKey, sourceUrl, question }) => {
+      execute: async ({ sourceKey, sourceUrl, question, score }) => {
         questionInputSchema.parse(question);
         validateEnriched(question);
         ensureOpen();
@@ -308,7 +310,6 @@ export async function createTaskFeatures(options: {
         const source = sourceUrl ?? (req.assetUrls.length === 1 ? req.assetUrls[0] : undefined);
         if (!source || !req.assetUrls.includes(source) || !inspected.has(source))
           throw new RequestError(409, "每道题需对应已查看的原始页面。");
-        sourceQuestions.set(sourceKey, source);
         if (req.subject && question.subject !== req.subject)
           throw new RequestError(422, "识别题目学科与指定学科不符。");
         if (req.grade && question.grade !== req.grade)
@@ -316,6 +317,13 @@ export async function createTaskFeatures(options: {
         for (const url of question.content.images)
           if (!crops.has(url))
             throw new RequestError(400, "题目配图必须先从本次导入页面裁切，不能引用整页。");
+        sourceQuestions.set(sourceKey, source);
+        importScores.set(
+          sourceKey,
+          question.type === "MIXED"
+            ? question.content.parts.reduce((n, p) => n + p.score, 0)
+            : (score ?? (["SINGLE", "MULTIPLE"].includes(question.type) ? 5 : 10)),
+        );
         const index = importKeys.indexOf(sourceKey);
         const command = { type: "question.save" as const, question };
         if (index >= 0) commands[index] = command;
@@ -870,6 +878,7 @@ export async function createTaskFeatures(options: {
               }
               if (command.type === "paper.save") {
                 for (const item of command.paper.items) {
+                  if (item.question) continue;
                   const previous = state.questions.find((q) => q.id === item.questionId)!;
                   const current = await db.question.findUnique({ where: { id: previous.id } });
                   if (!current || current.updatedAt.toISOString() !== previous.updatedAt)
@@ -969,8 +978,60 @@ export async function createTaskFeatures(options: {
                 },
               });
             }
+            let savedCommands = commands;
+            if (kind === "IMPORT") {
+              const req = input as z.infer<typeof aiInputSchemas.IMPORT>;
+              if (req.kind) {
+                const imported = commands
+                  .map((command, index) => {
+                    if (command.type !== "question.save")
+                      throw new RequestError(422, "导入题目无效。");
+                    return { question: command.question, key: importKeys[index] };
+                  })
+                  .sort(
+                    (a, b) =>
+                      req.assetUrls.indexOf(sourceQuestions.get(a.key)!) -
+                      req.assetUrls.indexOf(sourceQuestions.get(b.key)!),
+                  );
+                const first = imported[0].question;
+                if (
+                  imported.some(
+                    ({ question }) =>
+                      question.subject !== first.subject || question.grade !== first.grade,
+                  )
+                )
+                  throw new RequestError(422, "同一份作业或试卷的学科和年级必须一致。");
+                savedCommands = [
+                  {
+                    type: "paper.save",
+                    paper: {
+                      name:
+                        req.name?.trim() ||
+                        (req.kind === "HOMEWORK" ? "图片识别作业" : "图片识别试卷"),
+                      kind: req.kind,
+                      subject: req.subject || first.subject,
+                      grade: req.grade || first.grade,
+                      instructions: "",
+                      layout: { paperSize: "A4", columns: 1 },
+                      items: imported.map(({ question, key }) => ({
+                        questionId: randomUUID(),
+                        question,
+                        score: importScores.get(key)!,
+                        section: {
+                          SINGLE: "单选题",
+                          MULTIPLE: "多选题",
+                          BLANK: "填空题",
+                          SUBJECTIVE: "主观题",
+                          MIXED: "综合题",
+                        }[question.type],
+                      })),
+                    },
+                  },
+                ];
+              }
+            }
             const ids: string[] = [];
-            for (const command of commands)
+            for (const command of savedCommands)
               ids.push(
                 (
                   await executeCommand({ id: userId }, command, {
@@ -982,7 +1043,18 @@ export async function createTaskFeatures(options: {
               );
             const output = {
               summary,
-              result: commands.length ? json({ ids, evidence: result }) : result,
+              result: commands.length
+                ? json({
+                    ids,
+                    evidence: result,
+                    ...(kind === "IMPORT" && (input as z.infer<typeof aiInputSchemas.IMPORT>).kind
+                      ? {
+                          paperId: ids[0],
+                          paperKind: (input as z.infer<typeof aiInputSchemas.IMPORT>).kind,
+                        }
+                      : {}),
+                  })
+                : result,
             };
             await db.aiJob.update({
               where: { id: job.id },

@@ -10,7 +10,7 @@ import type {
 } from "@/contracts/platform";
 import { Empty, Panel } from "./primitives";
 import { QuestionBody } from "./questions";
-function KnowledgeTable({ knowledge }: { knowledge: KnowledgeStat[] }) {
+export function KnowledgeTable({ knowledge }: { knowledge: KnowledgeStat[] }) {
   return knowledge.length ? (
     <div className="p-table" role="region" aria-label="知识点掌握情况" tabIndex={0}>
       <table>
@@ -47,20 +47,36 @@ function KnowledgeTable({ knowledge }: { knowledge: KnowledgeStat[] }) {
     <Empty>完成评分后，根据题目知识点自动汇总掌握情况。</Empty>
   );
 }
-export function Analytics({ state }: { state: PlatformState }) {
-  const [assessmentId, setAssessmentId] = useState(""),
-    [classroomId, setClassroomId] = useState(""),
+export function Analytics({
+  state,
+  fixedView,
+  initialAssessmentId = "",
+  initialClassroomId = "",
+  initialStudentId = "",
+  kind,
+}: {
+  state: PlatformState;
+  fixedView?: string;
+  initialAssessmentId?: string;
+  initialClassroomId?: string;
+  initialStudentId?: string;
+  kind?: "EXAM" | "HOMEWORK";
+}) {
+  const [assessmentId, setAssessmentId] = useState(initialAssessmentId),
+    [classroomId, setClassroomId] = useState(initialClassroomId),
     [studentId, setStudentId] = useState(
-      state.actor.role === "STUDENT" ? (state.analytics.students[0]?.studentId ?? "") : "",
+      initialStudentId ||
+        (state.actor.role === "STUDENT" ? (state.analytics.students[0]?.studentId ?? "") : ""),
     ),
-    [view, setView] = useState("results");
+    [view, setView] = useState(fixedView ?? "results");
   const studentMode = state.actor.role === "STUDENT";
   const scope = new URLSearchParams();
   if (assessmentId) scope.set("assessmentId", assessmentId);
   if (classroomId) scope.set("classroomId", classroomId);
   if (studentId) scope.set("studentId", studentId);
+  if (kind) scope.set("kind", kind);
   const analyticsQuery = useQuery({
-    queryKey: ["platform-analytics", assessmentId, classroomId, studentId, state.analytics],
+    queryKey: ["platform-analytics", assessmentId, classroomId, studentId, kind, state.analytics],
     queryFn: () => apiRequest<AnalyticsData>(`/api/platform/analytics?${scope}`),
     staleTime: 0,
   });
@@ -115,17 +131,19 @@ export function Analytics({ state }: { state: PlatformState }) {
               ))}
             </select>
           )}
-          <div className="p-tabs">
-            {[
-              ["results", "成绩排名"],
-              ["knowledge", "知识点掌握"],
-              ["learning", "错题与练习"],
-            ].map(([key, label]) => (
-              <button key={key} aria-pressed={view === key} onClick={() => setView(key)}>
-                {label}
-              </button>
-            ))}
-          </div>
+          {!fixedView && (
+            <div className="p-tabs">
+              {[
+                ["results", "成绩排名"],
+                ["knowledge", "知识点掌握"],
+                ["learning", "错题与练习"],
+              ].map(([key, label]) => (
+                <button key={key} aria-pressed={view === key} onClick={() => setView(key)}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         {analyticsQuery.isPending && (
           <p role="status" className="p-empty">

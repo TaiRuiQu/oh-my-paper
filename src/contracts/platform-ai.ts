@@ -1,4 +1,5 @@
 import { z } from "zod";
+export const MAX_AI_IMPORT_PAGES = 20;
 export const aiKinds = ["IMPORT", "ENRICH", "ASSEMBLE", "TEMPLATE", "GRADE", "RECOMMEND"] as const;
 export type AiKind = (typeof aiKinds)[number];
 const id = z.string().min(1).max(128);
@@ -8,10 +9,11 @@ export const aiInputSchemas = {
     assetUrls: z
       .array(z.string().regex(/^\/api\/platform\/assets\/[\w-]+$/))
       .min(1)
-      .max(20),
+      .max(MAX_AI_IMPORT_PAGES),
     subject: z.string().max(40).optional(),
     grade: z.string().max(40).optional(),
     name: z.string().max(200).optional(),
+    kind: z.enum(["EXAM", "HOMEWORK"]).optional(),
   }),
   ENRICH: z.strictObject({ questionIds: z.array(id).min(1).max(100) }),
   ASSEMBLE: z

@@ -1,9 +1,7 @@
-import { requirePageSession } from "@/server/auth/session";
-import { PlatformWorkspace } from "@/components/platform/workspace";
+import { HomeOverviewPage } from "@/components/platform/home-pages";
 
-export const metadata = { title: "教学工作台" };
+export const metadata = { title: "首页" };
 
-export default async function WorkspacePage() {
-  await requirePageSession();
-  return <PlatformWorkspace />;
+export default function Page() {
+  return <HomeOverviewPage />;
 }

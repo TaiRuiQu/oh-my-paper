@@ -13,6 +13,12 @@ export async function GET(request: Request) {
           assessmentId: query.get("assessmentId") || undefined,
           classroomId: query.get("classroomId") || undefined,
           studentId: query.get("studentId") || undefined,
+          kind:
+            query.get("kind") === "EXAM"
+              ? "EXAM"
+              : query.get("kind") === "HOMEWORK"
+                ? "HOMEWORK"
+                : undefined,
         },
       ),
       { headers: { "Cache-Control": "private, no-store" } },
