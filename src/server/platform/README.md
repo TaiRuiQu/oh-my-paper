@@ -93,6 +93,8 @@ outbox 与题目写入同事务持久化，网络／模型调用在 AI Worker �
 
 扫描材料入口 `/api/platform/materials` 支持图片和 PDF，按原页码转换为私有 PNG 页面；`/api/platform/assets` 为配图入口并拒绝 PDF。扫描 `sources` 可按顺序引用已上传私有页面或 multipart 文件编号，也可直接上传原始多页 PDF；PDF 页面数量用于作答框页码与多页卡合并。源文件 30MB，扫描批次展开后最多100页／150MB，AI试卷识别保持20页上限。Web运行环境须提供 `pdfinfo`／`pdftoppm`（Docker已安装poppler-utils），`pnpm run doctor` 可检查。
 
+AI 执行轨迹的 Python / shell 输出图片在工具返回前写入共享 `storage/platform-assets`，并创建归属当前账号的 `PlatformAsset`，通过现有私有图片接口读取。轨迹图片独立于最终业务提交保存：任务运行中可查看，未用于最终题目、任务失败或沙箱清理后仍可审查。完整扫描页预览不会因此被允许作为独立题目配图。此前仅暂存在内存、未保存到题目的历史轨迹图片无法从链接恢复，需重新提交原始材料生成。
+
 ## 班级批量批改
 
 `BATCH_GRADE` 输入 `{assessmentId,classroomId,paperId,assetUrls?:string[],studentHints?:{sourceUrl,studentId}[]}`。教师按班级一次上传图片或多页 PDF，最多 100 页 / 150 MB；不传图片则批改班内已录入且没有评分的作答。Agent 自主识别考号/姓名、合并页、自动定位与裁剪作答、逐题首评，查看真实图片后才能保存评分。未匹配学生的页保存在 `result.pendingPages`，教师可在任务结果确认学生后重新提交这些页面；模糊题保存在 `result.skipped`，不会捏造零分。所有页面须登记或待确认、所有已识别学生的题目须评分或跳过，完成时同事务保存作答、Review、ReviewEvent、资产及任务结果。提交前重新检查权限、题本设置、学生身份、作答与已有评分。

@@ -104,6 +104,7 @@ export async function createBatchGradingFeatures(options: {
     return (await accessibleAsset(options.userId, id)).buffer;
   };
   const sandbox = createTaskSandbox({
+    userId: options.userId,
     context: {
       task: "BATCH_GRADE",
       classroom: {
@@ -122,9 +123,8 @@ export async function createBatchGradingFeatures(options: {
     allowedAssets,
     readAsset,
     ensureOpen,
-    onImages: async (images, sources) => {
+    onImages: async (_images, sources) => {
       sources.forEach((url) => inspected.add(url));
-      return images.map(() => ({}));
     },
   });
   const tools: ToolSet = { ...sandbox.tools };

@@ -4,9 +4,6 @@ import { tool, type ToolSet } from "ai";
 import { z } from "zod";
 import sharp, { type Sharp } from "sharp";
 import { randomUUID } from "node:crypto";
-import { mkdir, writeFile, rm } from "node:fs/promises";
-import { join } from "node:path";
-import { getStoragePaths } from "@/server/config/env";
 import { createTaskSandbox } from "./sandbox-tools";
 import { batchTool, withDetailedToolErrors } from "./tools";
 import type { Prisma } from "@/generated/prisma/client";
@@ -916,15 +913,16 @@ export async function createTaskFeatures(options: {
     },
   });
   const sandbox = createTaskSandbox({
+    userId,
     context: sandboxContext,
     allowedAssets,
     ensureOpen,
     readAsset: (url) => readSandboxAsset(url),
     onImages: async (images, sources) => {
       sources.forEach((url) => inspected.add(url));
-      return Promise.all(
-        images.map(async ({ buffer }) => {
-          if (kind !== "IMPORT") return {};
+      await Promise.all(
+        images.map(async ({ id, url, buffer }) => {
+          if (kind !== "IMPORT") return;
           const imported = input as z.infer<typeof aiInputSchemas.IMPORT>;
           const output = sharp(buffer);
           const metadata = await output.metadata();
@@ -938,13 +936,10 @@ export async function createTaskFeatures(options: {
             const sample = async (image: Sharp) =>
               image.resize(64, 64, { fit: "fill" }).removeAlpha().raw().toBuffer();
             const [a, b] = await Promise.all([sample(output.clone()), sample(original)]);
-            if (a.equals(b)) return {};
+            if (a.equals(b)) return;
           }
-          const id = randomUUID();
-          const url = `/api/platform/assets/${id}`;
           crops.set(url, { id, url, buffer });
           allowedAssets.add(url);
-          return { url };
         }),
       );
     },
@@ -964,226 +959,192 @@ export async function createTaskFeatures(options: {
     commit: async () => {
       if (failureReason) throw new RequestError(422, failureReason);
       if (!complete) throw new RequestError(422, "AI没有提交完整结果。");
-      const writtenPaths: string[] = [];
-      try {
-        return await getDb().$transaction(
-          async (db) => {
-            if (!options.jobId) throw new RequestError(400, "AI任务缺少持久化标识。");
-            await db.$queryRaw`SELECT id FROM ai_jobs WHERE id = ${options.jobId} FOR UPDATE`;
-            const job = await db.aiJob.findUnique({ where: { id: options.jobId } });
-            if (!job || job.userId !== userId || job.status !== "RUNNING" || job.kind !== kind)
-              throw new AccessError(403, "任务状态已改变，不能保存。");
-            await db.$queryRaw`SELECT pg_advisory_xact_lock(7240132026::bigint)::text`;
-            // A long-running agent must not overwrite content modified since it read the resources.
-            for (const command of commands) {
-              if (command.type === "question.save" && command.question.id) {
-                const previous = state.questions.find((q) => q.id === command.question.id)!;
+      return await getDb().$transaction(
+        async (db) => {
+          if (!options.jobId) throw new RequestError(400, "AI任务缺少持久化标识。");
+          await db.$queryRaw`SELECT id FROM ai_jobs WHERE id = ${options.jobId} FOR UPDATE`;
+          const job = await db.aiJob.findUnique({ where: { id: options.jobId } });
+          if (!job || job.userId !== userId || job.status !== "RUNNING" || job.kind !== kind)
+            throw new AccessError(403, "任务状态已改变，不能保存。");
+          await db.$queryRaw`SELECT pg_advisory_xact_lock(7240132026::bigint)::text`;
+          // A long-running agent must not overwrite content modified since it read the resources.
+          for (const command of commands) {
+            if (command.type === "question.save" && command.question.id) {
+              const previous = state.questions.find((q) => q.id === command.question.id)!;
+              const current = await db.question.findUnique({ where: { id: previous.id } });
+              if (!current || current.updatedAt.toISOString() !== previous.updatedAt)
+                throw new RequestError(409, "题目已被修改，请重新执行AI任务。");
+            }
+            if (command.type === "paper.save") {
+              for (const item of command.paper.items) {
+                if (item.question) continue;
+                const previous = state.questions.find((q) => q.id === item.questionId)!;
                 const current = await db.question.findUnique({ where: { id: previous.id } });
                 if (!current || current.updatedAt.toISOString() !== previous.updatedAt)
-                  throw new RequestError(409, "题目已被修改，请重新执行AI任务。");
-              }
-              if (command.type === "paper.save") {
-                for (const item of command.paper.items) {
-                  if (item.question) continue;
-                  const previous = state.questions.find((q) => q.id === item.questionId)!;
-                  const current = await db.question.findUnique({ where: { id: previous.id } });
-                  if (!current || current.updatedAt.toISOString() !== previous.updatedAt)
-                    throw new RequestError(409, "组卷题目已被修改，请重新执行AI任务。");
-                }
-              }
-              if (command.type === "review.save") {
-                const previous = state.submissions.find(
-                  (s) => s.id === command.review.submissionId,
-                )!;
-                const current = await db.scanSubmission.findUnique({ where: { id: previous.id } });
-                if (
-                  !current ||
-                  JSON.stringify(current.answers) !== JSON.stringify(previous.answers)
-                )
-                  throw new RequestError(409, "学生作答已被修改，请重新执行AI评阅。");
-                if (await db.review.count({ where: { submissionId: current.id } }))
-                  throw new RequestError(409, "答卷已有评阅记录，AI不能覆盖。");
+                  throw new RequestError(409, "组卷题目已被修改，请重新执行AI任务。");
               }
             }
-            if (kind === "RECOMMEND" && result !== null) {
-              const fresh = await loadState({ id: userId }, db);
-              const req = input as z.infer<typeof aiInputSchemas.RECOMMEND>;
-              const chosen = result as {
-                studentId: string;
-                recommendations: { questionId: string; reason: string; question: BankQuestion }[];
-              };
-              const report = fresh.analytics.students.find(
-                (student) => student.studentId === chosen.studentId,
-              );
-              const ownIds = fresh.classrooms.flatMap((c) =>
-                c.students.filter((s) => s.userId === userId).map((s) => s.id),
-              );
-              if (!report || (fresh.actor.role === "STUDENT" && !ownIds.includes(chosen.studentId)))
-                throw new AccessError(403, "学生学情权限已改变，请重新请求推荐。");
-              const wrong = report.wrongQuestions.filter(
-                (w) => !req.subject || w.question.subject === req.subject,
-              );
-              const attemptedPaperIds = new Set(
-                fresh.submissions
-                  .filter((s) => s.studentId === chosen.studentId)
-                  .map((s) => s.paperId),
-              );
-              const attempted = new Set(
-                fresh.papers
-                  .filter((p) => attemptedPaperIds.has(p.id))
-                  .flatMap((p) => p.items.map((i) => i.questionId)),
-              );
-              const rows = await db.question.findMany({
-                where: { id: { in: chosen.recommendations.map((r) => r.questionId) } },
-              });
-              if (rows.length !== chosen.recommendations.length)
-                throw new RequestError(409, "推荐题目已被删除，请重新请求。");
-              const updated = rows.map((row) => ({
-                ...row,
-                createdAt: row.createdAt.toISOString(),
-                updatedAt: row.updatedAt.toISOString(),
-              })) as unknown as BankQuestion[];
-              for (const candidate of updated)
-                if (
-                  attempted.has(candidate.id) ||
-                  !wrong.some(
-                    (w) =>
-                      w.question.subject === candidate.subject &&
-                      wrongTags(w).some((tag) => knowledgeTags(candidate).includes(tag)),
-                  )
-                )
-                  throw new RequestError(409, "错题或候选题目已改变，请重新请求推荐。");
-              result = json({
-                ...chosen,
-                recommendations: chosen.recommendations.map((recommendation) => ({
-                  ...recommendation,
-                  question: updated.find((q) => q.id === recommendation.questionId),
-                })),
-              });
+            if (command.type === "review.save") {
+              const previous = state.submissions.find((s) => s.id === command.review.submissionId)!;
+              const current = await db.scanSubmission.findUnique({ where: { id: previous.id } });
+              if (!current || JSON.stringify(current.answers) !== JSON.stringify(previous.answers))
+                throw new RequestError(409, "学生作答已被修改，请重新执行AI评阅。");
+              if (await db.review.count({ where: { submissionId: current.id } }))
+                throw new RequestError(409, "答卷已有评阅记录，AI不能覆盖。");
             }
-            const usedCrops = new Set(
-              commands.flatMap((command) =>
-                command.type === "question.save" ? command.question.content.images : [],
-              ),
-            );
-            for (const url of usedCrops) {
-              const crop = crops.get(url);
-              if (!crop) continue;
-              const directory = join(getStoragePaths().storage, "platform-assets");
-              await mkdir(directory, { recursive: true, mode: 0o700 });
-              const path = join(directory, `${crop.id}.png`);
-              await writeFile(path, crop.buffer, { mode: 0o600 });
-              writtenPaths.push(path);
-              await db.platformAsset.create({
-                data: {
-                  id: crop.id,
-                  ownerId: userId,
-                  name: "AI导入题目配图.png",
-                  contentType: "image/png",
-                  path,
-                },
-              });
-            }
-            let savedCommands = commands;
-            if (kind === "IMPORT") {
-              const req = input as z.infer<typeof aiInputSchemas.IMPORT>;
-              if (req.kind && commands.length) {
-                const imported = commands
-                  .map((command, index) => {
-                    if (command.type !== "question.save")
-                      throw new RequestError(422, "导入题目无效。");
-                    return { question: command.question, key: importKeys[index] };
-                  })
-                  .sort(
-                    (a, b) =>
-                      req.assetUrls.indexOf(sourceQuestions.get(a.key)!) -
-                      req.assetUrls.indexOf(sourceQuestions.get(b.key)!),
-                  );
-                const first = imported[0].question;
-                if (
-                  imported.some(
-                    ({ question }) =>
-                      question.subject !== first.subject || question.grade !== first.grade,
-                  )
-                )
-                  throw new RequestError(422, "同一份作业或试卷的学科和年级必须一致。");
-                savedCommands = [
-                  {
-                    type: "paper.save",
-                    paper: {
-                      name: importName!,
-                      kind: req.kind,
-                      subject: req.subject || first.subject,
-                      grade: req.grade || first.grade,
-                      instructions: "",
-                      layout: { ...DOCUMENT_DEFAULTS },
-                      items: imported.map(({ question, key }) => ({
-                        questionId: randomUUID(),
-                        question,
-                        score: importScores.get(key)!,
-                        section: {
-                          SINGLE: "单选题",
-                          MULTIPLE: "多选题",
-                          BLANK: "填空题",
-                          SUBJECTIVE: "主观题",
-                          MIXED: "综合题",
-                        }[question.type],
-                      })),
-                    },
-                  },
-                ];
-              }
-            }
-            const ids: string[] = [];
-            for (const command of savedCommands)
-              ids.push(
-                (
-                  await executeCommand({ id: userId }, command, {
-                    db,
-                    source: "AI",
-                    jobId: options.jobId,
-                  })
-                ).id,
-              );
-            const output = {
-              summary,
-              result: commands.length
-                ? json({
-                    ids,
-                    evidence: result,
-                    skipped: [...skipped.values()],
-                    ...(kind === "IMPORT" &&
-                    commands.length &&
-                    (input as z.infer<typeof aiInputSchemas.IMPORT>).kind
-                      ? {
-                          paperId: ids[0],
-                          paperKind: (input as z.infer<typeof aiInputSchemas.IMPORT>).kind,
-                        }
-                      : {}),
-                  })
-                : json({
-                    ...(result && typeof result === "object" ? result : {}),
-                    skipped: [...skipped.values()],
-                  }),
+          }
+          if (kind === "RECOMMEND" && result !== null) {
+            const fresh = await loadState({ id: userId }, db);
+            const req = input as z.infer<typeof aiInputSchemas.RECOMMEND>;
+            const chosen = result as {
+              studentId: string;
+              recommendations: { questionId: string; reason: string; question: BankQuestion }[];
             };
-            await db.aiJob.update({
-              where: { id: job.id },
-              data: {
-                status: "COMPLETED",
-                result: json(output) as Prisma.InputJsonValue,
-                finishedAt: new Date(),
-                heartbeatAt: new Date(),
-                error: null,
-              },
+            const report = fresh.analytics.students.find(
+              (student) => student.studentId === chosen.studentId,
+            );
+            const ownIds = fresh.classrooms.flatMap((c) =>
+              c.students.filter((s) => s.userId === userId).map((s) => s.id),
+            );
+            if (!report || (fresh.actor.role === "STUDENT" && !ownIds.includes(chosen.studentId)))
+              throw new AccessError(403, "学生学情权限已改变，请重新请求推荐。");
+            const wrong = report.wrongQuestions.filter(
+              (w) => !req.subject || w.question.subject === req.subject,
+            );
+            const attemptedPaperIds = new Set(
+              fresh.submissions
+                .filter((s) => s.studentId === chosen.studentId)
+                .map((s) => s.paperId),
+            );
+            const attempted = new Set(
+              fresh.papers
+                .filter((p) => attemptedPaperIds.has(p.id))
+                .flatMap((p) => p.items.map((i) => i.questionId)),
+            );
+            const rows = await db.question.findMany({
+              where: { id: { in: chosen.recommendations.map((r) => r.questionId) } },
             });
-            return output;
-          },
-          { timeout: 30000 },
-        );
-      } catch (error) {
-        await Promise.all(writtenPaths.map((path) => rm(path, { force: true })));
-        throw error;
-      }
+            if (rows.length !== chosen.recommendations.length)
+              throw new RequestError(409, "推荐题目已被删除，请重新请求。");
+            const updated = rows.map((row) => ({
+              ...row,
+              createdAt: row.createdAt.toISOString(),
+              updatedAt: row.updatedAt.toISOString(),
+            })) as unknown as BankQuestion[];
+            for (const candidate of updated)
+              if (
+                attempted.has(candidate.id) ||
+                !wrong.some(
+                  (w) =>
+                    w.question.subject === candidate.subject &&
+                    wrongTags(w).some((tag) => knowledgeTags(candidate).includes(tag)),
+                )
+              )
+                throw new RequestError(409, "错题或候选题目已改变，请重新请求推荐。");
+            result = json({
+              ...chosen,
+              recommendations: chosen.recommendations.map((recommendation) => ({
+                ...recommendation,
+                question: updated.find((q) => q.id === recommendation.questionId),
+              })),
+            });
+          }
+          let savedCommands = commands;
+          if (kind === "IMPORT") {
+            const req = input as z.infer<typeof aiInputSchemas.IMPORT>;
+            if (req.kind && commands.length) {
+              const imported = commands
+                .map((command, index) => {
+                  if (command.type !== "question.save")
+                    throw new RequestError(422, "导入题目无效。");
+                  return { question: command.question, key: importKeys[index] };
+                })
+                .sort(
+                  (a, b) =>
+                    req.assetUrls.indexOf(sourceQuestions.get(a.key)!) -
+                    req.assetUrls.indexOf(sourceQuestions.get(b.key)!),
+                );
+              const first = imported[0].question;
+              if (
+                imported.some(
+                  ({ question }) =>
+                    question.subject !== first.subject || question.grade !== first.grade,
+                )
+              )
+                throw new RequestError(422, "同一份作业或试卷的学科和年级必须一致。");
+              savedCommands = [
+                {
+                  type: "paper.save",
+                  paper: {
+                    name: importName!,
+                    kind: req.kind,
+                    subject: req.subject || first.subject,
+                    grade: req.grade || first.grade,
+                    instructions: "",
+                    layout: { ...DOCUMENT_DEFAULTS },
+                    items: imported.map(({ question, key }) => ({
+                      questionId: randomUUID(),
+                      question,
+                      score: importScores.get(key)!,
+                      section: {
+                        SINGLE: "单选题",
+                        MULTIPLE: "多选题",
+                        BLANK: "填空题",
+                        SUBJECTIVE: "主观题",
+                        MIXED: "综合题",
+                      }[question.type],
+                    })),
+                  },
+                },
+              ];
+            }
+          }
+          const ids: string[] = [];
+          for (const command of savedCommands)
+            ids.push(
+              (
+                await executeCommand({ id: userId }, command, {
+                  db,
+                  source: "AI",
+                  jobId: options.jobId,
+                })
+              ).id,
+            );
+          const output = {
+            summary,
+            result: commands.length
+              ? json({
+                  ids,
+                  evidence: result,
+                  skipped: [...skipped.values()],
+                  ...(kind === "IMPORT" &&
+                  commands.length &&
+                  (input as z.infer<typeof aiInputSchemas.IMPORT>).kind
+                    ? {
+                        paperId: ids[0],
+                        paperKind: (input as z.infer<typeof aiInputSchemas.IMPORT>).kind,
+                      }
+                    : {}),
+                })
+              : json({
+                  ...(result && typeof result === "object" ? result : {}),
+                  skipped: [...skipped.values()],
+                }),
+          };
+          await db.aiJob.update({
+            where: { id: job.id },
+            data: {
+              status: "COMPLETED",
+              result: json(output) as Prisma.InputJsonValue,
+              finishedAt: new Date(),
+              heartbeatAt: new Date(),
+              error: null,
+            },
+          });
+          return output;
+        },
+        { timeout: 30000 },
+      );
     },
   };
 }

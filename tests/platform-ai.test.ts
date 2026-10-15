@@ -18,6 +18,7 @@ const mocked = vi.hoisted(() => ({
   reviewCount: vi.fn(),
   accessibleAsset: vi.fn(),
   readOwnedAsset: vi.fn(),
+  saveImage: vi.fn(),
   loadAiModel: vi.fn(),
   createSandboxSession: vi.fn(),
   sandboxRun: vi.fn(),
@@ -34,6 +35,7 @@ vi.mock("@/server/db/client", () => ({
 vi.mock("@/server/platform/assets", () => ({
   accessibleAsset: mocked.accessibleAsset,
   readOwnedAsset: mocked.readOwnedAsset,
+  saveImage: mocked.saveImage,
   assetId: (u: string) => u.split("/").at(-1),
 }));
 vi.mock("@/server/platform/ai/model", () => ({ loadAiModel: mocked.loadAiModel }));
@@ -223,6 +225,10 @@ async function call(
 }
 beforeEach(async () => {
   vi.clearAllMocks();
+  mocked.saveImage.mockImplementation(async (_ownerId: string, buffer: Buffer) => {
+    const id = (await import("node:crypto")).randomUUID();
+    return { id, url: `/api/platform/assets/${id}`, buffer };
+  });
   mocked.storagePaths.temp = await mkdtemp(join(tmpdir(), "omp-ai-unit-"));
   mocked.storagePaths.storage = mocked.storagePaths.temp;
   sandboxImages.clear();
@@ -330,7 +336,20 @@ describe("AI autonomous tools and constraints", () => {
       images: { image: string; url?: string }[];
       previews: { url: string; image: string }[];
     };
-    expect(fullPage.images[0]).not.toHaveProperty("url");
+    expect(fullPage.images[0].url).toMatch(/^\/api\/platform\/assets\//);
+    await expect(
+      call(f, "propose_question", {
+        items: [
+          {
+            sourceKey: "p1-q1",
+            question: {
+              ...question,
+              content: { ...question.content, images: [fullPage.images[0].url] },
+            },
+          },
+        ],
+      }),
+    ).rejects.toThrow(/裁切/);
     expect(fullPage.previews).toEqual([
       expect.objectContaining({ url: "/api/platform/assets/source", image: expect.any(String) }),
     ]);

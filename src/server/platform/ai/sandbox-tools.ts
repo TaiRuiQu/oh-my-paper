@@ -8,6 +8,7 @@ import sharp from "sharp";
 import { createSandboxSession, sandboxImageNameSchema } from "@/server/ai/sandbox";
 import { getStoragePaths } from "@/server/config/env";
 import { AccessError } from "@/server/http/errors";
+import { saveImage } from "../assets";
 
 const parameters = {
   assets: z.array(z.string()).max(3).default([]),
@@ -17,13 +18,14 @@ type ExportedImage = { name: string; image: string; url?: string };
 
 /** The only host data exported to an agent is an authorized task snapshot and selected assets. */
 export function createTaskSandbox(options: {
+  userId: string;
   context: unknown;
   allowedAssets: Set<string>;
   readAsset: (url: string) => Promise<Buffer>;
   onImages: (
-    images: { name: string; buffer: Buffer }[],
+    images: { name: string; buffer: Buffer; id: string; url: string }[],
     sources: string[],
-  ) => Promise<{ url?: string }[]>;
+  ) => Promise<void>;
   ensureOpen: () => void;
 }) {
   let directory: string | undefined;
@@ -81,11 +83,15 @@ export function createTaskSandbox(options: {
         ? { command: input.command, images: input.images }
         : { code: input.code!, images: input.images };
     const output = await session!.run(request, { signal: abortSignal });
-    const images = output.images.map((image) => ({
-      name: image.name,
-      buffer: Buffer.from(image.data, "base64"),
-    }));
-    const references = output.exitCode === 0 ? await options.onImages(images, input.assets) : [];
+    // Trace URLs must resolve before the tool result is published, even if the task
+    // later fails or never uses these images in its final business records.
+    const images = await Promise.all(
+      output.images.map(async (image) => ({
+        name: image.name,
+        ...(await saveImage(options.userId, Buffer.from(image.data, "base64"), image.name)),
+      })),
+    );
+    if (output.exitCode === 0) await options.onImages(images, input.assets);
     // Requested originals are real model-visible evidence even when code emits an unrelated image.
     // Only this invocation's sources count as viewed; previously mounted inputs do not.
     const previews =
@@ -109,7 +115,7 @@ export function createTaskSandbox(options: {
       assets: input.assets.map((url) => ({ url, path: pathFor(url) })),
       previews,
       images: await Promise.all(
-        images.map(async (image, index) => ({
+        images.map(async (image) => ({
           name: image.name,
           image: (
             await sharp(image.buffer)
@@ -117,7 +123,7 @@ export function createTaskSandbox(options: {
               .png()
               .toBuffer()
           ).toString("base64"),
-          ...references[index],
+          url: image.url,
         })),
       ),
     };

@@ -40,7 +40,7 @@ async function main() {
       tasks.push(features);
       return features;
     };
-    const { saveImage } = await import("../src/server/platform/assets");
+    const { saveImage, accessibleAsset } = await import("../src/server/platform/assets");
     for (const id of ["teacher", "second"])
       await db.user.create({ data: { id, name: id, email: `${id}@domain.test`, role: "TEACHER" } });
     await db.user.create({
@@ -160,10 +160,14 @@ async function main() {
     });
     await call(importer, "finish", { summary: "导入完成" });
     assert.equal(await db.question.count(), 0);
-    assert.equal(await db.platformAsset.count(), 1);
+    assert.equal(await db.platformAsset.count(), 3);
+    assert.equal(
+      (await accessibleAsset("teacher", crop.url.split("/").at(-1)!)).contentType,
+      "image/png",
+    );
     await importer.commit();
     assert.equal(await db.question.count(), 1);
-    assert.equal(await db.platformAsset.count(), 2);
+    assert.equal(await db.platformAsset.count(), 3);
     assert.equal(
       (await db.aiJob.findUniqueOrThrow({ where: { id: importJob.id } })).status,
       "COMPLETED",
@@ -175,7 +179,7 @@ async function main() {
     assert.equal(cropMeta.width, 180);
     assert.equal(cropMeta.height, 200);
     console.log(
-      "✓ IMPORT stages source inventory and actual cropped pixels, then commits independent image assets, question and job completion atomically",
+      "✓ IMPORT persists trace images before commit, then commits question and job completion atomically",
     );
     const imported = (await loadState(actor)).questions[0];
     const enrichInput = { questionIds: [imported.id] },
@@ -430,9 +434,7 @@ async function main() {
     console.log(
       "✓ Mixed part scores persist through AI suggestion, human FIRST confirmation and independent human SECOND; correct subpart stays mastered and only the failed subpart enters weaknesses",
     );
-    const beforeQuestions = await db.question.count(),
-      beforeAssets = await db.platformAsset.count(),
-      beforeFiles = await readdir(join(root, "platform-assets"));
+    const beforeQuestions = await db.question.count();
     const badJob = await makeJob("IMPORT", importInput),
       bad = await createTaskFeatures({
         userId: "teacher",
@@ -462,18 +464,29 @@ async function main() {
       ],
     });
     await call(bad, "finish", { summary: "will fail" });
+    const beforeAssets = await db.platformAsset.count();
+    const beforeFiles = await readdir(join(root, "platform-assets"));
     await db.user.update({ where: { id: "teacher" }, data: { role: "STUDENT" } });
     await assert.rejects(bad.commit(), /教师权限/);
     await db.user.update({ where: { id: "teacher" }, data: { role: "TEACHER" } });
     assert.equal(await db.question.count(), beforeQuestions);
     assert.equal(await db.platformAsset.count(), beforeAssets);
     assert.deepEqual((await readdir(join(root, "platform-assets"))).sort(), beforeFiles.sort());
+    await bad.dispose();
+    assert.equal(
+      (await accessibleAsset("teacher", doomedCrop.url.split("/").at(-1)!)).contentType,
+      "image/png",
+    );
+    await assert.rejects(
+      accessibleAsset("second", doomedCrop.url.split("/").at(-1)!),
+      /图片不存在/,
+    );
     assert.equal(
       (await db.aiJob.findUniqueOrThrow({ where: { id: badJob.id } })).status,
       "RUNNING",
     );
     console.log(
-      "✓ Failed commit rolls back business rows, cropped asset rows and job completion, and removes written crop files",
+      "✓ Failed commit rolls back business rows and job completion while retaining private trace images after disposal",
     );
     const skippedJob = await makeJob("IMPORT", importInput);
     const unreadable = await createTaskFeatures({

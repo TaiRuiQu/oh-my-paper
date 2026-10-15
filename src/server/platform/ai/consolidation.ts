@@ -44,6 +44,7 @@ export async function createConsolidationFeatures(options: {
     ]),
   ]);
   const sandbox = createTaskSandbox({
+    userId: options.userId,
     context: {
       task: "CONSOLIDATE",
       requirements: input,
@@ -72,9 +73,8 @@ export async function createConsolidationFeatures(options: {
         )
       ).buffer;
     },
-    onImages: async (images, sources) => {
+    onImages: async (_images, sources) => {
       sources.forEach((url) => inspected.add(url));
-      return images.map(() => ({}));
     },
   });
   const tools: ToolSet = {
