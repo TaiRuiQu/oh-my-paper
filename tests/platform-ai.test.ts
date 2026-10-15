@@ -304,6 +304,60 @@ const assemble = () =>
     knowledgeDistribution: [{ tag: "代数", percent: 100 }],
   });
 describe("AI autonomous tools and constraints", () => {
+  it("mounts a compressed JPEG and rejects a resized full page as a question illustration", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 2700, height: 3600, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    const source = "/api/platform/assets/source";
+    mocked.readOwnedAsset.mockResolvedValue({ buffer });
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    const features = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: { assetUrls: [source] },
+      jobId: "job",
+    });
+    const output = (await viewImage(features, source)) as {
+      assets: { path: string }[];
+      images: { url: string; image: string }[];
+      previews: { image: string }[];
+    };
+    const directory = mocked.createSandboxSession.mock.calls[0][0].directory;
+    const mounted = await readFile(join(directory, output.assets[0].path));
+    expect(output.assets[0].path).toMatch(/\.jpg$/);
+    expect(mounted.length).toBeLessThanOrEqual(1024 * 1024);
+    expect(await sharp(mounted).metadata()).toMatchObject({
+      format: "jpeg",
+      width: 1800,
+      height: 2400,
+    });
+    for (const preview of [...output.images, ...output.previews]) {
+      const image = Buffer.from(preview.image, "base64");
+      expect(image.length).toBeLessThanOrEqual(512 * 1024);
+      expect(await sharp(image).metadata()).toMatchObject({
+        format: "jpeg",
+        width: 1350,
+        height: 1800,
+      });
+    }
+    await expect(
+      call(features, "propose_question", {
+        items: [
+          {
+            sourceKey: "q1",
+            question: {
+              ...question,
+              content: { ...question.content, images: [output.images[0].url] },
+            },
+          },
+        ],
+      }),
+    ).rejects.toThrow(/裁切/);
+  });
+
   it("imports complete image evidence directly into an editable homework without manual assembly", async () => {
     const sharp = (await import("sharp")).default;
     const buffer = await sharp({
@@ -1482,6 +1536,7 @@ it("returns execution, unknown-tool, JSON and schema errors to the same agent, t
     doGenerate: async () => {
       const step = sequence[index++];
       return {
+        providerMetadata: { openai: { responseId: `resp_${index}` } },
         content: step.map((c, n) => ({
           type: "tool-call" as const,
           toolCallId: `call-${index}-${n}`,
@@ -1525,8 +1580,17 @@ it("returns execution, unknown-tool, JSON and schema errors to the same agent, t
   expect(feedback).toContain("questionId");
   expect(feedback).toContain("expected string");
   expect(model.doGenerateCalls[0].providerOptions).toMatchObject({
-    openai: { store: false, parallelToolCalls: true },
+    openai: { store: true, parallelToolCalls: true },
   });
+  for (const [index, request] of model.doGenerateCalls.entries()) {
+    if (!index) continue;
+    expect(request.providerOptions?.openai?.previousResponseId).toBe(`resp_${index}`);
+    expect(
+      request.prompt
+        .filter((message) => message.role !== "system")
+        .every((message) => message.role === "tool"),
+    ).toBe(true);
+  }
   expect(JSON.stringify(events)).toContain("尚未提供有效候选结果");
   expect(events).toContainEqual(
     expect.objectContaining({ type: "step", toolNames: ["read_question", "search_questions"] }),

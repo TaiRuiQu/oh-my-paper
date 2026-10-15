@@ -5,7 +5,7 @@ import type { AiKind } from "@/contracts/platform-ai";
 import { createTaskFeatures } from "./features";
 import { loadAiModel } from "./model";
 import { RequestError } from "@/server/http/errors";
-import { statelessResponsesMessages } from "./responses";
+import { prepareResponsesStep } from "./responses";
 import { toolErrorDetails } from "./tools";
 export type AiTaskOptions = {
   userId: string;
@@ -82,7 +82,7 @@ export async function runAiTask(
           ? {
               openai: {
                 parallelToolCalls: true,
-                ...(configuration.identity.apiType === "openai_responses" ? { store: false } : {}),
+                ...(configuration.identity.apiType === "openai_responses" ? { store: true } : {}),
               },
             }
           : undefined,
@@ -102,7 +102,7 @@ export async function runAiTask(
           configuration.identity.apiType === "openai_chat"
             ? async ({ messages }) => ({ messages: chatToolImages(messages) })
             : configuration.identity.apiType === "openai_responses"
-              ? async ({ messages }) => ({ messages: statelessResponsesMessages(messages) })
+              ? prepareResponsesStep
               : undefined,
         stopWhen: [isStepCount(2048), () => features.isComplete()],
         onToolExecutionStart: async (e) => {

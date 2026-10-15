@@ -4,11 +4,11 @@ import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { tool } from "ai";
 import { z } from "zod";
-import sharp from "sharp";
 import { createSandboxSession, sandboxImageNameSchema } from "@/server/ai/sandbox";
 import { getStoragePaths } from "@/server/config/env";
 import { AccessError } from "@/server/http/errors";
 import { saveImage } from "../assets";
+import { prepareModelImage, prepareWorkbenchImage } from "./images";
 
 const parameters = {
   assets: z.array(z.string()).max(3).default([]),
@@ -34,9 +34,9 @@ export function createTaskSandbox(options: {
   let closed = false;
   let pending = Promise.resolve();
   const staged = new Set<string>();
-  const buffers = new Map<string, Buffer>();
+  const previews = new Map<string, string>();
   const pathFor = (url: string) =>
-    `/inputs/assets/${createHash("sha256").update(url).digest("hex")}.png`;
+    `/inputs/assets/${createHash("sha256").update(url).digest("hex")}.jpg`;
   const writeManifest = () =>
     writeFile(
       join(directory!, "inputs", "context.json"),
@@ -71,12 +71,12 @@ export function createTaskSandbox(options: {
       if (staged.has(url)) continue;
       const buffer = await options.readAsset(url);
       abortSignal?.throwIfAborted();
-      const normalized = await sharp(buffer, { limitInputPixels: 50_000_000 }).png().toBuffer();
+      const normalized = await prepareWorkbenchImage(buffer);
       await writeFile(join(directory!, "inputs", "assets", basename(pathFor(url))), normalized, {
         mode: 0o600,
       });
+      previews.set(url, (await prepareModelImage(normalized)).toString("base64"));
       staged.add(url);
-      buffers.set(url, normalized);
     }
     const request =
       input.command !== undefined
@@ -94,35 +94,18 @@ export function createTaskSandbox(options: {
     if (output.exitCode === 0) await options.onImages(images, input.assets);
     // Requested originals are real model-visible evidence even when code emits an unrelated image.
     // Only this invocation's sources count as viewed; previously mounted inputs do not.
-    const previews =
-      output.exitCode === 0
-        ? await Promise.all(
-            input.assets.map(async (url) => ({
-              url,
-              image: (
-                await sharp(buffers.get(url)!)
-                  .resize({ width: 1800, height: 1800, fit: "inside", withoutEnlargement: true })
-                  .png()
-                  .toBuffer()
-              ).toString("base64"),
-            })),
-          )
-        : [];
+    const sourcePreviews =
+      output.exitCode === 0 ? input.assets.map((url) => ({ url, image: previews.get(url)! })) : [];
     return {
       exitCode: output.exitCode,
       stdout: output.stdout,
       stderr: output.stderr,
       assets: input.assets.map((url) => ({ url, path: pathFor(url) })),
-      previews,
+      previews: sourcePreviews,
       images: await Promise.all(
         images.map(async (image) => ({
           name: image.name,
-          image: (
-            await sharp(image.buffer)
-              .resize({ width: 1800, height: 1800, fit: "inside", withoutEnlargement: true })
-              .png()
-              .toBuffer()
-          ).toString("base64"),
+          image: (await prepareModelImage(image.buffer)).toString("base64"),
           url: image.url,
         })),
       ),
@@ -166,18 +149,18 @@ export function createTaskSandbox(options: {
       },
       ...output.images.map((image) => ({
         type: "file" as const,
-        mediaType: "image/png",
+        mediaType: "image/jpeg",
         data: { type: "data" as const, data: image.image },
       })),
       ...output.previews.map((preview) => ({
         type: "file" as const,
-        mediaType: "image/png",
+        mediaType: "image/jpeg",
         data: { type: "data" as const, data: preview.image },
       })),
     ],
   });
   const description =
-    "Execute in this task's persistent Linux sandbox without network. /inputs/context.json contains authorized task data and the asset URL/path manifest. List up to 3 asset URLs in assets to mount their PNG files before executing; requested originals are also returned as visual previews. Files remain available for later calls. /inputs is read-only. Python and shell share a 100 MiB /workspace; files persist across calls, processes do not. Use print/stdout for text. To view an image, use Pillow/OpenCV to copy, crop, rotate or annotate an input into /workspace/output/<name>.png and list its filename in images (at most 3); the model receives the actual image pixels. Returned artifact URLs can be used as imported question illustrations. Do not attach an entire source page as an illustration. NumPy, SciPy, SymPy, mpmath and Pillow are installed. Each call has 60s wall time, 30s CPU and 512 MiB address space. Host files, secrets and network are unavailable.";
+    "Execute in this task's persistent Linux sandbox without network. /inputs/context.json contains authorized task data and the asset URL/path manifest. List up to 3 asset URLs in assets to mount compressed JPEG copies (longest edge at most 2400px, at most 1 MiB each); requested sources are also returned as JPEG visual previews (at most 1800px and 512 KiB each). Use mounted image dimensions for pixel coordinates. Files remain available for later calls. /inputs is read-only. Python and shell share a 100 MiB /workspace; files persist across calls, processes do not. Use print/stdout for text. To view an image, use Pillow/OpenCV to copy, crop, rotate or annotate an input into /workspace/output/<name>.png and list its filename in images (at most 3); the model receives the actual image pixels. Returned artifact URLs can be used as imported question illustrations. Do not attach an entire source page as an illustration. NumPy, SciPy, SymPy, mpmath and Pillow are installed. Each call has 60s wall time, 30s CPU and 512 MiB address space. Host files, secrets and network are unavailable.";
   return {
     tools: {
       python: tool({

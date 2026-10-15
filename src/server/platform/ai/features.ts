@@ -5,6 +5,7 @@ import { z } from "zod";
 import sharp, { type Sharp } from "sharp";
 import { randomUUID } from "node:crypto";
 import { createTaskSandbox } from "./sandbox-tools";
+import { prepareWorkbenchImage } from "./images";
 import { batchTool, withDetailedToolErrors } from "./tools";
 import type { Prisma } from "@/generated/prisma/client";
 import { getDb } from "@/server/db/client";
@@ -929,7 +930,7 @@ export async function createTaskFeatures(options: {
           // A full-page preview is evidence, never an independent question illustration.
           for (const source of sources.filter((url) => imported.assetUrls.includes(url))) {
             const asset = await readOwnedAsset(userId, source);
-            const original = sharp(asset.buffer);
+            const original = sharp(await prepareWorkbenchImage(asset.buffer));
             const originalMeta = await original.metadata();
             if (metadata.width !== originalMeta.width || metadata.height !== originalMeta.height)
               continue;
