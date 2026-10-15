@@ -3,11 +3,14 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useState,
   type ReactNode,
   type Dispatch,
   type SetStateAction,
 } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 import type { AccountCredentials } from "@/contracts/auth";
 import type { ScanUploadPage } from "@/contracts/uploads";
 import type { PlatformCommand, PlatformState } from "@/contracts/platform";
@@ -52,6 +55,11 @@ export function DomainProvider({
   const [scanFiles, setScanFiles] = useState<ScanUploadPage[]>([]);
   const [notice, setNotice] = useState<{ text: string; error?: boolean }>();
   const notify = useCallback((text: string, error?: boolean) => setNotice({ text, error }), []);
+  useEffect(() => {
+    if (!notice || notice.error) return;
+    const timeout = setTimeout(() => setNotice(undefined), 4000);
+    return () => clearTimeout(timeout);
+  }, [notice]);
   const refresh = useCallback(async () => {
     setState(
       await apiRequest<PlatformState>(
@@ -88,21 +96,24 @@ export function DomainProvider({
     <Context.Provider
       value={{ state, area, pending, mutate, refresh, notify, scanFiles, setScanFiles }}
     >
-      {notice && (
-        <div
-          className={`p-notice ${notice.error ? "error" : "success"}`}
-          role={notice.error ? "alert" : "status"}
-        >
-          <span>{notice.text}</span>
-          <button
-            className="link-button"
-            aria-label="关闭操作提示"
-            onClick={() => setNotice(undefined)}
+      {notice &&
+        createPortal(
+          <div
+            className={`p-notice p-operation-notice ${notice.error ? "error" : "success"}`}
+            role={notice.error ? "alert" : "status"}
           >
-            关闭
-          </button>
-        </div>
-      )}
+            <span>{notice.text}</span>
+            <button
+              type="button"
+              className="p-notice-close"
+              aria-label="关闭操作提示"
+              onClick={() => setNotice(undefined)}
+            >
+              <X size={16} aria-hidden="true" />
+            </button>
+          </div>,
+          document.body,
+        )}
       {children}
     </Context.Provider>
   );

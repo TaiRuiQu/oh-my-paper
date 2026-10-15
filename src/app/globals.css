@@ -1028,6 +1028,39 @@ td .button {
   justify-content: space-between;
   gap: 14px;
 }
+.p-operation-notice {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 60;
+  align-items: center;
+  width: fit-content;
+  max-width: min(400px, calc(100vw - 32px));
+  margin: 0;
+  padding: 10px 12px 10px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.p-operation-notice > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.p-notice-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.p-notice-close:hover {
+  background: rgb(0 0 0 / 0.05);
+}
 .p-navigation-sheet {
   width: 280px;
   max-width: 85vw;
