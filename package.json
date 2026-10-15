@@ -1,6 +1,6 @@
 {
   "name": "oh-my-paper",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": true,
   "description": "K12 题库、组卷、考试阅卷与学情分析平台",
   "packageManager": "pnpm@11.21.0",
