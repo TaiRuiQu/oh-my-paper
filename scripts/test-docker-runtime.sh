@@ -36,7 +36,11 @@ if [ "$target" = migrate ]; then
   echo 'Migration image completed successfully'
   exit 0
 fi
-docker run -d --name "$runtime" --network "$network" \
+sandbox_options=()
+if [ "$target" = ai-worker ]; then
+  sandbox_options=(--security-opt no-new-privileges:true --security-opt seccomp:unconfined --security-opt apparmor:unconfined --security-opt systempaths=unconfined --cap-drop ALL)
+fi
+docker run -d --name "$runtime" --network "$network" "${sandbox_options[@]}" \
   "${environment[@]}" "omp-runtime:${target}" >/dev/null
 ready=false
 for attempt in {1..60}; do
@@ -54,6 +58,9 @@ for attempt in {1..60}; do
   sleep 1
 done
 test "$ready" = true
+if [ "$target" = ai-worker ]; then
+  docker exec "$runtime" node --conditions=react-server sandbox-check.mjs
+fi
 # Allow several queue polls to catch failures after module loading.
 sleep 10
 test "$(docker inspect --format '{{.State.Running}}' "$runtime")" = true

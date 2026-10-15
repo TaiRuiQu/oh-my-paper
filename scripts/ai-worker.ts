@@ -6,6 +6,7 @@ async function main() {
   const { claimAiJob, runClaimedAiJob } = await import("../src/server/platform/ai-jobs");
   const { disconnectDatabase } = await import("../src/server/db/client");
   const { logEvent, logError } = await import("../src/server/logger");
+  const { runQuestionIndexOnce } = await import("../src/server/platform/search/indexer");
   const workerId = randomUUID();
   let stopping = false;
   process.on("SIGINT", () => {
@@ -15,6 +16,18 @@ async function main() {
     stopping = true;
   });
   logEvent("platform.ai.worker.started", { workerId });
+  const indexing = async () => {
+    while (!stopping) {
+      try {
+        if (!(await runQuestionIndexOnce()))
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+      } catch (error) {
+        logError("platform.search.worker.poll.failed", error);
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
+    }
+  };
+  const indexingTask = indexing();
   try {
     while (!stopping) {
       try {
@@ -27,6 +40,8 @@ async function main() {
       }
     }
   } finally {
+    stopping = true;
+    await indexingTask;
     await disconnectDatabase();
   }
 }

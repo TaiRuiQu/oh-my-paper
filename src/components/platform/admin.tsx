@@ -5,6 +5,7 @@ import { AccountCredentialsPanel } from "./account-credentials";
 import type { PlatformState, Role } from "@/contracts/platform";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { Empty, Field, Panel, readForm, stringField, splitList } from "./primitives";
+import { EmbeddingSettings } from "./embedding-settings";
 type Provider = {
   id: string;
   name: string;
@@ -338,6 +339,7 @@ export function Admin({
           )}
         </Panel>
       )}
+      {(!section || section === "models") && <EmbeddingSettings notify={notify} />}
     </>
   );
 }

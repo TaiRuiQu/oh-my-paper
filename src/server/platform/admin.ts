@@ -5,8 +5,16 @@ import { z } from "zod";
 import { getDb } from "@/server/db/client";
 import { AccessError, RequestError } from "@/server/http/errors";
 import { encryptApiKey } from "@/server/ai/credentials";
+import {
+  embeddingConfigurationSchema,
+  loadSearchConfiguration,
+  saveEmbeddingConfiguration,
+  reindexQuestions,
+} from "./search/configuration";
 
 export const adminCommandSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("embedding.save"), embedding: embeddingConfigurationSchema }),
+  z.object({ type: z.literal("embedding.reindex") }),
   z.strictObject({ type: z.literal("user.create"), user: managedAccountSchema }),
   z.object({
     type: z.literal("user.role"),
@@ -45,11 +53,13 @@ export async function loadAdmin(id: string) {
     },
     orderBy: { name: "asc" },
   });
-  return { providers };
+  return { providers, ...(await loadSearchConfiguration()) };
 }
 
 export async function executeAdmin(id: string, input: z.infer<typeof adminCommandSchema>) {
   await assertAdmin(id);
+  if (input.type === "embedding.save") return saveEmbeddingConfiguration(input.embedding);
+  if (input.type === "embedding.reindex") return reindexQuestions();
   if (input.type === "user.create") return createManagedAccount(id, input.user);
   if (input.type === "user.role") {
     await getDb().$transaction(async (tx) => {

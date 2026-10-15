@@ -22,7 +22,11 @@ jobs:
       BETTER_AUTH_URL: http://localhost:3000
       BETTER_AUTH_SECRET: ci-auth-secret-for-isolated-test-environment-2026
       PROVIDER_KEY_ENCRYPTION_KEY: ci-provider-secret-for-isolated-test-environment-2026
+      QDRANT_URL: http://127.0.0.1:6333
     services:
+      qdrant:
+        image: qdrant/qdrant:v1.19.2
+        ports: ["6333:6333"]
       postgres:
         image: postgres:18.6-bookworm
         env:
@@ -53,8 +57,10 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Install scanner runtime
         run: |
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends bubblewrap util-linux
           python3 -m venv .venv
           .venv/bin/pip install -r tools/card-scan/requirements.txt
+          .venv/bin/pip install -r tools/sandbox/requirements.txt
       - name: Install PDF runtime
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
       - name: Generate Prisma and apply migrations
@@ -71,10 +77,14 @@ jobs:
         run: pnpm run build:ai-worker
       - name: AI domain atomicity acceptance
         run: pnpm run test:ai-domain
+      - name: Isolated Python and shell sandbox acceptance
+        run: pnpm run test:sandbox
       - name: Durable AI job queue acceptance
         run: pnpm run test:ai-jobs
       - name: Non-AI domain acceptance
         run: pnpm run test:integration
+      - name: Question semantic search with real vector database
+        run: pnpm run test:semantic-search
       - name: Image scanning acceptance
         run: pnpm run test:scan
       - name: Scanner bridge protocol tests

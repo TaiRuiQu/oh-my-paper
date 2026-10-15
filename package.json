@@ -84,6 +84,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:integration": "node --conditions=react-server --import tsx scripts/test-platform.ts",
+    "test:semantic-search": "node --conditions=react-server --import tsx scripts/test-semantic-search.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
@@ -103,6 +104,7 @@
     "test:http": "node --conditions=react-server --import tsx scripts/test-platform-http.ts",
     "test:ai-live": "node --conditions=react-server --import tsx scripts/test-ai-live.ts",
     "test:production": "node --conditions=react-server --import tsx scripts/test-production.ts",
-    "test:ai-mixed-live": "node --conditions=react-server --import tsx scripts/test-ai-mixed-live.ts"
+    "test:ai-mixed-live": "node --conditions=react-server --import tsx scripts/test-ai-mixed-live.ts",
+    "test:sandbox": "node --conditions=react-server --import tsx scripts/test-sandbox.ts"
   }
 }

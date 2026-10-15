@@ -33,8 +33,10 @@ AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列，不
 
 所有写入候选在内存中暂存，`finish` 校验完整覆盖后才在同一数据库事务写入业务数据、AI 评阅来源及 `AiJob.COMPLETED/result`。任务行锁和领域锁防止竞争提交；题目更新、作答变更、已有评阅或权限撤回会拒绝过期提交。中途失败不留下半套题库、组卷或评分。模型输出不能直接修改所属用户或跳过现有业务校验。
 
-- IMPORT 先查看全部来源、记录逐页题数，再逐题提出候选；必须逐页完整覆盖。图表通过 `crop_material` 实际裁切成独立资产，禁止将整页来源图片作为题目配图。裁图文件和资产行随业务提交，失败删除已写文件。无参考答案来源时仍须生成标准答案、解析、考点及主观题评分标准。
+- IMPORT 需查看全部来源、记录逐页题数并逐题提出候选；必须逐页完整覆盖。图表由模型使用通用 `python` / `shell` 编写代码裁切，工具返回的独立图像可作为暂存资产，整页预览不作为题目配图。裁图文件和资产行随业务提交，失败删除已写文件。无参考答案来源时仍须生成标准答案、解析、考点及主观题评分标准。
 - IMPORT 可指定 `kind: HOMEWORK / EXAM`，直接保存含卷内题目快照的练习册／试卷；未指定时仍导入题库。作业入口为 `/homework/import`，完成记录包含 `paperId`、`paperKind`，可继续核对与排版。题目分值来自 `propose_question.score`，综合题使用子题分值总和。
+
+完整执行过程仅在 `/workspace/ai/[id]` 展示，`/workspace/ai` 为本人任务目录；`GET /api/platform/ai/[id]` 按当前用户与任务 ID 双重查询，任务列表同样只返回本人任务。业务页面保留任务状态与链接。公开模型列表仅包含 `id/name`，不返回供应商名称。六类任务都提供受 Bubblewrap 隔离的 `python/shell`，代码与输出随工具事件写入轨迹；沙箱无法访问数据库、服务器环境或网络。全部工具清单与生命周期参见 `docs/agent-tools.zh-CN.md`。
 
 `/api/platform/print` 默认返回附件 PDF，试卷／作业可用 `format=docx` 下载可编辑 Word；答题卡保留 `format=svg&page=1`。PDF 用 Chromium 按已保存版式渲染，禁止外部网络访问，配图经现有资产权限读取，字体从本地 `public/print-fonts` 加载。Word 保留纸张、方向、分栏、边距、字体、字号、行距、分页、材料图像和练习作答线，公式转换为 Office Math。Docker Web 镜像安装 Chromium；本地可安装系统 Chromium 或设置 `CHROMIUM_EXECUTABLE_PATH`，`pnpm run doctor` 检查运行环境。Word 的最终分页由打开文档的软件与已安装字体决定。
 
@@ -65,5 +67,13 @@ AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列，不
 完整页面清单见 `v2-docs/page-map.json`。新增文档版面测试见 `tests/platform-document-layout.test.ts`，真实数据库快照编辑／作业答题卡拒绝覆盖在 `scripts/test-platform.ts`。
 
 题库分页接口 `/api/platform/questions` 按 createdAt/id 倒序每页20题，支持搜索与筛选，`id` 单题读取、`stats` 服务端全库统计。页面工作台不携带整库题体，真实数量由 questionCount 返回。专项验收记录见 `v2-docs/workbench-v3-review.md`。
+
+该接口新增 `searchMode=keyword|semantic`，默认为关键词模式。语义模式要求 `q` 为 1–200 字文本，返回同形的 `questions/total/page/pageSize` 及 `searchMode/indexedTotal/warning?`；结果按向量相似度排序，未索引题目不会进入结果。学科、年级、题型和当前账号权限先由 PostgreSQL 筛选，再以当前版本、当前题目 revision 的 point ID 限定 Qdrant 查询；外部调用完成后以单条 SQL 再次验证当前题目与索引状态。管理员可查全站，教师仅查本人，学生拒绝。
+
+`GET /api/platform/admin` 增加 `embedding`（不含密钥，仅 `hasApiKey`）及 `searchIndex`（`total/indexed/pending/failed/enabled/lastError?`）。管理员命令 `embedding.save` 接收 `embedding:{name,apiType:openai|google,baseURL,model,dimensions,apiKey?,enabled}`；首次要求密钥，后续省略则保留。`embedding.reindex` 显式为存量题排队，返回 `{id:'question-bank',queued}`，不在 HTTP 请求内执行模型调用。
+
+迁移 `20261014150000_question_semantic_search` 增加 `EmbeddingSetting`、`QuestionSearchIndex` 和题目写触发器。outbox 与题目写入同事务持久化，网络／模型调用在 AI Worker 的独立索引循环执行。失败不自动重试付费请求，管理员可重新安排索引；五分钟 PROCESSING 超时转 FAILED。每次修改使用独立 revision point，防止旧请求覆写新向量；更换模型／接口／维度使用独立 version collection，避免混用向量空间。删除保留 tombstone 直至同步，关键词读写完全独立于 Qdrant。
+
+当前语义分页使用 Qdrant exact 检索所有授权候选的分数，再按分数与 ID 稳定排序和分页，避免大量同分向量跨页重复。请求与计算量随候选题数增长，超大题库需进一步优化；生产部署说明见 `docs/deployment.zh-CN.md`。`pnpm test:semantic-search` 使用真实 Qdrant 和本地 embedding HTTP 测试服务验证排序、分页、隔离、筛选、改删、竞争请求、失败及模型切换，不调用付费模型，不代表外部模型的语义效果验收。
 
 扫描材料入口 `/api/platform/materials` 支持图片和 PDF，按原页码转换为私有 PNG 页面；`/api/platform/assets` 为配图入口并拒绝 PDF。扫描 `sources` 可按顺序引用已上传私有页面或 multipart 文件编号，也可直接上传原始多页 PDF；PDF 页面数量用于作答框页码与多页卡合并。源文件 30MB，扫描批次展开后最多100页／150MB，AI试卷识别保持20页上限。Web运行环境须提供 `pdfinfo`／`pdftoppm`（Docker已安装poppler-utils），`pnpm run doctor` 可检查。验收见 `v2-docs/pdf-scan-upload-review.md`。

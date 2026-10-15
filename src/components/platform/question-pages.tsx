@@ -2,12 +2,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { QuestionStatistics } from "@/contracts/platform";
+import type { QuestionSearchMode } from "@/contracts/platform-search";
 import { useEffect, useState } from "react";
 import { useBankQuestion, useQuestionPage } from "./question-bank-picker";
 import { Plus, ArrowRight, Upload } from "lucide-react";
 import { SUBJECTS } from "@/contracts/platform";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { MarkdownText } from "@/components/markdown-text";
 import { useDomain } from "./domain-provider";
@@ -15,13 +15,18 @@ import { Panel, Empty } from "./primitives";
 import { MissingRecord, PageHeader, PageTabs } from "./page-header";
 import { QuestionBody, QuestionEditor, QUESTION_LABELS } from "./questions";
 import { PlatformAI } from "./ai";
+import { QuestionSearchControls } from "./question-search-controls";
 
 export function QuestionListPage() {
   const [query, setQuery] = useState("");
   const [subject, setSubject] = useState("");
   const [type, setType] = useState("");
+  const [searchMode, setSearchMode] = useState<QuestionSearchMode>("keyword");
   const [page, setPage] = useState(1);
-  const { questions, total, loading, error } = useQuestionPage({ q: query, subject, type }, page);
+  const { questions, total, loading, error, idle, warning, indexedTotal, retry } = useQuestionPage(
+    { q: query, subject, type, searchMode },
+    page,
+  );
   return (
     <>
       <PageHeader
@@ -44,17 +49,29 @@ export function QuestionListPage() {
           </>
         }
       />
-      <Panel title="全部试题" description={`${total} 道题 · 按加入时间倒序，每页 20 题`}>
-        <div className="p-toolbar p-toolbar-wrap">
-          <Input
-            aria-label="搜索试题"
-            placeholder="搜索题干或知识点"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setPage(1);
-            }}
-          />
+      <Panel
+        title="全部试题"
+        description={
+          idle
+            ? "输入题意后开始语义搜索，每页 20 题。"
+            : loading
+              ? "正在查询题库…"
+              : error
+                ? "查询未完成，请根据提示重试。"
+                : searchMode === "semantic"
+                  ? `${total} 道匹配试题 · ${indexedTotal ?? total} 道题可供检索 · 按相关度排列`
+                  : `${total} 道题 · 按加入时间倒序，每页 20 题`
+        }
+      >
+        <QuestionSearchControls
+          query={query}
+          mode={searchMode}
+          onSearch={(value, mode) => {
+            setQuery(value);
+            setSearchMode(mode);
+            setPage(1);
+          }}
+        >
           <select
             aria-label="筛选学科"
             value={subject}
@@ -83,8 +100,16 @@ export function QuestionListPage() {
               </option>
             ))}
           </select>
-        </div>
-        {error && <p role="alert">{error}</p>}
+        </QuestionSearchControls>
+        {warning && <p className="p-notice">{warning}</p>}
+        {error && (
+          <div className="p-notice error" role="alert">
+            <p>{error}</p>
+            <Button variant="outline" onClick={retry}>
+              重新查询
+            </Button>
+          </div>
+        )}
         {loading && <p role="status">正在查询题库…</p>}
         {questions.length ? (
           questions.map((q) => (
@@ -113,19 +138,23 @@ export function QuestionListPage() {
               </div>
             </article>
           ))
-        ) : (
+        ) : !loading && !error && !idle ? (
           <div className="p-empty-action">
             <h3>{query || subject || type ? "没有匹配的试题" : "建立自己的教学题库"}</h3>
-            <p>创建题干、答案与评分标准，或从试卷图片导入，再用于组卷和作业。</p>
+            <p>
+              {query || subject || type
+                ? "试着调整搜索描述或筛选条件，或创建新的题目。"
+                : "创建题干、答案与评分标准，或从试卷图片导入，再用于组卷和作业。"}
+            </p>
             <Button asChild variant="outline">
               <Link href="/questions/new">创建题目</Link>
             </Button>
           </div>
-        )}
+        ) : null}
         <div className="p-actions p-pagination">
           <Button
             variant="outline"
-            disabled={loading || page === 1}
+            disabled={idle || !!error || loading || page === 1}
             onClick={() => setPage(page - 1)}
           >
             上一页
@@ -135,7 +164,7 @@ export function QuestionListPage() {
           </span>
           <Button
             variant="outline"
-            disabled={loading || page * 20 >= total}
+            disabled={idle || !!error || loading || page * 20 >= total}
             onClick={() => setPage(page + 1)}
           >
             下一页

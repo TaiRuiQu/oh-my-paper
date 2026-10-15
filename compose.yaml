@@ -1,4 +1,11 @@
 services:
+  qdrant:
+    image: qdrant/qdrant:v1.19.2
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT_API_KEY:?Set a vector database API key}
+    volumes:
+      - qdrant:/qdrant/storage
+    restart: unless-stopped
   db:
     image: postgres:18.6-bookworm
     environment:
@@ -22,6 +29,7 @@ services:
       DATABASE_URL: ${DEPLOY_DATABASE_URL:?Set postgresql URL using db as the host}
       STORAGE_ROOT: /data/storage
       TEMP_ROOT: /data/tmp
+      QDRANT_URL: http://qdrant:6333
     depends_on:
       db:
         condition: service_healthy
@@ -56,11 +64,20 @@ services:
       target: ai-worker
     env_file: .env
     environment: *app-env
+    # Bubblewrap isolates each model execution inside its own user/PID/network namespace.
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:unconfined
+      - apparmor:unconfined
+      - systempaths=unconfined
+    cap_drop: [ALL]
     volumes:
       - ./storage:/data/storage
       - ./tmp:/data/tmp
     restart: unless-stopped
     depends_on:
+      qdrant:
+        condition: service_started
       migrate:
         condition: service_completed_successfully
   proxy:
@@ -77,6 +94,7 @@ services:
       web:
         condition: service_healthy
 volumes:
+  qdrant:
   postgres:
   caddy_data:
   caddy_config:

@@ -113,6 +113,56 @@ async function main() {
     console.log(
       "✓ Real HTTP managed-account sign-in/session, administrator role assignment, student restrictions and mutation origin checks",
     );
+    const traceId = randomUUID();
+    const studentTraceId = randomUUID();
+    const traceMarker = `private-trace-${prefix}`;
+    for (const [id, userId, kind] of [
+      [traceId, teacher.id, "IMPORT"],
+      [studentTraceId, student.id, "RECOMMEND"],
+    ])
+      await sql.query(
+        `INSERT INTO ai_jobs (id, "userId", kind, "modelId", status, input, events, "createdAt")
+         VALUES ($1, $2, $3, 'http-trace-fixture', 'COMPLETED', '{}', $4, NOW())`,
+        [
+          id,
+          userId,
+          kind,
+          JSON.stringify([{ type: "text", text: traceMarker, at: new Date().toISOString() }]),
+        ],
+      );
+    assert.equal((await request(null, `/api/platform/ai/${traceId}`)).status, 401);
+    for (const [account, ownId, foreignId] of [
+      [teacher, traceId, studentTraceId],
+      [student, studentTraceId, traceId],
+    ] as const) {
+      const detail = await request(account, `/api/platform/ai/${ownId}`);
+      assert.equal(detail.status, 200);
+      assert.equal(detail.headers.get("cache-control"), "private, no-store");
+      assert.equal((await detail.json()).events[0].text, traceMarker);
+      assert.equal((await request(account, `/api/platform/ai/${foreignId}`)).status, 404);
+      assert.equal((await request(account, `/workspace/ai/${ownId}`)).status, 200);
+      const hiddenPage = await request(account, `/workspace/ai/${foreignId}`);
+      // Next.js can send the shell before notFound resolves, yielding a streamed 200.
+      assert([200, 404].includes(hiddenPage.status));
+      const hiddenHtml = await hiddenPage.text();
+      assert(!hiddenHtml.includes(traceMarker));
+      assert(hiddenHtml.includes("NEXT_HTTP_ERROR_FALLBACK;404") || hiddenPage.status === 404);
+      const listing = await request(account, "/api/platform/ai");
+      assert.equal(listing.status, 200);
+      const listed = await listing.json();
+      assert(listed.jobs.some((job: { id: string }) => job.id === ownId));
+      assert(!listed.jobs.some((job: { id: string }) => job.id === foreignId));
+      assert(listed.models.every((model: Record<string, unknown>) => !("providerName" in model)));
+      assert.equal((await request(account, "/workspace/ai")).status, 200);
+    }
+    assert.equal((await request(admin, `/api/platform/ai/${traceId}`)).status, 404);
+    assert.equal((await request(teacher, `/api/platform/ai/${randomUUID()}`)).status, 404);
+    const importPage = await request(teacher, "/questions/import");
+    assert.equal(importPage.status, 200);
+    assert(!(await importPage.text()).includes(traceMarker));
+    console.log(
+      "✓ Dedicated AI trace pages and API preserve teacher/student ownership, reject foreign jobs and keep execution details off task pages; model choices omit providers",
+    );
     const image = await sharp({
       create: { width: 200, height: 100, channels: 3, background: "white" },
     })
@@ -449,6 +499,7 @@ async function main() {
     ]);
     await sql.query('DELETE FROM platform_assets WHERE "ownerId"=ANY($1)', [ids]);
     await sql.query('DELETE FROM assessments WHERE "ownerId"=ANY($1)', [ids]);
+    await sql.query('DELETE FROM ai_jobs WHERE "userId"=ANY($1)', [ids]);
     await sql.query("DELETE FROM users WHERE id=ANY($1)", [ids]);
     await Promise.all(
       assets.rows.map((asset: { path: string }) => rm(asset.path, { force: true })),

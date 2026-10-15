@@ -7,11 +7,18 @@ import { aiRequestSchema } from "@/contracts/platform-ai";
 import { runAiTask } from "./ai/runner";
 
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
+export async function getAiJob(userId: string, id: string) {
+  await getActor(userId);
+  const job = await getDb().aiJob.findFirst({ where: { id, userId } });
+  if (!job) throw new AccessError(404, "AI 任务不存在。");
+  return job;
+}
+
 export async function listAiJobs(userId: string) {
   await getActor(userId);
   const models = await getDb().aiModel.findMany({
     where: { isPublic: true },
-    include: { provider: { select: { name: true } } },
+    select: { id: true, name: true, displayName: true },
     orderBy: { name: "asc" },
   });
   const jobs = await getDb().aiJob.findMany({
@@ -23,7 +30,6 @@ export async function listAiJobs(userId: string) {
     models: models.map((model) => ({
       id: model.id,
       name: model.displayName || model.name,
-      providerName: model.provider.name,
     })),
     jobs,
   };

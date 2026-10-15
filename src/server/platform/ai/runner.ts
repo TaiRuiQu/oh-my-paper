@@ -47,7 +47,7 @@ export function chatToolImages(messages: ModelMessage[]): ModelMessage[] {
       output.push({
         role: "user",
         content: [
-          { type: "text", text: "Visual evidence from the preceding inspect_image tool:" },
+          { type: "text", text: "Visual evidence from the preceding sandbox tool:" },
           ...images,
         ],
       });
@@ -66,59 +66,101 @@ export async function runAiTask(
   active.set(key, count + 1);
   try {
     const features = await createTaskFeatures(options);
-    const emit = options.onEvent ?? (async () => {});
-    await emit({ type: "start", kind: options.kind, model: configuration.identity });
-    const agent = new ToolLoopAgent({
-      model: configuration.model,
-      instructions: features.instructions,
-      tools: features.tools,
-      maxOutputTokens: configuration.maxOutputTokens,
-      maxRetries: 2,
-      providerOptions:
-        configuration.identity.apiType === "openai_responses"
-          ? { openai: { store: false } }
-          : undefined,
-      prepareStep:
-        configuration.identity.apiType === "openai_chat"
-          ? async ({ messages }) => ({ messages: chatToolImages(messages) })
-          : configuration.identity.apiType === "openai_responses"
-            ? async ({ messages }) => ({ messages: statelessResponsesMessages(messages) })
+    try {
+      const emit = options.onEvent ?? (async () => {});
+      await emit({ type: "start", kind: options.kind, model: configuration.identity });
+      const agent = new ToolLoopAgent({
+        model: configuration.model,
+        instructions: features.instructions,
+        tools: features.tools,
+        maxOutputTokens: configuration.maxOutputTokens,
+        maxRetries: 2,
+        providerOptions:
+          configuration.identity.apiType === "openai_responses"
+            ? { openai: { store: false } }
             : undefined,
-      stopWhen: [isStepCount(2048), () => features.isComplete()],
-      onToolExecutionStart: async (e) => {
-        await emit({ type: "tool", name: e.toolCall.toolName, status: "started" });
-      },
-      onToolExecutionEnd: async (e) => {
-        await emit({
-          type: "tool",
-          name: e.toolCall.toolName,
-          status: "ended",
-          durationMs: e.toolExecutionMs,
-        });
-      },
-      onStepEnd: async (e) => {
-        await emit(
-          JSON.parse(
-            JSON.stringify({
-              type: "step",
-              finishReason: e.finishReason,
-              toolNames: e.toolCalls.map((t) => t.toolName),
-              usage: e.usage,
-            }),
-          ),
-        );
-      },
-    });
-    await agent.generate({
-      prompt: features.prompt,
-      // Provider timeout bounds each step; full tasks may include hundreds of questions.
-      timeout: { totalMs: 60 * 60 * 1000, stepMs: Math.max(configuration.timeoutMs, 1000) },
-    });
-    if (!features.isComplete())
-      throw new RequestError(422, "AI未完成全部要求，请查看任务说明后重试。");
-    const output = await features.commit();
-    await emit({ type: "complete", summary: output.summary });
-    return output;
+        prepareStep:
+          configuration.identity.apiType === "openai_chat"
+            ? async ({ messages }) => ({ messages: chatToolImages(messages) })
+            : configuration.identity.apiType === "openai_responses"
+              ? async ({ messages }) => ({ messages: statelessResponsesMessages(messages) })
+              : undefined,
+        stopWhen: [isStepCount(2048), () => features.isComplete()],
+        onToolExecutionStart: async (e) => {
+          await emit(
+            JSON.parse(
+              JSON.stringify({
+                type: "tool",
+                name: e.toolCall.toolName,
+                status: "started",
+                toolCallId: e.toolCall.toolCallId,
+                input: e.toolCall.input,
+              }),
+            ),
+          );
+        },
+        onToolExecutionEnd: async (e) => {
+          await emit({
+            type: "tool",
+            name: e.toolCall.toolName,
+            status: "ended",
+            durationMs: e.toolExecutionMs,
+            toolCallId: e.toolCall.toolCallId,
+            ...(e.toolOutput.type === "tool-error"
+              ? { error: "工具执行失败，请根据后续记录核对处理结果。" }
+              : {}),
+          });
+          if (
+            ["python", "shell"].includes(e.toolCall.toolName) &&
+            e.toolOutput.type === "tool-result"
+          ) {
+            const output = e.toolOutput.output as {
+              exitCode: number;
+              stdout: string;
+              stderr: string;
+              images: { name: string; url?: string }[];
+            };
+            await emit(
+              JSON.parse(
+                JSON.stringify({
+                  type: "sandbox",
+                  name: e.toolCall.toolName,
+                  toolCallId: e.toolCall.toolCallId,
+                  exitCode: output.exitCode,
+                  stdout: output.stdout,
+                  stderr: output.stderr,
+                  images: output.images.map((image) => ({ name: image.name, url: image.url })),
+                }),
+              ),
+            );
+          }
+        },
+        onStepEnd: async (e) => {
+          await emit(
+            JSON.parse(
+              JSON.stringify({
+                type: "step",
+                finishReason: e.finishReason,
+                toolNames: e.toolCalls.map((t) => t.toolName),
+                usage: e.usage,
+              }),
+            ),
+          );
+        },
+      });
+      await agent.generate({
+        prompt: features.prompt,
+        // Provider timeout bounds each step; full tasks may include hundreds of questions.
+        timeout: { totalMs: 60 * 60 * 1000, stepMs: Math.max(configuration.timeoutMs, 1000) },
+      });
+      if (!features.isComplete())
+        throw new RequestError(422, "AI未完成全部要求，请查看任务说明后重试。");
+      const output = await features.commit();
+      await emit({ type: "complete", summary: output.summary });
+      return output;
+    } finally {
+      await features.dispose();
+    }
   } finally {
     const remaining = (active.get(key) ?? 1) - 1;
     if (remaining) active.set(key, remaining);

@@ -67,6 +67,15 @@ await check("Python / OpenCV / NumPy / Pillow", () => {
     "import cv2,numpy,PIL; print('OpenCV '+cv2.__version__+' / NumPy '+numpy.__version__+' / Pillow '+PIL.__version__)",
   ]);
 });
+await check("AI Python / shell 沙箱", () =>
+  run(process.execPath, [
+    "--conditions=react-server",
+    "--import",
+    "tsx",
+    "-e",
+    `(async()=>{const {verifySandboxEnvironment}=await import('./src/server/ai/sandbox.ts');const result=verifySandboxEnvironment();if(!result.ok)throw new Error(result.diagnostic+' '+result.remediation);console.log('Bubblewrap 用户/进程/网络命名空间与只读根检查通过');})().catch(error=>{console.error(error.message);process.exitCode=1;});`,
+  ]),
+);
 await check("PDF 页面处理（Poppler）", () => {
   const info = run("pdfinfo", ["-v"]);
   const renderer = run("pdftoppm", ["-v"]);

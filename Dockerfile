@@ -34,8 +34,10 @@ RUN DATABASE_URL=postgresql://build:build@localhost:5432/build pnpm run build:ai
 
 FROM node:24.19.0-bookworm-slim AS ai-worker
 WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
-ENV NODE_ENV=production STORAGE_ROOT=/data/storage TEMP_ROOT=/data/tmp
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates bubblewrap python3 python3-venv util-linux fonts-noto-cjk poppler-utils && rm -rf /var/lib/apt/lists/*
+COPY tools/sandbox/requirements.txt /tmp/sandbox-requirements.txt
+RUN python3 -m venv /opt/python-sandbox && /opt/python-sandbox/bin/pip install --no-cache-dir -r /tmp/sandbox-requirements.txt && rm /tmp/sandbox-requirements.txt
+ENV NODE_ENV=production STORAGE_ROOT=/data/storage TEMP_ROOT=/data/tmp PYTHON_SANDBOX_VENV=/opt/python-sandbox
 COPY --from=build-ai-worker --chown=node:node /app/build/ai-worker ./
 RUN mkdir -p /data/storage /data/tmp && chown -R node:node /data
 USER node

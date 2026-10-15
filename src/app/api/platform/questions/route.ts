@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       db,
       actor,
       Object.fromEntries(
-        ["subject", "grade", "type", "q"].map((key) => [key, params.get(key) ?? ""]),
+        ["subject", "grade", "type", "q", "searchMode"].map((key) => [key, params.get(key) ?? ""]),
       ),
       page,
     );

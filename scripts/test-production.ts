@@ -21,6 +21,7 @@ async function main() {
     STORAGE_ROOT: resolve("storage"),
     TEMP_ROOT: resolve("tmp"),
     CARD_SCAN_PYTHON: process.env.CARD_SCAN_PYTHON || resolve(".venv/bin/python"),
+    PYTHON_SANDBOX_VENV: process.env.PYTHON_SANDBOX_VENV || resolve(".venv"),
   };
   const start = (cmd: string, args: string[], cwd: string) => {
     const child = spawn(cmd, args, { cwd, env: environment, stdio: ["ignore", "pipe", "pipe"] });
@@ -74,6 +75,19 @@ async function main() {
     console.log(
       "✓ Independent production Web and AI Worker start with only packaged runtime files",
     );
+    const sandbox = start(
+      process.execPath,
+      ["--conditions=react-server", "sandbox-check.mjs"],
+      join(directory, "worker"),
+    );
+    assert.equal(
+      await finished(sandbox),
+      0,
+      "Packaged Python/shell sandbox must pass isolation checks",
+    );
+    console.log(
+      "✓ Independently packaged Python/shell tools pass the full Bubblewrap isolation acceptance",
+    );
     const http = start(
       process.execPath,
       ["--conditions=react-server", "--import", "tsx", "scripts/test-platform-http.ts"],
@@ -96,6 +110,7 @@ async function main() {
           assertions: [
             "Web standalone复制到独立临时目录启动",
             "AI Worker独立打包启动",
+            "独立打包的Python和shell通过真实Bubblewrap隔离验收",
             "真实HTTP注册角色、业务闭环、私有配图与学情筛选验证通过",
           ],
           limits: ["使用本机Node/Python/PostgreSQL，未替代Docker或实体扫描仪验收"],

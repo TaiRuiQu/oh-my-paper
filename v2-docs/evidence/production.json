@@ -1,10 +1,11 @@
 {
-  "timestamp": "2026-10-14T15:02:09.058Z",
+  "timestamp": "2026-10-15T01:34:44.730Z",
   "success": true,
   "assertions": [
     "Web standalone复制到独立临时目录启动",
     "AI Worker独立打包启动",
-    "真实HTTP托管账号登录、角色权限、业务闭环、私有配图与学情筛选验证通过"
+    "独立打包的Python和shell通过真实Bubblewrap隔离验收",
+    "真实HTTP注册角色、业务闭环、私有配图与学情筛选验证通过"
   ],
   "limits": ["使用本机Node/Python/PostgreSQL，未替代Docker或实体扫描仪验收"]
 }

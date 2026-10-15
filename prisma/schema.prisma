@@ -109,6 +109,35 @@ model AiSetting {
   @@map("ai_settings")
 }
 
+model EmbeddingSetting {
+  id String @id @default("question-bank")
+  name String
+  apiType String
+  baseURL String
+  model String
+  dimensions Int
+  encryptedApiKey String
+  enabled Boolean @default(true)
+  version String @default(uuid())
+  updatedAt DateTime @updatedAt
+  @@map("embedding_settings")
+}
+
+// Durable outbox, deliberately without a Question FK so deletion tombstones survive.
+model QuestionSearchIndex {
+  questionId String @id
+  version String
+  revision String @default(uuid())
+  indexedRevision String?
+  action String @default("UPSERT")
+  status String @default("PENDING")
+  attempts Int @default(0)
+  error String?
+  updatedAt DateTime @updatedAt
+  @@index([version, status, updatedAt])
+  @@map("question_search_indexes")
+}
+
 model Question {
   id String @id @default(uuid())
   ownerId String

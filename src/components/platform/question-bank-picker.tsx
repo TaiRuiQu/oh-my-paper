@@ -1,8 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { BankQuestion } from "@/contracts/platform";
+import type {
+  QuestionSearchFilters,
+  QuestionSearchMode,
+  QuestionSearchResults,
+} from "@/contracts/platform-search";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Sheet,
   SheetContent,
@@ -12,42 +16,64 @@ import {
 } from "@/components/ui/sheet";
 import { MarkdownText } from "@/components/markdown-text";
 import { QUESTION_LABELS } from "./questions";
-export function useQuestionPage(
-  filters: { q?: string; subject?: string; grade?: string; type?: string },
-  page: number,
-) {
-  const [data, setData] = useState<{ questions: BankQuestion[]; total: number }>({
+import { QuestionSearchControls } from "./question-search-controls";
+export function useQuestionPage(filters: QuestionSearchFilters, page: number) {
+  const [data, setData] = useState<
+    Partial<QuestionSearchResults> & {
+      questions: BankQuestion[];
+      total: number;
+      key?: string;
+      error?: string;
+    }
+  >({
     questions: [],
     total: 0,
   });
-  const [loading, setLoading] = useState(true),
-    [error, setError] = useState("");
-  const query = new URLSearchParams({ ...filters, page: String(page) }).toString();
+  const [attempt, setAttempt] = useState(0);
+  const query = new URLSearchParams(
+    Object.entries({ ...filters, page: String(page) }).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
+  ).toString();
+  const key = `${query}:${attempt}`;
+  const idle = filters.searchMode === "semantic" && !filters.q?.trim();
   useEffect(() => {
+    if (idle) return;
     const controller = new AbortController();
     const timer = setTimeout(async () => {
-      setLoading(true);
-      setError("");
       try {
         const response = await fetch(`/api/platform/questions?${query}`, {
           signal: controller.signal,
         });
         const result = await response.json();
         if (!response.ok) throw new Error(result.error ?? "题库加载失败");
-        setData(result);
+        if (!controller.signal.aborted) setData({ ...result, key });
       } catch (err) {
         if (!controller.signal.aborted)
-          setError(err instanceof Error ? err.message : "题库加载失败");
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
+          setData({
+            key,
+            questions: [],
+            total: 0,
+            error: err instanceof Error ? err.message : "题库加载失败",
+          });
       }
     }, 180);
     return () => {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [query]);
-  return { ...data, loading, error };
+  }, [query, key, idle]);
+  const current = !idle && data.key === key;
+  return {
+    questions: current ? data.questions : [],
+    total: current ? data.total : 0,
+    indexedTotal: current ? data.indexedTotal : undefined,
+    warning: current ? data.warning : undefined,
+    loading: !idle && !current,
+    error: current ? (data.error ?? "") : "",
+    idle,
+    retry: () => setAttempt((value) => value + 1),
+  };
 }
 export function useBankQuestion(id?: string) {
   const [data, setData] = useState<{ question?: BankQuestion; loading: boolean; error?: string }>({
@@ -87,7 +113,7 @@ export function QuestionBankPicker({
       <SheetContent className="p-bank-picker" side="right">
         <SheetHeader>
           <SheetTitle>从题库导入一道题目</SheetTitle>
-          <SheetDescription>按加入时间从新到旧排列，每页 20 题。</SheetDescription>
+          <SheetDescription>用关键词或题意查找试题，每页 20 题。</SheetDescription>
         </SheetHeader>
         {open && (
           <BankResults
@@ -113,24 +139,36 @@ function BankResults({
   onImport: (q: BankQuestion) => void;
 }) {
   const [q, setQuery] = useState(""),
+    [searchMode, setSearchMode] = useState<QuestionSearchMode>("keyword"),
     [page, setPage] = useState(1);
-  const { questions, total, loading, error } = useQuestionPage({ subject, q }, page);
+  const { questions, total, loading, error, idle, warning, retry } = useQuestionPage(
+    { subject, q, searchMode },
+    page,
+  );
   return (
     <div className="p-bank-results">
-      <Input
-        autoFocus
-        aria-label="搜索题库"
-        placeholder="搜索题干或完整知识点"
-        value={q}
-        onChange={(e) => {
-          setQuery(e.target.value);
+      <QuestionSearchControls
+        compact
+        query={q}
+        mode={searchMode}
+        onSearch={(query, mode) => {
+          setQuery(query);
+          setSearchMode(mode);
           setPage(1);
         }}
       />
       <p className="p-muted" role="status">
-        {loading ? "正在查询…" : `${total} 道题 · 第 ${page} 页`}
+        {idle ? "输入题意后开始搜索。" : loading ? "正在查询…" : `${total} 道题 · 第 ${page} 页`}
       </p>
-      {error && <p role="alert">{error}</p>}
+      {warning && <p className="p-notice">{warning}</p>}
+      {error && (
+        <div className="p-notice error" role="alert">
+          <p>{error}</p>
+          <Button type="button" variant="outline" onClick={retry}>
+            重新查询
+          </Button>
+        </div>
+      )}
       <div className="p-bank-results-list" aria-busy={loading}>
         {questions.map((question) => (
           <article className="p-bank-item" key={question.id}>
@@ -149,13 +187,15 @@ function BankResults({
             </Button>
           </article>
         ))}
-        {!loading && !questions.length && <p>没有匹配的题目。</p>}
+        {!idle && !loading && !error && !questions.length && (
+          <p>没有匹配的题目，请调整描述或筛选条件。</p>
+        )}
       </div>
       <div className="p-actions">
         <Button
           type="button"
           variant="outline"
-          disabled={loading || page === 1}
+          disabled={idle || !!error || loading || page === 1}
           onClick={() => setPage(page - 1)}
         >
           上一页
@@ -163,7 +203,7 @@ function BankResults({
         <Button
           type="button"
           variant="outline"
-          disabled={loading || page * 20 >= total}
+          disabled={idle || !!error || loading || page * 20 >= total}
           onClick={() => setPage(page + 1)}
         >
           下一页

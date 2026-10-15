@@ -9,6 +9,7 @@ import { loadEnvironment } from "./load-env.mjs";
 import {
   claimAiJob,
   enqueueAiJob,
+  getAiJob,
   listAiJobs,
   retryAiJob,
   runClaimedAiJob,
@@ -101,6 +102,12 @@ async function main() {
       second = await enqueueAiJob("outside", request);
     assert.equal((await listAiJobs("teacher")).jobs.length, 1);
     assert.equal((await listAiJobs("outside")).jobs[0].id, second.id);
+    assert.equal((await getAiJob("teacher", first.id)).id, first.id);
+    await assert.rejects(getAiJob("outside", first.id), /AI 任务不存在/);
+    await assert.rejects(getAiJob("student", first.id), /AI 任务不存在/);
+    await assert.rejects(getAiJob("admin", first.id), /AI 任务不存在/);
+    await assert.rejects(getAiJob("teacher", "missing-job"), /AI 任务不存在/);
+    assert.deepEqual(Object.keys((await listAiJobs("teacher")).models[0]).sort(), ["id", "name"]);
     const claims = await Promise.all([claimAiJob("worker-a"), claimAiJob("worker-b")]);
     assert.equal(claims.filter(Boolean).length, 1);
     const job = claims.find(Boolean)!;

@@ -24,6 +24,7 @@ async function main() {
     paperDb?: InstanceType<typeof PrismaClient>;
   };
   const previous = globalDb.paperDb;
+  const tasks: { dispose: () => Promise<void> }[] = [];
   globalDb.paperDb = db;
   try {
     await sql.connect();
@@ -32,7 +33,13 @@ async function main() {
     for (const folder of (await readdir("prisma/migrations")).filter((f) => /^\d/.test(f)).sort())
       await sql.query(await readFile(join("prisma/migrations", folder, "migration.sql"), "utf8"));
     const { executeCommand, loadState } = await import("../src/server/platform/service");
-    const { createTaskFeatures } = await import("../src/server/platform/ai/features");
+    const { createTaskFeatures: createFeatures } =
+      await import("../src/server/platform/ai/features");
+    const createTaskFeatures = async (options: Parameters<typeof createFeatures>[0]) => {
+      const features = await createFeatures(options);
+      tasks.push(features);
+      return features;
+    };
     const { saveImage } = await import("../src/server/platform/assets");
     for (const id of ["teacher", "second"])
       await db.user.create({ data: { id, name: id, email: `${id}@domain.test`, role: "TEACHER" } });
@@ -49,6 +56,37 @@ async function main() {
       const tool = f.tools[name];
       if (!tool?.execute) throw new Error(`Tool missing: ${name}`);
       return tool.execute(input, { toolCallId: randomUUID(), messages: [], context: undefined });
+    };
+    const image = async (
+      features: Awaited<ReturnType<typeof createTaskFeatures>>,
+      url: string,
+      name: string,
+      box?: [number, number, number, number],
+    ) => {
+      const output = (await call(features, "python", {
+        code: [
+          "import json",
+          "from pathlib import Path",
+          "from PIL import Image",
+          "with open('/inputs/context.json') as file: manifest = json.load(file)",
+          `source = next(asset['path'] for asset in manifest['assets'] if asset['url'] == ${JSON.stringify(url)})`,
+          "image = Image.open(source)",
+          ...(box
+            ? [
+                `x, y, width, height = ${JSON.stringify(box)}`,
+                "left, top = int(x * image.width), int(y * image.height)",
+                "image = image.crop((left, top, left + int(width * image.width), top + int(height * image.height)))",
+              ]
+            : []),
+          "Path('/workspace/output').mkdir(exist_ok=True)",
+          `image.save('/workspace/output/${name}')`,
+        ].join("\n"),
+        assets: [url],
+        images: [name],
+      })) as { exitCode: number; stderr: string; images: { image: string; url?: string }[] };
+      assert.equal(output.exitCode, 0, output.stderr);
+      assert.equal(output.images.length, 1);
+      return output.images[0];
     };
     const makeJob = async (kind: string, input: unknown) =>
       db.aiJob.create({
@@ -85,14 +123,12 @@ async function main() {
         input: importInput,
         jobId: importJob.id,
       });
-    await call(importer, "inspect_image", { url: source.url });
+    await image(importer, source.url, "source.png");
     await call(importer, "record_source_inventory", {
       sources: [{ url: source.url, totalQuestions: 1 }],
     });
-    const crop = (await call(importer, "crop_material", {
-      url: source.url,
-      box: { x: 0.1, y: 0.2, width: 0.3, height: 0.25 },
-    })) as { url: string };
+    const crop = await image(importer, source.url, "diagram.png", [0.1, 0.2, 0.3, 0.25]);
+    assert.ok(crop.url);
     await call(importer, "propose_question", {
       sourceKey: "page1:q1",
       question: {
@@ -133,7 +169,7 @@ async function main() {
         jobId: enrichJob.id,
       });
     await call(enricher, "read_question", { questionId: imported.id });
-    await call(enricher, "inspect_image", { url: crop.url });
+    await image(enricher, crop.url, "illustration.png");
     await call(enricher, "propose_enrichment", {
       questionId: imported.id,
       knowledgeTags: ["函数图像"],
@@ -369,14 +405,12 @@ async function main() {
         input: importInput,
         jobId: badJob.id,
       });
-    await call(bad, "inspect_image", { url: source.url });
+    await image(bad, source.url, "source.png");
     await call(bad, "record_source_inventory", {
       sources: [{ url: source.url, totalQuestions: 1 }],
     });
-    const doomedCrop = (await call(bad, "crop_material", {
-      url: source.url,
-      box: { x: 0, y: 0, width: 0.2, height: 0.2 },
-    })) as { url: string };
+    const doomedCrop = await image(bad, source.url, "diagram.png", [0, 0, 0.2, 0.2]);
+    assert.ok(doomedCrop.url);
     await call(bad, "propose_question", {
       sourceKey: "q",
       question: {
@@ -405,6 +439,7 @@ async function main() {
     );
     console.log("AI domain atomicity acceptance passed without external model calls.");
   } finally {
+    await Promise.allSettled(tasks.map((features) => features.dispose()));
     globalDb.paperDb = previous;
     await db.$disconnect();
     await sql.query(`DROP SCHEMA IF EXISTS "${schema}" CASCADE`);

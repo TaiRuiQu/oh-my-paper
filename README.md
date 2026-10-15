@@ -21,11 +21,16 @@
 
 需要 Node.js 24.19+（24.x）、pnpm 11、PostgreSQL 和 Python 3.11+。
 
+题库支持关键词与语义搜索。语义搜索另需 [Qdrant](https://qdrant.tech/documentation/quickstart/)，在 `.env` 设置 `QDRANT_URL`、`QDRANT_API_KEY`；关键词搜索不依赖向量服务。管理员在后台配置兼容 OpenAI 或 Google 的向量化接口、模型名称及输出维度，密钥加密保存且不会通过接口返回。先保存配置，再明确点击「重建索引」处理存量题目；这会产生模型调用费用。新建、编辑、删除题目由 AI Worker 异步同步，包括 AI 导入和补全，索引失败不会阻断题目保存，可在后台查看失败数量后重建。
+
+向量按模型配置版本隔离，更换接口、模型或维度后需重新索引存量题目。停用向量化模型不影响关键词搜索；重新启用后自动处理停用期间的题目变更。语义结果按相似度分页，学科、年级、题型与账号权限均在向量检索之前过滤；尚未完成索引的题目不会参与语义搜索，页面会提示缺口。
+
 ```sh
 pnpm install --frozen-lockfile
 cp .env.example .env
 python3 -m venv .venv
 .venv/bin/pip install -r tools/card-scan/requirements.txt
+.venv/bin/pip install -r tools/sandbox/requirements.txt
 pnpm db:generate
 pnpm db:deploy
 pnpm dev
@@ -49,9 +54,12 @@ pnpm dev
 pnpm check
 pnpm build
 pnpm test:integration
+# 需真实 Qdrant；模型使用本地 HTTP 测试服务，不调用付费接口：
+pnpm test:semantic-search
 pnpm test:scan
 pnpm test:ai-jobs
 pnpm test:ai-domain
+pnpm test:sandbox
 pnpm test:http
 # 使用已配置真实模型（会调用供应商）：
 pnpm test:ai-live
@@ -85,6 +93,10 @@ sudo docker compose up -d --build
 开发可分别运行 `pnpm dev:web` 与 `pnpm dev:ai-worker`。部署不要只启动 Web，否则 AI 任务会停留在排队状态。Worker 接收到 SIGINT / SIGTERM 后完成当前任务再退出；部署停止宽限期应覆盖供应商请求超时。真实模型能力和端到端验收单独记录，队列测试的模拟执行器不能替代真实 AI 验收。
 
 AI 六项能力分别为图片试题导入、答案／解析／评分标准／知识点补全、按分布组卷、答题卡制作、逐题阅卷和薄弱知识点推题。每项通过自主 Agent 工具调用检查上下文并提交结构化结果，使用现有业务权限与校验。`test:ai-domain` 检查工具真实持久化，`test:ai-live` 调用已配置供应商模型；只有实际模型完成证据才能确认相应真实 AI 验收。
+
+所有 AI 任务的完整执行过程位于 `/workspace/ai/[id]`，任务目录为 `/workspace/ai`；业务页只显示状态与入口。仅任务本人能查看轨迹，失败重试生成新任务。模型选择仅展示模型名称。
+
+六类 Agent 都有通用 `python` 和 `shell` 工具，沿用 v0.1.15 的 Bubblewrap 沙箱设计。模型可自行编写图像查看、裁切、数值与符号计算代码，专用 `inspect_image`、`crop_material` 已移除。Linux 主机需安装 `bubblewrap`、`util-linux` 以及上述 Python 依赖；AI Worker 镜像已包含这些依赖。每个任务拥有共享的 100 MiB 临时工作区、只读授权输入、独立用户/进程/网络命名空间，每次执行限制为 60 秒、30 秒 CPU、512 MiB 地址空间；运行结束会清理子进程和工作区。代码、命令及文本输出会保存在独立执行轨迹中。业务提交工具继续检查资源权限、结果完整性与原子写入，工具清单见 [Agent 工具说明](docs/agent-tools.zh-CN.md)。
 
 ## 当前验收记录
 

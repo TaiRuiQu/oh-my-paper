@@ -1,24 +1,20 @@
 "use client";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { DOCUMENT_UPLOAD_ACCEPT } from "@/contracts/uploads";
 import { uploadDocument } from "@/lib/document-upload";
 import { useQuestionPage } from "./question-bank-picker";
+import { QuestionSearchControls } from "./question-search-controls";
+import type { QuestionSearchMode } from "@/contracts/platform-search";
 import { GradeSelect } from "./grade-select";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MAX_AI_IMPORT_PAGES, type AiJobDTO, type AiKind } from "@/contracts/platform-ai";
 import { SUBJECTS, type PlatformState, type QuestionType } from "@/contracts/platform";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { Empty, Field, Panel, readForm, stringField, numberField } from "./primitives";
-import { QUESTION_LABELS, QuestionBody } from "./questions";
-const names: Record<AiKind, string> = {
-  IMPORT: "图片识别导入",
-  ENRICH: "知识点与参考答案",
-  ASSEMBLE: "智能组卷",
-  TEMPLATE: "智能答题卡",
-  GRADE: "AI 阅卷",
-  RECOMMEND: "巩固练习推荐",
-};
-type Models = { id: string; name: string; providerName: string }[];
+import { QUESTION_LABELS } from "./questions";
+import { AI_JOB_NAMES as names, aiJobHref } from "@/lib/ai-job-display";
+import { AIJobList } from "./ai-job-list";
+type Models = { id: string; name: string }[];
 export function PlatformAI({
   state,
   tab,
@@ -34,11 +30,13 @@ export function PlatformAI({
   refresh: () => Promise<void>;
   notify: (message: string, error?: boolean) => void;
 }) {
+  const router = useRouter();
   const [models, setModels] = useState<Models>([]),
     [jobs, setJobs] = useState<AiJobDTO[]>([]),
     [modelId, setModelId] = useState(""),
     [busy, setBusy] = useState(false),
-    [failure, setFailure] = useState("");
+    [failure, setFailure] = useState(""),
+    [loading, setLoading] = useState(true);
   const completed = useRef(new Set<string>()),
     loaded = useRef(false);
   const poll = useCallback(async () => {
@@ -56,6 +54,8 @@ export function PlatformAI({
       loaded.current = true;
     } catch (e) {
       setFailure(e instanceof Error ? e.message : "AI 任务加载失败");
+    } finally {
+      setLoading(false);
     }
   }, [refresh]);
   useEffect(() => {
@@ -75,6 +75,7 @@ export function PlatformAI({
       });
       await poll();
       notify(`${names[kind]}已提交，关闭页面后仍会继续执行。`);
+      router.push(aiJobHref(result.id));
       return result;
     } catch (e) {
       notify(e instanceof Error ? e.message : "AI 任务提交失败", true);
@@ -114,14 +115,10 @@ export function PlatformAI({
                 onChange={(e) => setModelId(e.target.value)}
                 disabled={!models.length}
               >
-                <option value="">
-                  {models[0]
-                    ? `默认：${models[0].providerName} · ${models[0].name}`
-                    : "暂无可用模型"}
-                </option>
+                <option value="">{models[0] ? `默认：${models[0].name}` : "暂无可用模型"}</option>
                 {models.map((m) => (
                   <option key={m.id} value={m.id}>
-                    {m.providerName} · {m.name}
+                    {m.name}
                   </option>
                 ))}
               </select>
@@ -146,24 +143,13 @@ export function PlatformAI({
           </div>
         </Panel>
       )}
-      <AIJobs
+      <AIJobList
         jobs={jobs}
         mode={mode}
         failure={failure}
-        retry={async (id) => {
-          setBusy(true);
-          try {
-            await apiRequest(`/api/platform/ai/${id}/retry`, { method: "POST", ...jsonBody({}) });
-            await poll();
-            notify("任务已重新排队。");
-          } catch (e) {
-            notify(e instanceof Error ? e.message : "重试失败", true);
-          } finally {
-            setBusy(false);
-          }
-        }}
-        busy={busy}
-        state={state}
+        loading={loading}
+        compact={Boolean(mode)}
+        refresh={poll}
       />
     </>
   );
@@ -180,8 +166,17 @@ function AIImport({
   importKind?: "EXAM" | "HOMEWORK";
 }) {
   const [bankQuery, setBankQuery] = useState(""),
+    [bankSearchMode, setBankSearchMode] = useState<QuestionSearchMode>("keyword"),
     [bankPage, setBankPage] = useState(1);
-  const { questions, total, loading: bankLoading } = useQuestionPage({ q: bankQuery }, bankPage);
+  const {
+    questions,
+    total,
+    loading: bankLoading,
+    error: bankError,
+    warning: bankWarning,
+    idle: bankIdle,
+    retry: retryBank,
+  } = useQuestionPage({ q: bankQuery, searchMode: bankSearchMode }, bankPage);
   const [selected, setSelected] = useState<string[]>([]),
     [files, setFiles] = useState<File[]>([]),
     [uploading, setUploading] = useState(false),
@@ -271,15 +266,26 @@ function AIImport({
         <details>
           <summary>为已有试题生成知识点、标准答案与评分标准</summary>
           <div className="p-form">
-            <Field label="检索题目">
-              <input
-                value={bankQuery}
-                onChange={(e) => {
-                  setBankQuery(e.target.value);
-                  setBankPage(1);
-                }}
-              />
-            </Field>
+            <QuestionSearchControls
+              compact
+              query={bankQuery}
+              mode={bankSearchMode}
+              onSearch={(query, mode) => {
+                setBankQuery(query);
+                setBankSearchMode(mode);
+                setBankPage(1);
+              }}
+            />
+            {bankLoading && <p role="status">正在查询题库…</p>}
+            {bankWarning && <p className="p-notice">{bankWarning}</p>}
+            {bankError && (
+              <div className="p-notice error" role="alert">
+                <p>{bankError}</p>
+                <button type="button" className="button secondary" onClick={retryBank}>
+                  重新查询
+                </button>
+              </div>
+            )}
             {questions.length ? (
               questions.map((q) => (
                 <label key={q.id} className="p-check">
@@ -299,9 +305,11 @@ function AIImport({
                   </span>
                 </label>
               ))
-            ) : (
-              <Empty>先创建或导入试题。</Empty>
-            )}
+            ) : !bankLoading && !bankError ? (
+              <Empty>
+                {bankIdle ? "输入题意后开始搜索。" : "没有匹配的试题，请调整搜索或先创建题目。"}
+              </Empty>
+            ) : null}
             <button
               className="button"
               disabled={busy || !selected.length}
@@ -313,7 +321,7 @@ function AIImport({
               <button
                 type="button"
                 className="button secondary"
-                disabled={bankLoading || bankPage === 1}
+                disabled={bankIdle || !!bankError || bankLoading || bankPage === 1}
                 onClick={() => setBankPage(bankPage - 1)}
               >
                 上一页
@@ -324,7 +332,7 @@ function AIImport({
               <button
                 type="button"
                 className="button secondary"
-                disabled={bankLoading || bankPage * 20 >= total}
+                disabled={bankIdle || !!bankError || bankLoading || bankPage * 20 >= total}
                 onClick={() => setBankPage(bankPage + 1)}
               >
                 下一页
@@ -634,163 +642,5 @@ function AISelect({
             : "分析薄弱点并推荐练习"}
       </button>
     </form>
-  );
-}
-function AIJobs({
-  jobs,
-  mode,
-  failure,
-  retry,
-  busy,
-  state,
-}: {
-  jobs: AiJobDTO[];
-  mode: AiKind | null;
-  failure: string;
-  retry: (id: string) => Promise<void>;
-  busy: boolean;
-  state: PlatformState;
-}) {
-  const relevant = jobs.filter(
-    (j) => !mode || j.kind === mode || (mode === "IMPORT" && j.kind === "ENRICH"),
-  );
-  if (!relevant.length && !failure)
-    return (
-      <Panel title="AI 任务记录">
-        <Empty>暂无任务。提交任务后可在这里查看执行进度与结果。</Empty>
-      </Panel>
-    );
-  return (
-    <Panel title="AI 任务" description="后台任务会保留进度与结果，页面每三秒更新。">
-      {failure && (
-        <p role="alert" className="p-notice error">
-          {failure}
-        </p>
-      )}
-      {relevant.slice(0, 20).map((job) => {
-        const result =
-          job.result && typeof job.result === "object"
-            ? (job.result as {
-                summary?: string;
-                result?: {
-                  recommendations?: unknown[];
-                  paperId?: string;
-                  paperKind?: "EXAM" | "HOMEWORK";
-                };
-                recommendations?: unknown[];
-              })
-            : null;
-        return (
-          <article key={job.id} className="p-question">
-            <div className="p-question-head">
-              <strong>{names[job.kind]}</strong>
-              <span
-                className={`p-status${job.status === "COMPLETED" ? " success" : job.status === "FAILED" ? " warning" : ""}`}
-              >
-                {
-                  {
-                    QUEUED: "等待执行",
-                    RUNNING: "正在处理",
-                    COMPLETED: "已完成",
-                    FAILED: "执行失败",
-                  }[job.status]
-                }
-              </span>
-            </div>
-            <p className="p-muted">
-              提交于{" "}
-              {new Date(job.createdAt).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" })}
-            </p>
-            {result?.summary && <p>{result.summary}</p>}
-            {job.status === "COMPLETED" && result?.result?.paperId && (
-              <Link
-                className="button secondary"
-                href={`${result.result.paperKind === "HOMEWORK" ? "/homework" : "/exams/papers"}/${result.result.paperId}/edit`}
-              >
-                核对并编辑{result.result.paperKind === "HOMEWORK" ? "作业" : "试卷"}
-              </Link>
-            )}
-            {job.error && (
-              <p role="alert" className="field-error">
-                {job.error}
-              </p>
-            )}
-            {job.status === "FAILED" && (
-              <button
-                className="button secondary"
-                disabled={busy}
-                onClick={() => void retry(job.id)}
-              >
-                重试任务
-              </button>
-            )}
-            {job.events.length > 0 && (
-              <details>
-                <summary>查看执行记录（{job.events.length}）</summary>
-                <div className="p-ai-events">
-                  {job.events.map((event, index) => {
-                    const data =
-                      event && typeof event === "object"
-                        ? (event as {
-                            type?: string;
-                            tool?: string;
-                            name?: string;
-                            status?: string;
-                            message?: string;
-                            summary?: string;
-                          })
-                        : null;
-                    return (
-                      <p key={index} className="p-muted">
-                        {data?.message ??
-                          data?.summary ??
-                          [data?.type, data?.tool ?? data?.name, data?.status]
-                            .filter(Boolean)
-                            .join(" · ") ??
-                          "处理中"}
-                      </p>
-                    );
-                  })}
-                </div>
-              </details>
-            )}
-            {job.kind === "RECOMMEND" &&
-              (result?.recommendations ?? result?.result?.recommendations) && (
-                <div>
-                  {(result.recommendations ?? result.result?.recommendations ?? []).map(
-                    (rec, i) => {
-                      const id =
-                        typeof rec === "string"
-                          ? rec
-                          : rec && typeof rec === "object"
-                            ? ((rec as { questionId?: string; id?: string }).questionId ??
-                              (rec as { id?: string }).id)
-                            : undefined;
-                      const embedded =
-                        rec && typeof rec === "object"
-                          ? (rec as { question?: PlatformState["questions"][number] }).question
-                          : undefined;
-                      const question = embedded ?? state.questions.find((q) => q.id === id);
-                      return question ? (
-                        <div className="p-question" key={id}>
-                          <QuestionBody question={question} />
-                        </div>
-                      ) : (
-                        <p className="p-muted" key={i}>
-                          {rec && typeof rec === "object"
-                            ? ((rec as { reason?: string; stem?: string }).reason ??
-                              (rec as { stem?: string }).stem ??
-                              "已生成推荐题目")
-                            : String(rec)}
-                        </p>
-                      );
-                    },
-                  )}
-                </div>
-              )}
-          </article>
-        );
-      })}
-    </Panel>
   );
 }

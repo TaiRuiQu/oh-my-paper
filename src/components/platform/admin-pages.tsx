@@ -24,7 +24,7 @@ export function AdminPage({
           {
             overview: "查看平台教学资源和账号分布，进入具体管理页面处理配置。",
             users: "添加教师和学生账号，分配角色与登录凭据。学生只能查看本人学习数据。",
-            models: "维护模型供应商、可用模型与调用配置。",
+            models: "维护 AI 模型接入、向量化模型与题库语义搜索索引。",
             jobs: "跟进自主 Agent 的执行状态，查看结果和失败原因。",
           }[view]
         }
@@ -91,7 +91,7 @@ export function AdminPage({
                 账号角色管理<span>{state.users.length} 个账号</span>
               </Link>
               <Link href="/admin/models">
-                模型供应商与模型配置<span>进入配置</span>
+                AI 与向量化模型配置<span>进入配置</span>
               </Link>
               <Link href="/admin/jobs">
                 后台 AI 任务<span>查看执行状态</span>

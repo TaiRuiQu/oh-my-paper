@@ -24,6 +24,7 @@ sudo chown 1000:1000 storage tmp
 - `BETTER_AUTH_URL`：生产 HTTPS 地址。
 - `BETTER_AUTH_SECRET`：持久认证密钥。
 - `PROVIDER_KEY_ENCRYPTION_KEY`：持久提供商密钥加密密钥。
+- `QDRANT_API_KEY`：随机向量数据库访问密钥，Compose 内部 Qdrant 与应用共用。
 - `APP_VERSION=latest`：跟踪最新 v2 镜像。
 
 已有部署必须保留原认证密钥、提供商加密密钥和数据库凭据。私有仓库或私有 GHCR 镜像先登录：
@@ -43,7 +44,38 @@ sudo docker compose -f compose.yaml -f compose.release.yaml logs --tail=100 migr
 curl -fsS https://你的域名/api/health
 ```
 
-`migrate` 成功退出后，Web 和 AI Worker 才会启动。AI Worker 必须保持运行，否则 AI 任务会停留在队列中。不要使用 `sudo docker compose down -v`，它会删除数据库和 Caddy 持久卷。
+`migrate` 成功退出后，Web 和 AI Worker 才会启动。AI Worker 必须保持运行，否则 AI 任务及题库向量索引会停留在队列中。不要使用 `sudo docker compose down -v`，它会删除数据库、Qdrant 和 Caddy 持久卷。
+
+## 题库向量搜索
+
+当前 Compose 包含 `qdrant/qdrant:v1.19.2`，仅通过内部网络向应用提供 HTTP 服务，不发布 6333/6334 端口。应用使用 `QDRANT_URL=http://qdrant:6333`；本地运行可配置其他 Qdrant 服务。`QDRANT_COLLECTION_PREFIX` 可隔离同一 Qdrant 上的不同部署，必须使用字母、数字、下划线或连字符。
+
+已有部署升级时需同步本次 `compose.yaml`、在 `.env` 加入 `QDRANT_API_KEY` 并重新执行 Compose 启动命令，拉取应用镜像本身不会增加 Qdrant 服务。备份应覆盖 PostgreSQL、Qdrant 持久卷和原有素材目录。
+
+在后台「AI 模型配置」保存独立的向量化模型，支持 OpenAI 兼容 `/embeddings` 或 Google embedding 接口。填写服务实际支持的模型 ID 与输出维度；服务返回维度不一致时明确失败。密钥使用现有 `PROVIDER_KEY_ENCRYPTION_KEY` 加密，不回传明文。
+
+保存配置不会批量调用模型。管理员点击「重建索引」后，AI Worker 才会对存量题逐题向量化，会产生接口费用；之后题目写入由数据库 outbox 自动异步同步。关键词模式在向量服务未配置或不可用时仍可使用。失败任务不自动重复计费，检查后台安全诊断后可手动重建重试；进程中断的索引在五分钟后标记失败。
+
+更换模型、接口或维度会创建独立版本集合，旧向量不参与新模型检索，需手动重建。停用期间仍记录题目变更，重新启用后继续处理。旧版本 Qdrant 集合保留用于人工检查，可在确认切换完成后删除对应旧版本集合；删除当前版本集合后必须重建。若仅恢复了 PostgreSQL 或 Qdrant 一方，也须重建以恢复一致性。后台统计来自 PostgreSQL 的已确认同步记录，Qdrant 存储丢失不会自动变为索引失败。
+
+语义检索先从 PostgreSQL 计算当前账号可用且已同步的候选 ID，再将这些 ID 交给 Qdrant 过滤并按余弦相似度分页，防止待同步修改和删除泄漏旧内容。候选 ID 随题库大小增长；超大规模部署应结合实际负载优化候选过滤。查询仅返回本库题目，未索引题目会显示缺口提示。
+
+`pnpm test:semantic-search` 使用真实 Qdrant 及独立 PostgreSQL schema，向量化接口由本地 HTTP 服务提供，不调用外部付费模型。可通过 `QDRANT_TEST_BINARY` 指定本地 Qdrant 二进制，或直接连接 `QDRANT_URL`；测试集合使用独立前缀并在结束时清理。该测试验证索引与检索机制，不代表外部模型的语义质量。
+
+## Agent Python / shell 沙箱
+
+AI Worker 镜像包含 Bubblewrap、Python、util-linux 和 `tools/sandbox/requirements.txt` 中的图像与科学计算依赖，`PYTHON_SANDBOX_VENV=/opt/python-sandbox`。本地开发需安装相同系统依赖，并在 `.venv` 安装该 requirements；自定义虚拟环境可设置 `PYTHON_SANDBOX_VENV`。
+
+Compose 的 `ai-worker` 沿用 v0.1.15 配置：`cap_drop: [ALL]`，`no-new-privileges:true`、`seccomp:unconfined`、`apparmor:unconfined`、`systempaths=unconfined`。这些设置使 Bubblewrap 可以建立独立用户/进程/网络命名空间和私有 `/proc`，实际模型代码仍在只读根、禁网和受限工作区内运行。不要只拉取镜像而保留旧 Compose；升级后需重新创建 Worker。
+
+```bash
+sudo docker compose -f compose.yaml -f compose.release.yaml up -d --force-recreate ai-worker
+sudo docker compose -f compose.yaml -f compose.release.yaml exec ai-worker node --conditions=react-server sandbox-check.mjs
+```
+
+`sandbox-check.mjs` 是随 Worker 打包的完整隔离验收程序，CI 也会在真实 Docker Worker 中执行；本地可使用 `pnpm test:sandbox`。`pnpm doctor` 会执行包含 user/PID/network namespace、proc/dev 和只读根挂载的沙箱探针。
+
+如果日志显示 `creating new user namespace`、`RTM_NEWADDR` 或 UID 映射失败，先检查宿主机用户命名空间策略。Ubuntu 的 AppArmor 限制可按主机运维策略配置 Bubblewrap 专用 profile；沿用旧部署方式时可设置 `kernel.apparmor_restrict_unprivileged_userns=0` 并持久化后验证。若显示 `Can't mount proc`，用 `docker inspect` 核对 Worker 的 `HostConfig.SecurityOpt`，以及 `MaskedPaths`、`ReadonlyPaths` 均为空；`systempaths=unconfined` 使用等号。失败时不会在宿主机直接执行模型代码。
 
 ## 配置 v2 定时更新器
 

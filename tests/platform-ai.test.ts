@@ -1,4 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { MockLanguageModelV4 } from "ai/test";
 import { aiInputSchemas } from "@/contracts/platform-ai";
 import { questionInputSchema } from "@/server/platform/schemas";
@@ -16,6 +19,10 @@ const mocked = vi.hoisted(() => ({
   accessibleAsset: vi.fn(),
   readOwnedAsset: vi.fn(),
   loadAiModel: vi.fn(),
+  createSandboxSession: vi.fn(),
+  sandboxRun: vi.fn(),
+  sandboxDispose: vi.fn(),
+  storagePaths: { temp: "", storage: "" },
 }));
 vi.mock("@/server/platform/service", () => ({
   loadState: mocked.loadState,
@@ -30,8 +37,41 @@ vi.mock("@/server/platform/assets", () => ({
   assetId: (u: string) => u.split("/").at(-1),
 }));
 vi.mock("@/server/platform/ai/model", () => ({ loadAiModel: mocked.loadAiModel }));
-import { createTaskFeatures, validateAssembly } from "@/server/platform/ai/features";
+vi.mock("@/server/ai/sandbox", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/server/ai/sandbox")>()),
+  createSandboxSession: mocked.createSandboxSession,
+}));
+vi.mock("@/server/config/env", () => ({ getStoragePaths: () => mocked.storagePaths }));
+import {
+  createTaskFeatures as createFeatures,
+  validateAssembly,
+} from "@/server/platform/ai/features";
 import { runAiTask, chatToolImages } from "@/server/platform/ai/runner";
+const tasks: Awaited<ReturnType<typeof createFeatures>>[] = [];
+const sandboxImages = new Map<string, Buffer>();
+async function createTaskFeatures(options: Parameters<typeof createFeatures>[0]) {
+  const features = await createFeatures(options);
+  tasks.push(features);
+  return features;
+}
+function imageCode(url: string, name: string, crop?: [number, number, number, number]) {
+  return [
+    "import json",
+    "from PIL import Image",
+    "with open('/inputs/context.json') as file: manifest = json.load(file)",
+    `source = next(asset['path'] for asset in manifest['assets'] if asset['url'] == ${JSON.stringify(url)})`,
+    "image = Image.open(source)",
+    ...(crop ? [`image = image.crop((${crop.join(", ")}))`] : []),
+    `image.save('/workspace/output/${name}')`,
+  ].join("\n");
+}
+async function viewImage(features: Awaited<ReturnType<typeof createFeatures>>, url: string) {
+  return call(features, "python", {
+    code: imageCode(url, "source.png"),
+    assets: [url],
+    images: ["source.png"],
+  });
+}
 const question: BankQuestion = {
   id: "q",
   ownerId: "teacher",
@@ -174,8 +214,43 @@ async function call(
   if (!t?.execute) throw new Error(`Missing tool ${name}`);
   return t.execute(input, { toolCallId: "call", messages: [], context: undefined });
 }
-beforeEach(() => {
+beforeEach(async () => {
   vi.clearAllMocks();
+  mocked.storagePaths.temp = await mkdtemp(join(tmpdir(), "omp-ai-unit-"));
+  mocked.storagePaths.storage = mocked.storagePaths.temp;
+  sandboxImages.clear();
+  mocked.createSandboxSession.mockImplementation(({ directory }: { directory: string }) => ({
+    run: (request: { code?: string; command?: string; images: string[] }) =>
+      mocked.sandboxRun(directory, request),
+    dispose: mocked.sandboxDispose,
+  }));
+  mocked.sandboxRun.mockImplementation(
+    async (directory: string, request: { code?: string; command?: string; images: string[] }) => {
+      const manifest = JSON.parse(
+        await readFile(join(directory, "inputs", "context.json"), "utf8"),
+      ) as {
+        task: unknown;
+        assets: { url: string; path: string }[];
+      };
+      expect(manifest.task).toBeDefined();
+      const source =
+        manifest.assets.find((asset) => request.code?.includes(JSON.stringify(asset.url))) ??
+        manifest.assets[0];
+      return {
+        exitCode: 0,
+        stdout: "",
+        stderr: "",
+        images: await Promise.all(
+          request.images.map(async (name) => ({
+            name,
+            data: (
+              sandboxImages.get(name) ?? (await readFile(join(directory, source.path)))
+            ).toString("base64"),
+          })),
+        ),
+      };
+    },
+  );
   mocked.loadState.mockResolvedValue(state());
   mocked.executeCommand.mockResolvedValue({ id: "saved" });
   const tx = {
@@ -198,6 +273,13 @@ beforeEach(() => {
   mocked.submissionFind.mockResolvedValue(state().submissions[0]);
   mocked.reviewCount.mockResolvedValue(0);
   mocked.jobUpdate.mockResolvedValue({});
+});
+afterEach(async () => {
+  try {
+    await Promise.all(tasks.splice(0).map((features) => features.dispose()));
+  } finally {
+    await rm(mocked.storagePaths.temp, { recursive: true, force: true });
+  }
 });
 const assemble = () =>
   aiInputSchemas.ASSEMBLE.parse({
@@ -237,7 +319,14 @@ describe("AI autonomous tools and constraints", () => {
       jobId: "job",
     });
     await expect(call(f, "finish", { summary: "完成" })).rejects.toThrow(/全部导入/);
-    await call(f, "inspect_image", { url: "/api/platform/assets/source" });
+    const fullPage = (await viewImage(f, "/api/platform/assets/source")) as {
+      images: { image: string; url?: string }[];
+      previews: { url: string; image: string }[];
+    };
+    expect(fullPage.images[0]).not.toHaveProperty("url");
+    expect(fullPage.previews).toEqual([
+      expect.objectContaining({ url: "/api/platform/assets/source", image: expect.any(String) }),
+    ]);
     const draft = questionInputSchema.parse({ ...question, id: undefined });
     await call(f, "propose_question", { sourceKey: "p1-q1", score: 7, question: draft });
     await call(f, "record_source_inventory", {
@@ -328,7 +417,7 @@ describe("AI autonomous tools and constraints", () => {
     expect(mocked.jobUpdate).not.toHaveBeenCalled();
   });
 
-  it("crops non-text source material into actual independent pixel images, not full-page references", async () => {
+  it("stages sandbox-produced illustration pixels and rejects full-page source references", async () => {
     const sharp = (await import("sharp")).default;
     const buffer = await sharp({
       create: { width: 200, height: 300, channels: 3, background: "white" },
@@ -343,7 +432,7 @@ describe("AI autonomous tools and constraints", () => {
       input: { assetUrls: ["/api/platform/assets/source"] },
       jobId: "job",
     });
-    await call(f, "inspect_image", { url: "/api/platform/assets/source" });
+    await viewImage(f, "/api/platform/assets/source");
     await expect(
       call(f, "propose_question", {
         sourceKey: "q1",
@@ -353,19 +442,83 @@ describe("AI autonomous tools and constraints", () => {
         },
       }),
     ).rejects.toThrow(/裁切/);
-    const crop = (await call(f, "crop_material", {
-      url: "/api/platform/assets/source",
-      box: { x: 0.1, y: 0.2, width: 0.3, height: 0.2 },
-    })) as { url: string };
-    const viewed = (await call(f, "inspect_image", { url: crop.url })) as { image: string };
-    const meta = await sharp(Buffer.from(viewed.image, "base64")).metadata();
+    sandboxImages.set(
+      "diagram.png",
+      await sharp(buffer).extract({ left: 20, top: 60, width: 60, height: 60 }).png().toBuffer(),
+    );
+    const output = (await call(f, "python", {
+      code: imageCode("/api/platform/assets/source", "diagram.png", [20, 60, 80, 120]),
+      assets: ["/api/platform/assets/source"],
+      images: ["diagram.png"],
+    })) as { images: { url: string; image: string }[] };
+    const crop = output.images[0];
+    expect(crop.url).toMatch(/^\/api\/platform\/assets\//);
+    const meta = await sharp(Buffer.from(crop.image, "base64")).metadata();
     expect(meta.width).toBe(60);
     expect(meta.height).toBe(60);
+    await viewImage(f, crop.url);
+    const directory = mocked.createSandboxSession.mock.calls[0][0].directory;
+    const manifest = JSON.parse(await readFile(join(directory, "inputs", "context.json"), "utf8"));
+    expect(manifest.assets).toContainEqual(expect.objectContaining({ url: crop.url }));
     await call(f, "propose_question", {
       sourceKey: "q1",
       question: { ...question, content: { ...question.content, images: [crop.url] } },
     });
     expect(mocked.executeCommand).not.toHaveBeenCalled();
+  });
+  it("does not treat a previously mounted failed source as viewed when another source succeeds", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 60, height: 90, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    const source1 = "/api/platform/assets/source1",
+      source2 = "/api/platform/assets/source2";
+    mocked.readOwnedAsset.mockResolvedValue({ buffer });
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    const features = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: { assetUrls: [source1, source2] },
+      jobId: "job",
+    });
+    mocked.sandboxRun.mockResolvedValueOnce({
+      exitCode: 1,
+      stdout: "",
+      stderr: "cannot process this page",
+      images: [],
+    });
+    await call(features, "python", { code: "print('first page')", assets: [source1], images: [] });
+    const output = (await call(features, "python", {
+      code: "print('second page')",
+      assets: [source2],
+      images: [],
+    })) as { previews: { url: string }[] };
+    expect(output.previews.map((preview) => preview.url)).toEqual([source2]);
+    await expect(
+      call(features, "propose_question", { sourceKey: "p1:q1", sourceUrl: source1, question }),
+    ).rejects.toThrow(/已查看/);
+    await call(features, "propose_question", { sourceKey: "p2:q1", sourceUrl: source2, question });
+    await expect(
+      call(features, "record_source_inventory", {
+        sources: [
+          { url: source1, totalQuestions: 0 },
+          { url: source2, totalQuestions: 1 },
+        ],
+      }),
+    ).rejects.toThrow(/先查看每页/);
+    await call(features, "python", {
+      code: "print('retry first page')",
+      assets: [source1],
+      images: [],
+    });
+    await call(features, "record_source_inventory", {
+      sources: [
+        { url: source1, totalQuestions: 0 },
+        { url: source2, totalQuestions: 1 },
+      ],
+    });
   });
   it("requires meaningful answers, explanations and scoring rubrics when enriching", async () => {
     const f = await createTaskFeatures({
@@ -534,7 +687,7 @@ describe("AI autonomous tools and constraints", () => {
     await expect(call(f, "propose_question", { sourceKey: "page1:q1", question })).rejects.toThrow(
       /查看/,
     );
-    await call(f, "inspect_image", { url: "/api/platform/assets/source" });
+    await viewImage(f, "/api/platform/assets/source");
     await call(f, "propose_question", { sourceKey: "page1:q1", question });
     await call(f, "propose_question", {
       sourceKey: "page1:q2",
@@ -580,7 +733,7 @@ describe("AI autonomous tools and constraints", () => {
           {
             type: "tool-result",
             toolCallId: "call",
-            toolName: "inspect_image",
+            toolName: "python",
             output: {
               type: "content",
               value: [
@@ -721,6 +874,52 @@ describe("AI autonomous tools and constraints", () => {
     await next.commit();
     expect(mocked.executeCommand.mock.calls[0][1].review.round).toBe("FIRST");
   });
+  it("requires the question diagram as grading evidence and allows mounting the original answer page", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 100, height: 140, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    const diagram = "/api/platform/assets/question-diagram";
+    const handwriting = "/api/platform/assets/handwriting";
+    const page = "/api/platform/assets/answer-page";
+    const gradingState = state();
+    gradingState.papers[0].items[0].snapshot = {
+      ...question,
+      content: { ...question.content, images: [diagram] },
+    };
+    gradingState.submissions[0].answers[0].images = [handwriting];
+    gradingState.submissions[0].sourceFiles = [page];
+    mocked.loadState.mockResolvedValue(gradingState);
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    const features = await createTaskFeatures({
+      userId: "teacher",
+      kind: "GRADE",
+      input: { submissionId: "submission" },
+      jobId: "job",
+    });
+    await call(features, "read_answer", { itemId: "item" });
+    await viewImage(features, handwriting);
+    const original = (await call(features, "python", {
+      code: "print('inspect original answer page')",
+      assets: [page],
+      images: [],
+    })) as { previews: { url: string }[] };
+    expect(original.previews.map((preview) => preview.url)).toEqual([page]);
+    await expect(
+      call(features, "propose_grade", { itemId: "item", score: 8, feedback: "作答已查看" }),
+    ).rejects.toThrow(/先查看全部/);
+    await viewImage(features, diagram);
+    await call(features, "propose_grade", {
+      itemId: "item",
+      score: 8,
+      feedback: "结合题干图像和作答给分",
+    });
+    await call(features, "finish", { summary: "图像证据完整" });
+    expect(mocked.accessibleAsset).toHaveBeenCalledWith("teacher", "answer-page");
+    expect(mocked.executeCommand).not.toHaveBeenCalled();
+  });
   it("refuses student mutations and another student's recommendations", async () => {
     const s = state();
     s.actor = { id: "account", name: "学生", role: "STUDENT" };
@@ -735,6 +934,65 @@ describe("AI autonomous tools and constraints", () => {
         input: { studentId: "someone", count: 1 },
       }),
     ).rejects.toThrow(/本人/);
+  });
+  it("lets a student inspect a newly discovered matching candidate image before any recommendation is saved", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 80, height: 60, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    const candidateUrl = "/api/platform/assets/candidate-image";
+    const candidate = {
+      ...question,
+      id: "candidate",
+      content: { ...question.content, images: [candidateUrl] },
+    };
+    const studentState = state();
+    studentState.actor = { id: "account", name: "学生", role: "STUDENT" };
+    studentState.questions = [];
+    mocked.loadState.mockResolvedValue(studentState);
+    mocked.questionFind.mockResolvedValue([
+      {
+        ...candidate,
+        createdAt: new Date(candidate.createdAt),
+        updatedAt: new Date(candidate.updatedAt),
+      },
+    ]);
+    mocked.accessibleAsset.mockImplementation(async (userId: string, id: string) => {
+      if (userId !== "teacher" || id !== "candidate-image")
+        throw new Error("Student cannot ordinarily read this asset");
+      return { buffer };
+    });
+    const features = await createTaskFeatures({
+      userId: "account",
+      kind: "RECOMMEND",
+      input: { studentId: "student", count: 1 },
+      jobId: "job",
+    });
+    expect(studentState.analytics.students[0].recommendations).toEqual([]);
+    expect(features.getResult().result).toBeNull();
+    const output = (await viewImage(features, candidateUrl)) as {
+      exitCode: number;
+      previews: { url: string; image: string }[];
+    };
+    expect(output.exitCode).toBe(0);
+    expect(output.previews).toEqual([
+      expect.objectContaining({ url: candidateUrl, image: expect.any(String) }),
+    ]);
+    expect(mocked.accessibleAsset).toHaveBeenCalledWith("teacher", "candidate-image");
+    expect(mocked.questionFind).toHaveBeenLastCalledWith(
+      expect.objectContaining({ where: { id: "candidate", ownerId: "teacher" } }),
+    );
+    await expect(
+      call(features, "python", {
+        code: "print('foreign')",
+        assets: ["/api/platform/assets/foreign"],
+        images: [],
+      }),
+    ).rejects.toThrow(/不属于/);
+    expect(features.getResult().result).toBeNull();
+    expect(mocked.executeCommand).not.toHaveBeenCalled();
   });
   it("recommends only real unused matching questions with reasons, never a repeated or invented ID", async () => {
     const s = state();
@@ -813,6 +1071,7 @@ describe("AI autonomous tools and constraints", () => {
 describe("SDK 7 autonomous agent loop", () => {
   it("uses tool calls to read, propose and finish across separate model steps before committing", async () => {
     const sequence = [
+      { name: "python", args: { code: "print(1 + 1)", assets: [], images: [] } },
       { name: "read_question", args: { questionId: "q" } },
       { name: "propose_paper", args: { questionIds: ["q"] } },
       { name: "finish", args: { summary: "自主组卷完成" } },
@@ -864,8 +1123,13 @@ describe("SDK 7 autonomous agent loop", () => {
       },
     });
     expect(result.summary).toBe("自主组卷完成");
-    expect(model.doGenerateCalls).toHaveLength(3);
-    expect(events.filter((e) => (e as { type: string }).type === "step")).toHaveLength(3);
+    expect(model.doGenerateCalls).toHaveLength(4);
+    expect(events.filter((e) => (e as { type: string }).type === "step")).toHaveLength(4);
+    expect(events).toContainEqual(
+      expect.objectContaining({ type: "tool", name: "python", status: "ended" }),
+    );
+    expect(mocked.sandboxRun).toHaveBeenCalledOnce();
+    expect(mocked.sandboxDispose).toHaveBeenCalledOnce();
     expect(JSON.stringify(events)).not.toContain("apiKey");
     expect(mocked.executeCommand).toHaveBeenCalledTimes(1);
   });
