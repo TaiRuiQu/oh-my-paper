@@ -12,6 +12,8 @@ ENV NODE_ENV=production
 CMD ["pnpm", "run", "db:deploy"]
 
 FROM dependencies AS build
+ARG APP_COMMIT_SHA
+ENV APP_COMMIT_SHA=${APP_COMMIT_SHA}
 RUN DATABASE_URL=postgresql://build:build@localhost:5432/build pnpm run build
 
 FROM node:24.19.0-bookworm-slim AS web

@@ -17,6 +17,10 @@
 2. 模型查看当前试卷，自主选择调用工具，以尽可能清晰地获取所需上下文。
 3. 在模型认为自己获得了足够的上下文后，返回结果，结束 Agent Loop。
 
+## 提交、推送与 CI
+
+每次推送后，必须 watch 对应提交的完整 CI，直到所有必需任务通过，包括校验、Docker 镜像验收与发布，以及镜像清理。使用 `gh run watch <run-id> --exit-status` 跟进；失败时读取日志、修复、验证并重新推送，继续 watch 新提交。不能在 CI 仍运行、失败或取消时将任务报告为完成。GitHub 与 CNB 都需要推送时，确保两端分支指向最终通过 CI 的同一提交。
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know

@@ -55,6 +55,14 @@ async function main() {
     return (await response.json()) as PlatformState;
   }
   try {
+    if (process.env.APP_COMMIT_SHA) {
+      const page = await request(null, "/login");
+      assert.equal(page.status, 200);
+      const html = await page.text();
+      assert(html.includes(`data-commit="${process.env.APP_COMMIT_SHA}"`));
+      const footer = html.match(/<small\b[^>]*class="site-version"[^>]*>([\s\S]*?)<\/small>/)?.[1];
+      assert(footer?.replace(/<[^>]*>/g, "").includes(process.env.APP_COMMIT_SHA.slice(0, 6)));
+    }
     assert.equal((await request(null, "/api/platform")).status, 401);
     for (const role of ["ADMIN", "TEACHER", "STUDENT", "STUDENT"]) {
       const id = randomUUID();

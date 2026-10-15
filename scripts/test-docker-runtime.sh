@@ -58,6 +58,16 @@ for attempt in {1..60}; do
   sleep 1
 done
 test "$ready" = true
+if [ "$target" = web ] && [ -n "${EXPECTED_COMMIT_SHA:-}" ]; then
+  docker exec -e "EXPECTED_COMMIT_SHA=$EXPECTED_COMMIT_SHA" "$runtime" node -e '
+    fetch("http://localhost:3000/login").then(async response => {
+      const html = await response.text();
+      const revision = process.env.EXPECTED_COMMIT_SHA;
+      const footer = html.match(/<small\b[^>]*class="site-version"[^>]*>([\s\S]*?)<\/small>/)?.[1];
+      if (!response.ok || !html.includes(`data-commit="${revision}"`) ||
+          !footer?.replace(/<[^>]*>/g, "").includes(revision.slice(0, 6))) process.exit(1);
+    }).catch(() => process.exit(1));'
+fi
 if [ "$target" = ai-worker ]; then
   docker exec "$runtime" node --conditions=react-server sandbox-check.mjs
 fi

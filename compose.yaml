@@ -37,6 +37,8 @@ services:
     build:
       context: .
       target: web
+      args:
+        APP_COMMIT_SHA: ${APP_COMMIT_SHA:-}
     env_file: .env
     environment: *app-env
     volumes:

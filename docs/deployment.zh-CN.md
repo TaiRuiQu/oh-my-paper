@@ -46,6 +46,8 @@ curl -fsS https://你的域名/api/health
 
 `migrate` 成功退出后，Web 和 AI Worker 才会启动。AI Worker 必须保持运行，否则 AI 任务及题库向量索引会停留在队列中。不要使用 `sudo docker compose down -v`，它会删除数据库、Qdrant 和 Caddy 持久卷。
 
+页面版本标记同时显示源提交的前六位，例如 `v2.0.0 · abc123`，悬停可查看完整提交。发布镜像在构建时由 CI 注入对应 Git SHA，服务器无需安装 Git；切换或回滚镜像时，标记随镜像更新。本地 Next.js 构建自动读取当前提交；从源码构建 Docker 镜像时，在 `.env` 中将 `APP_COMMIT_SHA` 设置为 `git rev-parse HEAD` 的完整输出，或传入同名 Docker build argument。
+
 ## 题库向量搜索
 
 当前 Compose 包含 `qdrant/qdrant:v1.19.2`，仅通过内部网络向应用提供 HTTP 服务，不发布 6333/6334 端口。应用使用 `QDRANT_URL=http://qdrant:6333`；本地运行可配置其他 Qdrant 服务。`QDRANT_COLLECTION_PREFIX` 可隔离同一 Qdrant 上的不同部署，必须使用字母、数字、下划线或连字符。

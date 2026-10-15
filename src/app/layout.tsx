@@ -6,6 +6,7 @@ import "@fontsource-variable/noto-sans-sc";
 import "katex/dist/katex.min.css";
 import "./globals.css";
 const { version } = packageInfo;
+const commit = process.env.NEXT_PUBLIC_APP_COMMIT;
 
 export const metadata: Metadata = {
   title: { default: "Oh My Paper · 教学工作台", template: "%s · Oh My Paper" },
@@ -20,8 +21,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           跳转到主要内容
         </a>
         <Providers>{children}</Providers>
-        <small role="contentinfo" className="site-version" title={`网站版本 ${version}`}>
+        <small
+          role="contentinfo"
+          className="site-version"
+          title={`网站版本 ${version}${commit ? ` · Git ${commit}` : ""}`}
+          data-commit={commit || undefined}
+        >
           v{version}
+          {commit ? ` · ${commit.slice(0, 6)}` : ""}
         </small>
       </body>
     </html>

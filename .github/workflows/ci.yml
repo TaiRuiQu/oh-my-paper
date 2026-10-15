@@ -23,6 +23,7 @@ jobs:
       BETTER_AUTH_SECRET: ci-auth-secret-for-isolated-test-environment-2026
       PROVIDER_KEY_ENCRYPTION_KEY: ci-provider-secret-for-isolated-test-environment-2026
       QDRANT_URL: http://127.0.0.1:6333
+      APP_COMMIT_SHA: ${{ github.sha }}
     services:
       qdrant:
         image: qdrant/qdrant:v1.19.2
@@ -63,6 +64,14 @@ jobs:
           .venv/bin/pip install -r tools/sandbox/requirements.txt
       - name: Install PDF runtime
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
+      - name: Configure and verify sandbox on ephemeral Ubuntu runner
+        run: |
+          # Ubuntu 24.04 restricts the namespaces Bubblewrap needs for isolation.
+          # This applies only to this disposable runner, never to deployment hosts.
+          if [ -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+          pnpm run test:sandbox
       - name: Generate Prisma and apply migrations
         run: |
           pnpm run db:generate
@@ -77,8 +86,6 @@ jobs:
         run: pnpm run build:ai-worker
       - name: AI domain atomicity acceptance
         run: pnpm run test:ai-domain
-      - name: Isolated Python and shell sandbox acceptance
-        run: pnpm run test:sandbox
       - name: Durable AI job queue acceptance
         run: pnpm run test:ai-jobs
       - name: Non-AI domain acceptance
@@ -148,6 +155,7 @@ jobs:
           load: true
           tags: omp-runtime:${{ matrix.target }}
           labels: ${{ steps.metadata.outputs.labels }}
+          build-args: APP_COMMIT_SHA=${{ github.sha }}
           cache-from: type=gha,scope=${{ matrix.target }}
           cache-to: type=gha,mode=max,scope=${{ matrix.target }}
       - name: Build migration image for acceptance
@@ -161,7 +169,17 @@ jobs:
           tags: omp-runtime:migrate
           cache-from: type=gha,scope=migrate
       - name: Start and verify runtime image
+        if: matrix.target != 'ai-worker'
+        env:
+          EXPECTED_COMMIT_SHA: ${{ github.sha }}
         run: bash scripts/test-docker-runtime.sh "${{ matrix.target }}"
+      - name: Configure sandbox and verify AI worker runtime image
+        if: matrix.target == 'ai-worker'
+        run: |
+          if [ -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+          bash scripts/test-docker-runtime.sh ai-worker
       - name: Push tested runtime image
         env:
           IMAGE_TAGS: ${{ steps.metadata.outputs.tags }}
