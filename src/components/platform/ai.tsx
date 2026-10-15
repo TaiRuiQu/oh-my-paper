@@ -6,8 +6,8 @@ import { useQuestionPage } from "./question-bank-picker";
 import { QuestionSearchControls } from "./question-search-controls";
 import type { QuestionSearchMode } from "@/contracts/platform-search";
 import { GradeSelect } from "./grade-select";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { MAX_AI_IMPORT_PAGES, type AiJobDTO, type AiKind } from "@/contracts/platform-ai";
+import { useState } from "react";
+import { MAX_AI_IMPORT_PAGES, type AiKind } from "@/contracts/platform-ai";
 import { SUBJECTS, type PlatformState, type QuestionType } from "@/contracts/platform";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { Empty, Field, Panel, readForm, stringField, numberField } from "./primitives";
@@ -15,7 +15,7 @@ import { QUESTION_LABELS } from "./questions";
 import { AI_JOB_NAMES as names, aiJobHref } from "@/lib/ai-job-display";
 import { BatchGradingForm } from "./batch-grading";
 import { AIJobList } from "./ai-job-list";
-type Models = { id: string; name: string }[];
+import { useAiProgress } from "./use-ai-progress";
 export function PlatformAI({
   state,
   tab,
@@ -34,41 +34,9 @@ export function PlatformAI({
   notify: (message: string, error?: boolean) => void;
 }) {
   const router = useRouter();
-  const [models, setModels] = useState<Models>([]),
-    [jobs, setJobs] = useState<AiJobDTO[]>([]),
-    [modelId, setModelId] = useState(""),
-    [busy, setBusy] = useState(false),
-    [failure, setFailure] = useState(""),
-    [loading, setLoading] = useState(true);
-  const completed = useRef(new Set<string>()),
-    loaded = useRef(false);
-  const poll = useCallback(async () => {
-    try {
-      const data = await apiRequest<{ models: Models; jobs: AiJobDTO[] }>("/api/platform/ai");
-      setModels(data.models);
-      setJobs(data.jobs);
-      setFailure("");
-      for (const job of data.jobs) {
-        if (job.status === "COMPLETED" && !completed.current.has(job.id)) {
-          completed.current.add(job.id);
-          if (loaded.current) await refresh();
-        }
-      }
-      loaded.current = true;
-    } catch (e) {
-      setFailure(e instanceof Error ? e.message : "AI 任务加载失败");
-    } finally {
-      setLoading(false);
-    }
-  }, [refresh]);
-  useEffect(() => {
-    const initial = setTimeout(() => void poll(), 0);
-    const timer = setInterval(() => void poll(), 3000);
-    return () => {
-      clearTimeout(initial);
-      clearInterval(timer);
-    };
-  }, [poll]);
+  const [modelId, setModelId] = useState("");
+  const [busy, setBusy] = useState(false);
+  const { models, jobs, failure, loading, reconnect } = useAiProgress({ onCompleted: refresh });
   async function start(kind: AiKind, input: unknown) {
     setBusy(true);
     try {
@@ -76,7 +44,6 @@ export function PlatformAI({
         method: "POST",
         ...jsonBody({ kind, modelId: modelId || models[0]?.id, input }),
       });
-      await poll();
       notify(`${names[kind]}已提交，关闭页面后仍会继续处理。`);
       router.push(aiJobHref(result.id));
       return result;
@@ -165,7 +132,7 @@ export function PlatformAI({
         failure={failure}
         loading={loading}
         compact={Boolean(mode)}
-        refresh={poll}
+        refresh={reconnect}
       />
     </>
   );

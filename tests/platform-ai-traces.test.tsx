@@ -12,6 +12,7 @@ import { apiRequest } from "@/lib/http-client";
 import { aiTraceActivities, aiTraceGroups } from "@/lib/ai-trace-display";
 import { aiTraceFixtures } from "./fixtures/ai-traces";
 import { aiCostFixture } from "./fixtures/ai-cost";
+import { MockEventSource } from "./fixtures/event-source";
 
 const { push, refresh, notify } = vi.hoisted(() => ({
   push: vi.fn(),
@@ -67,6 +68,7 @@ beforeEach(() => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-10-15T02:00:35Z"));
   vi.clearAllMocks();
+  MockEventSource.install();
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   container = document.createElement("div");
   document.body.append(container);
@@ -79,16 +81,16 @@ afterEach(async () => {
 });
 
 it("keeps execution events on their own page and hides supplier names from model choices", async () => {
-  vi.mocked(apiRequest).mockResolvedValue({
+  const snapshot = {
     models: [{ id: "model", name: "教学模型", providerName: "hidden-supplier" }],
     jobs: [job],
-  });
+  };
   await act(async () =>
     root.render(
       <PlatformAI state={{} as PlatformState} tab="papers" refresh={refresh} notify={notify} />,
     ),
   );
-  await act(async () => vi.advanceTimersByTimeAsync(0));
+  await act(async () => MockEventSource.current.snapshot(snapshot));
   expect(container.textContent).toContain("教学模型");
   expect(container.textContent).not.toContain("hidden-supplier");
   expect(container.textContent).not.toContain("private-event-details");
@@ -97,16 +99,18 @@ it("keeps execution events on their own page and hides supplier names from model
 });
 
 it("updates a task's standalone timeline and preserves its complete execution record", async () => {
-  vi.mocked(apiRequest).mockResolvedValue({
+  const current = {
     ...job,
-    status: "COMPLETED",
+    status: "COMPLETED" as const,
     result: { summary: "全部题目已保存" },
     events: [...job.events, { type: "complete", summary: "全部题目已保存" }],
-  });
+  };
   await act(async () => root.render(<AIJobDetailPage initialJob={job} />));
   expect(container.textContent).not.toContain("private-event-details");
-  await act(async () => vi.advanceTimersByTimeAsync(3000));
-  expect(vi.mocked(apiRequest)).toHaveBeenCalledWith("/api/platform/ai/job");
+  await act(async () => MockEventSource.current.snapshot({ models: [], jobs: [current] }));
+  expect(MockEventSource.current.url).toBe("/api/platform/ai/job/events");
+  expect(vi.mocked(apiRequest)).not.toHaveBeenCalled();
+  expect(MockEventSource.current.close).toHaveBeenCalledOnce();
   expect(traceRows()).toHaveLength(2);
   await expandTrace();
   expect(container.textContent).toContain("全部题目已保存");
@@ -114,10 +118,14 @@ it("updates a task's standalone timeline and preserves its complete execution re
 });
 
 it("shows RMB cost after completion and preserves the pricing and exchange rate details", async () => {
-  vi.mocked(apiRequest).mockResolvedValue({ ...job, status: "COMPLETED", cost: aiCostFixture });
   await act(async () => root.render(<AIJobDetailPage initialJob={job} />));
   expect(container.querySelector('[aria-label="本次任务成本"]')).toBeNull();
-  await act(async () => vi.advanceTimersByTimeAsync(3000));
+  await act(async () =>
+    MockEventSource.current.snapshot({
+      models: [],
+      jobs: [{ ...job, status: "COMPLETED", cost: aiCostFixture }],
+    }),
+  );
   const cost = container.querySelector<HTMLDetailsElement>('[aria-label="本次任务成本"]')!;
   expect(cost.querySelector("summary")?.textContent).toContain("估算成本 ¥0.014");
   expect(cost.open).toBe(false);
@@ -149,31 +157,31 @@ it("identifies the fallback exchange rate and shows recorded costs for a failed 
 });
 
 it("shows completed task costs on the list and never presents unavailable pricing as zero", async () => {
-  vi.mocked(apiRequest).mockResolvedValue({
+  const snapshot = {
     models: [],
     jobs: [
-      { ...job, status: "COMPLETED", cost: aiCostFixture },
+      { ...job, status: "COMPLETED" as const, cost: aiCostFixture },
       {
         ...job,
         id: "missing-price",
-        status: "COMPLETED",
+        status: "COMPLETED" as const,
         cost: {
           ...aiCostFixture,
-          status: "unavailable",
-          reason: "price_unavailable",
+          status: "unavailable" as const,
+          reason: "price_unavailable" as const,
           cny: null,
           usd: null,
           pricing: null,
         },
       },
     ],
-  });
+  };
   await act(async () =>
     root.render(
       <PlatformAI state={{} as PlatformState} tab="overview" refresh={refresh} notify={notify} />,
     ),
   );
-  await act(async () => vi.advanceTimersByTimeAsync(0));
+  await act(async () => MockEventSource.current.snapshot(snapshot));
   expect(container.textContent).toContain("估算成本 ¥0.014");
   expect(container.textContent).toContain("成本暂无法估算");
   expect(container.textContent).not.toContain("¥0.00");
@@ -210,7 +218,7 @@ it.each(aiTraceFixtures)(
 
 it("updates the actual current step after a tool finishes and keeps every detail collapsed", async () => {
   const initial = aiTraceFixtures[0];
-  vi.mocked(apiRequest).mockResolvedValue({
+  const current = {
     ...initial,
     events: [
       ...initial.events,
@@ -222,23 +230,21 @@ it("updates the actual current step after a tool finishes and keeps every detail
         durationMs: 600,
       },
     ],
-  });
+  };
   await act(async () => root.render(<AIJobDetailPage initialJob={initial} />));
   await act(async () => vi.advanceTimersByTimeAsync(0));
   expect(container.querySelector('[role="status"]')?.textContent).toBe("核对扫描页题目数量");
   expect(container.textContent).toContain("用时 30 秒");
-  await act(async () => vi.advanceTimersByTimeAsync(3000));
+  await act(async () => MockEventSource.current.snapshot({ models: [], jobs: [current] }));
   expect(container.querySelector('[role="status"]')?.textContent).toBe("分析处理结果，确定下一步");
   expect(container.querySelectorAll("ol details[open]")).toHaveLength(0);
 });
 
-it("preserves the last known process on a polling failure and clears the error after recovery", async () => {
+it("preserves the last known process on a stream failure and clears the error after reconnecting", async () => {
   const initial = aiTraceFixtures[0];
-  vi.mocked(apiRequest)
-    .mockRejectedValueOnce(new Error("网络中断，请刷新重试。"))
-    .mockResolvedValueOnce({ ...initial, status: "COMPLETED", finishedAt: "2026-10-15T02:00:41Z" });
   await act(async () => root.render(<AIJobDetailPage initialJob={initial} />));
-  await act(async () => vi.advanceTimersByTimeAsync(3000));
+  const first = MockEventSource.current;
+  await act(async () => first.onerror?.());
   expect(container.querySelector('[role="alert"]')?.textContent).toContain("暂时无法更新进度");
   expect(container.querySelector('[role="status"]')?.textContent).toBe("核对扫描页题目数量");
   expect(traceRows()).toHaveLength(2);
@@ -246,6 +252,14 @@ it("preserves the last known process on a polling failure and clears the error a
     (button) => button.textContent === "刷新状态",
   )!;
   await act(async () => refreshButton.click());
+  expect(first.close).toHaveBeenCalledOnce();
+  expect(MockEventSource.current).not.toBe(first);
+  await act(async () =>
+    MockEventSource.current.snapshot({
+      models: [],
+      jobs: [{ ...initial, status: "COMPLETED", finishedAt: "2026-10-15T02:00:41Z" }],
+    }),
+  );
   expect(container.querySelector('[role="alert"]')).toBeNull();
   expect(container.querySelector('[role="status"]')?.textContent).toBe("处理完成");
   expect(container.querySelectorAll('ol > li[data-state="running"]')).toHaveLength(0);

@@ -6,6 +6,7 @@ import { PlatformAI } from "@/components/platform/ai";
 import type { PlatformState } from "@/contracts/platform";
 import { apiRequest } from "@/lib/http-client";
 import { uploadDocument } from "@/lib/document-upload";
+import { MockEventSource } from "./fixtures/event-source";
 
 const { push } = vi.hoisted(() => ({ push: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
@@ -25,6 +26,7 @@ const refresh = vi.fn(async () => {}),
 beforeEach(async () => {
   vi.resetAllMocks();
   vi.useFakeTimers();
+  MockEventSource.install();
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   vi.mocked(apiRequest).mockResolvedValue({
     id: "job",
@@ -52,7 +54,7 @@ beforeEach(async () => {
     ),
   );
   await act(async () => {
-    await vi.advanceTimersByTimeAsync(1);
+    MockEventSource.current.snapshot({ models: [{ id: "model", name: "模型" }], jobs: [] });
   });
 });
 afterEach(async () => {

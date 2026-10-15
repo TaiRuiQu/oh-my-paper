@@ -12,6 +12,7 @@ const schema = z.object({
     .refine((value) => !value.startsWith("REPLACE_")),
   STORAGE_ROOT: z.string().min(1).default("./storage"),
   TEMP_ROOT: z.string().min(1).default("./tmp"),
+  AI_PROGRESS_FORMAT: z.enum(["json", "protobuf"]).default("json"),
 });
 
 let cached: z.infer<typeof schema> | undefined;

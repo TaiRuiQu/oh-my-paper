@@ -8,6 +8,8 @@ import JSZip from "jszip";
 import { hashPassword } from "better-auth/crypto";
 import { loadEnvironment } from "./load-env.mjs";
 import type { Analytics, PlatformCommand, PlatformState } from "../src/contracts/platform";
+import { decodeAiProgress } from "../src/lib/ai-progress-codec";
+import { EventSourceParserStream } from "eventsource-parser/stream";
 
 loadEnvironment();
 
@@ -142,6 +144,8 @@ async function main() {
         ],
       );
     assert.equal((await request(null, `/api/platform/ai/${traceId}`)).status, 401);
+    assert.equal((await request(null, "/api/platform/ai/events")).status, 401);
+    assert.equal((await request(teacher, "/api/platform/admin/ai-progress")).status, 403);
     for (const [account, ownId, foreignId] of [
       [teacher, traceId, studentTraceId],
       [student, studentTraceId, traceId],
@@ -151,6 +155,38 @@ async function main() {
       assert.equal(detail.headers.get("cache-control"), "private, no-store");
       assert.equal((await detail.json()).events[0].text, traceMarker);
       assert.equal((await request(account, `/api/platform/ai/${foreignId}`)).status, 404);
+      assert.equal((await request(account, `/api/platform/ai/${foreignId}/events`)).status, 404);
+      for (const format of ["json", "protobuf"]) {
+        await sql.query("UPDATE ai_jobs SET status='RUNNING' WHERE id=$1", [ownId]);
+        const progress = await request(
+          account,
+          `/api/platform/ai/${ownId}/events?format=${format}`,
+          {
+            signal: AbortSignal.timeout(10_000),
+          },
+        );
+        assert.equal(progress.status, 200);
+        assert(progress.headers.get("content-type")?.includes("text/event-stream"));
+        const events = progress
+          .body!.pipeThrough(new TextDecoderStream())
+          .pipeThrough(new EventSourceParserStream())
+          .getReader();
+        const decode = (data: string) =>
+          format === "protobuf" ? decodeAiProgress(data) : JSON.parse(data);
+        try {
+          // The initial snapshot must arrive while the stream is still open.
+          const initial = decode((await events.read()).value!.data);
+          assert.equal(initial.jobs[0].id, ownId);
+          assert.equal(initial.jobs[0].status, "RUNNING");
+          await sql.query("UPDATE ai_jobs SET status='COMPLETED' WHERE id=$1", [ownId]);
+          const completed = decode((await events.read()).value!.data);
+          assert.equal(completed.jobs[0].events[0].text, traceMarker);
+          assert.equal(completed.jobs[0].status, "COMPLETED");
+          assert.equal((await events.read()).done, true);
+        } finally {
+          await events.cancel();
+        }
+      }
       assert.equal((await request(account, `/workspace/ai/${ownId}`)).status, 200);
       const hiddenPage = await request(account, `/workspace/ai/${foreignId}`);
       // Next.js can send the shell before notFound resolves, yielding a streamed 200.
@@ -172,7 +208,7 @@ async function main() {
     assert.equal(importPage.status, 200);
     assert(!(await importPage.text()).includes(traceMarker));
     console.log(
-      "✓ Dedicated AI trace pages and API preserve teacher/student ownership, reject foreign jobs and keep execution details off task pages; model choices omit providers",
+      "✓ Dedicated AI trace pages and JSON/Protobuf SSE preserve ownership, reject foreign jobs and close completed streams; model choices omit providers",
     );
     const image = await sharp({
       create: { width: 200, height: 100, channels: 3, background: "white" },
@@ -332,7 +368,7 @@ async function main() {
       `/api/platform/print?templateId=${templateId}&format=svg`,
     );
     assert.equal(cardSvg.status, 200);
-    assert((await cardSvg.text()).includes("六位学号"));
+    assert((await cardSvg.text()).includes("考号填涂区"));
     for (const document of [`paperId=${paperId}`, `templateId=${templateId}`]) {
       const pdf = await request(teacher, `/api/platform/print?${document}&format=pdf`);
       assert.equal(pdf.status, 400);

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import type { AiJobDTO, GradingResult } from "@/contracts/platform-ai";
 import { GradingResults } from "./batch-grading-results";
 import { aiTeacherFailure } from "@/lib/ai-teacher-display";
@@ -15,6 +15,7 @@ import { useDomain } from "./domain-provider";
 import { PageHeader } from "./page-header";
 import { Panel } from "./primitives";
 import { QuestionBody } from "./questions";
+import { useAiProgress } from "./use-ai-progress";
 
 export function AIJobsPage() {
   const { state, refresh, notify } = useDomain();
@@ -33,34 +34,17 @@ export function AIJobsPage() {
 export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
   const router = useRouter();
   const { state, refresh, notify } = useDomain();
-  const [job, setJob] = useState(initialJob);
-  const [failure, setFailure] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
+  const {
+    jobs,
+    failure,
+    loading: refreshing,
+    reconnect,
+  } = useAiProgress({
+    initialJob,
+    onCompleted: refresh,
+  });
+  const job = jobs[0];
   const [retrying, setRetrying] = useState(false);
-  const completed = useRef(initialJob.status === "COMPLETED");
-  const poll = useCallback(async () => {
-    setRefreshing(true);
-    try {
-      const current = await apiRequest<AiJobDTO>(`/api/platform/ai/${initialJob.id}`);
-      setJob(current);
-      setFailure("");
-      if (current.status === "COMPLETED" && !completed.current) {
-        completed.current = true;
-        await refresh();
-      }
-    } catch {
-      setFailure("暂时无法更新进度，请稍后刷新。");
-    } finally {
-      setRefreshing(false);
-    }
-  }, [initialJob.id, refresh]);
-
-  const active = job.status === "QUEUED" || job.status === "RUNNING";
-  useEffect(() => {
-    if (!active) return;
-    const timer = setInterval(() => void poll(), 3000);
-    return () => clearInterval(timer);
-  }, [active, poll]);
 
   async function retry() {
     setRetrying(true);
@@ -103,7 +87,11 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
         back={{ href: "/workspace/ai", label: "返回 AI 任务记录" }}
         actions={
           <>
-            <button className="button secondary" disabled={refreshing} onClick={() => void poll()}>
+            <button
+              className="button secondary"
+              disabled={refreshing}
+              onClick={() => void reconnect()}
+            >
               {refreshing ? "正在刷新…" : "刷新状态"}
             </button>
             {job.status === "FAILED" && (

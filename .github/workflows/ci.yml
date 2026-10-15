@@ -89,6 +89,8 @@ jobs:
         run: pnpm run test:ai-domain
       - name: Durable AI job queue acceptance
         run: pnpm run test:ai-jobs
+      - name: AI progress SSE and Protobuf acceptance
+        run: pnpm run test:ai-progress
       - name: Non-AI domain acceptance
         run: pnpm run test:integration
       - name: Teaching permissions acceptance

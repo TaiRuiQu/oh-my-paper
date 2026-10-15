@@ -1,9 +1,11 @@
 "use client";
 
-import { useId, useState, type ReactNode } from "react";
+import { useId, useState, type ChangeEvent, type ReactNode } from "react";
 import type { QuestionSearchMode } from "@/contracts/platform-search";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import styles from "./question-search-controls.module.css";
 
 export function QuestionSearchModeSelect({
   value,
@@ -39,6 +41,29 @@ export function QuestionSearchControls({
 }) {
   const [draft, setDraft] = useState(query);
   const hintId = useId();
+  const semantic = mode === "semantic";
+  const fieldProps = {
+    "aria-label": "搜索试题",
+    "aria-describedby": hintId,
+    placeholder: semantic ? "描述要查找的题意或知识点" : "搜索题干或知识点",
+    maxLength: 200,
+    value: draft,
+    onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setDraft(event.target.value);
+      if (mode === "keyword" || !event.target.value.trim()) onSearch(event.target.value, mode);
+    },
+  };
+  const modeSelect = (
+    <QuestionSearchModeSelect
+      value={mode}
+      onChange={(next) => onSearch(next === "semantic" ? "" : draft, next)}
+    />
+  );
+  const searchButton = (
+    <Button type="submit" variant="outline" disabled={semantic && !draft.trim()}>
+      搜索
+    </Button>
+  );
   return (
     <div>
       <form
@@ -51,26 +76,25 @@ export function QuestionSearchControls({
           onSearch(draft, mode);
         }}
       >
-        <QuestionSearchModeSelect
-          value={mode}
-          onChange={(next) => onSearch(next === "semantic" ? "" : draft, next)}
-        />
-        <Input
-          aria-label="搜索试题"
-          aria-describedby={hintId}
-          placeholder={mode === "semantic" ? "描述要查找的题意或知识点" : "搜索题干或知识点"}
-          maxLength={200}
-          value={draft}
-          onChange={(event) => {
-            setDraft(event.target.value);
-            if (mode === "keyword" || !event.target.value.trim())
-              onSearch(event.target.value, mode);
-          }}
-        />
-        <Button type="submit" variant="outline" disabled={mode === "semantic" && !draft.trim()}>
-          搜索
-        </Button>
-        {children}
+        {semantic ? (
+          <>
+            <div className={styles.filters}>
+              {modeSelect}
+              {children}
+            </div>
+            <div className={styles.query}>
+              <Textarea {...fieldProps} rows={4} />
+              {searchButton}
+            </div>
+          </>
+        ) : (
+          <>
+            {modeSelect}
+            <Input {...fieldProps} />
+            {searchButton}
+            {children}
+          </>
+        )}
       </form>
       <p id={hintId} className={compact ? "p-muted" : "p-panel-content p-muted"}>
         {mode === "semantic"

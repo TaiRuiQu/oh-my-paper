@@ -4,6 +4,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { CardAIPage } from "@/components/platform/card-ai-page";
 import { CardsListPage } from "@/components/platform/card-workbench";
+import { MockEventSource } from "./fixtures/event-source";
 
 const mock = vi.hoisted(() => ({ request: vi.fn(), push: vi.fn(), notify: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: mock.push }) }));
@@ -31,6 +32,7 @@ let container: HTMLDivElement, root: Root;
 beforeEach(() => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   vi.clearAllMocks();
+  MockEventSource.install();
   mock.request.mockImplementation(async (_url: string, init?: RequestInit) =>
     init?.method === "POST"
       ? { id: "job" }
@@ -56,9 +58,8 @@ it("preselects the current exam, submits a TEMPLATE job and opens its progress p
   await act(async () => {
     root.render(<CardAIPage paperId="exam" />);
   });
-  // The initial model request is intentionally deferred by PlatformAI.
   await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 20));
+    MockEventSource.current.snapshot({ models: [{ id: "model", name: "测试模型" }], jobs: [] });
   });
   const select = container.querySelector<HTMLSelectElement>('select[name="target"]')!;
   expect(select.value).toBe("exam");

@@ -6,6 +6,7 @@ import { QuestionListPage } from "@/components/platform/question-pages";
 import { EmbeddingSettings } from "@/components/platform/embedding-settings";
 import { apiRequest } from "@/lib/http-client";
 import type { AdminSearchConfiguration } from "@/contracts/platform-search";
+import { MockEventSource } from "./fixtures/event-source";
 
 vi.mock("@/lib/http-client", () => ({
   apiRequest: vi.fn(),
@@ -20,6 +21,7 @@ let container: HTMLDivElement, root: Root;
 beforeEach(() => {
   vi.useFakeTimers();
   vi.clearAllMocks();
+  MockEventSource.install();
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   container = document.createElement("div");
   document.body.append(container);
@@ -61,9 +63,15 @@ async function choose(label: string, value: string) {
   });
 }
 async function input(text: string) {
-  const element = container.querySelector('input[aria-label="搜索试题"]') as HTMLInputElement;
+  const element = container.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+    '[aria-label="搜索试题"]',
+  )!;
   await act(async () => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(element, text);
+    const prototype =
+      element instanceof HTMLTextAreaElement
+        ? HTMLTextAreaElement.prototype
+        : HTMLInputElement.prototype;
+    Object.getOwnPropertyDescriptor(prototype, "value")!.set!.call(element, text);
     element.dispatchEvent(new Event("input", { bubbles: true }));
   });
 }
@@ -159,6 +167,11 @@ it("preserves the saved embedding secret and shows queued indexing until the bac
       const body = JSON.parse(String(init.body));
       if (body.type === "embedding.reindex") {
         configuration.searchIndex.pending = 8;
+        MockEventSource.current.snapshot({
+          models: [],
+          jobs: [],
+          searchConfiguration: configuration,
+        });
         return { queued: 8 } as never;
       }
       return {} as never;
@@ -166,6 +179,9 @@ it("preserves the saved embedding secret and shows queued indexing until the bac
     return structuredClone(configuration) as never;
   });
   await act(async () => root.render(<EmbeddingSettings notify={notify} />));
+  await act(async () =>
+    MockEventSource.current.snapshot({ models: [], jobs: [], searchConfiguration: configuration }),
+  );
   await click("编辑向量化配置");
   expect(container.querySelector<HTMLInputElement>('input[name="apiKey"]')!.value).toBe("");
   await act(async () => {
@@ -188,7 +204,10 @@ it("preserves the saved embedding secret and shows queued indexing until the bac
     )?.disabled,
   ).toBe(true);
   configuration.searchIndex = { ...configuration.searchIndex, pending: 0, indexed: 8 };
-  await act(async () => vi.advanceTimersByTimeAsync(3000));
+  await act(async () =>
+    MockEventSource.current.snapshot({ models: [], jobs: [], searchConfiguration: configuration }),
+  );
+  expect(vi.mocked(apiRequest).mock.calls.every(([, init]) => init?.method === "POST")).toBe(true);
   expect(container.textContent).toContain("8 / 8 道题");
   expect(
     Array.from(container.querySelectorAll("button")).find(

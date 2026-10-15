@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { AdminSearchConfiguration } from "@/contracts/platform-search";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { Empty, Field, Panel, readForm, stringField } from "./primitives";
+import { openAiProgress } from "@/lib/ai-progress-client";
 
 export function EmbeddingSettings({
   notify,
@@ -16,36 +17,15 @@ export function EmbeddingSettings({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const controller = new AbortController();
-    apiRequest<AdminSearchConfiguration>("/api/platform/admin", { signal: controller.signal })
-      .then((result) => {
-        if (!controller.signal.aborted) setConfiguration(result);
-      })
-      .catch((cause) => {
-        if (!controller.signal.aborted)
-          setError(cause instanceof Error ? cause.message : "向量化配置加载失败，请刷新页面。");
-      });
-    return () => controller.abort();
+    return openAiProgress({
+      search: true,
+      snapshot: (data) => {
+        setConfiguration(data.searchConfiguration);
+        setError("");
+      },
+      error: () => setError("暂时无法更新向量化进度，正在重新连接。"),
+    });
   }, []);
-
-  useEffect(() => {
-    if (!configuration?.searchIndex.pending) return;
-    const controller = new AbortController();
-    const timer = setTimeout(() => {
-      apiRequest<AdminSearchConfiguration>("/api/platform/admin", { signal: controller.signal })
-        .then((result) => {
-          if (!controller.signal.aborted) setConfiguration(result);
-        })
-        .catch((cause) => {
-          if (!controller.signal.aborted)
-            setError(cause instanceof Error ? cause.message : "索引状态加载失败，请刷新页面。");
-        });
-    }, 3000);
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-  }, [configuration]);
 
   async function save(body: unknown, action: "save" | "reindex") {
     setBusy(action);
@@ -55,7 +35,6 @@ export function EmbeddingSettings({
         method: "POST",
         ...jsonBody(body),
       });
-      setConfiguration(await apiRequest<AdminSearchConfiguration>("/api/platform/admin"));
       if (action === "save") {
         setEditing(false);
         notify("向量化配置已保存。首次配置或更换模型后，请重建题目索引。");

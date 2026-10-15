@@ -55,7 +55,7 @@ AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列。`en
 - IMPORT 需查看全部来源、记录逐页题数并批量提出候选；成功题目与明确跳过项必须逐页完整覆盖。图表由模型使用通用 `python` / `shell` 编写代码裁切，工具返回的独立图像可作为暂存资产，整页预览不作为题目配图。裁图文件和资产行随业务提交，失败删除已写文件。无参考答案来源时仍须生成标准答案、解析、考点及主观题评分标准。
 - IMPORT 可指定 `kind: HOMEWORK / EXAM`，直接保存含卷内题目快照的练习册／试卷；未指定时仍导入题库。作业入口为 `/homework/import`，完成记录包含 `paperId`、`paperKind`，可继续核对与排版。题目分值来自 `propose_question.score`，综合题使用子题分值总和。
 
-完整执行过程仅在 `/workspace/ai/[id]` 展示，`/workspace/ai` 为本人任务目录；`GET /api/platform/ai/[id]` 按当前用户与任务 ID 双重查询，任务列表同样只返回本人任务。业务页面保留任务状态与链接。公开模型列表仅包含 `id/name`，不返回供应商名称。各类任务都提供受 Bubblewrap 隔离的 `python/shell`，代码与输出随工具事件写入轨迹；沙箱无法访问数据库、服务器环境或网络。全部工具清单与生命周期参见 `docs/agent-tools.zh-CN.md`。
+完整执行过程仅在 `/workspace/ai/[id]` 展示，`/workspace/ai` 为本人任务目录；任务列表、详情与向量化索引进度通过 SSE 同步，任务查询始终按当前用户隔离。Web 使用共享 PostgreSQL `LISTEN/NOTIFY` 连接，在事务提交后读取授权快照，不轮询进度；`AI_PROGRESS_FORMAT=protobuf` 开启实验性 Protobuf 编码。协议与验收见 `docs/ai-progress.zh-CN.md`。业务页面保留任务状态与链接。公开模型列表仅包含 `id/name`，不返回供应商名称。各类任务都提供受 Bubblewrap 隔离的 `python/shell`，代码与输出随工具事件写入轨迹；沙箱无法访问数据库、服务器环境或网络。全部工具清单与生命周期参见 `docs/agent-tools.zh-CN.md`。
 
 题目读取与报告工具统一接受 `items` 数组并逐项返回成功或详细错误，单条失败保留其他条目结果。同一模型响应可调用多个独立工具并由 SDK 并发执行；OpenAI 显式开启并行工具调用。异常及无效工具调用将具体消息、字段路径和原因反馈给原 Agent，并保存执行记录。管理员可通过 `provider.delete` 删除供应商及关联模型；模型偏好置空，历史任务保留。
 
