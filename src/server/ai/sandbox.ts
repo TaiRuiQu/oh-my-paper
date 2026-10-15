@@ -32,8 +32,12 @@ export type SandboxOutput = z.infer<typeof outputSchema>;
 const failure = (message: string) => new AppError(message, "AI_SANDBOX_FAILED", 422);
 
 export function sandboxRemediation(diagnostic: string): string {
-  if (/RTM_NEWADDR|uid map|creating new user namespace|new user namespaces/i.test(diagnostic))
-    return "宿主机限制非特权用户命名空间。请按 docs/deployment.zh-CN.md 配置 Bubblewrap 所需的用户命名空间与 AppArmor。";
+  if (
+    /RTM_NEWADDR|uid map|creating new user namespace|new user namespaces|No permissions to create new namespace|non-privileged user namespaces/i.test(
+      diagnostic,
+    )
+  )
+    return "沙箱无法创建用户命名空间。请在服务器执行 sudo python3 deploy/repair-sandbox.py，检查并修复 Worker 的 Docker 安全配置及宿主机用户命名空间策略；详见 docs/deployment.zh-CN.md。";
   if (/Can't mount proc/i.test(diagnostic))
     return "Worker 的系统路径屏蔽阻止了私有 /proc 挂载。请检查 compose.yaml 中 seccomp、AppArmor 与 systempaths=unconfined 配置，并重建 Worker。";
   if (/Can't mount|Operation not permitted|EPERM/i.test(diagnostic))
@@ -141,6 +145,14 @@ export function verifySandboxEnvironment(): {
   return { ok: result.status === 0, diagnostic, remediation: sandboxRemediation(diagnostic) };
 }
 
+export function assertSandboxEnvironment() {
+  const environment = verifySandboxEnvironment();
+  if (!environment.ok)
+    throw failure(
+      `AI 沙箱启动检查失败。${environment.diagnostic} ${environment.remediation}`.trim(),
+    );
+}
+
 /** A task gets a private persistent filesystem; every invocation gets fresh bounded processes. */
 export function createSandboxSession(options: { directory: string; signal?: AbortSignal }) {
   let child: ChildProcessWithoutNullStreams | undefined;
@@ -239,7 +251,9 @@ export function createSandboxSession(options: { directory: string; signal?: Abor
       diagnostic = (diagnostic + chunk).slice(-4000);
     });
     child.stdin.on("error", (error) => {
-      receiver?.reject(failure(`沙箱输入通道错误：${error.message}`));
+      // Wait for close to drain stderr; EPIPE often races with bwrap's actual error.
+      diagnostic = (diagnostic + `\n沙箱输入通道错误：${error.message}`).slice(-4000);
+      void stop();
     });
     child.on("error", (error) => {
       diagnostic = error.message;

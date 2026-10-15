@@ -26,5 +26,10 @@ it("gives operators actionable namespace, proc mount and missing runtime diagnos
     "systempaths=unconfined",
   );
   expect(sandboxRemediation("spawn bwrap ENOENT")).toContain("BWRAP_PATH");
+  expect(
+    sandboxRemediation(
+      "bwrap: No permissions to create new namespace, likely because the kernel does not allow non-privileged user namespaces",
+    ),
+  ).toContain("repair-sandbox.py");
   expect(sandboxRemediation("custom model error")).toBe("");
 });

@@ -76,6 +76,8 @@ AI Worker 镜像包含 Bubblewrap、Python、util-linux 和 `tools/sandbox/requi
 
 Compose 的 `ai-worker` 沿用 v0.1.15 配置：`cap_drop: [ALL]`，`no-new-privileges:true`、`seccomp:unconfined`、`apparmor:unconfined`、`systempaths=unconfined`。这些设置使 Bubblewrap 可以建立独立用户/进程/网络命名空间和私有 `/proc`，实际模型代码仍在只读根、禁网和受限工作区内运行。不要只拉取镜像而保留旧 Compose；升级后需重新创建 Worker。
 
+Worker 在输出 `platform.ai.worker.started`、连接数据库和领取任务之前执行沙箱启动检查。检查失败会退出并报告部署诊断，避免让模型反复调用必然失败的 Python/shell 工具。CI 中的 `sysctl` 设置只作用于 CI 主机，不会随镜像发布到生产服务器。
+
 ```bash
 sudo docker compose -f compose.yaml -f compose.release.yaml up -d --force-recreate ai-worker
 sudo docker compose -f compose.yaml -f compose.release.yaml exec ai-worker node --conditions=react-server sandbox-check.mjs
@@ -83,7 +85,31 @@ sudo docker compose -f compose.yaml -f compose.release.yaml exec ai-worker node 
 
 `sandbox-check.mjs` 是随 Worker 打包的完整隔离验收程序，CI 也会在真实 Docker Worker 中执行；本地可使用 `pnpm test:sandbox`。`pnpm doctor` 会执行包含 user/PID/network namespace、proc/dev 和只读根挂载的沙箱探针。
 
-如果日志显示 `creating new user namespace`、`RTM_NEWADDR` 或 UID 映射失败，先检查宿主机用户命名空间策略。Ubuntu 的 AppArmor 限制可按主机运维策略配置 Bubblewrap 专用 profile；沿用旧部署方式时可设置 `kernel.apparmor_restrict_unprivileged_userns=0` 并持久化后验证。若显示 `Can't mount proc`，用 `docker inspect` 核对 Worker 的 `HostConfig.SecurityOpt`，以及 `MaskedPaths`、`ReadonlyPaths` 均为空；`systempaths=unconfined` 使用等号。失败时不会在宿主机直接执行模型代码。
+### 修复所有 Python / shell 命令失败
+
+`bwrap: No permissions to create new namespace` 可能由 Docker 安全配置阻止创建命名空间，也可能由宿主机禁用非特权用户命名空间引起。`write EPIPE` 是沙箱退出后输入管道关闭的伴随错误。仅凭这条日志不能判断是哪一层；新版本会保留 Bubblewrap 的 stderr，避免只看到 EPIPE。
+
+先同步本次 `compose.yaml` 和 `deploy/repair-sandbox.py` 到现有服务器，然后在项目目录执行：
+
+```bash
+cd ~/oh-my-paper
+sudo python3 deploy/repair-sandbox.py
+```
+
+脚本先检查 Compose 是否包含上述必要安全参数；缺少参数时明确报错，不修改宿主机。配置完整后，使用当前发布镜像和 Compose 安全配置运行临时 Worker，执行完整的 `sandbox-check.mjs`，不启动其依赖服务。如果验收通过，直接重新创建现有 Worker，使 Docker 安全参数生效，不改宿主机设置。若验收失败，则读取并修复存在的禁用项：`kernel.unprivileged_userns_clone=0` 改为 `1`，`user.max_user_namespaces=0` 改为 `16384`，`kernel.apparmor_restrict_unprivileged_userns=1` 改为 `0`。这些是宿主机级别的策略，最后一项会关闭宿主机对非特权用户命名空间的 AppArmor 全局限制；已有专用 AppArmor 策略的主机应按自身策略配置。其机制见 [Ubuntu 说明](https://ubuntu.com/blog/ubuntu-23-10-restricted-unprivileged-user-namespaces)，配额含义见 [Linux 内核文档](https://kernel.org/doc/html/latest/admin-guide/sysctl/user.html)。
+
+只有实际镜像验收通过后，脚本才将变更持久化到 `/etc/sysctl.d/99-oh-my-paper-sandbox.conf`，重新创建 Worker，并在运行中的容器内再次验收。宿主机修复阶段的临时 Worker 验收失败，会回滚本次临时 sysctl 变更，保留运行中的 Worker，不保存失败配置。完成后可在界面点击「重试任务」。脚本使用现有 `compose.release.yaml` 选定的镜像；采用 digest 清单的部署须已执行过 `deploy/update.sh`，生成 `deploy/.release.json`。
+
+手动排查时，核对运行中容器，而不是只查看仓库文件：
+
+```bash
+sudo docker inspect oh-my-paper-ai-worker-1 --format 'User={{.Config.User}} SecurityOpt={{json .HostConfig.SecurityOpt}} CapDrop={{json .HostConfig.CapDrop}} MaskedPaths={{json .HostConfig.MaskedPaths}} ReadonlyPaths={{json .HostConfig.ReadonlyPaths}}'
+sudo sysctl kernel.unprivileged_userns_clone user.max_user_namespaces
+# 仅 Ubuntu 等提供此设置的内核存在下面这项。
+sudo sysctl kernel.apparmor_restrict_unprivileged_userns
+```
+
+若显示 `Can't mount proc`，核对 `MaskedPaths`、`ReadonlyPaths` 均为空；`systempaths=unconfined` 使用等号。不要给 Worker 开启 `privileged` 或在沙箱失败时直接执行模型代码。
 
 ## 配置 v2 定时更新器
 

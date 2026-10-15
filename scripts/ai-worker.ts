@@ -3,6 +3,8 @@ import { loadEnvironment } from "./load-env.mjs";
 loadEnvironment();
 
 async function main() {
+  const { assertSandboxEnvironment } = await import("../src/server/ai/sandbox");
+  assertSandboxEnvironment();
   const { claimAiJob, runClaimedAiJob } = await import("../src/server/platform/ai-jobs");
   const { disconnectDatabase } = await import("../src/server/db/client");
   const { logEvent, logError } = await import("../src/server/logger");
