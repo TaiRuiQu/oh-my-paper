@@ -161,10 +161,16 @@ export const regionSchema = z
     options: z.array(z.string().max(10)).max(26).optional(),
     multiple: z.boolean().optional(),
     image: z.string().max(2048).optional(),
+    label: text.max(100).optional(),
+    writingStyle: z.enum(["plain", "lines", "grid"]).optional(),
   })
   .refine((b) => b.x + b.width <= 1.000001 && b.y + b.height <= 1.000001, "区域必须位于页面内。");
 export const cardLayoutSchema = z
   .strictObject({
+    showAbsent: z.boolean().optional(),
+    showFooter: z.boolean().optional(),
+    showSubject: z.boolean().optional(),
+    locked: z.boolean().optional(),
     annotations: z
       .array(boxSchema.safeExtend({ id, text: text.max(2000) }))
       .max(100)
@@ -320,7 +326,16 @@ export const commandSchema = z.discriminatedUnion("type", [
   z.strictObject({ type: z.literal("assessment.save"), assessment: assessmentInputSchema }),
   z.strictObject({ type: z.literal("assessment.publish"), id, published: z.boolean() }),
   z.strictObject({ type: z.literal("assessment.rename"), id, name: recordName }),
-  z.strictObject({ type: z.literal("template.save"), template: templateInputSchema }),
+  z.strictObject({
+    type: z.literal("template.save"),
+    template: templateInputSchema,
+    paperDraft: z
+      .strictObject({
+        itemIds: z.array(id).min(1).max(500),
+        items: paperInputSchema.shape.items,
+      })
+      .optional(),
+  }),
   z.strictObject({ type: z.literal("template.delete"), id }),
   z.strictObject({ type: z.literal("submission.save"), submission: submissionInputSchema }),
   z.strictObject({

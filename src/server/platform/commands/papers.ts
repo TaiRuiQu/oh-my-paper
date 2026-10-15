@@ -18,6 +18,9 @@ export async function executePapersCommand(
     }
     case "paper.save": {
       const { id, items, ...data } = command.paper;
+      const previousItems = id
+        ? await db.paperItem.findMany({ where: { paperId: id }, orderBy: { position: "asc" } })
+        : [];
       if (id) {
         owner(a, await db.paper.findUnique({ where: { id } }));
         if (await db.assessmentPaper.count({ where: { paperId: id } }))
@@ -32,7 +35,7 @@ export async function executePapersCommand(
       if (rows.length !== items.filter((i) => !i.question).length) throw missing();
       if (rows.some((q) => q.subject !== data.subject))
         throw new RequestError(400, "题目学科必须与试卷学科一致。");
-      const nested = [];
+      const nested: PrismaTypes.PaperItemUncheckedCreateWithoutPaperInput[] = [];
       for (const [position, item] of items.entries()) {
         const source = item.question ?? rows.find((q) => q.id === item.questionId)!;
         const parsed = questionInputSchema.safeParse({
@@ -46,6 +49,9 @@ export async function executePapersCommand(
         await assertAssets(db, a, parsed.data.content.images);
         const now = new Date().toISOString();
         nested.push({
+          ...(previousItems.find((old) => old.questionId === item.questionId)
+            ? { id: previousItems.find((old) => old.questionId === item.questionId)!.id }
+            : {}),
           questionId: item.questionId,
           score: item.score,
           section: item.section,
@@ -61,7 +67,24 @@ export async function executePapersCommand(
       }
       if (id) {
         await db.paperItem.deleteMany({ where: { paperId: id } });
-        await db.cardTemplate.deleteMany({ where: { paperId: id } });
+        // Text/answer edits keep the card's item references valid. Structural changes
+        // invalidate the card because its printed numbering or bubbles would differ.
+        const sameCardStructure =
+          previousItems.length === nested.length &&
+          previousItems.every((old, index) => {
+            const before = old.snapshot as unknown as {
+              type: string;
+              content: { options: { label: string }[] };
+            };
+            const after = nested[index].snapshot as unknown as typeof before;
+            return (
+              old.questionId === nested[index].questionId &&
+              before.type === after.type &&
+              JSON.stringify(before.content.options.map((option) => option.label)) ===
+                JSON.stringify(after.content.options.map((option) => option.label))
+            );
+          });
+        if (!sameCardStructure) await db.cardTemplate.deleteMany({ where: { paperId: id } });
         const p = await db.paper.update({
           where: { id },
           data: { ...data, layout: json(data.layout), items: { create: nested } },

@@ -16,7 +16,6 @@ function unpack(value: unknown): unknown {
   }
 }
 
-/** Interpret diagnostic categories without showing internal messages to teachers. */
 function issue(value: unknown) {
   const text = (typeof value === "string" ? value : (JSON.stringify(value) ?? "")).slice(0, 20000);
   if (/看不清|无法辨认|模糊|遮挡|unreadable/i.test(text)) return "部分题目或作答看不清。";
@@ -118,7 +117,6 @@ export function aiTeacherActivity(activity: AITraceActivity, status: AiJobDTO["s
   return completed[activity.toolName ?? ""] ?? "已完成这一步的核对。";
 }
 
-/** Only actual, task-owned image results are useful in a teacher's activity details. */
 export function aiActivityImages(activity: AITraceActivity): string[] {
   return [
     ...new Set(

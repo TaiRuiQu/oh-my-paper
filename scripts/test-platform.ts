@@ -65,7 +65,6 @@ async function main() {
         classroom: { name: "高一一班", grade: "高一" },
       })
     ).id;
-    // The marking pool follows subject teaching assignments, without a separate reviewer list.
     await db.teachingAssignment.createMany({
       data: [ids.teacher, ids.second, ids.arbiter].flatMap((userId) =>
         ["化学", "生物", "数学"].map((subject) => ({
@@ -230,7 +229,6 @@ async function main() {
     console.log(
       "✓ All five question types persist, blank answers and mixed parts remain structured, selected order and paper snapshots survive question edits",
     );
-    // Paper edits belong to this document snapshot, leaving the reusable bank untouched.
     const documentQuestion = state.questions.find((q) => q.id === chemistry[0])!;
     const edited = await cmd({
       type: "paper.save",

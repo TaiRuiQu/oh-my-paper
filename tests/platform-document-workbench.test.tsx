@@ -140,3 +140,29 @@ it("keeps side panels independent and restores background state when navigating 
   expect(background.inert).toBe(true);
   expect(document.body.style.overflow).toBe(originalOverflow);
 });
+
+it("keeps the making panel draft and its action dock mounted when collapsing or entering full screen", async () => {
+  await act(async () =>
+    root.render(
+      <DocumentWorkbench
+        title="答题卡"
+        status="草稿"
+        outline={false}
+        actions={<button>撤销</button>}
+        propertiesPanel={<input aria-label="答题卡名称" defaultValue="月考答题卡" />}
+        panelActions={<button>保存答题卡</button>}
+      >
+        <div>纸面</div>
+      </DocumentWorkbench>,
+    ),
+  );
+  const name = container.querySelector("input")!;
+  name.value = "尚未保存的名称";
+  await click("属性");
+  expect(workbench().dataset.properties).toBe("false");
+  await click("属性");
+  await click("全屏");
+  expect(container.querySelector("input")).toBe(name);
+  expect(name.value).toBe("尚未保存的名称");
+  expect(button("保存答题卡")).toBeTruthy();
+});

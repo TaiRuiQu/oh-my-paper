@@ -19,8 +19,6 @@ declare module "micromark-util-types" {
 export function remarkParentheticalMath(this: Processor) {
   const data = this.data();
   const extensions = data.micromarkExtensions ?? (data.micromarkExtensions = []);
-  // Reuse remark-math's inlineMath compilation and the existing KaTeX renderer.
-  // A syntax extension naturally leaves fenced/indented/inline code untouched.
   extensions.push({ text: { 92: { name: "parentheticalMath", tokenize } } });
 }
 

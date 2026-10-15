@@ -15,10 +15,20 @@ export const CARD_PRESETS = SUBJECTS.map((subject) => ({
   blankHeight: 110,
   subjectiveHeight: subject === "语文" ? 300 : 190,
 }));
-function baseLayout(
-  format: Pick<CardLayout, "paperSize" | "orientation" | "columns" | "fontFamily" | "annotations"> &
-    Partial<Pick<CardLayout, "width" | "height">> = {},
-): CardLayout {
+type CardFormat = Pick<
+  CardLayout,
+  | "paperSize"
+  | "orientation"
+  | "columns"
+  | "fontFamily"
+  | "annotations"
+  | "showAbsent"
+  | "showFooter"
+  | "showSubject"
+  | "locked"
+> &
+  Partial<Pick<CardLayout, "width" | "height">>;
+function baseLayout(format: CardFormat = {}): CardLayout {
   const { width, height } = pageDimensions(format.paperSize, format.orientation);
   return {
     paperSize: format.paperSize ?? "A4",
@@ -69,8 +79,7 @@ export function defaultCardPresets(): CardTemplate[] {
 export function generateCardTemplate(
   paper: Paper,
   overrides: Partial<CardPreset> = {},
-  format: Pick<CardLayout, "paperSize" | "orientation" | "columns" | "fontFamily" | "annotations"> &
-    Partial<Pick<CardLayout, "width" | "height">> = paper.layout,
+  format: CardFormat = paper.layout,
 ): CardTemplate {
   const preset = {
     ...(CARD_PRESETS.find((entry) => entry.subject === paper.subject) ?? CARD_PRESETS[1]),
@@ -83,7 +92,13 @@ export function generateCardTemplate(
     name: `${paper.name}答题卡`,
     subject: paper.subject,
     preset: false,
-    layout: baseLayout(format),
+    layout: {
+      ...baseLayout(format),
+      showAbsent: format.showAbsent,
+      showFooter: format.showFooter,
+      showSubject: format.showSubject,
+      locked: format.locked,
+    },
   };
   let y = 275,
     page = 1,

@@ -462,7 +462,6 @@ async function main() {
       ],
     });
     await call(bad, "finish", { summary: "will fail" });
-    // Permission changes while an agent runs must invalidate its commit, including already written crop assets.
     await db.user.update({ where: { id: "teacher" }, data: { role: "STUDENT" } });
     await assert.rejects(bad.commit(), /教师权限/);
     await db.user.update({ where: { id: "teacher" }, data: { role: "TEACHER" } });

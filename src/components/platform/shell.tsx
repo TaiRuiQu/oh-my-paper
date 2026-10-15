@@ -73,7 +73,9 @@ export function PlatformShell({
     <>
       <Link href="/workspace" className="wordmark" onClick={() => setMobile(false)}>
         <BookOpen size={22} />
-        Oh My Paper
+        <span className="p-brand-name">
+          Oh My Paper<small>教学工作平台</small>
+        </span>
       </Link>
       <nav className="p-nav p-group-nav" aria-label="主导航">
         {groups.map((group) => {
@@ -124,7 +126,10 @@ export function PlatformShell({
           );
         })}
       </nav>
-      <div className="p-sidebar-foot">从题目，到学习的进步。</div>
+      <div className="p-sidebar-foot">
+        <span className="p-online-dot" />
+        教学工作平台
+      </div>
     </>
   );
   return (

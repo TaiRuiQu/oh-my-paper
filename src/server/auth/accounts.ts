@@ -26,21 +26,30 @@ export async function nextStudentNumber(db: Db) {
   throw new RequestError(409, "暂时无法分配学号，请指定学号后重试。");
 }
 
-export async function insertAccount(db: Db, input: z.infer<typeof managedAccountSchema>) {
+export async function prepareAccountPassword(input: z.infer<typeof managedAccountSchema>) {
+  const password =
+    input.role === "STUDENT" ? randomBytes(15).toString("base64url") : input.password;
+  return { password, hash: await hashPassword(password) };
+}
+
+export async function insertAccount(
+  db: Db,
+  input: z.infer<typeof managedAccountSchema>,
+  prepared?: Awaited<ReturnType<typeof prepareAccountPassword>>,
+) {
   const username =
     input.role === "STUDENT"
       ? (input.studentNumber ?? (await nextStudentNumber(db)))
       : input.username;
   if (await db.user.findUnique({ where: { username } }))
     throw new RequestError(409, "账号或学号已存在，请使用其他账号或绑定已有学生账号。");
-  const password =
-    input.role === "STUDENT" ? randomBytes(15).toString("base64url") : input.password;
+  const { password, hash } = prepared ?? (await prepareAccountPassword(input));
   const id = randomUUID();
   await db.user.create({
     data: {
       id,
       username,
-      name: input.role === "STUDENT" ? input.name : username,
+      name: input.name ?? username,
       email: `${id}@accounts.invalid`,
       role: input.role,
       accounts: {
@@ -48,7 +57,7 @@ export async function insertAccount(db: Db, input: z.infer<typeof managedAccount
           id: randomUUID(),
           providerId: "credential",
           accountId: id,
-          password: await hashPassword(password),
+          password: hash,
         },
       },
     },

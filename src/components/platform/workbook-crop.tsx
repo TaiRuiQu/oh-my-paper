@@ -30,7 +30,6 @@ export function WorkbookCrop({
   const start = useRef<{ x: number; y: number; pointer: number } | null>(null);
   const actualPage = Math.min(page, files.length);
   const file = files[actualPage - 1];
-  // Store the blob URL in state only after decoding its natural dimensions.
   useEffect(() => {
     if (!file) return;
     let alive = true;

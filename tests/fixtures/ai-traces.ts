@@ -15,7 +15,6 @@ const base = {
   finishedAt: null,
 } satisfies Partial<AiJobDTO>;
 
-/** Synthetic examples for shared trace UI tests and desktop/mobile visual inspection. */
 export const aiTraceFixtures: AiJobDTO[] = [
   {
     ...base,

@@ -1,7 +1,6 @@
 import type { Parent, Paragraph, Root, RootContent } from "mdast";
 import type { Processor } from "unified";
 
-/** Accept $$formula…$$ even when either delimiter shares a line with TeX. */
 export function remarkDisplayMath(this: Processor) {
   // remark-math's fenced block syntax treats text following an opening $$ as
   // metadata and requires the closing fence on its own line. Its inline

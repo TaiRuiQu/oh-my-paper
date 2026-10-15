@@ -1,4 +1,3 @@
-"""Deterministic registration-mark alignment, OMR and worksheet crops; no AI."""
 import argparse
 import json
 from pathlib import Path

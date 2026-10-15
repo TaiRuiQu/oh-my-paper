@@ -2,7 +2,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const db = vi.hoisted(() => ({
   user: { findUnique: vi.fn() },
-  aiProvider: { findUnique: vi.fn(), delete: vi.fn() },
+  aiProvider: { findUnique: vi.fn(), delete: vi.fn(), update: vi.fn() },
+  aiModel: { deleteMany: vi.fn(), upsert: vi.fn() },
   $executeRaw: vi.fn(),
   $transaction: vi.fn(),
 }));
@@ -15,6 +16,52 @@ beforeEach(() => {
   db.user.findUnique.mockResolvedValue({ role: "ADMIN" });
   db.aiProvider.findUnique.mockResolvedValue({ id: "provider" });
   db.$transaction.mockImplementation(async (run) => run(db));
+});
+
+describe("provider model names", () => {
+  const command = {
+    type: "provider.save",
+    provider: {
+      id: "provider",
+      name: "学校服务",
+      apiType: "openai_chat",
+      baseURL: "https://example.test/v1",
+      maxOutputTokens: 16384,
+      models: [{ name: "vendor/model-id", displayName: "课堂助手" }],
+    },
+  };
+  it("persists the display name on both insert and update without changing the API model ID", async () => {
+    db.aiProvider.findUnique.mockResolvedValue({ id: "provider", encryptedApiKey: "saved-key" });
+    db.aiProvider.update.mockResolvedValue({ id: "provider" });
+    await executeAdmin("admin", adminCommandSchema.parse(command));
+    expect(db.aiModel.upsert).toHaveBeenCalledWith({
+      where: { providerId_name: { providerId: "provider", name: "vendor/model-id" } },
+      create: {
+        providerId: "provider",
+        name: "vendor/model-id",
+        displayName: "课堂助手",
+        reasoningEfforts: ["default"],
+        isPublic: true,
+      },
+      update: { displayName: "课堂助手", isPublic: true },
+    });
+  });
+  it("allows clearing the display name, trims fields and rejects duplicate or empty IDs", () => {
+    const parseModels = (models: unknown) =>
+      adminCommandSchema.safeParse({ ...command, provider: { ...command.provider, models } });
+    const valid = parseModels([{ name: " model-id ", displayName: " " }]);
+    expect(valid.success).toBe(true);
+    if (valid.success && valid.data.type === "provider.save")
+      expect(valid.data.provider.models).toEqual([{ name: "model-id", displayName: "" }]);
+    expect(parseModels([{ name: "", displayName: "助手" }]).success).toBe(false);
+    expect(
+      parseModels([
+        { name: "same", displayName: "一" },
+        { name: " same ", displayName: "二" },
+      ]).success,
+    ).toBe(false);
+    expect(parseModels([]).success).toBe(false);
+  });
 });
 
 describe("administrator provider deletion", () => {

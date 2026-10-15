@@ -352,7 +352,7 @@ describe("AI autonomous tools and constraints", () => {
         },
       ],
     });
-    await call(f, "finish", { summary: "已识别两题" });
+    await call(f, "finish", { summary: "已识别两题", name: "AI 识别标题" });
     const output = await f.commit();
     expect(mocked.executeCommand).toHaveBeenCalledTimes(1);
     expect(mocked.executeCommand.mock.calls[0][1]).toMatchObject({
@@ -369,6 +369,61 @@ describe("AI autonomous tools and constraints", () => {
     });
     expect(output.result).toMatchObject({ paperId: "saved", paperKind: "HOMEWORK" });
   });
+  it.each(["HOMEWORK", "EXAM"] as const)(
+    "saves an AI title, subject and grade for an automatic %s import",
+    async (kind) => {
+      const sharp = (await import("sharp")).default;
+      const buffer = await sharp({
+        create: { width: 120, height: 160, channels: 3, background: "white" },
+      })
+        .png()
+        .toBuffer();
+      mocked.readOwnedAsset.mockResolvedValue({ buffer });
+      mocked.accessibleAsset.mockResolvedValue({ buffer });
+      mocked.jobFind.mockResolvedValue({
+        id: "job",
+        userId: "teacher",
+        kind: "IMPORT",
+        status: "RUNNING",
+      });
+      const page = "/api/platform/assets/source";
+      const f = await createTaskFeatures({
+        userId: "teacher",
+        kind: "IMPORT",
+        input: { assetUrls: [page], kind },
+        jobId: "job",
+      });
+      await viewImage(f, page);
+      await call(f, "record_source_inventory", { sources: [{ url: page, totalQuestions: 1 }] });
+      await call(f, "propose_question", {
+        items: [
+          {
+            sourceKey: "p1-q1",
+            question: questionInputSchema.parse({
+              ...question,
+              id: undefined,
+              subject: "英语",
+              grade: "小学三年级",
+            }),
+          },
+        ],
+      });
+      await expect(call(f, "finish", { summary: "完成" })).rejects.toThrow(/标题/);
+      expect(f.isComplete()).toBe(false);
+      await expect(call(f, "finish", { summary: "完成", name: "  " })).rejects.toThrow();
+      await call(f, "finish", { summary: "完成", name: "  英语单元练习  " });
+      await f.commit();
+      expect(mocked.executeCommand.mock.calls[0][1]).toMatchObject({
+        type: "paper.save",
+        paper: {
+          name: "英语单元练习",
+          kind,
+          subject: "英语",
+          grade: "小学三年级",
+        },
+      });
+    },
+  );
   it("preserves an established one-answer-per-blank count during enrichment", async () => {
     const s = state();
     s.questions[0] = { ...question, content: { ...question.content, answers: ["2", "4"] } };
@@ -1335,7 +1390,7 @@ describe("batched question processing and unreadable evidence", () => {
     ]);
     expect(reports.results.every((r) => r.success)).toBe(true);
     await batch(f, "skip_questions", [{ id: "p1:q3", sourceUrl: page, reason: "题目被遮挡" }]);
-    await call(f, "finish", { summary: "识别2题，跳过遮挡题1题" });
+    await call(f, "finish", { summary: "识别2题，跳过遮挡题1题", name: "代数练习" });
     const output = await f.commit();
     expect(mocked.executeCommand.mock.calls[0][1].paper.items).toHaveLength(2);
     expect(output.result).toMatchObject({ skipped: [{ id: "p1:q3", sourceUrl: page }] });

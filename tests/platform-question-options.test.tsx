@@ -152,3 +152,41 @@ it("keeps correct-answer selections independent across choice subquestions", asy
   const question = await save();
   expect(question.content.parts.map((part) => part.answers)).toEqual([["A"], ["B"]]);
 });
+
+it("keeps multiline answers and punctuation inside separate rows, including empty blank positions", async () => {
+  await render();
+  const type = [...container.querySelectorAll("select")].find((select) =>
+    [...select.options].some((option) => option.value === "BLANK"),
+  )!;
+  await act(async () => {
+    type.value = "BLANK";
+    type.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  const group = (label: string) =>
+    [...container.querySelectorAll<HTMLElement>('[role="group"]')].find(
+      (node) =>
+        document.getElementById(node.getAttribute("aria-labelledby")!)?.textContent === label,
+    )!;
+  const answers = group("各空标准答案");
+  const addAnswer = () =>
+    [...answers.querySelectorAll("button")].find((b) => b.textContent === "添加填空答案")!;
+  await click(addAnswer());
+  await fill(answers.querySelector("textarea")!, "第一步，计算\n第二步，化简");
+  await click(addAnswer());
+  await click(addAnswer());
+  await fill(answers.querySelectorAll("textarea")[2], "第三空");
+  const tags = group("知识点");
+  await click([...tags.querySelectorAll("button")].find((b) => b.textContent === "添加知识点")!);
+  const tag = tags.querySelector("input")!;
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(
+      tag,
+      "函数，定义域",
+    );
+    tag.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  expect(mutate).not.toHaveBeenCalled();
+  const question = await save();
+  expect(question.content.answers).toEqual(["第一步，计算\n第二步，化简", "", "第三空"]);
+  expect(question.knowledgeTags).toEqual(["函数，定义域"]);
+});

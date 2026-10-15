@@ -179,7 +179,6 @@ async function main() {
           .map((b) => `<circle cx="${b.x}" cy="${b.y}" r="7" fill="black"/>`)
           .join("");
       }
-      // Replace remote materials with self-contained data URIs for raster test fixtures.
       const svg = renderCardSvg(card, page)
         .replaceAll(material.url, `data:image/png;base64,${material.buffer.toString("base64")}`)
         .replace("</svg>", `${fills}</svg>`);
@@ -276,7 +275,6 @@ async function main() {
       JSON.stringify(reversed),
     );
     report.push("同一学生多页倒序 → 通过印刷识别码拒收");
-    // A second assessment uses the same paper to verify free-form worksheet scanning.
     const workAssessmentId = (
       await command({
         type: "assessment.save",

@@ -1,4 +1,3 @@
-/** Small, valid PDFs generated locally so parser tests need no external files or models. */
 export function makeTextPdf(pageCount = 2) {
   const objects: string[] = [],
     fontId = 3 + pageCount * 2;

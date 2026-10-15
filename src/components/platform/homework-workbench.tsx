@@ -21,6 +21,7 @@ import { Field, Panel, Empty } from "./primitives";
 import { MissingRecord, PageHeader, PageTabs } from "./page-header";
 import { RecordNameEditor } from "./record-name-editor";
 import { QUESTION_LABELS } from "./questions";
+import { StringListEditor } from "./editable-list";
 
 export function HomeworkNavigation({ id, active }: { id: string; active: string }) {
   const base = `/homework/${id}`;
@@ -274,7 +275,7 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
     change(() => setExercises(exercises.map((i, n) => (n === index ? { ...i, ...value } : i))));
   const questionContent = (
     index: number,
-    field: "stem" | "answers" | "rubric" | "explanation",
+    field: "stem" | "rubric" | "explanation",
     value: string,
   ) =>
     update(index, {
@@ -282,7 +283,7 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
         ...exercises[index].question,
         content: {
           ...exercises[index].question.content,
-          [field]: field === "answers" ? value.split("\n") : value,
+          [field]: value,
         },
       },
     });
@@ -352,6 +353,181 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
         }}
       >
         <DocumentWorkbench
+          outline={false}
+          propertiesPanel={
+            <>
+              <aside className="p-paper-bank">
+                {selectedExercise && (
+                  <div className="p-mobile-document-tools">
+                    <h3>练习设置</h3>
+                    <div className="p-form-grid">
+                      <Field label="当前练习">
+                        <select
+                          value={selectedExerciseIndex}
+                          onChange={(e) => setSelectedIndex(Number(e.target.value))}
+                        >
+                          {exercises.map((exercise, n) => (
+                            <option key={exercise.question.id} value={n}>
+                              第 {n + 1} 题
+                            </option>
+                          ))}
+                        </select>
+                      </Field>
+                      <Field label="分值">
+                        <Input
+                          type="number"
+                          min={0}
+                          step={0.5}
+                          value={selectedExercise.score}
+                          onChange={(e) =>
+                            update(selectedExerciseIndex, { score: Number(e.target.value) })
+                          }
+                        />
+                      </Field>
+                      <Field label="作答横线（0 为无）">
+                        <Input
+                          type="number"
+                          min={0}
+                          max={30}
+                          value={documentAnswerLines(layout, selectedExercise.question.id)}
+                          onChange={(e) =>
+                            change(() =>
+                              setLayout({
+                                ...layout,
+                                questionLayouts: {
+                                  ...layout.questionLayouts,
+                                  [selectedExercise.question.id]: {
+                                    ...layout.questionLayouts?.[selectedExercise.question.id],
+                                    answerLines: Number(e.target.value),
+                                  },
+                                },
+                              }),
+                            )
+                          }
+                        />
+                      </Field>
+                    </div>
+                    <div className="p-actions">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={selectedExerciseIndex === 0}
+                        onClick={() => {
+                          move(selectedExerciseIndex, -1);
+                          setSelectedIndex(selectedExerciseIndex - 1);
+                        }}
+                      >
+                        上移练习
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={selectedExerciseIndex === exercises.length - 1}
+                        onClick={() => {
+                          move(selectedExerciseIndex, 1);
+                          setSelectedIndex(selectedExerciseIndex + 1);
+                        }}
+                      >
+                        下移练习
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() =>
+                          change(() =>
+                            setExercises(exercises.filter((_, n) => n !== selectedExerciseIndex)),
+                          )
+                        }
+                      >
+                        <Trash2 />
+                        移除练习
+                      </Button>
+                      <label className="p-check">
+                        <input
+                          type="checkbox"
+                          checked={
+                            layout.questionLayouts?.[selectedExercise.question.id]
+                              ?.pageBreakBefore ?? false
+                          }
+                          onChange={(e) =>
+                            change(() =>
+                              setLayout({
+                                ...layout,
+                                questionLayouts: {
+                                  ...layout.questionLayouts,
+                                  [selectedExercise.question.id]: {
+                                    ...layout.questionLayouts?.[selectedExercise.question.id],
+                                    pageBreakBefore: e.target.checked,
+                                  },
+                                },
+                              }),
+                            )
+                          }
+                        />
+                        从新页开始
+                      </label>
+                    </div>
+                    <p className="p-muted">点击「100% 编辑」放大纸面，再直接编辑练习内容。</p>
+                  </div>
+                )}
+                <h2>添加练习题</h2>
+                <div className="p-paper-settings">
+                  <Field label="学科">
+                    <select
+                      value={subject}
+                      disabled={exercises.length > 0}
+                      onChange={(e) => setSubject(e.target.value)}
+                    >
+                      {SUBJECTS.map((s) => (
+                        <option key={s}>{s}</option>
+                      ))}
+                    </select>
+                  </Field>
+                  <Field label="年级">
+                    <GradeSelect
+                      value={grade}
+                      onChange={(e) => change(() => setGrade(e.target.value))}
+                    />
+                  </Field>
+                </div>
+                <DocumentInsertTools
+                  subject={subject}
+                  grade={grade}
+                  usedIds={exercises.map((i) => i.question.id)}
+                  onText={() =>
+                    change(() =>
+                      setLayout({
+                        ...layout,
+                        textBlocks: [
+                          ...(layout.textBlocks ?? []),
+                          {
+                            id: crypto.randomUUID(),
+                            text: "",
+                            beforeQuestionId: selectedExercise?.question.id,
+                          },
+                        ],
+                      }),
+                    )
+                  }
+                  onAdd={(q) =>
+                    change(() =>
+                      setExercises([
+                        ...exercises,
+                        {
+                          question: structuredClone(q),
+                          score:
+                            q.type === "MIXED"
+                              ? q.content.parts.reduce((n, p) => n + p.score, 0)
+                              : 5,
+                          section: QUESTION_LABELS[q.type],
+                        },
+                      ]),
+                    )
+                  }
+                />
+              </aside>
+            </>
+          }
           title={name.trim() || "作业练习册"}
           status={
             <>
@@ -435,7 +611,6 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
             </div>
           }
           notice={used && <p className="p-notice">这份作业已经布置，修改将保存为新版本。</p>}
-          outline={false}
         >
           <div className="p-workbook-workbench">
             <div>
@@ -542,13 +717,20 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                         />
                         {answers ? (
                           <div className="p-answers">
-                            <Field label="标准答案">
-                              <PaperText
-                                label={`练习 ${index + 1} 答案`}
-                                value={exercise.question.content.answers.join("\n")}
-                                onChange={(v) => questionContent(index, "answers", v)}
-                              />
-                            </Field>
+                            <StringListEditor
+                              label={`练习 ${index + 1} 标准答案`}
+                              itemLabel="答案"
+                              multiline
+                              values={exercise.question.content.answers}
+                              onChange={(answers) =>
+                                update(index, {
+                                  question: {
+                                    ...exercise.question,
+                                    content: { ...exercise.question.content, answers },
+                                  },
+                                })
+                              }
+                            />
                             <Field label="解析">
                               <PaperText
                                 label={`练习 ${index + 1} 解析`}
@@ -564,25 +746,26 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                               />
                             </Field>
                             {exercise.question.content.parts.map((part, n) => (
-                              <Field label={`小问 ${n + 1} 标准答案`} key={part.id}>
-                                <PaperText
-                                  label={`练习 ${index + 1} 小问 ${n + 1} 答案`}
-                                  value={part.answers.join("\n")}
-                                  onChange={(value) =>
-                                    update(index, {
-                                      question: {
-                                        ...exercise.question,
-                                        content: {
-                                          ...exercise.question.content,
-                                          parts: exercise.question.content.parts.map((p, j) =>
-                                            j === n ? { ...p, answers: value.split("\n") } : p,
-                                          ),
-                                        },
+                              <StringListEditor
+                                key={part.id}
+                                label={`小问 ${n + 1} 标准答案`}
+                                itemLabel="答案"
+                                multiline
+                                values={part.answers}
+                                onChange={(answers) =>
+                                  update(index, {
+                                    question: {
+                                      ...exercise.question,
+                                      content: {
+                                        ...exercise.question.content,
+                                        parts: exercise.question.content.parts.map((p, j) =>
+                                          j === n ? { ...p, answers } : p,
+                                        ),
                                       },
-                                    })
-                                  }
-                                />
-                              </Field>
+                                    },
+                                  })
+                                }
+                              />
                             ))}
                           </div>
                         ) : (
@@ -641,174 +824,6 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                 })}
               />
             </div>
-            <aside className="p-paper-bank">
-              {selectedExercise && (
-                <div className="p-mobile-document-tools">
-                  <h3>练习设置</h3>
-                  <div className="p-form-grid">
-                    <Field label="当前练习">
-                      <select
-                        value={selectedExerciseIndex}
-                        onChange={(e) => setSelectedIndex(Number(e.target.value))}
-                      >
-                        {exercises.map((exercise, n) => (
-                          <option key={exercise.question.id} value={n}>
-                            第 {n + 1} 题
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    <Field label="分值">
-                      <Input
-                        type="number"
-                        min={0}
-                        step={0.5}
-                        value={selectedExercise.score}
-                        onChange={(e) =>
-                          update(selectedExerciseIndex, { score: Number(e.target.value) })
-                        }
-                      />
-                    </Field>
-                    <Field label="作答横线（0 为无）">
-                      <Input
-                        type="number"
-                        min={0}
-                        max={30}
-                        value={documentAnswerLines(layout, selectedExercise.question.id)}
-                        onChange={(e) =>
-                          change(() =>
-                            setLayout({
-                              ...layout,
-                              questionLayouts: {
-                                ...layout.questionLayouts,
-                                [selectedExercise.question.id]: {
-                                  ...layout.questionLayouts?.[selectedExercise.question.id],
-                                  answerLines: Number(e.target.value),
-                                },
-                              },
-                            }),
-                          )
-                        }
-                      />
-                    </Field>
-                  </div>
-                  <div className="p-actions">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={selectedExerciseIndex === 0}
-                      onClick={() => {
-                        move(selectedExerciseIndex, -1);
-                        setSelectedIndex(selectedExerciseIndex - 1);
-                      }}
-                    >
-                      上移练习
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={selectedExerciseIndex === exercises.length - 1}
-                      onClick={() => {
-                        move(selectedExerciseIndex, 1);
-                        setSelectedIndex(selectedExerciseIndex + 1);
-                      }}
-                    >
-                      下移练习
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() =>
-                        change(() =>
-                          setExercises(exercises.filter((_, n) => n !== selectedExerciseIndex)),
-                        )
-                      }
-                    >
-                      <Trash2 />
-                      移除练习
-                    </Button>
-                    <label className="p-check">
-                      <input
-                        type="checkbox"
-                        checked={
-                          layout.questionLayouts?.[selectedExercise.question.id]?.pageBreakBefore ??
-                          false
-                        }
-                        onChange={(e) =>
-                          change(() =>
-                            setLayout({
-                              ...layout,
-                              questionLayouts: {
-                                ...layout.questionLayouts,
-                                [selectedExercise.question.id]: {
-                                  ...layout.questionLayouts?.[selectedExercise.question.id],
-                                  pageBreakBefore: e.target.checked,
-                                },
-                              },
-                            }),
-                          )
-                        }
-                      />
-                      从新页开始
-                    </label>
-                  </div>
-                  <p className="p-muted">点击「100% 编辑」放大纸面，再直接编辑练习内容。</p>
-                </div>
-              )}
-              <h2>添加练习题</h2>
-              <div className="p-paper-settings">
-                <Field label="学科">
-                  <select
-                    value={subject}
-                    disabled={exercises.length > 0}
-                    onChange={(e) => setSubject(e.target.value)}
-                  >
-                    {SUBJECTS.map((s) => (
-                      <option key={s}>{s}</option>
-                    ))}
-                  </select>
-                </Field>
-                <Field label="年级">
-                  <GradeSelect
-                    value={grade}
-                    onChange={(e) => change(() => setGrade(e.target.value))}
-                  />
-                </Field>
-              </div>
-              <DocumentInsertTools
-                subject={subject}
-                grade={grade}
-                usedIds={exercises.map((i) => i.question.id)}
-                onText={() =>
-                  change(() =>
-                    setLayout({
-                      ...layout,
-                      textBlocks: [
-                        ...(layout.textBlocks ?? []),
-                        {
-                          id: crypto.randomUUID(),
-                          text: "",
-                          beforeQuestionId: selectedExercise?.question.id,
-                        },
-                      ],
-                    }),
-                  )
-                }
-                onAdd={(q) =>
-                  change(() =>
-                    setExercises([
-                      ...exercises,
-                      {
-                        question: structuredClone(q),
-                        score:
-                          q.type === "MIXED" ? q.content.parts.reduce((n, p) => n + p.score, 0) : 5,
-                        section: QUESTION_LABELS[q.type],
-                      },
-                    ]),
-                  )
-                }
-              />
-            </aside>
           </div>
         </DocumentWorkbench>
       </form>

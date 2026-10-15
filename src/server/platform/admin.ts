@@ -35,7 +35,19 @@ export const adminCommandSchema = z.discriminatedUnion("type", [
       apiType: z.enum(["openai_chat", "openai_responses", "anthropic", "google"]),
       baseURL: z.url().refine((url) => /^https?:/.test(url), "使用 HTTP 或 HTTPS 地址。"),
       apiKey: z.string().min(1).max(4096).optional(),
-      models: z.array(z.string().trim().min(1).max(120)).min(1).max(30),
+      models: z
+        .array(
+          z.strictObject({
+            name: z.string().trim().min(1).max(120),
+            displayName: z.string().trim().max(120),
+          }),
+        )
+        .min(1)
+        .max(30)
+        .refine(
+          (models) => new Set(models.map((model) => model.name)).size === models.length,
+          "同一提供商的模型 ID 不能重复。",
+        ),
       maxOutputTokens: z.number().int().min(1024).max(393216).default(16384),
     }),
   }),
@@ -55,7 +67,7 @@ export async function loadAdmin(id: string) {
       apiType: true,
       baseURL: true,
       maxOutputTokens: true,
-      models: { select: { id: true, name: true } },
+      models: { select: { id: true, name: true, displayName: true }, orderBy: { name: "asc" } },
     },
     orderBy: { name: "asc" },
   });
@@ -153,13 +165,20 @@ export async function executeAdmin(id: string, input: z.infer<typeof adminComman
     const saved = existing
       ? await tx.aiProvider.update({ where: { id: existing.id }, data: values })
       : await tx.aiProvider.create({ data: values });
-    const models = [...new Set(data.models)];
-    await tx.aiModel.deleteMany({ where: { providerId: saved.id, name: { notIn: models } } });
-    for (const name of models)
+    await tx.aiModel.deleteMany({
+      where: { providerId: saved.id, name: { notIn: data.models.map((model) => model.name) } },
+    });
+    for (const { name, displayName } of data.models)
       await tx.aiModel.upsert({
         where: { providerId_name: { providerId: saved.id, name } },
-        create: { providerId: saved.id, name, reasoningEfforts: ["default"], isPublic: true },
-        update: { isPublic: true },
+        create: {
+          providerId: saved.id,
+          name,
+          displayName,
+          reasoningEfforts: ["default"],
+          isPublic: true,
+        },
+        update: { displayName, isPublic: true },
       });
     return saved;
   });

@@ -253,9 +253,9 @@ async function main() {
     assert.equal(report.knowledge.find((point) => point.tag === "矩形面积")!.accuracy, 0);
     assert.equal(report.knowledge.find((point) => point.tag === "矩形周长")!.accuracy, 1);
     assert.deepEqual(report.wrongQuestions[0].wrongPartIds, ["1"]);
-    await mkdir("v2-docs/evidence", { recursive: true });
+    await mkdir("tmp", { recursive: true });
     await writeFile(
-      "v2-docs/evidence/ai-mixed-live.json",
+      "tmp/ai-mixed-live-evidence.json",
       JSON.stringify(
         {
           timestamp: new Date().toISOString(),

@@ -135,7 +135,6 @@ describe("answer cards and scans", () => {
     const svg = renderCardSvg(template).replace("</svg>", `${fills}</svg>`);
     const source = join(dir, "card.png");
     await sharp(Buffer.from(svg)).png().toFile(source);
-    // Genuine projective distortion exercises the four-point OpenCV correction.
     const photo = join(dir, "photo.png");
     await promisify(execFile)(resolve(".venv/bin/python"), [
       "-c",

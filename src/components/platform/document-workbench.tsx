@@ -13,6 +13,8 @@ export function DocumentWorkbench({
   notice,
   outline = true,
   properties = true,
+  propertiesPanel,
+  panelActions,
   children,
 }: {
   title: string;
@@ -22,6 +24,8 @@ export function DocumentWorkbench({
   notice?: ReactNode;
   outline?: boolean;
   properties?: boolean;
+  propertiesPanel?: ReactNode;
+  panelActions?: ReactNode;
   children: ReactNode;
 }) {
   const id = useId();
@@ -74,10 +78,11 @@ export function DocumentWorkbench({
       ref={host}
       id={id}
       aria-label={`${title}排版工作台`}
-      className={`${styles.workbench}${fullscreen ? ` ${styles.fullscreen}` : ""}`}
+      className={`${styles.workbench}${fullscreen ? ` ${styles.fullscreen}` : ""}${propertiesPanel ? ` ${styles.withRail}` : ""}`}
       data-fullscreen={fullscreen}
       data-outline={outline && showOutline}
       data-properties={properties && showProperties}
+      data-rail={!!propertiesPanel}
     >
       <header className={styles.header}>
         <div className={styles.identity}>
@@ -88,7 +93,7 @@ export function DocumentWorkbench({
           </div>
         </div>
         <div className={styles.actions}>
-          {fullscreen && (outline || properties) && (
+          {(outline || properties) && (
             <div className={styles.viewControls}>
               {outline && (
                 <Button
@@ -139,8 +144,32 @@ export function DocumentWorkbench({
         </div>
       </header>
       {notice && <div className={styles.notice}>{notice}</div>}
-      {ribbon && <div className={styles.ribbon}>{ribbon}</div>}
-      <div className={styles.content}>{children}</div>
+      {propertiesPanel ? (
+        <div className={styles.body}>
+          <div className={styles.content}>{children}</div>
+          <aside className={styles.rail} aria-label="制作面板">
+            <div className={styles.railTitle}>
+              <PanelRight size={16} />
+              制作面板
+            </div>
+            <div className={styles.railScroll} role="region" aria-label="制作属性设置" tabIndex={0}>
+              {ribbon && (
+                <section className={styles.railSettings}>
+                  <h3>纸张与排版</h3>
+                  <div className={styles.ribbon}>{ribbon}</div>
+                </section>
+              )}
+              {propertiesPanel}
+            </div>
+            {panelActions ?? (ribbon && <div className={styles.railActions}>{actions}</div>)}
+          </aside>
+        </div>
+      ) : (
+        <>
+          {ribbon && <div className={styles.ribbon}>{ribbon}</div>}
+          <div className={styles.content}>{children}</div>
+        </>
+      )}
     </section>
   );
 }

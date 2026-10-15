@@ -1,10 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { AccountCredentials } from "@/contracts/auth";
+import { AccountImport } from "./account-import";
+import importStyles from "./account-import.module.css";
+import type { ImportRole } from "@/contracts/account-import";
 import { AccountCredentialsPanel } from "./account-credentials";
 import type { PlatformState, Role } from "@/contracts/platform";
 import { apiRequest, jsonBody } from "@/lib/http-client";
-import { Empty, Field, Panel, readForm, stringField, splitList } from "./primitives";
+import { Empty, Field, Panel, readForm, stringField } from "./primitives";
+import { ProviderModelsEditor } from "./provider-models-editor";
+import listStyles from "./editable-list.module.css";
 import { EmbeddingSettings } from "./embedding-settings";
 import { assignmentLabel, TeachingPermissions } from "./teaching-permissions";
 type Provider = {
@@ -13,7 +18,7 @@ type Provider = {
   apiType: string;
   baseURL: string;
   maxOutputTokens: number;
-  models: { id: string; name: string }[];
+  models: { id: string; name: string; displayName: string }[];
 };
 export function Admin({
   state,
@@ -27,6 +32,7 @@ export function Admin({
   notify: (message: string, error?: boolean) => void;
 }) {
   const [newRole, setNewRole] = useState<Role>();
+  const [importRole, setImportRole] = useState<ImportRole>();
   const [permissionUserId, setPermissionUserId] = useState<string>();
   const permissionUser = state.users.find(
     (user) => user.id === permissionUserId && user.role === "TEACHER",
@@ -66,203 +72,233 @@ export function Admin({
   return (
     <>
       {(!section || section === "users") && (
-        <Panel
-          title="账号与角色"
-          description="管理员创建账号，并为教师配置可兼任的教学身份和数据范围。教师使用账号登录，学生使用学号登录。"
-          actions={
-            <div className="p-actions">
-              <button
-                className="button"
-                disabled={busy}
-                onClick={() => {
-                  setCredentials(undefined);
-                  setNewRole("TEACHER");
-                }}
-              >
-                添加教师
-              </button>
-              <button
-                className="button secondary"
-                disabled={busy}
-                onClick={() => {
-                  setCredentials(undefined);
-                  setNewRole("STUDENT");
-                }}
-              >
-                添加学生
-              </button>
-              <button
-                className="button secondary"
-                disabled={busy}
-                onClick={() => {
-                  setCredentials(undefined);
-                  setNewRole("ADMIN");
-                }}
-              >
-                添加管理员
-              </button>
-            </div>
-          }
-        >
-          {credentials && <AccountCredentialsPanel credentials={credentials} />}
-          {newRole && (
-            <form
-              className="p-form"
-              key={newRole}
-              onSubmit={(e) => {
-                const d = readForm(e);
-                void save(
-                  {
-                    type: "user.create",
-                    user:
-                      newRole === "STUDENT"
-                        ? {
-                            role: newRole,
-                            name: stringField(d, "name"),
-                            studentNumber: stringField(d, "studentNumber") || undefined,
-                          }
-                        : {
-                            role: newRole,
-                            username: stringField(d, "username"),
-                            password: stringField(d, "password"),
-                          },
-                  },
-                  true,
-                );
-              }}
-            >
-              <div className="p-form-grid">
-                {newRole === "STUDENT" ? (
-                  <>
-                    <Field label="真实姓名">
-                      <input name="name" required maxLength={80} autoComplete="off" />
-                    </Field>
-                    <Field label="学号（可选）" hint="留空自动生成六位学号，密码由系统生成。">
-                      <input
-                        name="studentNumber"
-                        pattern="[0-9]{1,20}"
-                        maxLength={20}
-                        inputMode="numeric"
-                      />
-                    </Field>
-                  </>
-                ) : (
-                  <>
-                    <Field label="账号" hint="字母、数字、下划线、点或短横线；不区分大小写。">
-                      <input
-                        name="username"
-                        required
-                        maxLength={64}
-                        pattern="[a-zA-Z0-9_.\-]+"
-                        autoComplete="off"
-                      />
-                    </Field>
-                    <Field label="密码" hint="10 至 128 个字符。">
-                      <input
-                        type="password"
-                        name="password"
-                        required
-                        minLength={10}
-                        maxLength={128}
-                        autoComplete="new-password"
-                      />
-                    </Field>
-                  </>
-                )}
-              </div>
+        <div className={importStyles.users}>
+          <Panel
+            title="账号与角色"
+            description="管理员创建账号，并为教师配置可兼任的教学身份和数据范围。教师使用账号登录，学生使用学号登录。"
+            actions={
               <div className="p-actions">
-                <button className="button" disabled={busy}>
-                  {busy
-                    ? "正在创建…"
-                    : `创建${newRole === "STUDENT" ? "学生" : newRole === "TEACHER" ? "教师" : "管理员"}账号`}
+                <button
+                  className="button"
+                  disabled={busy || !!importRole}
+                  onClick={() => {
+                    setNewRole(undefined);
+                    setImportRole("TEACHER");
+                  }}
+                >
+                  批量导入教师
                 </button>
                 <button
-                  type="button"
                   className="button secondary"
-                  disabled={busy}
-                  onClick={() => setNewRole(undefined)}
+                  disabled={busy || !!importRole}
+                  onClick={() => {
+                    setNewRole(undefined);
+                    setImportRole("STUDENT");
+                  }}
                 >
-                  取消
+                  批量导入学生
+                </button>
+                <button
+                  className="button"
+                  disabled={busy || !!importRole}
+                  onClick={() => {
+                    setCredentials(undefined);
+                    setNewRole("TEACHER");
+                  }}
+                >
+                  添加教师
+                </button>
+                <button
+                  className="button secondary"
+                  disabled={busy || !!importRole}
+                  onClick={() => {
+                    setCredentials(undefined);
+                    setNewRole("STUDENT");
+                  }}
+                >
+                  添加学生
+                </button>
+                <button
+                  className="button secondary"
+                  disabled={busy || !!importRole}
+                  onClick={() => {
+                    setCredentials(undefined);
+                    setNewRole("ADMIN");
+                  }}
+                >
+                  添加管理员
                 </button>
               </div>
-            </form>
-          )}
-          <div className="p-table" role="region" aria-label="账号与角色列表" tabIndex={0}>
-            <table>
-              <thead>
-                <tr>
-                  <th>姓名</th>
-                  <th>账号 / 学号</th>
-                  <th>角色</th>
-                  <th>教学身份与范围</th>
-                  <th>权限配置</th>
-                </tr>
-              </thead>
-              <tbody>
-                {state.users.map((u) => (
-                  <tr key={u.id}>
-                    <td>{u.name}</td>
-                    <td>{u.username ?? u.email}</td>
-                    <td>
-                      <select
-                        aria-label={`${u.name} 的角色`}
-                        value={u.role}
-                        disabled={busy || u.id === state.actor.id}
-                        onChange={(e) =>
-                          void save({ type: "user.role", id: u.id, role: e.target.value as Role })
-                        }
-                      >
-                        <option value="ADMIN">管理员</option>
-                        <option value="TEACHER">教师</option>
-                        <option value="STUDENT">学生</option>
-                      </select>
-                    </td>
-                    <td>
-                      {u.role === "ADMIN" ? (
-                        "全校教学数据与系统配置"
-                      ) : u.role === "STUDENT" ? (
-                        "本人学习数据"
-                      ) : u.teachingAssignments?.length ? (
-                        <ul className="p-permission-summary">
-                          {u.teachingAssignments.map((row, index) => (
-                            <li key={index}>{assignmentLabel(row, state.classrooms)}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        "尚未分配教学身份"
-                      )}
-                    </td>
-                    <td>
-                      {u.role === "TEACHER" && (
-                        <button
-                          className="button secondary"
-                          disabled={busy}
-                          aria-label={`配置 ${u.name} 的教学权限`}
-                          onClick={() => setPermissionUserId(u.id)}
-                        >
-                          配置教学权限
-                        </button>
-                      )}
-                    </td>
+            }
+          >
+            {importRole && (
+              <AccountImport
+                key={importRole}
+                role={importRole}
+                refresh={refresh}
+                onClose={() => setImportRole(undefined)}
+              />
+            )}
+            {credentials && <AccountCredentialsPanel credentials={credentials} />}
+            {newRole && (
+              <form
+                className="p-form"
+                key={newRole}
+                onSubmit={(e) => {
+                  const d = readForm(e);
+                  void save(
+                    {
+                      type: "user.create",
+                      user:
+                        newRole === "STUDENT"
+                          ? {
+                              role: newRole,
+                              name: stringField(d, "name"),
+                              studentNumber: stringField(d, "studentNumber") || undefined,
+                            }
+                          : {
+                              role: newRole,
+                              username: stringField(d, "username"),
+                              password: stringField(d, "password"),
+                            },
+                    },
+                    true,
+                  );
+                }}
+              >
+                <div className="p-form-grid">
+                  {newRole === "STUDENT" ? (
+                    <>
+                      <Field label="真实姓名">
+                        <input name="name" required maxLength={80} autoComplete="off" />
+                      </Field>
+                      <Field label="学号（可选）" hint="留空自动生成六位学号，密码由系统生成。">
+                        <input
+                          name="studentNumber"
+                          pattern="[0-9]{1,20}"
+                          maxLength={20}
+                          inputMode="numeric"
+                        />
+                      </Field>
+                    </>
+                  ) : (
+                    <>
+                      <Field label="账号" hint="字母、数字、下划线、点或短横线；不区分大小写。">
+                        <input
+                          name="username"
+                          required
+                          maxLength={64}
+                          pattern="[a-zA-Z0-9_.\-]+"
+                          autoComplete="off"
+                        />
+                      </Field>
+                      <Field label="密码" hint="10 至 128 个字符。">
+                        <input
+                          type="password"
+                          name="password"
+                          required
+                          minLength={10}
+                          maxLength={128}
+                          autoComplete="new-password"
+                        />
+                      </Field>
+                    </>
+                  )}
+                </div>
+                <div className="p-actions">
+                  <button className="button" disabled={busy}>
+                    {busy
+                      ? "正在创建…"
+                      : `创建${newRole === "STUDENT" ? "学生" : newRole === "TEACHER" ? "教师" : "管理员"}账号`}
+                  </button>
+                  <button
+                    type="button"
+                    className="button secondary"
+                    disabled={busy}
+                    onClick={() => setNewRole(undefined)}
+                  >
+                    取消
+                  </button>
+                </div>
+              </form>
+            )}
+            <div className="p-table" role="region" aria-label="账号与角色列表" tabIndex={0}>
+              <table>
+                <thead>
+                  <tr>
+                    <th>姓名</th>
+                    <th>账号 / 学号</th>
+                    <th>角色</th>
+                    <th>教学身份与范围</th>
+                    <th>权限配置</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {permissionUser && (
-            <TeachingPermissions
-              key={permissionUser.id}
-              name={permissionUser.name}
-              assignments={permissionUser.teachingAssignments ?? []}
-              classrooms={state.classrooms}
-              busy={busy}
-              onCancel={() => setPermissionUserId(undefined)}
-              onSave={(assignments) =>
-                void save({ type: "user.permissions", id: permissionUser.id, assignments })
-              }
-            />
-          )}
-        </Panel>
+                </thead>
+                <tbody>
+                  {state.users.map((u) => (
+                    <tr key={u.id}>
+                      <td>{u.name}</td>
+                      <td>{u.username ?? u.email}</td>
+                      <td>
+                        <select
+                          aria-label={`${u.name} 的角色`}
+                          value={u.role}
+                          disabled={busy || u.id === state.actor.id}
+                          onChange={(e) =>
+                            void save({ type: "user.role", id: u.id, role: e.target.value as Role })
+                          }
+                        >
+                          <option value="ADMIN">管理员</option>
+                          <option value="TEACHER">教师</option>
+                          <option value="STUDENT">学生</option>
+                        </select>
+                      </td>
+                      <td>
+                        {u.role === "ADMIN" ? (
+                          "全校教学数据与系统配置"
+                        ) : u.role === "STUDENT" ? (
+                          "本人学习数据"
+                        ) : u.teachingAssignments?.length ? (
+                          <ul className="p-permission-summary">
+                            {u.teachingAssignments.map((row, index) => (
+                              <li key={index}>{assignmentLabel(row, state.classrooms)}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          "尚未分配教学身份"
+                        )}
+                      </td>
+                      <td>
+                        {u.role === "TEACHER" && (
+                          <button
+                            className="button secondary"
+                            disabled={busy}
+                            aria-label={`配置 ${u.name} 的教学权限`}
+                            onClick={() => setPermissionUserId(u.id)}
+                          >
+                            配置教学权限
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {permissionUser && (
+              <TeachingPermissions
+                key={permissionUser.id}
+                name={permissionUser.name}
+                assignments={permissionUser.teachingAssignments ?? []}
+                classrooms={state.classrooms}
+                busy={busy}
+                onCancel={() => setPermissionUserId(undefined)}
+                onSave={(assignments) =>
+                  void save({ type: "user.permissions", id: permissionUser.id, assignments })
+                }
+              />
+            )}
+          </Panel>
+        </div>
       )}
       {(!section || section === "models") && (
         <Panel
@@ -289,7 +325,10 @@ export function Admin({
                     baseURL: stringField(d, "baseURL"),
                     apiKey: stringField(d, "apiKey") || undefined,
                     maxOutputTokens: Number(d.get("maxOutputTokens")),
-                    models: splitList(stringField(d, "models")),
+                    models: d.getAll("modelName").map((name, index) => ({
+                      name: String(name).trim(),
+                      displayName: String(d.getAll("modelDisplayName")[index] ?? "").trim(),
+                    })),
                   },
                 });
               }}
@@ -331,13 +370,7 @@ export function Admin({
                   defaultValue={editing?.maxOutputTokens ?? 16384}
                 />
               </Field>
-              <Field label="模型 ID（每行一个）">
-                <textarea
-                  required
-                  name="models"
-                  defaultValue={editing?.models.map((m) => m.name).join("\n")}
-                />
-              </Field>
+              <ProviderModelsEditor models={editing?.models} disabled={busy} />
               <div className="p-actions">
                 <button className="button" disabled={busy}>
                   {busy ? "正在保存…" : "保存提供商"}
@@ -372,7 +405,16 @@ export function Admin({
                         <div className="p-muted">{p.baseURL}</div>
                       </td>
                       <td>{p.apiType}</td>
-                      <td>{p.models.map((m) => m.name || m.id).join("、")}</td>
+                      <td>
+                        <ul className={listStyles.summary}>
+                          {p.models.map((m) => (
+                            <li key={m.id}>
+                              {m.displayName || m.name}
+                              {m.displayName && <small>{m.name}</small>}
+                            </li>
+                          ))}
+                        </ul>
+                      </td>
                       <td>
                         <div className="p-actions">
                           <button

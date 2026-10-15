@@ -52,7 +52,6 @@ export async function loadScopedAnalytics(
       assessmentIds.has(submission.assessmentId) && studentIds.has(submission.studentId),
   );
   const submissionIds = new Set(submissions.map((submission) => submission.id));
-  // Student review records stay on the server. Only final authorized analytics leave this module.
   const rows =
     state.actor.role === "STUDENT"
       ? await getDb().review.findMany({ where: { submissionId: { in: [...submissionIds] } } })

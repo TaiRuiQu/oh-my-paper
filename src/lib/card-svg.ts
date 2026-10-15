@@ -31,11 +31,12 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
   const columns = l.columns ?? 1,
     cw = (w - 110 - (columns - 1) * 12) / columns;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><title>${text(template.name)} · 第 ${page} 页</title>${rect(0, 0, w, h, 'fill="white"')}<g font-family="${text(documentFont(l.fontFamily))}" fill="black">${l.markers.map((m) => rect(m.x * w - 7, m.y * h - 7, 14, 14, 'fill="black"')).join("")}
-  ${rect(45, 45, w - 90, h - 100, 'fill="none" stroke="#a62b34" stroke-width="1.5"')}
+  ${rect(45, 45, w - 90, h - 100, 'fill="none" stroke="#333" stroke-width="1.5"')}
   ${label(60, 69, template.name.length > 22 ? `${template.name.slice(0, 22)}…` : template.name, 20, 'font-weight="bold"')}
   ${label(60, 108, "姓名：____________  班级：____________", 14)}
   ${rect(55, 122, Math.max(230, w - 410), 52, 'fill="none" stroke="#333" stroke-width="1"')}
-  ${label(64, 140, "注意事项", 11, 'font-weight="bold"')}${label(64, 158, "请用 2B 铅笔填涂，答案写在黑色矩形框内。", 10)}
+  ${label(64, 140, "注意事项", 11, 'font-weight="bold"')}${label(64, 158, "1. 客观题用 2B 铅笔填涂。主观题用黑色字迹书写。", 10)}
+  ${l.showAbsent !== false ? rect(55, 174, Math.max(230, w - 410), 12, 'fill="none" stroke="#333" stroke-width="0.7"') + label(64, 183, "正确填涂 ▰     缺考标记 □（教师填写）", 8) : ""}
   <g data-page-code="${page}">${Array.from(cardPageCode(template.id, page), (bit, i) => (bit === "1" ? rect(65 + i * 8, 190, 6, 10, 'fill="black"') : "")).join("")}</g>${label(65, 225, "页面识别码 · 请勿涂改", 10)}
   ${label(n.x * w - 10, 57, "六位学号 / 考号（每列填一个数字）", 11)}
   ${Array.from({ length: n.digits }, (_, column) => rect((n.x + column * n.cellWidth) * w - 10, n.y * h - 22, 20, 15, 'fill="none" stroke="black" stroke-width="0.8"')).join("")}
@@ -47,7 +48,7 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
       label(x, y + 2.5, String(i % 10), 7, 'text-anchor="middle"')
     );
   }).join("")}
-  ${Array.from({ length: columns }, (_, c) => rect(50 + c * (cw + 12), 265, cw + 10, h - 328, 'fill="none" stroke="#a62b34" stroke-width="1.1"')).join("")}
+  ${Array.from({ length: columns }, (_, c) => rect(50 + c * (cw + 12), 265, cw + 10, h - 328, 'fill="none" stroke="#333" stroke-width="1.1"')).join("")}
   ${l.regions
     .filter((r) => r.page === page)
     .map((r) => {
@@ -62,10 +63,29 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
         label(
           x + 8,
           y + 20,
-          `${number}. ${r.kind === "CHOICE" ? (r.multiple ? "多项选择题" : "单项选择题") : r.kind === "BLANK" ? "填空题" : "解答题"}`,
+          `${number}. ${r.label ?? (r.kind === "CHOICE" ? (r.multiple ? "多项选择题" : "单项选择题") : r.kind === "BLANK" ? "填空题" : "解答题")}`,
           12,
           'font-weight="bold"',
         ) +
+        (r.kind === "WRITING" && r.writingStyle === "lines"
+          ? Array.from(
+              { length: Math.max(0, Math.floor((rh - 32) / 24)) },
+              (_, i) =>
+                `<path d="M ${x + 12} ${y + 48 + i * 24} H ${x + rw - 12}" stroke="#999" stroke-width="0.6"/>`,
+            ).join("")
+          : r.kind === "WRITING" && r.writingStyle === "grid"
+            ? Array.from({ length: Math.max(0, Math.floor((rh - 36) / 24)) }, (_, row) =>
+                Array.from({ length: Math.max(0, Math.floor((rw - 24) / 24)) }, (_, col) =>
+                  rect(
+                    x + 12 + col * 24,
+                    y + 32 + row * 24,
+                    24,
+                    24,
+                    'fill="none" stroke="#999" stroke-width="0.5"',
+                  ),
+                ).join(""),
+              ).join("")
+            : "") +
         choiceBubbles(r, l)
           .map(
             (b) =>
@@ -99,5 +119,6 @@ ${(l.annotations ?? [])
         .join("")}</text>`,
   )
   .join("")}
-  ${label(w / 2, h - 40, `第 ${page} 页 / 共 ${l.pageCount} 页 · 请在各题答题区域内作答`, 10, 'text-anchor="middle"')}</g></svg>`;
+  ${l.showFooter !== false ? label(w / 2, h - 40, `第 ${page} 页 / 共 ${l.pageCount} 页 · 请在各题答题区域内作答`, 10, 'text-anchor="middle"') : ""}
+  ${l.showSubject !== false ? label(w - 60, h - 58, `${template.subject}答题卡`, 11, 'text-anchor="end"') : ""}</g></svg>`;
 }

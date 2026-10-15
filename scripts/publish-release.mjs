@@ -1,4 +1,3 @@
-// Publish one OCI index only after all three tested runtime images are available.
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import { imageSuffixes, releaseAnnotation, releaseImages } from "./release-manifest.mjs";
@@ -10,7 +9,6 @@ export async function publishRelease({ repository, revision, runId, ref, refType
     "org.opencontainers.image.revision": revision,
   };
   let web;
-  // Resolve every staging tag before writing any release tag.
   for (const [target, suffix] of Object.entries(imageSuffixes)) {
     const descriptor = await registry(`${image}${suffix}`, `build-${runId}`);
     annotations[`${releaseAnnotation}.${target}`] = descriptor.digest;

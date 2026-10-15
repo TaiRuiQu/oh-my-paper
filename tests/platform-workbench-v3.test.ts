@@ -107,7 +107,6 @@ describe("desktop document formats and question-level independent grading", () =
       smaller.layout.annotations![0].x + smaller.layout.annotations![0].width,
     ).toBeLessThanOrEqual(1);
     const a = smaller.layout.annotations![0];
-    // Move long multi-line notes into a free area, clear of the objective OMR boxes.
     smaller.layout.annotations = [
       fitAnnotationText(
         {

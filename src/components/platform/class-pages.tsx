@@ -1,4 +1,5 @@
 "use client";
+import { AccountImport } from "./account-import";
 import type { AccountCredentials } from "@/contracts/auth";
 import { AccountCredentialsPanel } from "./account-credentials";
 import { GradeSelect } from "./grade-select";
@@ -134,7 +135,8 @@ export function ClassEditPage({ id }: { id?: string }) {
 }
 
 export function ClassDetailPage({ id, students = false }: { id: string; students?: boolean }) {
-  const { state, mutate, pending } = useDomain();
+  const { state, mutate, pending, refresh } = useDomain();
+  const [importing, setImporting] = useState(false);
   const c = state.classrooms.find((c) => c.id === id);
   if (!c) return <MissingRecord back="/workspace/classes" />;
   return (
@@ -172,7 +174,26 @@ export function ClassDetailPage({ id, students = false }: { id: string; students
           )}
         </Panel>
       )}
-      <Panel title="学生名单">
+      <Panel
+        title="学生名单"
+        actions={
+          <Button
+            variant="outline"
+            disabled={pending || importing}
+            onClick={() => setImporting(true)}
+          >
+            批量导入学生
+          </Button>
+        }
+      >
+        {importing && (
+          <AccountImport
+            role="STUDENT"
+            classroomId={id}
+            refresh={refresh}
+            onClose={() => setImporting(false)}
+          />
+        )}
         {c.students.length ? (
           <div className="p-table" role="region" aria-label="学生名单" tabIndex={0}>
             <table>

@@ -49,7 +49,6 @@ export function aiToolLabel(name: string) {
   return TOOL_LABELS[name] ?? "处理题目";
 }
 
-/** Decode escaped prose line breaks without changing TeX commands or code examples. */
 export function normalizeAITraceText(value: string) {
   return value
     .split(
@@ -61,7 +60,6 @@ export function normalizeAITraceText(value: string) {
 
 export type AITraceGroup = { id: number; label: string; activities: AITraceActivity[] };
 
-/** Consecutive tool calls share a row; model messages and final checks remain boundaries. */
 export function aiTraceGroups(activities: AITraceActivity[]): AITraceGroup[] {
   const groups: AITraceGroup[] = [];
   const canGroup = (activity: AITraceActivity) =>
@@ -79,7 +77,6 @@ export function aiTraceGroups(activities: AITraceActivity[]): AITraceGroup[] {
   return groups;
 }
 
-/** Group a tool's lifecycle without losing any raw events or mixing concurrent calls. */
 export function aiTraceActivities(events: unknown[]): AITraceActivity[] {
   const activities: AITraceActivity[] = [];
   const calls = new Map<string, AITraceActivity>();

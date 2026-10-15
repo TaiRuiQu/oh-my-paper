@@ -14,7 +14,6 @@ export function AITraceText({ text }: { text: string }) {
   );
 }
 
-/** Teachers can inspect the relevant material without seeing internal tool output. */
 export function AITraceImages({ urls }: { urls: string[] }) {
   return (
     <ul className={styles.items}>

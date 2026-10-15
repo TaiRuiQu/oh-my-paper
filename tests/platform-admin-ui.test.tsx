@@ -17,7 +17,7 @@ const provider = {
   apiType: "openai_chat",
   baseURL: "https://example.test/v1",
   maxOutputTokens: 16384,
-  models: [{ id: "m", name: "教学模型" }],
+  models: [{ id: "m", name: "model-api-id", displayName: "教学模型" }],
 };
 let container: HTMLDivElement, root: Root;
 const notify = vi.fn(),
@@ -90,4 +90,43 @@ it("preserves the supplier and allows retry after the server rejects deletion", 
   await act(async () => deleteButton().click());
   expect(notify).toHaveBeenCalledWith("需要管理员权限。", true);
   expect(deleteButton().disabled).toBe(false);
+});
+
+it("edits, adds and removes model rows and saves IDs separately from display names", async () => {
+  await renderAdmin();
+  expect(container.querySelector("tbody ul li")?.textContent).toBe("教学模型model-api-id");
+  const findButton = (text: string) =>
+    [...container.querySelectorAll("button")].find((b) => b.textContent === text)!;
+  await act(async () => findButton("编辑").click());
+  expect(container.querySelector<HTMLInputElement>('[name="modelName"]')!.value).toBe(
+    "model-api-id",
+  );
+  expect(container.querySelector<HTMLInputElement>('[name="modelDisplayName"]')!.value).toBe(
+    "教学模型",
+  );
+  await act(async () => findButton("添加模型").click());
+  async function fill(name: string, index: number, value: string) {
+    const input = container.querySelectorAll<HTMLInputElement>(`[name="${name}"]`)[index];
+    await act(async () => {
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!.call(input, value);
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+  }
+  await fill("modelName", 1, "vendor/model,with-comma");
+  await fill("modelDisplayName", 1, "课堂模型");
+  await act(async () =>
+    container.querySelector<HTMLButtonElement>('[aria-label="删除模型 1"]')!.click(),
+  );
+  expect(container.querySelectorAll('[name="modelName"]')).toHaveLength(1);
+  await act(async () =>
+    container
+      .querySelector("form")!
+      .dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })),
+  );
+  const request = vi
+    .mocked(apiRequest)
+    .mock.calls.find(([, options]) => options?.method === "POST")!;
+  expect(JSON.parse(String(request[1]!.body)).provider.models).toEqual([
+    { name: "vendor/model,with-comma", displayName: "课堂模型" },
+  ]);
 });

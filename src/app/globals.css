@@ -1,16 +1,19 @@
 @import "tailwindcss";
 :root {
-  --workspace: #f5f7fb;
+  --workspace: #f3f5f4;
   --white: #fff;
-  --ink: #202b3d;
-  --muted: #58657a;
-  --line: #dfe5ee;
-  --accent: #2459d3;
-  --accent-hover: #1946b4;
-  --accent-soft: #edf2ff;
+  --canvas: #dce1df;
+  --section-fill: #eff2f0;
+  --control-line: #bfcac3;
+  --ink: #29332f;
+  --muted: #626e68;
+  --line: #dce2de;
+  --accent: #08745f;
+  --accent-hover: #066753;
+  --accent-soft: #e8f5ef;
   --danger: #b42318;
   --success: #21724e;
-  --radius: 12px;
+  --radius: 4px;
 }
 * {
   box-sizing: border-box;
@@ -70,7 +73,7 @@ textarea {
   width: 100%;
   min-height: 40px;
   padding: 8px 11px;
-  border: 1px solid #bbc7d8;
+  border: 1px solid #bfcac3;
   border-radius: 7px;
   background: white;
   color: var(--ink);
@@ -91,13 +94,13 @@ input[type="file"] {
   padding: 7px;
 }
 ::placeholder {
-  color: #69768a;
+  color: #717b75;
 }
 ::selection {
-  background: #dce7ff;
+  background: #d4eee2;
 }
 *:focus-visible {
-  outline: 3px solid #9db9fa;
+  outline: 3px solid #79bda7;
   outline-offset: 3px;
 }
 h1,
@@ -139,7 +142,7 @@ th {
   font-size: 12px;
   font-weight: 600;
   color: var(--muted);
-  background: #f9fafc;
+  background: #f2f5f3;
   white-space: nowrap;
 }
 tr:last-child td {
@@ -182,10 +185,10 @@ td .button {
 .button.secondary {
   background: white;
   color: var(--ink);
-  border-color: #bbc7d8;
+  border-color: #bfcac3;
 }
 .button.secondary:hover {
-  background: #f1f5fc;
+  background: #eff5f1;
 }
 .button.danger {
   background: #fff5f3;
@@ -278,12 +281,12 @@ td .button {
   gap: 11px;
   border-radius: 7px;
   padding: 10px 13px;
-  color: #58657a;
+  color: #626e68;
   text-decoration: none;
 }
 .p-nav a:hover {
   color: var(--accent);
-  background: #f7f9fd;
+  background: #f2f6f3;
 }
 .p-nav a[aria-current="page"] {
   background: var(--accent-soft);
@@ -322,8 +325,8 @@ td .button {
 }
 .p-role {
   font-size: 11px;
-  background: #edf2ff;
-  color: #2451bc;
+  background: #e8f5ef;
+  color: #08745f;
   border-radius: 4px;
   padding: 2px 7px;
 }
@@ -428,11 +431,11 @@ td .button {
   font-size: 11px;
   padding: 3px 7px;
   display: inline-block;
-  background: #edf2ff;
-  color: #2451bc;
+  background: #e8f5ef;
+  color: #08745f;
 }
 .p-status.success {
-  background: #edf8f1;
+  background: #edf7ef;
   color: var(--success);
 }
 .p-status.warning {
@@ -444,8 +447,8 @@ td .button {
   border: 1px solid #b7caef;
   border-radius: 8px;
   margin-bottom: 18px;
-  background: #edf2ff;
-  color: #254d98;
+  background: #e8f5ef;
+  color: #24664f;
 }
 .p-notice.error,
 .form-error {
@@ -454,7 +457,7 @@ td .button {
   border-color: #edc0ba;
 }
 .p-notice.success {
-  background: #edf8f1;
+  background: #edf7ef;
   color: var(--success);
   border-color: #b9deca;
 }
@@ -510,8 +513,8 @@ td .button {
   font-size: 11px;
   padding: 2px 7px;
   border-radius: 4px;
-  background: #f0f3f8;
-  color: #52627c;
+  background: #eef2ef;
+  color: #57675e;
 }
 .p-check {
   display: flex;
@@ -887,29 +890,28 @@ td .button {
   max-height: 260px;
   overflow: auto;
   padding: 12px;
-  background: #f7f9fd;
+  background: #f2f6f3;
   border-radius: 7px;
 }
 
-/* ShadCN primitives share the incumbent teaching workspace palette. */
 :root {
   --background: #fff;
-  --foreground: #202b3d;
-  --primary: #2459d3;
+  --foreground: #29332f;
+  --primary: #08745f;
   --primary-foreground: #fff;
-  --secondary: #f1f5fc;
-  --secondary-foreground: #202b3d;
-  --muted-foreground: #58657a;
+  --secondary: #eff5f1;
+  --secondary-foreground: #29332f;
+  --muted-foreground: #626e68;
   --accent-foreground: #fff;
   --destructive: #b42318;
   --destructive-foreground: #fff;
-  --border: #dfe5ee;
-  --input: #bbc7d8;
-  --ring: #9db9fa;
+  --border: #dce2de;
+  --input: #bfcac3;
+  --ring: #79bda7;
   --card: #fff;
-  --card-foreground: #202b3d;
+  --card-foreground: #29332f;
   --popover: #fff;
-  --popover-foreground: #202b3d;
+  --popover-foreground: #29332f;
 }
 @theme inline {
   --color-background: var(--background);
@@ -918,7 +920,7 @@ td .button {
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: #f7f9fd;
+  --color-muted: #f2f6f3;
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent-soft);
   --color-accent-foreground: var(--ink);
@@ -1192,7 +1194,7 @@ td .button {
 .p-inline-input:hover,
 .p-paper-canvas .p-inline-input:hover {
   border-color: var(--line);
-  background: #f9fbff;
+  background: #f6faf7;
 }
 .p-inline-input:focus,
 .p-paper-canvas .p-inline-input:focus {
@@ -1252,7 +1254,7 @@ td .button {
   margin-bottom: 20px;
 }
 .p-answers {
-  background: #f7f9fd;
+  background: #f2f6f3;
   padding: 14px;
   margin-top: 14px;
   border-radius: 7px;
@@ -1377,7 +1379,7 @@ td .button {
   overflow: auto;
   max-height: 1100px;
   padding: 24px;
-  background: #e9edf3;
+  background: #dce1df;
   border: 1px solid var(--line);
 }
 .p-document-pages {
@@ -1439,15 +1441,15 @@ td .button {
   overflow-wrap: anywhere;
 }
 .p-document-text:focus {
-  outline: 2px solid #9db9fa;
+  outline: 2px solid #79bda7;
   border-radius: 3px;
 }
 .p-document-text:hover {
-  background: #f7f9fd;
+  background: #f2f6f3;
 }
 .p-document-text:empty::before {
   content: attr(data-placeholder);
-  color: #69768a;
+  color: #717b75;
 }
 .p-document-title {
   font-size: 24px;
@@ -1540,7 +1542,7 @@ td .button {
   overflow: auto;
   padding: 28px;
   border: 1px solid var(--line);
-  background: #e9edf3;
+  background: #dce1df;
 }
 .p-card-sheet {
   width: 100%;
@@ -1763,7 +1765,6 @@ td .button {
   background: var(--danger);
 }
 
-/* Editing tools float over printable content; they never change paper pagination. */
 .p-paper-question,
 .p-workbook-exercise {
   position: relative;
@@ -1926,7 +1927,6 @@ td .button {
   min-width: 0;
 }
 
-/* Desktop document workbenches and persistent navigation. */
 .p-routed-shell .p-topbar {
   position: sticky;
   top: 0;
@@ -2179,7 +2179,6 @@ td .button {
   color: var(--accent);
   font: 11px var(--font-sans);
 }
-/* Teaching identities reuse the existing form and table controls. */
 .p-permission-fields {
   border: 0;
   padding: 0;

@@ -27,6 +27,7 @@ import { DocumentQuestionBody } from "./document-question";
 import { DocumentCanvas, PaperText } from "./document-canvas";
 import { MissingRecord, PageHeader, PageTabs } from "./page-header";
 import { RecordNameEditor } from "./record-name-editor";
+import { StringListEditor } from "./editable-list";
 
 function usePaperPaths() {
   return { homework: false, root: "/exams/papers", noun: "试卷" };
@@ -426,6 +427,219 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
         }}
       >
         <DocumentWorkbench
+          outline={false}
+          propertiesPanel={
+            <>
+              <aside
+                className="p-paper-bank"
+                aria-label={view === "layout" ? "版面设置" : "题库选题"}
+              >
+                {selectedQuestion && (
+                  <div className="p-mobile-document-tools">
+                    <h3>题目设置</h3>
+                    <div className="p-form-grid">
+                      <Field label="当前题目">
+                        <select
+                          value={selectedQuestionIndex}
+                          onChange={(e) => setSelectedIndex(Number(e.target.value))}
+                        >
+                          {items.map((i, n) => (
+                            <option key={i.questionId} value={n}>
+                              第 {n + 1} 题 · {i.section}
+                            </option>
+                          ))}
+                        </select>
+                      </Field>
+                      <Field label="分值">
+                        <Input
+                          type="number"
+                          min={0}
+                          step={0.5}
+                          value={selectedQuestion.score}
+                          onChange={(e) =>
+                            patch(selectedQuestionIndex, { score: Number(e.target.value) })
+                          }
+                        />
+                      </Field>
+                      <Field label="栏目">
+                        <Input
+                          value={selectedQuestion.section}
+                          onChange={(e) =>
+                            patch(selectedQuestionIndex, { section: e.target.value })
+                          }
+                        />
+                      </Field>
+                    </div>
+                    <div className="p-actions">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={selectedQuestionIndex === 0}
+                        onClick={() => {
+                          move(selectedQuestionIndex, selectedQuestionIndex - 1);
+                          setSelectedIndex(selectedQuestionIndex - 1);
+                        }}
+                      >
+                        上移题目
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={selectedQuestionIndex === items.length - 1}
+                        onClick={() => {
+                          move(selectedQuestionIndex, selectedQuestionIndex + 1);
+                          setSelectedIndex(selectedQuestionIndex + 1);
+                        }}
+                      >
+                        下移题目
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() =>
+                          edit(() => setItems(items.filter((_, n) => n !== selectedQuestionIndex)))
+                        }
+                      >
+                        <Trash2 />
+                        移除题目
+                      </Button>
+                      <label className="p-check">
+                        <input
+                          type="checkbox"
+                          checked={
+                            layout.questionLayouts?.[selectedQuestion.questionId]
+                              ?.pageBreakBefore ?? false
+                          }
+                          onChange={(e) =>
+                            edit(() =>
+                              setLayout({
+                                ...layout,
+                                questionLayouts: {
+                                  ...layout.questionLayouts,
+                                  [selectedQuestion.questionId]: {
+                                    ...layout.questionLayouts?.[selectedQuestion.questionId],
+                                    pageBreakBefore: e.target.checked,
+                                  },
+                                },
+                              }),
+                            )
+                          }
+                        />
+                        从新页开始
+                      </label>
+                    </div>
+                    <p className="p-muted">纸面可横向滚动。点击「100% 编辑」放大文字后直接编辑。</p>
+                  </div>
+                )}
+                {view === "layout" ? (
+                  <>
+                    <h2>版面设置</h2>
+                    <div className="p-paper-settings">
+                      <Field label="纸张大小">
+                        <select
+                          value={layout.paperSize}
+                          onChange={(e) =>
+                            edit(() =>
+                              setLayout({ ...layout, paperSize: e.target.value as "A4" | "A3" }),
+                            )
+                          }
+                        >
+                          <option>A4</option>
+                          <option>A3</option>
+                        </select>
+                      </Field>
+                      <Field label="分栏">
+                        <select
+                          value={layout.columns}
+                          onChange={(e) =>
+                            edit(() => setLayout({ ...layout, columns: Number(e.target.value) }))
+                          }
+                        >
+                          <option value={1}>单栏</option>
+                          <option value={2}>双栏</option>
+                          <option value={3}>三栏</option>
+                          <option value={4}>四栏</option>
+                        </select>
+                      </Field>
+                      <p className="p-muted">保存后可在「导出与打印」中下载 PDF 或 Word 文档。</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h2>文档设置 · {subject}</h2>
+                    <div className="p-paper-settings">
+                      <Field label="学科">
+                        <select
+                          value={subject}
+                          disabled={items.length > 0}
+                          onChange={(e) => edit(() => setSubject(e.target.value))}
+                        >
+                          {SUBJECTS.map((v) => (
+                            <option key={v}>{v}</option>
+                          ))}
+                        </select>
+                      </Field>
+                      <Field label="年级">
+                        <GradeSelect
+                          value={grade}
+                          onChange={(e) => edit(() => setGrade(e.target.value))}
+                        />
+                      </Field>
+                    </div>
+                    <DocumentInsertTools
+                      subject={subject}
+                      grade={grade}
+                      usedIds={items.map((i) => i.questionId)}
+                      onText={() =>
+                        edit(() =>
+                          setLayout({
+                            ...layout,
+                            textBlocks: [
+                              ...(layout.textBlocks ?? []),
+                              {
+                                id: crypto.randomUUID(),
+                                text: "",
+                                beforeQuestionId: selectedQuestion?.questionId,
+                              },
+                            ],
+                          }),
+                        )
+                      }
+                      onAdd={(q) =>
+                        edit(() =>
+                          setItems([
+                            ...items,
+                            {
+                              questionId: q.id,
+                              score:
+                                q.type === "MIXED"
+                                  ? q.content.parts.reduce((n, p) => n + p.score, 0)
+                                  : 5,
+                              section: QUESTION_LABELS[q.type],
+                              snapshot: structuredClone(q),
+                            },
+                          ]),
+                        )
+                      }
+                    />
+                  </>
+                )}
+              </aside>
+              <aside className="p-paper-outline" aria-label="试题目录">
+                <h2>试题目录</h2>
+                {items.length ? (
+                  items.map((i, n) => (
+                    <a href={`#paper-item-${n}`} key={i.questionId}>
+                      {n + 1}. {i.section || QUESTION_LABELS[i.snapshot.type]}
+                      <span>{i.score} 分</span>
+                    </a>
+                  ))
+                ) : (
+                  <Empty>添加试题后显示目录。</Empty>
+                )}
+              </aside>
+            </>
+          }
           title={name.trim() || title}
           status={
             <>
@@ -527,19 +741,6 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
           }
         >
           <div className="p-paper-workbench">
-            <aside className="p-paper-outline" aria-label="试题目录">
-              <h2>试题目录</h2>
-              {items.length ? (
-                items.map((i, n) => (
-                  <a href={`#paper-item-${n}`} key={i.questionId}>
-                    {n + 1}. {i.section || QUESTION_LABELS[i.snapshot.type]}
-                    <span>{i.score} 分</span>
-                  </a>
-                ))
-              ) : (
-                <Empty>添加试题后显示目录。</Empty>
-              )}
-            </aside>
             <div>
               <DocumentCanvas
                 layout={layout}
@@ -653,17 +854,13 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
                       />
                       {view === "answers" && (
                         <div className="p-answers">
-                          <Field
+                          <StringListEditor
                             label={`第 ${index + 1} 题标准答案`}
-                            hint="多个答案按行填写；选择题填写选项字母。"
-                          >
-                            <Textarea
-                              value={item.snapshot.content.answers.join("\n")}
-                              onChange={(e) =>
-                                content(index, { answers: e.target.value.split("\n") })
-                              }
-                            />
-                          </Field>
+                            itemLabel="答案"
+                            multiline
+                            values={item.snapshot.content.answers}
+                            onChange={(answers) => content(index, { answers })}
+                          />
                           <Field label="解析">
                             <Textarea
                               value={item.snapshot.content.explanation}
@@ -679,18 +876,19 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
                           {item.snapshot.content.parts.map((part, n) => (
                             <div key={part.id}>
                               <h3>小问 {n + 1}</h3>
-                              <Field label="小问答案">
-                                <Textarea
-                                  value={part.answers.join("\n")}
-                                  onChange={(e) =>
-                                    content(index, {
-                                      parts: item.snapshot.content.parts.map((p, j) =>
-                                        j === n ? { ...p, answers: e.target.value.split("\n") } : p,
-                                      ),
-                                    })
-                                  }
-                                />
-                              </Field>
+                              <StringListEditor
+                                label="小问答案"
+                                itemLabel="答案"
+                                multiline
+                                values={part.answers}
+                                onChange={(answers) =>
+                                  content(index, {
+                                    parts: item.snapshot.content.parts.map((p, j) =>
+                                      j === n ? { ...p, answers } : p,
+                                    ),
+                                  })
+                                }
+                              />
                               <Field label="小问评分标准">
                                 <Textarea
                                   value={part.rubric}
@@ -743,199 +941,6 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
                 }))}
               />
             </div>
-            <aside
-              className="p-paper-bank"
-              aria-label={view === "layout" ? "版面设置" : "题库选题"}
-            >
-              {selectedQuestion && (
-                <div className="p-mobile-document-tools">
-                  <h3>题目设置</h3>
-                  <div className="p-form-grid">
-                    <Field label="当前题目">
-                      <select
-                        value={selectedQuestionIndex}
-                        onChange={(e) => setSelectedIndex(Number(e.target.value))}
-                      >
-                        {items.map((i, n) => (
-                          <option key={i.questionId} value={n}>
-                            第 {n + 1} 题 · {i.section}
-                          </option>
-                        ))}
-                      </select>
-                    </Field>
-                    <Field label="分值">
-                      <Input
-                        type="number"
-                        min={0}
-                        step={0.5}
-                        value={selectedQuestion.score}
-                        onChange={(e) =>
-                          patch(selectedQuestionIndex, { score: Number(e.target.value) })
-                        }
-                      />
-                    </Field>
-                    <Field label="栏目">
-                      <Input
-                        value={selectedQuestion.section}
-                        onChange={(e) => patch(selectedQuestionIndex, { section: e.target.value })}
-                      />
-                    </Field>
-                  </div>
-                  <div className="p-actions">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={selectedQuestionIndex === 0}
-                      onClick={() => {
-                        move(selectedQuestionIndex, selectedQuestionIndex - 1);
-                        setSelectedIndex(selectedQuestionIndex - 1);
-                      }}
-                    >
-                      上移题目
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={selectedQuestionIndex === items.length - 1}
-                      onClick={() => {
-                        move(selectedQuestionIndex, selectedQuestionIndex + 1);
-                        setSelectedIndex(selectedQuestionIndex + 1);
-                      }}
-                    >
-                      下移题目
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() =>
-                        edit(() => setItems(items.filter((_, n) => n !== selectedQuestionIndex)))
-                      }
-                    >
-                      <Trash2 />
-                      移除题目
-                    </Button>
-                    <label className="p-check">
-                      <input
-                        type="checkbox"
-                        checked={
-                          layout.questionLayouts?.[selectedQuestion.questionId]?.pageBreakBefore ??
-                          false
-                        }
-                        onChange={(e) =>
-                          edit(() =>
-                            setLayout({
-                              ...layout,
-                              questionLayouts: {
-                                ...layout.questionLayouts,
-                                [selectedQuestion.questionId]: {
-                                  ...layout.questionLayouts?.[selectedQuestion.questionId],
-                                  pageBreakBefore: e.target.checked,
-                                },
-                              },
-                            }),
-                          )
-                        }
-                      />
-                      从新页开始
-                    </label>
-                  </div>
-                  <p className="p-muted">纸面可横向滚动。点击「100% 编辑」放大文字后直接编辑。</p>
-                </div>
-              )}
-              {view === "layout" ? (
-                <>
-                  <h2>版面设置</h2>
-                  <div className="p-paper-settings">
-                    <Field label="纸张大小">
-                      <select
-                        value={layout.paperSize}
-                        onChange={(e) =>
-                          edit(() =>
-                            setLayout({ ...layout, paperSize: e.target.value as "A4" | "A3" }),
-                          )
-                        }
-                      >
-                        <option>A4</option>
-                        <option>A3</option>
-                      </select>
-                    </Field>
-                    <Field label="分栏">
-                      <select
-                        value={layout.columns}
-                        onChange={(e) =>
-                          edit(() => setLayout({ ...layout, columns: Number(e.target.value) }))
-                        }
-                      >
-                        <option value={1}>单栏</option>
-                        <option value={2}>双栏</option>
-                        <option value={3}>三栏</option>
-                        <option value={4}>四栏</option>
-                      </select>
-                    </Field>
-                    <p className="p-muted">保存后可在「导出与打印」中下载 PDF 或 Word 文档。</p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <h2>文档设置 · {subject}</h2>
-                  <div className="p-paper-settings">
-                    <Field label="学科">
-                      <select
-                        value={subject}
-                        disabled={items.length > 0}
-                        onChange={(e) => edit(() => setSubject(e.target.value))}
-                      >
-                        {SUBJECTS.map((v) => (
-                          <option key={v}>{v}</option>
-                        ))}
-                      </select>
-                    </Field>
-                    <Field label="年级">
-                      <GradeSelect
-                        value={grade}
-                        onChange={(e) => edit(() => setGrade(e.target.value))}
-                      />
-                    </Field>
-                  </div>
-                  <DocumentInsertTools
-                    subject={subject}
-                    grade={grade}
-                    usedIds={items.map((i) => i.questionId)}
-                    onText={() =>
-                      edit(() =>
-                        setLayout({
-                          ...layout,
-                          textBlocks: [
-                            ...(layout.textBlocks ?? []),
-                            {
-                              id: crypto.randomUUID(),
-                              text: "",
-                              beforeQuestionId: selectedQuestion?.questionId,
-                            },
-                          ],
-                        }),
-                      )
-                    }
-                    onAdd={(q) =>
-                      edit(() =>
-                        setItems([
-                          ...items,
-                          {
-                            questionId: q.id,
-                            score:
-                              q.type === "MIXED"
-                                ? q.content.parts.reduce((n, p) => n + p.score, 0)
-                                : 5,
-                            section: QUESTION_LABELS[q.type],
-                            snapshot: structuredClone(q),
-                          },
-                        ]),
-                      )
-                    }
-                  />
-                </>
-              )}
-            </aside>
           </div>
         </DocumentWorkbench>
       </form>

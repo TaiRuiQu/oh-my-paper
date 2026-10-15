@@ -5,6 +5,7 @@ import "@fontsource-variable/geist";
 import "@fontsource-variable/noto-sans-sc";
 import "katex/dist/katex.min.css";
 import "./globals.css";
+import "./teaching-workspace.css";
 const { version } = packageInfo;
 const commit = process.env.NEXT_PUBLIC_APP_COMMIT;
 

@@ -101,8 +101,9 @@ async function main() {
     console.log(
       "✓ Production HTTP workflow, authenticated Word/SVG exports, server PDF rejection, role/session/CSRF, private diagrams, exam-scoped analytics and official peer ranks pass",
     );
+    await mkdir("tmp", { recursive: true });
     await writeFile(
-      "v2-docs/evidence/production.json",
+      "tmp/production-evidence.json",
       JSON.stringify(
         {
           timestamp: new Date().toISOString(),

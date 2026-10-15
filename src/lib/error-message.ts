@@ -1,4 +1,3 @@
-/** Sanitize diagnostic text; never serialize complete request/error objects. */
 export function redactErrorText(value: string, secrets: readonly string[] = []) {
   let text = value;
   for (const secret of secrets.filter(Boolean).sort((a, b) => b.length - a.length))

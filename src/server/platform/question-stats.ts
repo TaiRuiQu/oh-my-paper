@@ -2,7 +2,6 @@ import "server-only";
 import { Prisma } from "@/generated/prisma/client";
 import type { Db } from "./access";
 export async function questionStatistics(db: Db, ownerId?: string) {
-  // Aggregate on the server; full question bodies never enter the analysis response.
   const rows = await db.$queryRaw<
     {
       subject: string;

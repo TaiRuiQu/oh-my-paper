@@ -5,6 +5,7 @@ import type { Command } from "./types";
 import { assertAssets, json, missing, owner } from "../access";
 import { validateCardTemplate } from "../cards";
 import type { Paper } from "../types";
+import { executePapersCommand } from "./papers";
 import { RequestError } from "@/server/http/errors";
 export async function executeTemplatesCommand(
   db: PrismaTypes.TransactionClient,
@@ -13,8 +14,14 @@ export async function executeTemplatesCommand(
 ) {
   switch (command.type) {
     case "template.save": {
-      const { id, layout, ...data } = command.template;
-      const paper = await db.paper.findUnique({
+      let { id } = command.template;
+      let layout = command.template.layout;
+      const data = {
+        paperId: command.template.paperId,
+        name: command.template.name,
+        subject: command.template.subject,
+      };
+      let paper = await db.paper.findUnique({
         where: { id: data.paperId },
         include: { items: true },
       });
@@ -27,6 +34,44 @@ export async function executeTemplatesCommand(
         owner(a, { ownerId: previous.ownerId });
         if (await db.scanSubmission.count({ where: { templateId: id } }))
           throw new RequestError(409, "已扫描使用的模板不能更改，请另存。");
+      }
+      if (command.paperDraft) {
+        const draft = command.paperDraft;
+        if (
+          draft.itemIds.length !== draft.items.length ||
+          new Set(draft.itemIds).size !== draft.itemIds.length ||
+          draft.itemIds.length !== layout.regions.length ||
+          layout.regions.some((r) => !draft.itemIds.includes(r.itemId))
+        )
+          throw new RequestError(400, "题目与答题区必须一一对应。");
+        const saved = await executePapersCommand(db, a, {
+          type: "paper.save",
+          paper: {
+            name: `${paper.name}（答题卡修订）`.slice(0, 200),
+            kind: "EXAM",
+            subject: paper.subject,
+            grade: paper.grade,
+            instructions: paper.instructions,
+            layout: paper.layout as unknown as Paper["layout"],
+            items: draft.items,
+          },
+        });
+        if (!saved) throw missing();
+        paper = await db.paper.findUnique({
+          where: { id: saved.id },
+          include: { items: { orderBy: { position: "asc" } } },
+        });
+        if (!paper) throw missing();
+        layout = {
+          ...layout,
+          regions: layout.regions.map((region) => ({
+            ...region,
+            itemId: paper!.items[draft.itemIds.indexOf(region.itemId)].id,
+          })),
+        };
+        data.paperId = paper.id;
+        // The original paper and templates remain usable by existing assessments.
+        id = undefined;
       }
       if (data.subject !== paper.subject) throw new RequestError(400, "模板学科与试卷不一致。");
       if (

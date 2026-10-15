@@ -73,8 +73,3 @@ export function readForm(event: FormEvent<HTMLFormElement>) {
 
 export const stringField = (data: FormData, name: string) => String(data.get(name) ?? "").trim();
 export const numberField = (data: FormData, name: string) => Number(data.get(name) ?? 0);
-export const splitList = (value: string) =>
-  value
-    .split(/[，,\n]/)
-    .map((part) => part.trim())
-    .filter(Boolean);

@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
-# 发布升级脚本：解析完整发布 -> 按 digest 拉取整组镜像 -> 等待服务就绪 -> 清理旧镜像。
-# 需要 Docker Compose、Buildx 和 Python 3。发布入口仅在全部镜像验收并推送后更新。
 # 私有镜像时需要 root 已执行 docker login ghcr.io（systemd 与 cron 都使用 root 凭据）。
-# APP_VERSION 可指定 sha-<完整提交 SHA> 或 release tag；未指定时跟踪 latest。
 set -euo pipefail
 cd "$(dirname "$0")/.."
 exec 9>./deploy/.update.lock

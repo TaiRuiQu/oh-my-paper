@@ -21,7 +21,6 @@ await build({
   tsconfig: "tsconfig.json",
   sourcemap: true,
 });
-// Trace runtime dependencies including pnpm symlinks and native Sharp modules.
 const trace = await nodeFileTrace(
   [resolve(destination, "worker.mjs"), resolve(destination, "sandbox-check.mjs")],
   {

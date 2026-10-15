@@ -17,6 +17,7 @@ export const managedAccountSchema = z.discriminatedUnion("role", [
     role: z.enum(["ADMIN", "TEACHER"]),
     username: usernameSchema,
     password: newPasswordSchema,
+    name: z.string().trim().min(1).max(80).optional(),
   }),
   z.strictObject({
     role: z.literal("STUDENT"),
@@ -31,7 +32,6 @@ export const authLoginSchema = z.object({
 });
 export type AuthFields = z.infer<typeof authLoginSchema>;
 
-/** Kept for downstream contract consumers; public registration is disabled. */
 export function authFormSchema(mode: "login" | "register") {
   if (mode === "login")
     return z.object({ name: z.string(), email: z.email(), password: z.string().min(1).max(128) });

@@ -1,4 +1,3 @@
-"""Loopback HTTP bridge for real SANE and eSCL scanners. Python standard library."""
 import argparse
 import base64
 import hmac

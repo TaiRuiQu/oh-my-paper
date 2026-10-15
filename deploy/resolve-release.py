@@ -1,4 +1,3 @@
-"""Validate one complete OCI release index and emit digest-pinned Compose JSON."""
 
 import json
 import re

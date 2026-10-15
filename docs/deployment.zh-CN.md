@@ -1,6 +1,6 @@
 # Oh My Paper v2 部署指南
 
-本文描述当前 v2 镜像部署方式。已有 0.1.15 生产环境请先阅读 [从 0.1.15 升级到 v2](upgrade-from-v0.1.15.zh-CN.md)，不要直接执行全新部署步骤。
+本文描述当前 Docker Compose 部署、更新与运行诊断。
 
 生产服务由 PostgreSQL、Web、AI Worker 和 Caddy 组成。v2 的应用镜像发布在 GHCR：`oh-my-paper`、`oh-my-paper-migrate` 和 `oh-my-paper-ai-worker`。三个镜像全部验收、推送成功后，GitHub Actions 才会在 `oh-my-paper` 发布统一入口 `latest`，其中记录三个镜像的固定 digest。服务器定时器每五分钟读取一次入口并更新整组镜像；GitHub Actions 不会替服务器同步 Compose 文件或部署脚本。
 
@@ -60,7 +60,7 @@ Word 与答题卡 SVG 仍由服务端生成并经过现有资源权限检查。W
 
 当前 Compose 包含 `qdrant/qdrant:v1.19.2`，仅通过内部网络向应用提供 HTTP 服务，不发布 6333/6334 端口。应用使用 `QDRANT_URL=http://qdrant:6333`；本地运行可配置其他 Qdrant 服务。`QDRANT_COLLECTION_PREFIX` 可隔离同一 Qdrant 上的不同部署，必须使用字母、数字、下划线或连字符。
 
-已有部署升级时需同步本次 `compose.yaml`、在 `.env` 加入 `QDRANT_API_KEY` 并重新执行 Compose 启动命令，拉取应用镜像本身不会增加 Qdrant 服务。备份应覆盖 PostgreSQL、Qdrant 持久卷和原有素材目录。
+备份应覆盖 PostgreSQL、Qdrant 持久卷和素材目录。
 
 在后台「AI 模型配置」保存独立的向量化模型，支持 OpenAI 兼容 `/embeddings` 或 Google embedding 接口。填写服务实际支持的模型 ID 与输出维度；服务返回维度不一致时明确失败。密钥使用现有 `PROVIDER_KEY_ENCRYPTION_KEY` 加密，不回传明文。
 
@@ -76,7 +76,7 @@ Word 与答题卡 SVG 仍由服务端生成并经过现有资源权限检查。W
 
 AI Worker 镜像包含 Bubblewrap、Python、util-linux 和 `tools/sandbox/requirements.txt` 中的图像与科学计算依赖，`PYTHON_SANDBOX_VENV=/opt/python-sandbox`。本地开发需安装相同系统依赖，并在 `.venv` 安装该 requirements；自定义虚拟环境可设置 `PYTHON_SANDBOX_VENV`。
 
-Compose 的 `ai-worker` 沿用 v0.1.15 配置：`cap_drop: [ALL]`，`no-new-privileges:true`、`seccomp:unconfined`、`apparmor:unconfined`、`systempaths=unconfined`。这些设置使 Bubblewrap 可以建立独立用户/进程/网络命名空间和私有 `/proc`，实际模型代码仍在只读根、禁网和受限工作区内运行。不要只拉取镜像而保留旧 Compose；升级后需重新创建 Worker。
+Compose 的 `ai-worker` 需要 `cap_drop: [ALL]`，`no-new-privileges:true`、`seccomp:unconfined`、`apparmor:unconfined`、`systempaths=unconfined`。这些设置使 Bubblewrap 可以建立独立用户/进程/网络命名空间和私有 `/proc`，实际模型代码仍在只读根、禁网和受限工作区内运行。修改 Compose 安全配置后需重新创建 Worker。
 
 Worker 在输出 `platform.ai.worker.started`、连接数据库和领取任务之前执行沙箱启动检查。检查失败会退出并报告部署诊断，避免让模型反复调用必然失败的 Python/shell 工具。CI 中的 `sysctl` 设置只作用于 CI 主机，不会随镜像发布到生产服务器。
 
@@ -168,7 +168,7 @@ sudo bash deploy/update.sh
 sudo systemctl enable --now oh-my-paper-update.timer
 ```
 
-现有 v2 服务器启用此修复时，需先同步本次 `deploy/update.sh`、`deploy/resolve-release.py` 和 `compose.release.yaml`，确认新 CI 的「Publish complete release and clean GHCR」成功后，再手动运行一次更新脚本。无需修改已有 timer unit；只拉取应用镜像不会更新服务器上的脚本。构建尚未全部成功时，统一入口保持上次完整发布。
+只拉取应用镜像不会更新服务器上的部署脚本与 Compose 配置；它们有变更时需同步到服务器。构建尚未全部成功时，统一入口保持上次完整发布。
 
 ## 日常检查
 
@@ -179,5 +179,3 @@ cd ~/oh-my-paper
 sudo docker compose -f compose.yaml -f compose.release.yaml ps -a
 sudo docker compose -f compose.yaml -f compose.release.yaml logs --tail=100 web ai-worker
 ```
-
-已有 0.1.15 服务器切换到 v2 时，请使用 [升级专用指南](upgrade-from-v0.1.15.zh-CN.md)。

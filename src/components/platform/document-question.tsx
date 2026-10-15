@@ -3,7 +3,6 @@ import Image from "next/image";
 import type { BankQuestion, QuestionContent } from "@/contracts/platform";
 import { PaperText } from "./document-canvas";
 
-/** The editable canvas and export preview use the same printable text geometry. */
 export function DocumentQuestionBody({
   question,
   index,

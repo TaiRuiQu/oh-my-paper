@@ -1,4 +1,4 @@
-# 新平台服务契约
+# 平台服务契约
 
 `loadState(actor: { id: string }) -> Promise<PlatformState>`；`executeCommand(actor, command) -> Promise<{id: string}>`。actor 只以账号 id 识别，数据库当前 role 为权限权威。接口层取得登录用户并传入；不能接受客户端 ownerId/reviewerId。
 
@@ -32,17 +32,13 @@ Teacher loadState 返回自己的备课资源，以及教学身份授权范围�
 
 授权同时用于考试/作业、参试名单、答卷、评阅及历史、成绩、知识点、错题和推荐；同一场考试内按每个班级与学科分别过滤。科目排名与赋分在服务器以完整参试名单计算，再投影到授权范围。仅有部分学科权限时，`totalRestricted` 为 true，全科总分、联合排名、班级排名和全科平均分不返回，界面显示「仅授权学科」。页面与筛选报表再次汇总时继续使用相同授权规则。
 
-参与阅卷的教师根据当前 SUBJECT_TEACHER 身份和 reviewScope 自动确定，无需单独选择双评或仲裁教师；首评、第二评和仲裁共用同一范围，保留不同教师独立评分的约束。系统管理员可阅全校；学校总管理、年级主任和班主任的成绩查看身份不会自动授予任教学科。扫描录入需要对应班级与学科的数据授权，且为班级创建者或本班该学科任课老师；年级跨班阅卷不授予替换答卷的权限。发布和撤回成绩均要求覆盖整场考试的全部班级与学科。班级已删除 reviewerIds 字段和共同评阅教师配置。
+参与阅卷的教师根据当前 SUBJECT_TEACHER 身份和 reviewScope 自动确定，无需单独选择双评或仲裁教师；首评、第二评和仲裁共用同一范围，保留不同教师独立评分的约束。系统管理员可阅全校；学校总管理、年级主任和班主任的成绩查看身份不会自动授予任教学科。扫描录入需要对应班级与学科的数据授权，且为班级创建者或本班该学科任课老师；年级跨班阅卷不授予替换答卷的权限。发布和撤回成绩均要求覆盖整场考试的全部班级与学科。
 
 阅卷页面与 AI GRADE 使用独立阅卷数据范围。`GET /api/platform/exams/state?scope=reviewing`（作业为 homework）返回可阅答卷、题目与逐题评分，不返回学情、推荐、全科总分或排名。常规 state 与成绩报表仍使用原教学数据授权，跨班阅卷不扩大报表权限。阅卷配图按当前阅卷范围校验，撤销任课身份后读取和评分均立即失效；AI 提交时再次校验。
 
-`pnpm test:permissions` 在隔离的 PostgreSQL schema 中验证四类身份、多班多科与学生隔离、年级与班级阅卷、跨学科与跨年级拒绝、非参试班教师加入年级阅卷、独立双评仲裁、撤权和报表隔离；无需真实模型，CI 必须执行。`pnpm test:integration` 继续覆盖完整教学与双评流程。
-
 `sourceFiles`、作答 `images`/`sourcePage`、题目 `content.images` 和模板区域图片均须引用 `/api/platform/assets/{id}`；命令验证资产所属账号或管理员权限。文件系统路径与外部 URL 不能通过业务命令注入。答题卡模板写入还验证 A4/A3 横纵版式、1–4 栏、四定位点、六位学号、题区不重叠并完整覆盖卷内题目。
 
-验证入口：`pnpm test:integration` 使用独立 PostgreSQL schema，覆盖五题型、两科两学生、题库快照、双评仲裁、排名赋分、并列排名、完整发布条件、资产授权、共享班级边界以及后续转入学生的历史隔离；`tests/platform-domain.test.ts` 覆盖评分、知识点、推荐与命令约束。扫描像素与上传验收由 `pnpm test:scan` 独立执行。
-
-AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列，不使用旧版 Worker / pg-boss。`enqueueAiJob` 验证资源及当前角色，`claimAiJob` 原子领取并遵守供应商并发，`runClaimedAiJob` 校验 worker 身份并保存事件及结果；超过 90 秒未收到心跳后由领取轮询标记失败，重试创建新任务且只允许本人操作。验证入口 `pnpm test:ai-jobs` 使用真实隔离数据库和可注入测试 runner，覆盖队列安全和持久化，不证明真实模型任务质量。生产使用 `pnpm build:ai-worker` 打包到 `build/ai-worker`，Docker 提供 `ai-worker` target 和独立 Compose 服务。
+AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列。`enqueueAiJob` 验证资源及当前角色，`claimAiJob` 原子领取并遵守供应商并发，`runClaimedAiJob` 校验 worker 身份并保存事件及结果；超过 90 秒未收到心跳后由领取轮询标记失败，重试创建新任务且只允许本人操作。生产使用 `pnpm build:ai-worker` 打包到 `build/ai-worker`，Docker 提供 `ai-worker` target 和独立 Compose 服务。
 
 已有参试学生未绑定账号时，可以在考试后通过 `student.save` 进行 `userId:null → 已注册STUDENT` 的首次绑定；姓名、学号、班级必须保持不变。首次绑定后可以读取这个学生原有名单内的历史已发布成绩；已有账号不能转绑或解绑。此行为不同于后来新加入班级的学生，后者仍不能读取既有考试。
 
@@ -59,7 +55,7 @@ AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列，不
 
 题目读取与报告工具统一接受 `items` 数组并逐项返回成功或详细错误，单条失败保留其他条目结果。同一模型响应可调用多个独立工具并由 SDK 并发执行；OpenAI 显式开启并行工具调用。异常及无效工具调用将具体消息、字段路径和原因反馈给原 Agent，并保存执行记录。管理员可通过 `provider.delete` 删除供应商及关联模型；模型偏好置空，历史任务保留。
 
-PDF 在客户端通过浏览器打印保存，使用预览中的版面与本机字体。`/api/platform/print` 仅接受显式 `format=docx`（试卷／作业的可编辑 Word）或 `format=svg&page=1`（答题卡）。请求 `format=pdf` 或省略格式返回 400，不再保留服务端 PDF 渲染器或 Chromium 依赖。配图继续经现有资产权限读取，`export-assets.ts` 提供 Word 使用的资源加载类型。Word 保留纸张、方向、分栏分隔线、边距、字体、字号、行距、分页、材料图像和手动设置的练习作答线，公式转换为 Office Math；最终分页由打开文档的软件与已安装字体决定。Poppler 仍用于上传 PDF 的页面读取。
+PDF 在客户端通过浏览器打印保存，使用预览中的版面与本机字体。`/api/platform/print` 仅接受显式 `format=docx`（试卷／作业的可编辑 Word）或 `format=svg&page=1`（答题卡）。请求 `format=pdf` 或省略格式返回 400。配图继续经现有资产权限读取，`export-assets.ts` 提供 Word 使用的资源加载类型。Word 保留纸张、方向、分栏分隔线、边距、字体、字号、行距、分页、材料图像和手动设置的练习作答线，公式转换为 Office Math；最终分页由打开文档的软件与已安装字体决定。Poppler 仍用于上传 PDF 的页面读取。
 
 - ENRICH 仅可读取和修改指定题的考点、答案、解析及评分标准；保留题干、选项、配图和混合子题编号，已有逐空答案保留空数。配图须先查看。
 - ASSEMBLE 从真实题库选择并读取题目，验证学科、年级、准确题型数量、平均难度与知识点分布。百分比通过最大余数法分配整数题数，多标签题使用容量匹配且每题只贡献一次。题库条件无法满足时明确失败，不编造题目；因无法辨认而跳过后不能组卷时，正常结束并在摘要说明未生成试卷。
@@ -67,13 +63,11 @@ PDF 在客户端通过浏览器打印保存，使用预览中的版面与本机�
 - GRADE 批量读取原题、答案、解析、评分标准和实际作答；有作答图必须逐一查看。混合题须逐小问给分并验证比例上限与总分，结构化存入 `Review.partScores`；结果写入 `Review.source=AI` 和 `aiJobId`，只允许 FIRST，DOUBLE 仍等待独立人工第二评和必要的第三评仲裁。
 - RECOMMEND 读取本人或获授权学生的真实错题，从同学科真实题库匹配父题及混合子题知识点；排除本人已提交作答的题，保留尚未作答的组卷题作为候选。推荐要求具体理由和准确数量，并在提交前重新校验学生权限、错题和候选题。
 
-`pnpm run test:ai-domain` 在真实隔离 PostgreSQL 验证裁图持久化、AI 首评来源、人工独立第二评、过期数据保护和原子失败回滚；不调用外部模型。`tests/platform-ai.test.ts` 验证工具边界、完整性和真实 SDK 自主多轮执行。真实模型质量另由 `scripts/test-ai-live.ts` 及其最新证据验证；不可用模拟工具或旧版本运行结果替代当前代码的外部模型验收。
-
-迁移 `20261014040000_review_part_scores` 新增结构化混合题小问评分。`review.save.partScores=[{partId,score,feedback}]` 对混合题必填，完整覆盖各子题；每问上限为卷内题分乘该子题权重占比，总分必须等于各小问之和。双评平均及仲裁保存对应逐问结果；学情按实际小问标签统计，`wrongPartIds` 仅标记失分小问，正确小问不会因整题失分被误算为薄弱。AI 推题只使用失分小问标签。
+`review.save.partScores=[{partId,score,feedback}]` 对混合题必填，完整覆盖各子题；每问上限为卷内题分乘该子题权重占比，总分必须等于各小问之和。双评平均及仲裁保存对应逐问结果；学情按实际小问标签统计，`wrongPartIds` 仅标记失分小问，正确小问不会因整题失分被误算为薄弱。AI 推题只使用失分小问标签。
 
 ## App Router 与业务分层
 
-`src/app/(platform)` 使用真实嵌套路由，85 个功能页面分别有自己的 `page.tsx`。平台 layout 负责会话与主导航；六个模块 layout 分别装载经过角色检查的初始数据。客户端导航使用 Next.js Link，页面 URL 可直接打开和刷新，不再使用查询参数切换整个应用。
+`src/app/(platform)` 使用真实嵌套路由。平台 layout 负责会话与主导航；六个模块 layout 分别装载经过角色检查的初始数据。客户端导航使用 Next.js Link，页面 URL 可直接打开和刷新。
 
 试卷工作台 (`paper-pages.tsx`)、练习册工作台 (`homework-workbench.tsx`) 和答题卡工作台 (`card-workbench.tsx`) 分别维护自己的业务编辑状态与操作。仅复用纸张几何／分页渲染、基础表单与 ShadCN UI 组件。作业不会使用答题卡，接口和命令层均验证此约束。
 
@@ -85,16 +79,14 @@ PDF 在客户端通过浏览器打印保存，使用预览中的版面与本机�
 - `/api/platform/[area]/commands`：按业务域提交写操作，拒绝命令类型与域不匹配的请求。
 - `page-layout.tsx`：服务端页面装载，学生／教师／管理员入口验证。
 
-完整页面清单见 `v2-docs/page-map.json`。新增文档版面测试见 `tests/platform-document-layout.test.ts`，真实数据库快照编辑／作业答题卡拒绝覆盖在 `scripts/test-platform.ts`。
+题库分页接口 `/api/platform/questions` 按 createdAt/id 倒序每页20题，支持搜索与筛选，`id` 单题读取、`stats` 服务端全库统计。页面工作台不携带整库题体，真实数量由 questionCount 返回。
 
-题库分页接口 `/api/platform/questions` 按 createdAt/id 倒序每页20题，支持搜索与筛选，`id` 单题读取、`stats` 服务端全库统计。页面工作台不携带整库题体，真实数量由 questionCount 返回。专项验收记录见 `v2-docs/workbench-v3-review.md`。
+该接口支持 `searchMode=keyword|semantic`，默认为关键词模式。语义模式要求 `q` 为 1–200 字文本，返回同形的 `questions/total/page/pageSize` 及 `searchMode/indexedTotal/warning?`；结果按向量相似度排序，未索引题目不会进入结果。学科、年级、题型和当前账号权限先由 PostgreSQL 筛选，再以当前版本、当前题目 revision 的 point ID 限定 Qdrant 查询；外部调用完成后以单条 SQL 再次验证当前题目与索引状态。管理员可查全站，教师仅查本人，学生拒绝。
 
-该接口新增 `searchMode=keyword|semantic`，默认为关键词模式。语义模式要求 `q` 为 1–200 字文本，返回同形的 `questions/total/page/pageSize` 及 `searchMode/indexedTotal/warning?`；结果按向量相似度排序，未索引题目不会进入结果。学科、年级、题型和当前账号权限先由 PostgreSQL 筛选，再以当前版本、当前题目 revision 的 point ID 限定 Qdrant 查询；外部调用完成后以单条 SQL 再次验证当前题目与索引状态。管理员可查全站，教师仅查本人，学生拒绝。
+`GET /api/platform/admin` 返回 `embedding`（不含密钥，仅 `hasApiKey`）及 `searchIndex`（`total/indexed/pending/failed/enabled/lastError?`）。管理员命令 `embedding.save` 接收 `embedding:{name,apiType:openai|google,baseURL,model,dimensions,apiKey?,enabled}`；首次要求密钥，后续省略则保留。`embedding.reindex` 显式为存量题排队，返回 `{id:'question-bank',queued}`，不在 HTTP 请求内执行模型调用。
 
-`GET /api/platform/admin` 增加 `embedding`（不含密钥，仅 `hasApiKey`）及 `searchIndex`（`total/indexed/pending/failed/enabled/lastError?`）。管理员命令 `embedding.save` 接收 `embedding:{name,apiType:openai|google,baseURL,model,dimensions,apiKey?,enabled}`；首次要求密钥，后续省略则保留。`embedding.reindex` 显式为存量题排队，返回 `{id:'question-bank',queued}`，不在 HTTP 请求内执行模型调用。
+outbox 与题目写入同事务持久化，网络／模型调用在 AI Worker 的独立索引循环执行。失败不自动重试付费请求，管理员可重新安排索引；五分钟 PROCESSING 超时转 FAILED。每次修改使用独立 revision point，防止旧请求覆写新向量；更换模型／接口／维度使用独立 version collection，避免混用向量空间。删除保留 tombstone 直至同步，关键词读写完全独立于 Qdrant。
 
-迁移 `20261014150000_question_semantic_search` 增加 `EmbeddingSetting`、`QuestionSearchIndex` 和题目写触发器。outbox 与题目写入同事务持久化，网络／模型调用在 AI Worker 的独立索引循环执行。失败不自动重试付费请求，管理员可重新安排索引；五分钟 PROCESSING 超时转 FAILED。每次修改使用独立 revision point，防止旧请求覆写新向量；更换模型／接口／维度使用独立 version collection，避免混用向量空间。删除保留 tombstone 直至同步，关键词读写完全独立于 Qdrant。
+当前语义分页使用 Qdrant exact 检索所有授权候选的分数，再按分数与 ID 稳定排序和分页，避免大量同分向量跨页重复。请求与计算量随候选题数增长，超大题库需进一步优化；生产部署说明见 `docs/deployment.zh-CN.md`。
 
-当前语义分页使用 Qdrant exact 检索所有授权候选的分数，再按分数与 ID 稳定排序和分页，避免大量同分向量跨页重复。请求与计算量随候选题数增长，超大题库需进一步优化；生产部署说明见 `docs/deployment.zh-CN.md`。`pnpm test:semantic-search` 使用真实 Qdrant 和本地 embedding HTTP 测试服务验证排序、分页、隔离、筛选、改删、竞争请求、失败及模型切换，不调用付费模型，不代表外部模型的语义效果验收。
-
-扫描材料入口 `/api/platform/materials` 支持图片和 PDF，按原页码转换为私有 PNG 页面；`/api/platform/assets` 为配图入口并拒绝 PDF。扫描 `sources` 可按顺序引用已上传私有页面或 multipart 文件编号，也可直接上传原始多页 PDF；PDF 页面数量用于作答框页码与多页卡合并。源文件 30MB，扫描批次展开后最多100页／150MB，AI试卷识别保持20页上限。Web运行环境须提供 `pdfinfo`／`pdftoppm`（Docker已安装poppler-utils），`pnpm run doctor` 可检查。验收见 `v2-docs/pdf-scan-upload-review.md`。
+扫描材料入口 `/api/platform/materials` 支持图片和 PDF，按原页码转换为私有 PNG 页面；`/api/platform/assets` 为配图入口并拒绝 PDF。扫描 `sources` 可按顺序引用已上传私有页面或 multipart 文件编号，也可直接上传原始多页 PDF；PDF 页面数量用于作答框页码与多页卡合并。源文件 30MB，扫描批次展开后最多100页／150MB，AI试卷识别保持20页上限。Web运行环境须提供 `pdfinfo`／`pdftoppm`（Docker已安装poppler-utils），`pnpm run doctor` 可检查。

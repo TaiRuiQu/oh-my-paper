@@ -453,7 +453,6 @@ export function buildAnalytics(input: {
   };
 }
 
-/** Preserve official subject conversion/ranks, while withholding totals for partial subject access. */
 export function applyOfficialResults(analytics: Analytics, official: Analytics["results"]) {
   analytics.results = analytics.results.map((row) => {
     const original = official.find(

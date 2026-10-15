@@ -94,7 +94,6 @@ export async function reindexQuestions() {
     await tx.$queryRaw`SELECT pg_advisory_xact_lock(7240132027::bigint)::text`;
     const config = await tx.embeddingSetting.findUnique({ where: { id: "question-bank" } });
     if (!config?.enabled) throw new RequestError(409, "请先保存并启用向量化模型。");
-    // SQL queues existing questions without invoking a paid provider in this request.
     const queued = await tx.$executeRaw`
       INSERT INTO "question_search_indexes"
         ("questionId", version, revision, action, status, attempts, "updatedAt")

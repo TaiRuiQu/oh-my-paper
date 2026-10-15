@@ -1,4 +1,3 @@
-// Keep three complete releases and every runtime/child manifest they reference.
 import { pathToFileURL } from "node:url";
 import { imageSuffixes, releaseImages } from "./release-manifest.mjs";
 

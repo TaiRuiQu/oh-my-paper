@@ -149,8 +149,14 @@ export type CardRegion = Box & {
   options?: string[];
   multiple?: boolean;
   image?: string;
+  label?: string;
+  writingStyle?: "plain" | "lines" | "grid";
 };
 export type CardLayout = {
+  showAbsent?: boolean;
+  showFooter?: boolean;
+  showSubject?: boolean;
+  locked?: boolean;
   annotations?: (Box & { id: string; text: string })[];
   omrVersion?: 2;
   paperSize?: "A4" | "A3";
@@ -357,6 +363,18 @@ export type PlatformCommand =
   | { type: "assessment.rename"; id: string; name: string }
   | {
       type: "template.save";
+      paperDraft?: {
+        itemIds: string[];
+        items: {
+          questionId: string;
+          score: number;
+          section: string;
+          question: Pick<
+            BankQuestion,
+            "type" | "subject" | "grade" | "difficulty" | "knowledgeTags" | "content"
+          >;
+        }[];
+      };
       template: { id?: string; paperId: string; name: string; subject: string; layout: CardLayout };
     }
   | { type: "template.delete"; id: string }

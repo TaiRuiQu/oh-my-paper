@@ -180,8 +180,9 @@ function AIImport({
   const [selected, setSelected] = useState<string[]>([]),
     [files, setFiles] = useState<File[]>([]),
     [uploading, setUploading] = useState(false),
-    [subject, setSubject] = useState("数学"),
-    [grade, setGrade] = useState("高中一年级"),
+    [subject, setSubject] = useState(""),
+    [grade, setGrade] = useState(""),
+    [nameMode, setNameMode] = useState("auto"),
     [name, setName] = useState(""),
     [error, setError] = useState("");
   async function upload() {
@@ -189,6 +190,8 @@ function AIImport({
     setError("");
     try {
       if (!files.length) throw new Error("请选择试卷扫描图片或 PDF。");
+      if (importKind && nameMode === "manual" && !name.trim())
+        throw new Error("请输入名称，或选择 AI 自动识别。");
       const urls = [];
       for (const file of files) {
         if (urls.length >= MAX_AI_IMPORT_PAGES)
@@ -198,9 +201,10 @@ function AIImport({
       }
       await start("IMPORT", {
         assetUrls: urls,
-        subject,
-        grade,
-        ...(importKind ? { kind: importKind, name: name.trim() } : {}),
+        ...(subject ? { subject } : {}),
+        ...(grade ? { grade } : {}),
+        ...(importKind ? { kind: importKind } : {}),
+        ...(importKind && nameMode === "manual" ? { name: name.trim() } : {}),
       });
     } catch (e) {
       setError(e instanceof Error ? e.message : "图片上传失败");
@@ -211,26 +215,56 @@ function AIImport({
   return (
     <>
       {importKind && (
-        <Field label={importKind === "HOMEWORK" ? "作业名称" : "试卷名称"}>
-          <input
-            value={name}
-            maxLength={200}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={importKind === "HOMEWORK" ? "例如：函数课后练习" : "例如：期中考试试卷"}
-            disabled={uploading || busy}
-          />
-        </Field>
+        <>
+          <Field
+            label={importKind === "HOMEWORK" ? "作业名称" : "试卷名称"}
+            hint="优先识别材料中的标题，没有标题时根据内容生成。"
+          >
+            <select
+              value={nameMode}
+              onChange={(e) => setNameMode(e.target.value)}
+              disabled={uploading || busy}
+            >
+              <option value="auto">AI 自动识别（推荐）</option>
+              <option value="manual">手动填写</option>
+            </select>
+          </Field>
+          {nameMode === "manual" && (
+            <Field label={importKind === "HOMEWORK" ? "填写作业名称" : "填写试卷名称"}>
+              <input
+                required
+                value={name}
+                maxLength={200}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={
+                  importKind === "HOMEWORK" ? "例如：函数课后练习" : "例如：期中考试试卷"
+                }
+                disabled={uploading || busy}
+              />
+            </Field>
+          )}
+        </>
       )}
       <div className="p-form-grid">
         <Field label="导入学科">
-          <select value={subject} onChange={(e) => setSubject(e.target.value)}>
+          <select
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            disabled={uploading || busy}
+          >
+            <option value="">AI 自动识别（推荐）</option>
             {SUBJECTS.map((s) => (
               <option key={s}>{s}</option>
             ))}
           </select>
         </Field>
         <Field label="适用年级">
-          <GradeSelect value={grade} onChange={(e) => setGrade(e.target.value)} />
+          <GradeSelect
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+            emptyLabel="AI 自动识别（推荐）"
+            disabled={uploading || busy}
+          />
         </Field>
       </div>
       <Field

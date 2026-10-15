@@ -18,15 +18,20 @@ export function normalizeGrade(value?: string) {
   };
   return aliases[value] ?? (numerals.some((n) => value === `${n}年级`) ? `小学${value}` : value);
 }
-export function GradeSelect(props: SelectHTMLAttributes<HTMLSelectElement>) {
+export function GradeSelect({
+  emptyLabel,
+  ...props
+}: SelectHTMLAttributes<HTMLSelectElement> & { emptyLabel?: string }) {
+  const gradeValue = (value: string) => (value === "" && emptyLabel ? "" : normalizeGrade(value));
   return (
     <select
       {...props}
-      value={props.value === undefined ? undefined : normalizeGrade(String(props.value))}
+      value={props.value === undefined ? undefined : gradeValue(String(props.value))}
       defaultValue={
-        props.defaultValue === undefined ? undefined : normalizeGrade(String(props.defaultValue))
+        props.defaultValue === undefined ? undefined : gradeValue(String(props.defaultValue))
       }
     >
+      {emptyLabel && <option value="">{emptyLabel}</option>}
       {GRADE_GROUPS.map((group) => (
         <optgroup label={group.label} key={group.label}>
           {numerals.slice(0, group.count).map((n) => (

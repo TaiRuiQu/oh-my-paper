@@ -12,7 +12,8 @@ import {
 } from "@/contracts/platform";
 import { apiRequest } from "@/lib/http-client";
 import { MarkdownText } from "@/components/markdown-text";
-import { Field, Panel, Submit, splitList } from "./primitives";
+import { Field, Panel, Submit } from "./primitives";
+import { StringListEditor } from "./editable-list";
 import { QuestionOptionsEditor } from "./question-options-editor";
 export type Mutate = (command: PlatformCommand) => Promise<{ id?: string; error?: string }>;
 export const QUESTION_LABELS: Record<QuestionType, string> = {
@@ -97,6 +98,7 @@ export function QuestionEditor({
 }) {
   const [type, setType] = useState<QuestionType>(question?.type ?? "SINGLE"),
     [content, setContent] = useState(question?.content ?? freshContent());
+  const [knowledgeTags, setKnowledgeTags] = useState(question?.knowledgeTags ?? []);
   const [uploading, setUploading] = useState(false),
     [uploadError, setUploadError] = useState("");
   async function uploadImage(file?: File) {
@@ -144,7 +146,7 @@ export function QuestionEditor({
               subject: String(d.get("subject")),
               grade: String(d.get("grade")),
               difficulty: Number(d.get("difficulty")),
-              knowledgeTags: splitList(String(d.get("tags"))),
+              knowledgeTags,
               content,
             },
           });
@@ -212,12 +214,13 @@ export function QuestionEditor({
           />
         )}
         {type !== "SINGLE" && type !== "MULTIPLE" && (
-          <Field label={type === "BLANK" ? "各空标准答案（每行一个空）" : "参考答案"}>
-            <textarea
-              value={content.answers.join("\n")}
-              onChange={(e) => patch({ answers: e.target.value.split("\n").filter(Boolean) })}
-            />
-          </Field>
+          <StringListEditor
+            label={type === "BLANK" ? "各空标准答案" : "参考答案"}
+            itemLabel={type === "BLANK" ? "填空答案" : "答案"}
+            values={content.answers}
+            multiline
+            onChange={(answers) => patch({ answers })}
+          />
         )}
         <div className="p-form-grid">
           <Field label="解析">
@@ -234,9 +237,12 @@ export function QuestionEditor({
             />
           </Field>
         </div>
-        <Field label="知识点（用逗号分隔）">
-          <input name="tags" defaultValue={question?.knowledgeTags.join("，")} />
-        </Field>
+        <StringListEditor
+          label="知识点"
+          itemLabel="知识点"
+          values={knowledgeTags}
+          onChange={setKnowledgeTags}
+        />
         <Field label="上传题目配图" hint="支持 PNG、JPG；上传后图片与题目一起保存。">
           <input
             type="file"
@@ -336,14 +342,13 @@ export function QuestionEditor({
                   />
                 )}
                 {p.type !== "SINGLE" && p.type !== "MULTIPLE" && (
-                  <Field label="各空答案 / 参考答案（每行一个）">
-                    <textarea
-                      value={p.answers.join("\n")}
-                      onChange={(e) =>
-                        patchPart(i, { answers: e.target.value.split("\n").filter(Boolean) })
-                      }
-                    />
-                  </Field>
+                  <StringListEditor
+                    label="各空答案 / 参考答案"
+                    itemLabel="答案"
+                    values={p.answers}
+                    multiline
+                    onChange={(answers) => patchPart(i, { answers })}
+                  />
                 )}
                 <Field label="小问评分标准">
                   <input
@@ -351,12 +356,12 @@ export function QuestionEditor({
                     onChange={(e) => patchPart(i, { rubric: e.target.value })}
                   />
                 </Field>
-                <Field label="小问知识点">
-                  <input
-                    value={p.knowledgeTags.join("，")}
-                    onChange={(e) => patchPart(i, { knowledgeTags: splitList(e.target.value) })}
-                  />
-                </Field>
+                <StringListEditor
+                  label="小问知识点"
+                  itemLabel="知识点"
+                  values={p.knowledgeTags}
+                  onChange={(knowledgeTags) => patchPart(i, { knowledgeTags })}
+                />
               </section>
             ))}
             <button

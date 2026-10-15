@@ -1,4 +1,3 @@
-/** Print a copy of the visible document, preserving this browser's fonts and pagination. */
 export async function printClientDocument({
   content,
   title,
@@ -12,7 +11,6 @@ export async function printClientDocument({
 }) {
   await document.fonts.ready;
   await Promise.all(Array.from(content.querySelectorAll("img")).map((image) => image.decode()));
-  // Force a fresh canvas measurement, including fonts/images, before cloning its pages.
   content.dispatchEvent(new Event("omp:prepare-print"));
   // Allow React to commit the measured pagination, bypassing ResizeObserver's debounce.
   await new Promise<void>((resolve) =>

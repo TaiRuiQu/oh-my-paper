@@ -324,7 +324,6 @@ async function main() {
       ),
       /不属于|无权访问/,
     );
-    // Neither legacy collaboration nor record ownership can override narrowed teaching scopes.
     await db.classroom.update({
       where: { id: classes[1] },
       data: { ownerId: "subject" },
