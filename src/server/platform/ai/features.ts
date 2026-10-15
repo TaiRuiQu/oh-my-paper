@@ -18,6 +18,7 @@ import { loadState, executeCommand } from "../service";
 import { accessibleAsset, assetId, readOwnedAsset } from "../assets";
 import { generateCardTemplate } from "../cards";
 import { AccessError, RequestError } from "@/server/http/errors";
+import { createBatchGradingFeatures } from "./batch-grading";
 const json = (v: unknown) => JSON.parse(JSON.stringify(v)) as Prisma.JsonValue;
 const questionSummary = (q: BankQuestion) => ({
   id: q.id,
@@ -127,6 +128,7 @@ export async function createTaskFeatures(options: {
   jobId?: string;
 }) {
   const { userId, kind } = options;
+  if (kind === "BATCH_GRADE") return createBatchGradingFeatures(options);
   const input = aiInputSchemas[kind].parse(options.input);
   const state = await loadState({ id: userId }, undefined, { reviewing: kind === "GRADE" });
   if (state.actor.role === "STUDENT" && kind !== "RECOMMEND")

@@ -145,7 +145,6 @@ function state(): PlatformState {
         kind: "EXAM",
         reviewScope: "CLASSROOM",
         classroomIds: ["class"],
-        studentIds: ["student"],
         papers: [
           {
             paperId: "paper",

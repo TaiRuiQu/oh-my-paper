@@ -13,6 +13,7 @@ import { apiRequest, jsonBody } from "@/lib/http-client";
 import { Empty, Field, Panel, readForm, stringField, numberField } from "./primitives";
 import { QUESTION_LABELS } from "./questions";
 import { AI_JOB_NAMES as names, aiJobHref } from "@/lib/ai-job-display";
+import { BatchGradingForm } from "./batch-grading";
 import { AIJobList } from "./ai-job-list";
 type Models = { id: string; name: string }[];
 export function PlatformAI({
@@ -92,7 +93,7 @@ export function PlatformAI({
         : tab === "templates"
           ? "TEMPLATE"
           : tab === "reviews"
-            ? "GRADE"
+            ? "BATCH_GRADE"
             : tab === "analytics"
               ? "RECOMMEND"
               : null;
@@ -137,7 +138,10 @@ export function PlatformAI({
             {mode === "ASSEMBLE" && (
               <AIAssembly start={start} busy={busy || !models.length} fixedKind={fixedKind} />
             )}{" "}
-            {(mode === "TEMPLATE" || mode === "GRADE" || mode === "RECOMMEND") && (
+            {mode === "BATCH_GRADE" && (
+              <BatchGradingForm state={state} start={start} busy={busy || !models.length} />
+            )}
+            {(mode === "TEMPLATE" || mode === "RECOMMEND") && (
               <AISelect mode={mode} state={state} start={start} busy={busy || !models.length} />
             )}
           </div>
@@ -600,7 +604,7 @@ function AISelect({
   start,
   busy,
 }: {
-  mode: "TEMPLATE" | "GRADE" | "RECOMMEND";
+  mode: "TEMPLATE" | "RECOMMEND";
   state: PlatformState;
   start: Start;
   busy: boolean;
@@ -614,17 +618,15 @@ function AISelect({
           mode,
           mode === "TEMPLATE"
             ? { paperId: stringField(d, "target") }
-            : mode === "GRADE"
-              ? { submissionId: stringField(d, "target") }
-              : {
-                  studentId: stringField(d, "target") || undefined,
-                  count: numberField(d, "count"),
-                  subject: stringField(d, "subject") || undefined,
-                },
+            : {
+                studentId: stringField(d, "target") || undefined,
+                count: numberField(d, "count"),
+                subject: stringField(d, "subject") || undefined,
+              },
         );
       }}
     >
-      <Field label={mode === "TEMPLATE" ? "对应试卷" : mode === "GRADE" ? "学生答卷" : "查看学生"}>
+      <Field label={mode === "TEMPLATE" ? "对应试卷" : "查看学生"}>
         <select required={mode !== "RECOMMEND" || state.actor.role !== "STUDENT"} name="target">
           <option value="">{state.actor.role === "STUDENT" ? "我的学习情况" : "请选择"}</option>
           {mode === "TEMPLATE"
@@ -633,24 +635,12 @@ function AISelect({
                   {p.name}
                 </option>
               ))
-            : mode === "GRADE"
-              ? state.submissions.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {
-                      state.classrooms
-                        .flatMap((c) => c.students)
-                        .find((st) => st.id === s.studentId)?.name
-                    }{" "}
-                    · {state.papers.find((p) => p.id === s.paperId)?.subject} ·{" "}
-                    {state.assessments.find((a) => a.id === s.assessmentId)?.name}
-                  </option>
-                ))
-              : state.analytics.students.map((s) => (
-                  <option key={s.studentId} value={s.studentId}>
-                    {state.classrooms.flatMap((c) => c.students).find((st) => st.id === s.studentId)
-                      ?.name ?? state.actor.name}
-                  </option>
-                ))}
+            : state.analytics.students.map((s) => (
+                <option key={s.studentId} value={s.studentId}>
+                  {state.classrooms.flatMap((c) => c.students).find((st) => st.id === s.studentId)
+                    ?.name ?? state.actor.name}
+                </option>
+              ))}
         </select>
       </Field>
       {mode === "RECOMMEND" && (
@@ -669,11 +659,7 @@ function AISelect({
         </div>
       )}
       <button className="button" disabled={busy}>
-        {mode === "TEMPLATE"
-          ? "智能制作答题卡"
-          : mode === "GRADE"
-            ? "开始 AI 阅卷"
-            : "分析薄弱点并推荐练习"}
+        {mode === "TEMPLATE" ? "智能制作答题卡" : "分析薄弱点并推荐练习"}
       </button>
     </form>
   );

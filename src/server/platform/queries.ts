@@ -1,4 +1,5 @@
 import "server-only";
+import { paperRecord, assessmentRecord } from "./records";
 import { getDb } from "@/server/db/client";
 import { AccessError } from "@/server/http/errors";
 import { getActor, toTeachingAssignment, visibleClassrooms, type Db } from "./access";
@@ -29,23 +30,19 @@ export async function loadState(
     orderBy: { name: "asc" },
   });
   const allowedClassIds = classes.map((c) => c.id);
-  const ownStudentIds = classes.flatMap((c) =>
-    c.students.filter((s) => s.userId === a.id).map((s) => s.id),
-  );
   const assessmentRows = await db.assessment.findMany({
     where:
       a.role === "ADMIN" || options.reviewing
         ? {}
         : a.role === "STUDENT"
-          ? { published: true, studentIds: { hasSome: ownStudentIds } }
+          ? { published: true, classroomIds: { hasSome: allowedClassIds } }
           : { classroomIds: { hasSome: allowedClassIds } },
-    include: { papers: true },
     orderBy: { createdAt: "desc" },
   });
   const fullAssessments = assessmentRows.map((row) => ({
     ...row,
     createdAt: row.createdAt.toISOString(),
-    papers: row.papers.map((p) => ({
+    papers: assessmentRecord(row).papers.map((p) => ({
       paperId: p.paperId,
       subject: p.subject,
       gradingMode: p.gradingMode,
@@ -78,11 +75,10 @@ export async function loadState(
         : a.role === "STUDENT" || options.reviewing
           ? { id: { in: paperIds } }
           : { OR: [{ ownerId: a.id }, { id: { in: paperIds } }] },
-    include: { items: { orderBy: { position: "asc" } } },
     orderBy: { updatedAt: "desc" },
   });
   const papers = paperRows.map((p) => ({
-    ...p,
+    ...paperRecord(p),
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
   })) as unknown as Paper[];
@@ -113,18 +109,7 @@ export async function loadState(
     )
     .map((c) => ({
       ...c,
-      students:
-        a.role === "STUDENT"
-          ? c.students.filter((s) => s.userId === a.id)
-          : options.reviewing
-            ? c.students.filter((s) =>
-                assessments.some(
-                  (exam) =>
-                    exam.studentIds?.includes(s.id) &&
-                    exam.papers.some((p) => readsSubject(c.id, p.subject, exam)),
-                ),
-              )
-            : c.students,
+      students: a.role === "STUDENT" ? c.students.filter((s) => s.userId === a.id) : c.students,
     })) as Classroom[];
   const studentIds = classroomDTO.flatMap((c) => c.students.map((s) => s.id));
   const candidateSubmissions = await db.scanSubmission.findMany({
@@ -271,16 +256,7 @@ export async function loadState(
           allowedClassIds.includes(id) &&
           exam.papers.some((p) => readsSubject(id, p.subject, exam)),
       );
-      const enrolled = new Set(
-        classroomDTO
-          .filter((c) => classroomIds.includes(c.id))
-          .flatMap((c) => c.students.map((s) => s.id)),
-      );
-      return {
-        ...exam,
-        classroomIds,
-        studentIds: exam.studentIds?.filter((id) => enrolled.has(id)),
-      };
+      return { ...exam, classroomIds };
     }),
     templates,
     submissions,

@@ -48,8 +48,7 @@ export function Scans({
     paper = state.papers.find((p) => p.id === paperId),
     students = state.classrooms
       .filter((c) => assessment?.classroomIds.includes(c.id))
-      .flatMap((c) => c.students)
-      .filter((s) => !assessment?.studentIds || assessment.studentIds.includes(s.id));
+      .flatMap((c) => c.students);
   const [bridge, setBridge] = useState("http://127.0.0.1:17863"),
     [token, setToken] = useState(""),
     [devices, setDevices] = useState<ScannerDevice[]>([]),

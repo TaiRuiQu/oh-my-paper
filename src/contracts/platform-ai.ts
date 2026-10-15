@@ -1,7 +1,30 @@
 import { z } from "zod";
 export const MAX_AI_IMPORT_PAGES = 20;
-export const aiKinds = ["IMPORT", "ENRICH", "ASSEMBLE", "TEMPLATE", "GRADE", "RECOMMEND"] as const;
+export const MAX_AI_BATCH_PAGES = 100;
+export const aiKinds = [
+  "IMPORT",
+  "ENRICH",
+  "ASSEMBLE",
+  "TEMPLATE",
+  "GRADE",
+  "BATCH_GRADE",
+  "RECOMMEND",
+] as const;
 export type AiKind = (typeof aiKinds)[number];
+export type BatchGradingResult = {
+  assessmentId: string;
+  assessmentKind: "EXAM" | "HOMEWORK";
+  classroomId: string;
+  paperId: string;
+  students: {
+    studentId: string;
+    name: string;
+    submissionId: string;
+    gradedQuestions: number;
+    skippedQuestions: number;
+  }[];
+  pendingPages: { sourceUrl: string; reason: string }[];
+};
 const id = z.string().min(1).max(128);
 const questionType = z.enum(["SINGLE", "MULTIPLE", "BLANK", "SUBJECTIVE", "MIXED"]);
 export const aiInputSchemas = {
@@ -56,6 +79,30 @@ export const aiInputSchemas = {
     }),
   TEMPLATE: z.strictObject({ paperId: id, name: z.string().max(200).optional() }),
   GRADE: z.strictObject({ submissionId: id }),
+  BATCH_GRADE: z
+    .strictObject({
+      assessmentId: id,
+      classroomId: id,
+      paperId: id,
+      assetUrls: z
+        .array(z.string().regex(/^\/api\/platform\/assets\/[\w-]+$/))
+        .max(MAX_AI_BATCH_PAGES)
+        .default([]),
+      studentHints: z
+        .array(z.strictObject({ sourceUrl: z.string(), studentId: id }))
+        .max(MAX_AI_BATCH_PAGES)
+        .default([]),
+    })
+    .superRefine((input, ctx) => {
+      if (new Set(input.assetUrls).size !== input.assetUrls.length)
+        ctx.addIssue({ code: "custom", message: "扫描页不能重复。" });
+      if (
+        new Set(input.studentHints.map((hint) => hint.sourceUrl)).size !==
+          input.studentHints.length ||
+        input.studentHints.some((hint) => !input.assetUrls.includes(hint.sourceUrl))
+      )
+        ctx.addIssue({ code: "custom", message: "学生确认信息必须唯一对应本批扫描页。" });
+    }),
   RECOMMEND: z.strictObject({
     studentId: id.optional(),
     count: z.number().int().min(1).max(20).default(5),
@@ -68,6 +115,11 @@ export const aiRequestSchema = z.discriminatedUnion("kind", [
   z.strictObject({ kind: z.literal("ASSEMBLE"), input: aiInputSchemas.ASSEMBLE, modelId: id }),
   z.strictObject({ kind: z.literal("TEMPLATE"), input: aiInputSchemas.TEMPLATE, modelId: id }),
   z.strictObject({ kind: z.literal("GRADE"), input: aiInputSchemas.GRADE, modelId: id }),
+  z.strictObject({
+    kind: z.literal("BATCH_GRADE"),
+    input: aiInputSchemas.BATCH_GRADE,
+    modelId: id,
+  }),
   z.strictObject({ kind: z.literal("RECOMMEND"), input: aiInputSchemas.RECOMMEND, modelId: id }),
 ]);
 export type AiJobDTO = {

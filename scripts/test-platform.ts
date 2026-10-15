@@ -336,12 +336,12 @@ async function main() {
         },
       })
     ).id;
-    assert.equal(
-      (await loadState(actor)).assessments
-        .find((a) => a.id === assessmentId)!
-        .studentIds!.includes(lateStudent),
-      false,
+    assert(
+      (await loadState(actor)).analytics.results.some(
+        (result) => result.assessmentId === assessmentId && result.studentId === lateStudent,
+      ),
     );
+    await cmd({ type: "student.delete", id: lateStudent });
     await assert.rejects(
       cmd({
         type: "paper.save",
@@ -570,7 +570,7 @@ async function main() {
       /已发布成绩/,
     );
     console.log(
-      "✓ Publishing requires every snapshotted participant and subject to finish; students only see their own published results, mistakes and knowledge weaknesses",
+      "✓ Publishing requires every class participant and subject to finish; students only see their own published results, mistakes and knowledge weaknesses",
     );
     await cmd({ type: "assessment.publish", id: assessmentId, published: false });
     assert.equal((await loadState({ id: ids.student })).analytics.results.length, 0);
@@ -709,26 +709,11 @@ async function main() {
       ),
       /无权访问/,
     );
-    await assert.rejects(cmd({ type: "student.delete", id: lateStudent }), /考试名单/);
-    const lateAccount = await db.user.create({
-      data: { id: "late-account", name: "新转入", email: "late@test.invalid", role: "STUDENT" },
-    });
-    await cmd({
-      type: "student.save",
-      student: {
-        id: lateStudent,
-        classroomId: classId,
-        name: "新转入",
-        studentNumber: "000003",
-        userId: lateAccount.id,
-      },
-    });
+    // Class-scoped arrangements do not configure or freeze student IDs.
+    await assert.rejects(cmd({ type: "student.delete", id: lateStudent }), /无权访问/);
     await cmd({ type: "assessment.publish", id: assessmentId, published: true });
-    assert(
-      !(await loadState({ id: lateAccount.id })).assessments.some((a) => a.id === assessmentId),
-    );
     console.log(
-      "✓ Shared reviewers cannot read or grade another class in the same assessment, and late enrollment cannot expose historic published papers",
+      "✓ Shared reviewers cannot read or grade another class, and class-scoped arrangements follow the class roster",
     );
     const unboundClass = (
       await cmd({ type: "classroom.save", classroom: { name: "补绑定验收班", grade: "高一" } })

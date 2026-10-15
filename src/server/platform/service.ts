@@ -44,12 +44,13 @@ export async function executeCommand(
       executeClassroomsCommand,
       executeAssessmentsCommand,
       executeTemplatesCommand,
-      executeSubmissionsCommand,
     ];
     for (const handle of handlers) {
       const result = await handle(db, a, command);
       if (result) return result;
     }
+    const submission = await executeSubmissionsCommand(db, a, command, context);
+    if (submission) return submission;
     const review = await executeReviewsCommand(db, a, command, context);
     if (review) return review;
     throw new RequestError(400, "未知教学操作。");

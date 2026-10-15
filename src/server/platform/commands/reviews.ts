@@ -1,4 +1,5 @@
 import "server-only";
+import { paperRecord, assessmentRecord } from "../records";
 import type { Prisma as PrismaTypes } from "@/generated/prisma/client";
 import type { PlatformState } from "../types";
 import type { Command, CommandContext } from "./types";
@@ -20,11 +21,11 @@ export async function executeReviewsCommand(
         throw new RequestError(400, "AI只允许第一评，第二评与仲裁必须人工完成。");
       const s = await db.scanSubmission.findUnique({ where: { id: r.submissionId } });
       if (!s) throw missing();
-      const exam = await db.assessment.findUnique({
+      const examRow = await db.assessment.findUnique({
         where: { id: s.assessmentId },
-        include: { papers: true },
       });
-      if (!exam || !exam.studentIds.includes(s.studentId)) throw missing();
+      if (!examRow) throw missing();
+      const exam = assessmentRecord(examRow);
       const student = await db.classroomStudent.findUniqueOrThrow({
         where: { id: s.studentId },
       });
@@ -32,10 +33,11 @@ export async function executeReviewsCommand(
       if (!config) throw missing();
       await assertCanReview(db, a, exam, student.classroomId, config.subject);
       if (exam.published) throw new RequestError(409, "已发布成绩的考试不能重新评阅。");
-      const paper = await db.paper.findUniqueOrThrow({
-        where: { id: s.paperId },
-        include: { items: true },
-      });
+      const paper = paperRecord(
+        await db.paper.findUniqueOrThrow({
+          where: { id: s.paperId },
+        }),
+      );
       const item = paper.items.find((i) => i.id === r.itemId);
       if (!item || r.score > item.score) throw new RequestError(400, "评分必须在题目分值范围内。");
       const snapshot = item.snapshot as unknown as BankQuestion;

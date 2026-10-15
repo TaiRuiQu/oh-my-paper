@@ -214,9 +214,7 @@ export function buildAnalytics(input: {
   for (const a of input.assessments) {
     const rows: StudentResult[] = [];
     for (const c of input.classrooms.filter((c) => a.classroomIds.includes(c.id)))
-      for (const student of c.students.filter(
-        (s) => !a.studentIds || a.studentIds.includes(s.id),
-      )) {
+      for (const student of c.students) {
         const subjects: SubjectResult[] = a.papers
           .filter(
             (config) => !input.canReadSubject || input.canReadSubject(c.id, config.subject, a),

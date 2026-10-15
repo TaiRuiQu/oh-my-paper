@@ -153,7 +153,7 @@ export function AssessmentCreatePage({ id, paperId }: { id?: string; paperId?: s
         title={`${id ? "调整" : homework ? "布置" : "安排"}${noun}`}
         description={
           homework
-            ? "选择练习册和参与班级，保存本次作业的独立名单与批改设置。"
+            ? "选择练习册和参与班级，保存参与班级与本次批改设置。"
             : "选择考试试卷与班级，设置每科评阅方式和成绩赋分规则。"
         }
         back={{ href: id ? `${root}/${id}` : root, label: assessment?.name ?? `全部${noun}` }}
@@ -215,8 +215,7 @@ export function AssessmentOverviewPage({ id }: { id: string }) {
   const subs = state.submissions.filter((s) => s.assessmentId === id);
   const roster = state.classrooms
     .filter((c) => a.classroomIds.includes(c.id))
-    .flatMap((c) => c.students)
-    .filter((s) => !a.studentIds || a.studentIds.includes(s.id));
+    .flatMap((c) => c.students);
   return (
     <>
       <PageHeader
@@ -277,7 +276,7 @@ export function AssessmentOverviewPage({ id }: { id: string }) {
           <div className="p-task-links">
             <Link href={`${root}/${id}/roster`}>
               <div>
-                核对参与名单<small>使用布置时保存的学生名单</small>
+                核对参与名单<small>查看参与班级的学生名单</small>
               </div>
               <ArrowRight size={16} />
             </Link>
@@ -316,13 +315,12 @@ export function AssessmentRosterPage({ id }: { id: string }) {
   if (!a) return <MissingRecord back={root} />;
   const students = state.classrooms
     .filter((c) => a.classroomIds.includes(c.id))
-    .flatMap((c) => c.students.map((s) => ({ ...s, classroomName: c.name })))
-    .filter((s) => !a.studentIds || a.studentIds.includes(s.id));
+    .flatMap((c) => c.students.map((s) => ({ ...s, classroomName: c.name })));
   return (
     <>
       <PageHeader
         title="参与名单"
-        description="名单在布置时保存；之后班级新增学生不会改变本次成绩排名范围。"
+        description="参与范围以班级为单位，学生名单来自当前班级名册。"
         back={{ href: `${root}/${id}`, label: a.name }}
       />
       <AssessmentNavigation id={id} active={`${root}/${id}/roster`} />
@@ -368,7 +366,9 @@ export function AssessmentPublishPage({ id }: { id: string }) {
   const a = state.assessments.find((a) => a.id === id);
   if (!a) return <MissingRecord back={root} />;
   const results = state.analytics.results.filter((r) => r.assessmentId === id);
-  const expected = a.studentIds?.length ?? 0;
+  const expected = state.classrooms
+    .filter((c) => a.classroomIds.includes(c.id))
+    .reduce((n, c) => n + c.students.length, 0);
   const unfinished = results.filter((r) => r.total === null);
   const ready = results.length === expected && expected > 0 && !unfinished.length;
   return (

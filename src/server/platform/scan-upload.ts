@@ -38,8 +38,7 @@ export async function uploadScans(actorId: string, form: FormData) {
   if (kind === "CARD" && !template) throw new RequestError(400, "请选择这套试卷的答题卡模板。");
   const students = state.classrooms
     .filter((classroom) => assessment.classroomIds.includes(classroom.id))
-    .flatMap((classroom) => classroom.students)
-    .filter((student) => !assessment.studentIds || assessment.studentIds.includes(student.id));
+    .flatMap((classroom) => classroom.students);
   const override = String(form.get("studentId") || "");
   if (override && !students.some((student) => student.id === override))
     throw new RequestError(400, "学生不在本次考试班级中。");

@@ -4,6 +4,7 @@ import { getDb } from "@/server/db/client";
 import { AccessError, RequestError } from "@/server/http/errors";
 import { getActor, loadState } from "./service";
 import { assertCanReview } from "./access";
+import { batchGradingContext, type BatchGradingInput } from "./batch-grading";
 import { aiRequestSchema } from "@/contracts/platform-ai";
 import { runAiTask } from "./ai/runner";
 import type { LogContext } from "@/server/logger";
@@ -45,9 +46,11 @@ export async function enqueueAiJob(userId: string, raw: unknown) {
   const actor = await getActor(userId);
   if (actor.role === "STUDENT" && kind !== "RECOMMEND")
     throw new AccessError(403, "需要教师权限。");
-  const state = await loadState(actor, undefined, { reviewing: kind === "GRADE" });
+  const state = await loadState(actor, undefined, {
+    reviewing: kind === "GRADE" || kind === "BATCH_GRADE",
+  });
   const ids = input as Record<string, unknown>;
-  if (kind === "IMPORT") {
+  if (kind === "IMPORT" || kind === "BATCH_GRADE") {
     const urls = ids.assetUrls as string[];
     for (const url of urls) {
       const id = /^\/api\/platform\/assets\/([\w-]+)$/.exec(url)?.[1];
@@ -74,6 +77,9 @@ export async function enqueueAiJob(userId: string, raw: unknown) {
     )
   )
     throw new AccessError(404, "试卷不存在。");
+  if (kind === "BATCH_GRADE") {
+    await batchGradingContext(getDb(), state, input as BatchGradingInput);
+  }
   if (kind === "GRADE") {
     const submission = state.submissions.find((submission) => submission.id === ids.submissionId);
     if (!submission) throw new AccessError(404, "答卷不存在。");

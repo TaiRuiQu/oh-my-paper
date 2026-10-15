@@ -1,5 +1,6 @@
 import "server-only";
 import { Prisma, type PrismaClient } from "@/generated/prisma/client";
+import { assessmentRecord } from "./records";
 import { getDb } from "@/server/db/client";
 import { AccessError, RequestError } from "@/server/http/errors";
 import type { Assessment, PlatformState, Role } from "./types";
@@ -64,8 +65,9 @@ export function owner<T extends { ownerId: string }>(
   return record;
 }
 export async function canAssess(db: Db, a: PlatformState["actor"], id: string) {
-  const assessment = await db.assessment.findUnique({ where: { id }, include: { papers: true } });
-  if (!assessment) throw missing();
+  const row = await db.assessment.findUnique({ where: { id } });
+  if (!row) throw missing();
+  const assessment = assessmentRecord(row);
   if (a.role === "ADMIN") return assessment;
   const classes = await db.classroom.findMany({
     where: { AND: [{ id: { in: assessment.classroomIds } }, visibleClassrooms(a)] },

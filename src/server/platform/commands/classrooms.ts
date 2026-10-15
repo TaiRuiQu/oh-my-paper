@@ -58,8 +58,7 @@ export async function executeClassroomsCommand(
           ? await db.user.findUnique({ where: { id: previous.userId }, select: { email: true } })
           : null;
         const hasHistory =
-          (await db.scanSubmission.count({ where: { studentId: previous.id } })) > 0 ||
-          (await db.assessment.count({ where: { studentIds: { has: previous.id } } })) > 0;
+          (await db.scanSubmission.count({ where: { studentId: previous.id } })) > 0;
         if (hasHistory) {
           const unchangedIdentity =
             previous.name === data.name &&
@@ -113,8 +112,6 @@ export async function executeClassroomsCommand(
       const s = await db.classroomStudent.findUnique({ where: { id: command.id } });
       if (!s) throw missing();
       owner(a, await db.classroom.findUnique({ where: { id: s.classroomId } }));
-      if (await db.assessment.count({ where: { studentIds: { has: s.id } } }))
-        throw new RequestError(409, "已列入考试名单的学生不能删除。");
       if (await db.scanSubmission.count({ where: { studentId: s.id } }))
         throw new RequestError(409, "已有答卷的学生不能删除。");
       await db.classroomStudent.delete({ where: { id: s.id } });

@@ -151,11 +151,11 @@ async function main() {
       async function snapshot() {
         const paperRow = await db.paper.findUniqueOrThrow({
           where: { id: paper.id },
-          include: { items: true, templates: true },
+          include: { templates: true },
         });
         const assessmentRow = await db.assessment.findUniqueOrThrow({
           where: { id: assessment.id },
-          include: { papers: true, submissions: { include: { reviews: true } } },
+          include: { submissions: { include: { reviews: true } } },
         });
         return {
           paper: { ...paperRow, name: undefined, updatedAt: undefined },

@@ -508,6 +508,282 @@ async function main() {
       "✓ An entirely unreadable import completes normally and persists every skip reason without saving questions",
     );
 
+    // Class batch tools run against a real database and sandbox, without model calls.
+    const secondStudent = (
+      await command({
+        type: "student.save",
+        student: { classroomId, name: "学生", studentNumber: "000002", userId: null },
+      })
+    ).id;
+    const batchAssessmentId = (
+      await command({
+        type: "assessment.save",
+        assessment: {
+          name: "班级批量",
+          kind: "EXAM",
+          classroomIds: [classroomId],
+          reviewScope: "CLASSROOM",
+          papers: [
+            {
+              paperId,
+              subject: "数学",
+              gradingMode: "SINGLE",
+              arbitrationThreshold: 2,
+              conversion: { enabled: false, bands: [] },
+            },
+          ],
+        },
+      })
+    ).id;
+    const sourceBuffer = await readFile(
+      (await db.platformAsset.findUniqueOrThrow({ where: { id: source.id } })).path,
+    );
+    const secondPage = await saveImage("teacher", sourceBuffer, "第二位学生.png");
+    const continuationPage = await saveImage("teacher", sourceBuffer, "第一位学生续页.png");
+    const unknownPage = await saveImage("teacher", sourceBuffer, "无考号.png");
+    const batchInput = {
+      assessmentId: batchAssessmentId,
+      classroomId,
+      paperId,
+      assetUrls: [source.url, continuationPage.url, secondPage.url, unknownPage.url],
+    };
+    const batchJob = await makeJob("BATCH_GRADE", batchInput);
+    const batch = await createTaskFeatures({
+      userId: "teacher",
+      kind: "BATCH_GRADE",
+      input: batchInput,
+      jobId: batchJob.id,
+    });
+    await call(batch, "read_classroom", {});
+    await assert.rejects(
+      call(batch, "register_submission", {
+        items: [{ sourceUrls: [source.url], studentNumber: "000001" }],
+      }),
+      /先查看/,
+    );
+    for (const [index, url] of batchInput.assetUrls.entries())
+      await image(batch, url, `batch-${index}.png`);
+    await assert.rejects(
+      call(batch, "register_submission", { items: [{ sourceUrls: [source.url], name: "学生" }] }),
+      /唯一匹配/,
+    );
+    for (const [index, page] of [source, secondPage].entries()) {
+      const sid = index === 0 ? studentId : secondStudent;
+      await call(batch, "register_submission", {
+        items: [
+          { sourceUrls: [page.url], name: "学生", studentNumber: index === 0 ? "1" : "000002" },
+        ],
+      });
+      await assert.rejects(
+        call(batch, "record_answers", {
+          items: [
+            {
+              studentId: sid,
+              itemId: paper.items[0].id,
+              text: "2,4",
+              regions: [{ sourceUrl: page.url, x: 0.9, y: 0, width: 0.5, height: 0.2 }],
+            },
+          ],
+        }),
+        /作答区域/,
+      );
+      const answer = (await call(batch, "record_answers", {
+        items: [
+          {
+            studentId: sid,
+            itemId: paper.items[0].id,
+            text: "2,4",
+            regions: [{ sourceUrl: page.url, x: 0, y: 0.2, width: 0.8, height: 0.3 }],
+          },
+        ],
+      })) as { images: string[] };
+      const score = {
+        studentId: sid,
+        itemId: paper.items[0].id,
+        score: 5,
+        feedback: "解释需要完善",
+        partScores: [
+          { partId: "1", score: 4, feedback: "填空正确" },
+          { partId: "2", score: 1, feedback: "解释不完整" },
+        ],
+      };
+      await assert.rejects(call(batch, "propose_grade", { items: [score] }), /先查看/);
+      await image(batch, answer.images[0], `answer-${index}.png`);
+      await assert.rejects(
+        call(batch, "propose_grade", { items: [{ ...score, score: 10 }] }),
+        /合计/,
+      );
+      await call(batch, "propose_grade", { items: [score] });
+      if (index === 0) {
+        await call(batch, "register_submission", {
+          items: [{ sourceUrls: [continuationPage.url], studentNumber: "000001" }],
+        });
+        const continued = (await call(batch, "record_answers", {
+          items: [
+            {
+              studentId: sid,
+              itemId: paper.items[0].id,
+              text: "2,4，续页解释",
+              regions: [page.url, continuationPage.url].map((sourceUrl) => ({
+                sourceUrl,
+                x: 0,
+                y: 0.2,
+                width: 0.8,
+                height: 0.3,
+              })),
+            },
+          ],
+        })) as { images: string[] };
+        for (const [part, url] of continued.images.entries())
+          await image(batch, url, `continued-${part}.png`);
+        await call(batch, "propose_grade", { items: [score] });
+      }
+    }
+    await assert.rejects(call(batch, "finish", { summary: "完成" }), /原始页/);
+    await call(batch, "defer_pages", {
+      items: [{ sourceUrl: unknownPage.url, reason: "未写姓名考号，无法确认学生" }],
+    });
+    await call(batch, "finish", { summary: "完成2位学生，另1页待确认学生" });
+    await batch.commit();
+    const batchSubs = await db.scanSubmission.findMany({
+      where: { assessmentId: batchAssessmentId },
+    });
+    assert.equal(batchSubs.length, 2);
+    assert(batchSubs.every((s) => s.status === "GRADED"));
+    assert.equal(batchSubs.find((s) => s.studentId === studentId)!.sourceFiles.length, 2);
+    assert.equal(
+      (batchSubs.find((s) => s.studentId === studentId)!.answers as { images: string[] }[])[0]
+        .images.length,
+      2,
+    );
+    assert.equal(await db.review.count({ where: { aiJobId: batchJob.id } }), 2);
+    assert.equal(await db.reviewEvent.count({ where: { aiJobId: batchJob.id } }), 2);
+    const batchResult = (await db.aiJob.findUniqueOrThrow({ where: { id: batchJob.id } }))
+      .result as { result: { pendingPages: { sourceUrl: string }[] } };
+    assert.equal(batchResult.result.pendingPages[0].sourceUrl, unknownPage.url);
+    console.log(
+      "✓ Class batch grades multiple students with automatic crops, rejects ambiguous identity and invalid scores, and preserves unidentified pages without blocking the class",
+    );
+    const confirmedStudent = (
+      await command({
+        type: "student.save",
+        student: { classroomId, name: "补确认", studentNumber: "000003", userId: null },
+      })
+    ).id;
+    const confirmedInput = {
+      ...batchInput,
+      assetUrls: [unknownPage.url],
+      studentHints: [{ sourceUrl: unknownPage.url, studentId: confirmedStudent }],
+    };
+    const confirmedJob = await makeJob("BATCH_GRADE", confirmedInput);
+    const confirmed = await createTaskFeatures({
+      userId: "teacher",
+      kind: "BATCH_GRADE",
+      input: confirmedInput,
+      jobId: confirmedJob.id,
+    });
+    await call(confirmed, "read_classroom", {});
+    await image(confirmed, unknownPage.url, "confirmed.png");
+    await call(confirmed, "register_submission", { items: [{ sourceUrls: [unknownPage.url] }] });
+    await call(confirmed, "skip_questions", {
+      items: [{ studentId: confirmedStudent, itemId: paper.items[0].id, reason: "作答模糊" }],
+    });
+    await call(confirmed, "finish", { summary: "学生已确认，作答看不清留待人工核对" });
+    await confirmed.commit();
+    assert.equal(await db.review.count({ where: { aiJobId: confirmedJob.id } }), 0);
+    assert.equal(
+      await db.scanSubmission.count({
+        where: { assessmentId: batchAssessmentId, studentId: confirmedStudent },
+      }),
+      1,
+    );
+    const protectedJob = await makeJob("BATCH_GRADE", batchInput);
+    const protectedBatch = await createTaskFeatures({
+      userId: "teacher",
+      kind: "BATCH_GRADE",
+      input: batchInput,
+      jobId: protectedJob.id,
+    });
+    await image(protectedBatch, source.url, "protected.png");
+    await assert.rejects(
+      call(protectedBatch, "register_submission", {
+        items: [{ sourceUrls: [source.url], studentNumber: "000001" }],
+      }),
+      /已有评分/,
+    );
+    console.log(
+      "✓ Teacher confirmation recovers unidentified pages, unreadable answers remain ungraded, and existing scores cannot be overwritten",
+    );
+
+    const existingBatchInput = {
+      assessmentId: batchAssessmentId,
+      classroomId,
+      paperId,
+      assetUrls: [],
+    };
+    const staleBatchJob = await makeJob("BATCH_GRADE", existingBatchInput);
+    const staleBatch = await createTaskFeatures({
+      userId: "teacher",
+      kind: "BATCH_GRADE",
+      input: existingBatchInput,
+      jobId: staleBatchJob.id,
+    });
+    await call(staleBatch, "read_classroom", {});
+    await image(staleBatch, unknownPage.url, "stale-source.png");
+    await call(staleBatch, "skip_questions", {
+      items: [{ studentId: confirmedStudent, itemId: paper.items[0].id, reason: "模糊待人工确认" }],
+    });
+    await call(staleBatch, "finish", { summary: "待人工确认" });
+    const confirmedSubmission = await db.scanSubmission.findFirstOrThrow({
+      where: { assessmentId: batchAssessmentId, studentId: confirmedStudent },
+    });
+    await command({
+      type: "review.save",
+      review: {
+        submissionId: confirmedSubmission.id,
+        itemId: paper.items[0].id,
+        round: "FIRST",
+        score: 5,
+        feedback: "人工已评分",
+        partScores: [
+          { partId: "1", score: 4, feedback: "正确" },
+          { partId: "2", score: 1, feedback: "不完整" },
+        ],
+      },
+    });
+    await assert.rejects(staleBatch.commit(), /上传全班|变化/);
+    assert.equal(await db.review.count({ where: { aiJobId: staleBatchJob.id } }), 0);
+    assert.equal(
+      (await db.aiJob.findUniqueOrThrow({ where: { id: staleBatchJob.id } })).status,
+      "RUNNING",
+    );
+    const revokedJob = await makeJob("BATCH_GRADE", batchInput);
+    const revoked = await createTaskFeatures({
+      userId: "teacher",
+      kind: "BATCH_GRADE",
+      input: batchInput,
+      jobId: revokedJob.id,
+    });
+    for (const [index, url] of batchInput.assetUrls.entries()) {
+      await image(revoked, url, `revoked-${index}.png`);
+      await call(revoked, "defer_pages", { items: [{ sourceUrl: url, reason: "需要确认学生" }] });
+    }
+    await call(revoked, "finish", { summary: "材料待确认" });
+    await db.teachingAssignment.deleteMany({
+      where: { userId: "teacher", role: "SUBJECT_TEACHER", classroomId },
+    });
+    await assert.rejects(revoked.commit(), /权限|不存在/);
+    assert.equal(
+      (await db.aiJob.findUniqueOrThrow({ where: { id: revokedJob.id } })).status,
+      "RUNNING",
+    );
+    await db.teachingAssignment.create({
+      data: { userId: "teacher", role: "SUBJECT_TEACHER", classroomId, subject: "数学" },
+    });
+    console.log(
+      "✓ Class batch commit revalidates concurrent manual grading and revoked teaching permissions without writing stale AI scores or task completion",
+    );
+
     const { executeAdmin } = await import("../src/server/platform/admin");
     await db.user.create({
       data: { id: "admin", name: "管理员", email: "admin@domain.test", role: "ADMIN" },

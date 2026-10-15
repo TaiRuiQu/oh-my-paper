@@ -1,4 +1,5 @@
 import "server-only";
+import { paperRecord } from "../records";
 import type { Prisma as PrismaTypes } from "@/generated/prisma/client";
 import type { PlatformState } from "../types";
 import type { Command } from "./types";
@@ -21,12 +22,10 @@ export async function executeTemplatesCommand(
         name: command.template.name,
         subject: command.template.subject,
       };
-      let paper = await db.paper.findUnique({
+      let paperRow = await db.paper.findUnique({
         where: { id: data.paperId },
-        include: { items: true },
       });
-      owner(a, paper);
-      if (!paper) throw missing();
+      let paper = paperRecord(owner(a, paperRow));
       if (paper.kind !== "EXAM") throw new RequestError(400, "作业使用练习册作答，不创建答题卡。");
       if (id) {
         const previous = await db.cardTemplate.findUnique({ where: { id } });
@@ -57,11 +56,11 @@ export async function executeTemplatesCommand(
           },
         });
         if (!saved) throw missing();
-        paper = await db.paper.findUnique({
+        paperRow = await db.paper.findUnique({
           where: { id: saved.id },
-          include: { items: { orderBy: { position: "asc" } } },
         });
-        if (!paper) throw missing();
+        if (!paperRow) throw missing();
+        paper = paperRecord(paperRow);
         layout = {
           ...layout,
           regions: layout.regions.map((region) => ({

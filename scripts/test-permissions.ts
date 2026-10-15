@@ -207,8 +207,7 @@ async function main() {
         kind: "HOMEWORK",
         reviewScope: "CLASSROOM",
         classroomIds: [classes[2]],
-        studentIds: [students[2]],
-        papers: { create: [{ ...configs[0] }] },
+        papers: JSON.parse(JSON.stringify([{ ...configs[0] }])),
       },
     });
     assert((await loadState({ id: "school" })).assessments.some((a) => a.id === homework.id));
@@ -466,9 +465,7 @@ async function main() {
     });
     const afterEnrollment = await loadState({ id: "subject" }, db, { reviewing: true });
     assert(!afterEnrollment.users.some((u) => u.id === "late-account"));
-    assert(
-      !afterEnrollment.classrooms.some((c) => c.students.some((s) => s.id === lateStudent.id)),
-    );
+    assert(afterEnrollment.classrooms.some((c) => c.students.some((s) => s.id === lateStudent.id)));
     const asset = await saveImage(
       "admin",
       await sharp({

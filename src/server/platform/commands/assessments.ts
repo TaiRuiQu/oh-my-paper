@@ -2,6 +2,7 @@ import "server-only";
 import type { Prisma as PrismaTypes } from "@/generated/prisma/client";
 import type { PlatformState } from "../types";
 import type { Command } from "./types";
+import { paperRecord, assessmentRecord } from "../records";
 import { json, missing, owner, visibleClassrooms } from "../access";
 import { canReadSubject } from "@/contracts/permissions";
 import { loadState } from "../queries";
@@ -34,13 +35,14 @@ export async function executeAssessmentsCommand(
         throw missing();
       if (data.reviewScope === "GRADE" && new Set(classrooms.map((c) => c.grade)).size !== 1)
         throw new RequestError(400, "年级联考的参与班级必须属于同一年级。");
-      const paperRows = await db.paper.findMany({
-        include: { items: true },
-        where: {
-          id: { in: papers.map((p) => p.paperId) },
-          ...(a.role === "ADMIN" ? {} : { ownerId: a.id }),
-        },
-      });
+      const paperRows = (
+        await db.paper.findMany({
+          where: {
+            id: { in: papers.map((p) => p.paperId) },
+            ...(a.role === "ADMIN" ? {} : { ownerId: a.id }),
+          },
+        })
+      ).map(paperRecord);
       if (paperRows.length !== papers.length) throw missing();
       if (
         papers.some(
@@ -60,36 +62,24 @@ export async function executeAssessmentsCommand(
         )
           throw new RequestError(400, "评阅规则包含不属于本卷的题目。");
       }
-      const enrolled = await db.classroomStudent.findMany({
-        where: { classroomId: { in: data.classroomIds } },
-        select: { id: true },
-      });
-      if (!enrolled.length) throw new RequestError(400, "请先录入参试学生。");
-      const studentIds = enrolled.map((s) => s.id);
-      const create = papers.map((p) => ({
-        ...p,
-        questionRules: json(p.questionRules ?? {}),
-        conversion: json(p.conversion),
-      }));
+      const settings = papers.map((p) => ({ ...p, questionRules: p.questionRules ?? {} }));
       if (id) {
-        await db.assessmentPaper.deleteMany({ where: { assessmentId: id } });
         await db.assessment.update({
           where: { id },
-          data: { ...data, studentIds, published: false, papers: { create } },
+          data: { ...data, published: false, papers: json(settings) },
         });
         return { id };
       }
       const exam = await db.assessment.create({
-        data: { ...data, studentIds, ownerId: a.id, papers: { create } },
+        data: { ...data, ownerId: a.id, papers: json(settings) },
       });
       return { id: exam.id };
     }
     case "assessment.publish": {
-      const exam = await db.assessment.findUnique({
+      const row = await db.assessment.findUnique({
         where: { id: command.id },
-        include: { papers: true },
       });
-      owner(a, exam);
+      const exam = assessmentRecord(owner(a, row));
       const state = await loadState(a, db);
       const target = state.assessments.find((e) => e.id === command.id);
       if (
@@ -106,8 +96,7 @@ export async function executeAssessmentsCommand(
       if (command.published) {
         const rosters = state.classrooms
           .filter((c) => target.classroomIds.includes(c.id))
-          .flatMap((c) => c.students)
-          .filter((s) => !target.studentIds || target.studentIds.includes(s.id));
+          .flatMap((c) => c.students);
         const result = state.analytics.results.filter((r) => r.assessmentId === target.id);
         if (
           !rosters.length ||

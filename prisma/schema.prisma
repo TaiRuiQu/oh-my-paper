@@ -165,26 +165,13 @@ model Paper {
   grade String
   instructions String @db.Text
   layout Json
-  items PaperItem[]
-  assessmentPapers AssessmentPaper[]
+  items Json @default("[]")
   templates CardTemplate[]
   submissions ScanSubmission[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@index([ownerId])
   @@map("papers")
-}
-model PaperItem {
-  id String @id @default(uuid())
-  paperId String
-  paper Paper @relation(fields: [paperId], references: [id], onDelete: Cascade)
-  questionId String
-  position Int
-  score Float
-  section String
-  snapshot Json
-  @@unique([paperId, position])
-  @@map("paper_items")
 }
 model Classroom {
   id String @id @default(uuid())
@@ -232,26 +219,12 @@ model Assessment {
   kind String
   reviewScope String @default("CLASSROOM")
   classroomIds String[]
-  studentIds String[] @default([])
-  papers AssessmentPaper[]
+  papers Json @default("[]")
   published Boolean @default(false)
   submissions ScanSubmission[]
   createdAt DateTime @default(now())
   @@index([ownerId])
   @@map("assessments")
-}
-model AssessmentPaper {
-  assessmentId String
-  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
-  paperId String
-  paper Paper @relation(fields: [paperId], references: [id], onDelete: Restrict)
-  subject String
-  gradingMode String
-  arbitrationThreshold Float
-  questionRules Json @default("{}")
-  conversion Json
-  @@id([assessmentId, paperId])
-  @@map("assessment_papers")
 }
 model CardTemplate {
   id String @id @default(uuid())

@@ -137,7 +137,6 @@ export type Assessment = {
   kind: "EXAM" | "HOMEWORK";
   reviewScope: "CLASSROOM" | "GRADE";
   classroomIds: string[];
-  studentIds?: string[];
   papers: AssessmentPaper[];
   published: boolean;
   createdAt: string;

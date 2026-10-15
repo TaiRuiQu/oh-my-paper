@@ -448,9 +448,14 @@ async function main() {
     ).id;
     const lateForm = form();
     lateForm.set("studentId", lateId);
-    lateForm.append("files", allCards[0]);
-    await assert.rejects(uploadScans(teacherId, lateForm), /不在本次考试/);
-    report.push("考试后新增学生 → 扫描层遵守参试名单快照");
+    for (const file of allCards.slice(0, template.layout.pageCount)) lateForm.append("files", file);
+    const lateResult = await uploadScans(teacherId, lateForm);
+    assert.equal(lateResult.imported, 1, JSON.stringify(lateResult.issues));
+    assert.equal(
+      (await db.scanSubmission.findUniqueOrThrow({ where: { id: lateResult.ids[0] } })).studentId,
+      lateId,
+    );
+    report.push("考试按班级参与 → 新加入班级的学生可直接录入作答，无需修改学生 ID 名单");
     for (const size of ["A4", "A3"] as const)
       for (const orientation of ["portrait", "landscape"] as const) {
         const variant = generateCardTemplate({
