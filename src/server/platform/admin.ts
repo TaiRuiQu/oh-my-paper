@@ -48,6 +48,7 @@ export const adminCommandSchema = z.discriminatedUnion("type", [
           (models) => new Set(models.map((model) => model.name)).size === models.length,
           "同一提供商的模型 ID 不能重复。",
         ),
+      usePreviousResponseId: z.boolean().default(false),
       maxOutputTokens: z.number().int().min(1024).max(393216).default(16384),
     }),
   }),
@@ -67,6 +68,7 @@ export async function loadAdmin(id: string) {
       apiType: true,
       baseURL: true,
       maxOutputTokens: true,
+      usePreviousResponseId: true,
       models: { select: { id: true, name: true, displayName: true }, orderBy: { name: "asc" } },
     },
     orderBy: { name: "asc" },
@@ -158,6 +160,7 @@ export async function executeAdmin(id: string, input: z.infer<typeof adminComman
       apiType: data.apiType,
       baseURL: data.baseURL,
       maxOutputTokens: data.maxOutputTokens,
+      usePreviousResponseId: data.apiType === "openai_responses" && data.usePreviousResponseId,
       encryptedApiKey: data.apiKey ? encryptApiKey(data.apiKey) : existing!.encryptedApiKey,
     };
     const saved = existing

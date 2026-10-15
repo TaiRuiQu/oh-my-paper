@@ -101,7 +101,8 @@ export async function runAiTask(
         prepareStep:
           configuration.identity.apiType === "openai_chat"
             ? async ({ messages }) => ({ messages: chatToolImages(messages) })
-            : configuration.identity.apiType === "openai_responses"
+            : configuration.identity.apiType === "openai_responses" &&
+                configuration.usePreviousResponseId
               ? prepareResponsesStep
               : undefined,
         stopWhen: [isStepCount(2048), () => features.isComplete()],

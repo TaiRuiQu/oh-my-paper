@@ -52,6 +52,7 @@ export async function loadAiModel(userId: string, modelId?: string) {
       providerId: p.id,
       apiType: p.apiType,
     },
+    usePreviousResponseId: p.apiType === "openai_responses" && p.usePreviousResponseId,
     maxOutputTokens: p.maxOutputTokens,
     timeoutMs: p.timeoutSeconds * 1000,
     maxConcurrency: p.maxConcurrency,

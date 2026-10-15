@@ -74,4 +74,6 @@ Python/shell 调用代码、命令、退出码与文本输出写入本人专属 
 
 ## Responses API 上下文续接
 
-`openai_responses` 使用 `store: true` 保存服务端上下文。同一任务首轮发送完整任务要求，后续通过 `previous_response_id` 引用紧邻的上一轮响应，只发送本轮工具结果及其图片，不再重传整段历史。每轮继续发送 Agent 指令和工具定义；任务之间不共享响应 ID。供应商必须支持响应保存和 ID 续接，未返回响应 ID 时会明确报错。
+`openai_responses` 可在 AI 供应商设置中选择「使用 previous_response_id」，默认关闭。无论是否开启，均保持 `store: true` 保存响应；该开关只控制是否通过 `previous_response_id` 续接。关闭时每轮发送完整对话历史（包含工具结果与图片），不要求供应商返回响应 ID。
+
+开启后，同一任务首轮发送完整任务要求，后续通过 `previous_response_id` 引用紧邻的上一轮响应，只发送本轮工具结果及其图片，不再重传整段历史。每轮继续发送 Agent 指令和工具定义；任务之间不共享响应 ID。供应商必须支持响应保存和 ID 续接，未返回响应 ID 时会明确报错。

@@ -130,3 +130,44 @@ it("edits, adds and removes model rows and saves IDs separately from display nam
     { name: "vendor/model,with-comma", displayName: "课堂模型" },
   ]);
 });
+
+it.each([true, false])(
+  "loads and saves response continuation choice %s only for Responses",
+  async (enabled) => {
+    vi.mocked(apiRequest).mockResolvedValue({
+      providers: [{ ...provider, apiType: "openai_responses", usePreviousResponseId: enabled }],
+    });
+    await renderAdmin();
+    const edit = [...container.querySelectorAll("button")].find((b) => b.textContent === "编辑")!;
+    await act(async () => edit.click());
+    const choice = container.querySelector<HTMLSelectElement>('[name="usePreviousResponseId"]')!;
+    expect(choice.value).toBe(String(enabled));
+    await act(async () => {
+      choice.value = String(!enabled);
+      choice.dispatchEvent(new Event("change", { bubbles: true }));
+      container
+        .querySelector("form")!
+        .dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+    });
+    const request = vi
+      .mocked(apiRequest)
+      .mock.calls.find(([, options]) => options?.method === "POST")!;
+    expect(JSON.parse(String(request[1]!.body)).provider.usePreviousResponseId).toBe(!enabled);
+    await act(async () =>
+      [...container.querySelectorAll("button")].find((b) => b.textContent === "编辑")!.click(),
+    );
+    const apiType = container.querySelector<HTMLSelectElement>('[name="apiType"]')!;
+    await act(async () => {
+      apiType.value = "anthropic";
+      apiType.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    expect(container.querySelector('[name="usePreviousResponseId"]')).toBeNull();
+    await act(async () => {
+      apiType.value = "openai_responses";
+      apiType.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    expect(
+      container.querySelector<HTMLSelectElement>('[name="usePreviousResponseId"]')!.value,
+    ).toBe(String(enabled));
+  },
+);

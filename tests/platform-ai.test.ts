@@ -1517,83 +1517,92 @@ describe("batched question processing and unreadable evidence", () => {
   });
 });
 
-it("returns execution, unknown-tool, JSON and schema errors to the same agent, then accepts concurrent tool calls", async () => {
-  const sequence = [
-    [
-      { name: "finish", input: JSON.stringify({ summary: "过早完成" }) },
-      { name: "not_a_tool", input: "{}" },
-      { name: "read_question", input: "{broken-json" },
-      { name: "read_question", input: JSON.stringify({ items: [{ questionId: 123 }] }) },
-    ],
-    [
-      { name: "read_question", input: JSON.stringify({ items: [{ questionId: "q" }] }) },
-      { name: "search_questions", input: JSON.stringify({ query: "1+1" }) },
-    ],
-    [{ name: "propose_paper", input: JSON.stringify({ questionIds: ["q"] }) }],
-    [{ name: "finish", input: JSON.stringify({ summary: "修正后完成" }) }],
-  ];
-  let index = 0;
-  const model = new MockLanguageModelV4({
-    doGenerate: async () => {
-      const step = sequence[index++];
-      return {
-        providerMetadata: { openai: { responseId: `resp_${index}` } },
-        content: step.map((c, n) => ({
-          type: "tool-call" as const,
-          toolCallId: `call-${index}-${n}`,
-          toolName: c.name,
-          input: c.input,
-        })),
-        finishReason: { unified: "tool-calls" as const, raw: undefined },
-        usage: {
-          inputTokens: { total: 10, noCache: 10, cacheRead: undefined, cacheWrite: undefined },
-          outputTokens: { total: 20, text: 20, reasoning: undefined },
-        },
-        warnings: [],
-      };
-    },
-  });
-  mocked.loadAiModel.mockResolvedValue({
-    model,
-    identity: { providerId: "provider", apiType: "openai_responses" },
-    maxOutputTokens: 16000,
-    timeoutMs: 30000,
-    maxConcurrency: 3,
-  });
-  const events: unknown[] = [];
-  const output = await runAiTask({
-    userId: "teacher",
-    kind: "ASSEMBLE",
-    input: assemble(),
-    jobId: "job",
-    onEvent: async (event) => {
-      events.push(event);
-    },
-  });
-  expect(output.summary).toBe("修正后完成");
-  expect(model.doGenerateCalls).toHaveLength(4);
-  const feedback = JSON.stringify(model.doGenerateCalls[1].prompt);
-  expect(feedback).toContain("尚未提供有效候选结果");
-  expect(feedback).toContain("REQUEST_422");
-  expect(feedback).toContain("not_a_tool");
-  expect(feedback).toContain("Available tools");
-  expect(feedback).toContain("JSON parsing failed");
-  expect(feedback).toContain("questionId");
-  expect(feedback).toContain("expected string");
-  expect(model.doGenerateCalls[0].providerOptions).toMatchObject({
-    openai: { store: true, parallelToolCalls: true },
-  });
-  for (const [index, request] of model.doGenerateCalls.entries()) {
-    if (!index) continue;
-    expect(request.providerOptions?.openai?.previousResponseId).toBe(`resp_${index}`);
-    expect(
-      request.prompt
-        .filter((message) => message.role !== "system")
-        .every((message) => message.role === "tool"),
-    ).toBe(true);
-  }
-  expect(JSON.stringify(events)).toContain("尚未提供有效候选结果");
-  expect(events).toContainEqual(
-    expect.objectContaining({ type: "step", toolNames: ["read_question", "search_questions"] }),
-  );
-});
+it.each([true, false])(
+  "returns tool errors and continues concurrent calls with usePreviousResponseId=%s",
+  async (usePreviousResponseId) => {
+    const sequence = [
+      [
+        { name: "finish", input: JSON.stringify({ summary: "过早完成" }) },
+        { name: "not_a_tool", input: "{}" },
+        { name: "read_question", input: "{broken-json" },
+        { name: "read_question", input: JSON.stringify({ items: [{ questionId: 123 }] }) },
+      ],
+      [
+        { name: "read_question", input: JSON.stringify({ items: [{ questionId: "q" }] }) },
+        { name: "search_questions", input: JSON.stringify({ query: "1+1" }) },
+      ],
+      [{ name: "propose_paper", input: JSON.stringify({ questionIds: ["q"] }) }],
+      [{ name: "finish", input: JSON.stringify({ summary: "修正后完成" }) }],
+    ];
+    let index = 0;
+    const model = new MockLanguageModelV4({
+      doGenerate: async () => {
+        const step = sequence[index++];
+        return {
+          providerMetadata: usePreviousResponseId
+            ? { openai: { responseId: `resp_${index}` } }
+            : undefined,
+          content: step.map((c, n) => ({
+            type: "tool-call" as const,
+            toolCallId: `call-${index}-${n}`,
+            toolName: c.name,
+            input: c.input,
+          })),
+          finishReason: { unified: "tool-calls" as const, raw: undefined },
+          usage: {
+            inputTokens: { total: 10, noCache: 10, cacheRead: undefined, cacheWrite: undefined },
+            outputTokens: { total: 20, text: 20, reasoning: undefined },
+          },
+          warnings: [],
+        };
+      },
+    });
+    mocked.loadAiModel.mockResolvedValue({
+      model,
+      identity: { providerId: "provider", apiType: "openai_responses" },
+      usePreviousResponseId,
+      maxOutputTokens: 16000,
+      timeoutMs: 30000,
+      maxConcurrency: 3,
+    });
+    const events: unknown[] = [];
+    const output = await runAiTask({
+      userId: "teacher",
+      kind: "ASSEMBLE",
+      input: assemble(),
+      jobId: "job",
+      onEvent: async (event) => {
+        events.push(event);
+      },
+    });
+    expect(output.summary).toBe("修正后完成");
+    expect(model.doGenerateCalls).toHaveLength(4);
+    const feedback = JSON.stringify(model.doGenerateCalls[1].prompt);
+    expect(feedback).toContain("尚未提供有效候选结果");
+    expect(feedback).toContain("REQUEST_422");
+    expect(feedback).toContain("not_a_tool");
+    expect(feedback).toContain("Available tools");
+    expect(feedback).toContain("JSON parsing failed");
+    expect(feedback).toContain("questionId");
+    expect(feedback).toContain("expected string");
+    expect(model.doGenerateCalls[0].providerOptions).toMatchObject({
+      openai: { store: true, parallelToolCalls: true },
+    });
+    for (const [index, request] of model.doGenerateCalls.entries()) {
+      if (!index) continue;
+      expect(request.providerOptions?.openai?.previousResponseId).toBe(
+        usePreviousResponseId ? `resp_${index}` : undefined,
+      );
+      expect(
+        request.prompt
+          .filter((message) => message.role !== "system")
+          .every((message) => message.role === "tool"),
+      ).toBe(usePreviousResponseId);
+      if (!usePreviousResponseId) expect(JSON.stringify(request.prompt)).toContain("call-1-0");
+    }
+    expect(JSON.stringify(events)).toContain("尚未提供有效候选结果");
+    expect(events).toContainEqual(
+      expect.objectContaining({ type: "step", toolNames: ["read_question", "search_questions"] }),
+    );
+  },
+);

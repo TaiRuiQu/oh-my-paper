@@ -18,6 +18,7 @@ type Provider = {
   apiType: string;
   baseURL: string;
   maxOutputTokens: number;
+  usePreviousResponseId: boolean;
   models: { id: string; name: string; displayName: string }[];
 };
 export function Admin({
@@ -31,6 +32,7 @@ export function Admin({
   refresh: () => Promise<void>;
   notify: (message: string, error?: boolean) => void;
 }) {
+  const [providerApiType, setProviderApiType] = useState("openai_chat");
   const [newRole, setNewRole] = useState<Role>();
   const [importRole, setImportRole] = useState<ImportRole>();
   const [permissionUserId, setPermissionUserId] = useState<string>();
@@ -305,7 +307,14 @@ export function Admin({
           title="AI 模型提供商"
           description="配置统一的模型接入，凭据保存在服务器，前端不显示已保存的密钥。"
           actions={
-            <button className="button" disabled={busy} onClick={() => setEditing(null)}>
+            <button
+              className="button"
+              disabled={busy}
+              onClick={() => {
+                setProviderApiType("openai_chat");
+                setEditing(null);
+              }}
+            >
               添加提供商
             </button>
           }
@@ -325,6 +334,7 @@ export function Admin({
                     baseURL: stringField(d, "baseURL"),
                     apiKey: stringField(d, "apiKey") || undefined,
                     maxOutputTokens: Number(d.get("maxOutputTokens")),
+                    usePreviousResponseId: d.get("usePreviousResponseId") === "true",
                     models: d.getAll("modelName").map((name, index) => ({
                       name: String(name).trim(),
                       displayName: String(d.getAll("modelDisplayName")[index] ?? "").trim(),
@@ -338,7 +348,11 @@ export function Admin({
                   <input required name="name" defaultValue={editing?.name} />
                 </Field>
                 <Field label="接口类型">
-                  <select name="apiType" defaultValue={editing?.apiType ?? "openai_chat"}>
+                  <select
+                    name="apiType"
+                    value={providerApiType}
+                    onChange={(e) => setProviderApiType(e.target.value)}
+                  >
                     <option value="openai_chat">OpenAI Chat Completions 兼容</option>
                     <option value="openai_responses">OpenAI Responses</option>
                     <option value="anthropic">Anthropic</option>
@@ -357,6 +371,21 @@ export function Admin({
                   />
                 </Field>
               </div>
+              {providerApiType === "openai_responses" && (
+                <Field
+                  label="使用 previous_response_id"
+                  hint="开启后通过响应 ID 续接上下文，减少历史重传；供应商需支持响应保存。关闭时每轮发送完整历史。"
+                >
+                  <select
+                    name="usePreviousResponseId"
+                    defaultValue={String(editing?.usePreviousResponseId ?? false)}
+                    disabled={busy}
+                  >
+                    <option value="false">关闭（默认）</option>
+                    <option value="true">开启</option>
+                  </select>
+                </Field>
+              )}
               <Field
                 label="每步最大输出 tokens"
                 hint="按供应商公布的模型输出上限设置，过大可能导致请求被拒绝。"
@@ -420,7 +449,10 @@ export function Admin({
                           <button
                             className="button secondary"
                             disabled={busy}
-                            onClick={() => setEditing(p)}
+                            onClick={() => {
+                              setProviderApiType(p.apiType);
+                              setEditing(p);
+                            }}
                           >
                             编辑
                           </button>

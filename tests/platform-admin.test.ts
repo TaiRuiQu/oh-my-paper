@@ -46,6 +46,37 @@ describe("provider model names", () => {
       update: { displayName: "课堂助手", isPublic: true },
     });
   });
+  it.each([true, false])(
+    "persists response continuation choice %s and clears it for other protocols",
+    async (enabled) => {
+      db.aiProvider.findUnique.mockResolvedValue({ id: "provider", encryptedApiKey: "saved-key" });
+      db.aiProvider.update.mockResolvedValue({ id: "provider" });
+      for (const apiType of ["openai_responses", "openai_chat", "anthropic", "google"]) {
+        await executeAdmin(
+          "admin",
+          adminCommandSchema.parse({
+            ...command,
+            provider: { ...command.provider, apiType, usePreviousResponseId: enabled },
+          }),
+        );
+        expect(db.aiProvider.update).toHaveBeenLastCalledWith({
+          where: { id: "provider" },
+          data: expect.objectContaining({
+            usePreviousResponseId: apiType === "openai_responses" && enabled,
+          }),
+        });
+      }
+      const parsed = adminCommandSchema.parse(command);
+      if (parsed.type === "provider.save")
+        expect(parsed.provider.usePreviousResponseId).toBe(false);
+      expect(
+        adminCommandSchema.safeParse({
+          ...command,
+          provider: { ...command.provider, usePreviousResponseId: "true" },
+        }).success,
+      ).toBe(false);
+    },
+  );
   it("allows clearing the display name, trims fields and rejects duplicate or empty IDs", () => {
     const parseModels = (models: unknown) =>
       adminCommandSchema.safeParse({ ...command, provider: { ...command.provider, models } });
