@@ -1,5 +1,7 @@
 # 平台服务契约
 
+完整模型、外键、JSON 引用及业务关系见[数据模型关系说明](../../../docs/data-model.zh-CN.md)。
+
 `loadState(actor: { id: string }) -> Promise<PlatformState>`；`executeCommand(actor, command) -> Promise<{id: string}>`。actor 只以账号 id 识别，数据库当前 role 为权限权威。接口层取得登录用户并传入；不能接受客户端 ownerId/reviewerId。
 
 共享类型位于 `src/contracts/platform.ts`，`types.ts` 仅提供服务端导出入口。内容写命令为 `{type, question|paper|classroom|student|assessment|template|submission|review}`；删除和发布命令用 `{type,id}`。创建省略 id，修改带 id。执行后前端按当前页面模块重新读取 state。
@@ -7,7 +9,7 @@
 `paper.rename` 和 `assessment.rename` 使用 `{type,id,name}`，仅接受创建者或系统管理员修改名称（去除首尾空白，1–200 字）。题本名称用于列表与打印标题；安排名称用于本次作业或考试与成绩报告，两者独立。已布置、已有答卷及已发布的记录均可重命名，不重建题目、模板、参试名单或评分。
 
 - question.save 支持 SINGLE/MULTIPLE/BLANK/SUBJECTIVE/MIXED，混合题 parts 各自记录题型、答案、标签、分值。answers 数组分别表达正确选项或各空答案。
-- paper.save items 按数组顺序排列，引用 questionId，包含 score、section 和可选 content／question；question 允许卷内独立创建，无需题库记录。可视化编辑只修改当前卷内快照，不改动题库原题。layout 保存 A4/A3、横纵方向、1–4 栏、字体（默认 NSimSun）、自由文字块、页边距、字号、行距和逐题分页／作答行数，画布与打印使用同一份版面数据。
+- paper.save items 按数组顺序排列，引用 questionId，包含 score、section 和可选 content／question；question 允许卷内独立创建，无需题库记录。可视化编辑只修改当前卷内快照，不改动题库原题。layout 保存 A4/A3、横纵方向、1–4 栏、字体（默认 NSimSun）、自由文字块、页边距、字号、行距和逐题分页／空白作答区域高度（mm），画布与打印使用同一份版面数据。
 - classroom.save 后 student.save 可用 studentNumber、name 创建学生；userId 或 email 可绑定已注册 STUDENT 账号，不接受任意角色账号。
 - assessment.save 的 reviewScope 为 CLASSROOM（默认）或 GRADE。CLASSROOM 为每个班级的任课老师只阅本班对应学科；GRADE 仅用于同一年级的考试，该年级任课老师可阅参与班级对应学科，任教班级无需参试。作业必须使用 CLASSROOM，跨年级不能配置为 GRADE。papers 为 paperId、subject、questionRules（按 PaperItem.id 的 doubleReview/arbitrationEnabled/maxDifference）、gradingMode/arbitrationThreshold、conversion（enabled,bands）。bands 为从高分到低分的累计百分比区间，例如 upperPercent=15,min=86,max=100。
 - template.save 使用规范化坐标 CardLayout；regions 引用 PaperItem.id。system presets 只读，选用后按当前题目生成或另存。
@@ -17,7 +19,7 @@
 
 Teacher loadState 返回自己的备课资源，以及教学身份授权范围内的班级、考试与评阅，管理员返回全站；学生没有 users、reviews 和他人数据。analytics 包含多科/班级排名、原始分/赋分、知识点及错题。
 
-考试 `studentIds` 由服务根据布置时班级学生生成，前端不能指定。班级后续加入的学生不进入已有考试，也不能读取已有考试的已发布试卷；名单内学生不能删除。需要修改参试名单时，在尚未上传答卷的场次重新保存安排。
+考试和作业仅配置参与班级 `classroomIds`，不保存 `studentIds`。名单来自当前班级名册；新加入学生自动纳入参与范围。已有作答的学生身份和账号绑定受保护。`Paper.items` 与 `Assessment.papers` 直接保存 JSON 集合，不再使用 PaperItem、AssessmentPaper 中间表；它们仅保留为共享 TypeScript 类型。
 
 班级 owner/admin 可以编辑班级与学生。教师的教学数据权限由 `teaching_assignments` 独立保存，由系统管理员在「系统管理 → 账号与权限 → 配置教学权限」维护；`user.permissions` 原子替换全部教学身份，空数组表示撤销全部教学数据授权。每次请求读取数据库中的当前账号角色与教学身份，不接受客户端传入权限。
 
@@ -44,14 +46,14 @@ AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列。`en
 
 ## AI 自主任务
 
-共享输入定义为 `src/contracts/platform-ai.ts`，六类任务分别为 IMPORT / ENRICH / ASSEMBLE / TEMPLATE / GRADE / RECOMMEND。执行器使用 AI SDK 7 `ToolLoopAgent`，由模型选择检索、读取、查看图片、裁切、提出候选和完成工具；没有预先固定的模型调用工作流。
+共享输入定义为 `src/contracts/platform-ai.ts`，基础任务包括 IMPORT / ENRICH / ASSEMBLE / TEMPLATE / GRADE / BATCH_GRADE / RECOMMEND。执行器使用 AI SDK 7 `ToolLoopAgent`，由模型选择检索、读取、查看图片、裁切、提出候选和完成工具；没有预先固定的模型调用工作流。
 
 所有写入候选在内存中暂存，`finish` 校验成功项与明确跳过的不可辨认题目覆盖要求后，才在同一数据库事务写入业务数据、AI 评阅来源及 `AiJob.COMPLETED/result`。跳过项不写入题目或评分，原因保存在 `result.skipped` 并在任务详情展示；全部题目无法辨认也可正常完成。任务行锁和领域锁防止竞争提交；题目更新、作答变更、已有评阅或权限撤回会拒绝过期提交。模型输出不能直接修改所属用户或绕过现有业务校验。
 
 - IMPORT 需查看全部来源、记录逐页题数并批量提出候选；成功题目与明确跳过项必须逐页完整覆盖。图表由模型使用通用 `python` / `shell` 编写代码裁切，工具返回的独立图像可作为暂存资产，整页预览不作为题目配图。裁图文件和资产行随业务提交，失败删除已写文件。无参考答案来源时仍须生成标准答案、解析、考点及主观题评分标准。
 - IMPORT 可指定 `kind: HOMEWORK / EXAM`，直接保存含卷内题目快照的练习册／试卷；未指定时仍导入题库。作业入口为 `/homework/import`，完成记录包含 `paperId`、`paperKind`，可继续核对与排版。题目分值来自 `propose_question.score`，综合题使用子题分值总和。
 
-完整执行过程仅在 `/workspace/ai/[id]` 展示，`/workspace/ai` 为本人任务目录；`GET /api/platform/ai/[id]` 按当前用户与任务 ID 双重查询，任务列表同样只返回本人任务。业务页面保留任务状态与链接。公开模型列表仅包含 `id/name`，不返回供应商名称。六类任务都提供受 Bubblewrap 隔离的 `python/shell`，代码与输出随工具事件写入轨迹；沙箱无法访问数据库、服务器环境或网络。全部工具清单与生命周期参见 `docs/agent-tools.zh-CN.md`。
+完整执行过程仅在 `/workspace/ai/[id]` 展示，`/workspace/ai` 为本人任务目录；`GET /api/platform/ai/[id]` 按当前用户与任务 ID 双重查询，任务列表同样只返回本人任务。业务页面保留任务状态与链接。公开模型列表仅包含 `id/name`，不返回供应商名称。各类任务都提供受 Bubblewrap 隔离的 `python/shell`，代码与输出随工具事件写入轨迹；沙箱无法访问数据库、服务器环境或网络。全部工具清单与生命周期参见 `docs/agent-tools.zh-CN.md`。
 
 题目读取与报告工具统一接受 `items` 数组并逐项返回成功或详细错误，单条失败保留其他条目结果。同一模型响应可调用多个独立工具并由 SDK 并发执行；OpenAI 显式开启并行工具调用。异常及无效工具调用将具体消息、字段路径和原因反馈给原 Agent，并保存执行记录。管理员可通过 `provider.delete` 删除供应商及关联模型；模型偏好置空，历史任务保留。
 
@@ -90,3 +92,17 @@ outbox 与题目写入同事务持久化，网络／模型调用在 AI Worker �
 当前语义分页使用 Qdrant exact 检索所有授权候选的分数，再按分数与 ID 稳定排序和分页，避免大量同分向量跨页重复。请求与计算量随候选题数增长，超大题库需进一步优化；生产部署说明见 `docs/deployment.zh-CN.md`。
 
 扫描材料入口 `/api/platform/materials` 支持图片和 PDF，按原页码转换为私有 PNG 页面；`/api/platform/assets` 为配图入口并拒绝 PDF。扫描 `sources` 可按顺序引用已上传私有页面或 multipart 文件编号，也可直接上传原始多页 PDF；PDF 页面数量用于作答框页码与多页卡合并。源文件 30MB，扫描批次展开后最多100页／150MB，AI试卷识别保持20页上限。Web运行环境须提供 `pdfinfo`／`pdftoppm`（Docker已安装poppler-utils），`pnpm run doctor` 可检查。
+
+## 班级批量批改
+
+`BATCH_GRADE` 输入 `{assessmentId,classroomId,paperId,assetUrls?:string[],studentHints?:{sourceUrl,studentId}[]}`。教师按班级一次上传图片或多页 PDF，最多 100 页 / 150 MB；不传图片则批改班内已录入且没有评分的作答。Agent 自主识别考号/姓名、合并页、自动定位与裁剪作答、逐题首评，查看真实图片后才能保存评分。未匹配学生的页保存在 `result.pendingPages`，教师可在任务结果确认学生后重新提交这些页面；模糊题保存在 `result.skipped`，不会捏造零分。所有页面须登记或待确认、所有已识别学生的题目须评分或跳过，完成时同事务保存作答、Review、ReviewEvent、资产及任务结果。提交前重新检查权限、题本设置、学生身份、作答与已有评分。
+
+练习册首页统一显示姓名、班级、六位考号填写与填涂区，预览、PDF 打印与 Word 导出共享几何。原人工练习册录入与答题卡扫描仍可用于人工处理。
+
+### 答题卡条形码与标签纸
+
+`layout.studentNumber.mode` 选择 `OMR`（六位考号填涂）或 `BARCODE`（贴码区）。A4 固定纵向，A3 固定横向；页面识别码位于左上定位点右侧，SVG 预览、打印与 Python 扫描使用同一几何。
+
+教师调用 `GET /api/platform/barcodes?classroomId=…&copies=…`，按其可访问班级生成独立 A4 标签纸 SVG 页面。每页 40 枚标签，包含姓名、班级、六位考号与 Code 128 条码；不足六位补零，每人 1–20 份，一次最多 4000 枚。制作页的「粘贴条形码 → 打印条码标签」提供预览和打印 / 保存 PDF。
+
+扫描在四点透视矫正后，只读取保存的贴码区，支持 Code 128、Code 39、ITF 的六位数字考号。条码缺失或多个不同考号时返回待人工确认，不猜测学生身份。Python 运行环境通过 `tools/card-scan/requirements.txt` 安装 ZXing；Docker 与 CI 共用该依赖文件。
