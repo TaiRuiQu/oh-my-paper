@@ -1507,14 +1507,6 @@ td .button {
   padding: 3px 0;
   break-inside: avoid;
 }
-.p-workbook-lines > div {
-  height: 7mm;
-  border-bottom: 0.5pt solid #777;
-}
-.p-workbook-lines small {
-  font-size: 11px;
-  color: var(--muted);
-}
 .p-workbook-controls {
   display: flex;
   align-items: flex-end;
@@ -1528,9 +1520,7 @@ td .button {
   font-size: 11px;
 }
 .p-workbook-answer-space {
-  min-height: 100px;
-  color: var(--muted);
-  padding: 20px 0;
+  break-inside: avoid;
 }
 .p-card-workbench {
   display: grid;
@@ -1794,6 +1784,17 @@ td .button {
   flex: 1 0 max-content;
   min-width: calc(25% - 0.75em);
   max-width: 100%;
+}
+.p-document-option-pair {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1em;
+  flex: 1 0 max-content;
+  min-width: calc(50% - 0.5em);
+  max-width: 100%;
+}
+.p-document-option-pair > .p-document-option {
+  min-width: calc(50% - 0.5em);
 }
 .p-document-option .p-document-text {
   flex: 1;

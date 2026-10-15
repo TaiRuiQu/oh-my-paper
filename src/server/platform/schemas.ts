@@ -118,7 +118,7 @@ export const paperInputSchema = z
           id,
           z.strictObject({
             pageBreakBefore: z.boolean().optional(),
-            answerLines: z.number().int().min(0).max(30).optional(),
+            answerSpaceMm: z.number().min(0).max(200).optional(),
             spaceAfterMm: z.number().min(0).max(60).optional(),
           }),
         )

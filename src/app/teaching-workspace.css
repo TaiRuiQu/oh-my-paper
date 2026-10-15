@@ -857,3 +857,14 @@ td {
 .p-maker-advanced .p-maker-format {
   padding-top: 10px;
 }
+
+.p-student-identity {
+  break-inside: avoid;
+  margin-bottom: 3mm;
+}
+.p-student-identity svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 52mm;
+}

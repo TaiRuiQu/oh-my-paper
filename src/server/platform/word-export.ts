@@ -1,5 +1,6 @@
 import "server-only";
 import sharp from "sharp";
+import { renderStudentIdentitySvg } from "@/lib/student-identity";
 import katex from "katex";
 import { mml2omml } from "mathml2omml";
 import {
@@ -31,7 +32,7 @@ import {
   DOCUMENT_DEFAULTS,
   DOCUMENT_COLUMN_GAP_MM,
   DOCUMENT_FOOTER_MM,
-  documentAnswerLines,
+  documentAnswerSpaceMm,
 } from "@/lib/document-layout";
 import type { ExportAssetLoader } from "./export-assets";
 import { renderPrintRichText } from "@/lib/document-text";
@@ -94,13 +95,37 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
       },
       ...options,
     });
-  const header = [
+  const header: Paragraph[] = [];
+  if (paper.kind === "HOMEWORK") {
+    const width = Math.min(
+      660,
+      (((layout.orientation === "landscape" ? long : short) - 2 * margin) * 96) / 25.4,
+    );
+    header.push(
+      new Paragraph({
+        keepNext: true,
+        children: [
+          new ImageRun({
+            type: "png",
+            data: await sharp(Buffer.from(renderStudentIdentitySvg())).png().toBuffer(),
+            altText: {
+              title: "考号填写与填涂区",
+              description: "姓名、班级与六位考号填写及填涂区",
+              name: "考号",
+            },
+            transformation: { width, height: (width * 170) / 574 },
+          }),
+        ],
+      }),
+    );
+  }
+  header.push(
     paragraph(paper.name, {
       alignment: AlignmentType.CENTER,
       spacing: { after: 210 },
       run: { bold: true, size: 36 },
     }),
-  ];
+  );
   if (paper.kind === "EXAM")
     header.push(
       paragraph(`${paper.subject} · ${paper.grade}`, { alignment: AlignmentType.CENTER }),
@@ -115,7 +140,7 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
       layout.columns) *
       96) /
     25.4;
-  const optionRows = (options: { label: string; text: string }[], indent = 0) => {
+  const optionRows = (options: { label: string; text: string }[], indent = 0, keepNext = false) => {
     if (!options.length) return [];
     // Estimate visible glyph widths rather than counting LaTeX command characters.
     // Word wraps inside each cell; longer options keep the full column width.
@@ -141,7 +166,7 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
       return options.map((option, index) =>
         paragraph(`${option.label}. ${option.text}`, {
           indent: { left: indent },
-          keepNext: index < options.length - 1,
+          keepNext: keepNext || index < options.length - 1,
         }),
       );
     const cellWidth = Math.floor(width / columns);
@@ -172,7 +197,7 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
                   margins: { top: 0, bottom: 0, left: 0, right: 100 },
                   children: [
                     paragraph(option ? `${option.label}. ${option.text}` : "", {
-                      keepNext: row < Math.ceil(options.length / columns) - 1,
+                      keepNext: keepNext || row < Math.ceil(options.length / columns) - 1,
                     }),
                   ],
                 });
@@ -202,6 +227,8 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
     const item = block.item;
     const content = item.snapshot.content;
     const settings = layout.questionLayouts?.[item.questionId];
+    const answerSpaceMm =
+      paper.kind === "HOMEWORK" ? documentAnswerSpaceMm(layout, item.snapshot) : 0;
     children.push(
       paragraph(`${block.index! + 1}. ${content.stem}`, {
         pageBreakBefore: settings?.pageBreakBefore,
@@ -225,6 +252,7 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
       const scale = Math.min(1, maxWidth / meta.width!, 220 / meta.height!);
       children.push(
         new Paragraph({
+          keepNext: answerSpaceMm > 0,
           children: [
             new ImageRun({
               type: "png",
@@ -238,19 +266,27 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
         }),
       );
     }
-    children.push(...optionRows(content.options));
+    children.push(...optionRows(content.options, 0, answerSpaceMm > 0));
     for (const [index, part] of content.parts.entries()) {
-      children.push(paragraph(`（${index + 1}）${part.stem}`, { indent: { left: 270 } }));
-      children.push(...optionRows(part.options, 270));
+      children.push(
+        paragraph(`（${index + 1}）${part.stem}`, {
+          indent: { left: 270 },
+          keepNext: answerSpaceMm > 0,
+        }),
+      );
+      children.push(...optionRows(part.options, 270, answerSpaceMm > 0));
     }
     if (paper.kind === "HOMEWORK") {
-      const lines = documentAnswerLines(layout, item.questionId);
-      for (let line = 0; line < lines; line++)
+      if (answerSpaceMm > 0)
         children.push(
           new Paragraph({
             text: "",
-            spacing: { line: twips(7), lineRule: LineRuleType.EXACT, after: 0 },
-            border: { bottom: { style: BorderStyle.SINGLE, size: 2, color: "777777" } },
+            spacing: {
+              before: 0,
+              line: twips(answerSpaceMm),
+              lineRule: LineRuleType.EXACT,
+              after: 0,
+            },
           }),
         );
       children.push(

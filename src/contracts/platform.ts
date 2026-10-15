@@ -85,7 +85,7 @@ export type DocumentLayout = {
   showScores?: boolean;
   questionLayouts?: Record<
     string,
-    { pageBreakBefore?: boolean; answerLines?: number; spaceAfterMm?: number }
+    { pageBreakBefore?: boolean; answerSpaceMm?: number; spaceAfterMm?: number }
   >;
 };
 export type Paper = {

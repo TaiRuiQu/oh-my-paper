@@ -244,7 +244,7 @@ async function main() {
           marginMm: 22,
           fontSizePt: 12,
           lineHeight: 2,
-          questionLayouts: { [documentQuestion.id]: { answerLines: 8, pageBreakBefore: true } },
+          questionLayouts: { [documentQuestion.id]: { answerSpaceMm: 56, pageBreakBefore: true } },
         },
         items: [
           {
@@ -260,7 +260,7 @@ async function main() {
     const editedPaper = documentState.papers.find((p) => p.id === edited.id)!;
     assert.equal(editedPaper.items[0].snapshot.content.stem, "本练习册独立题干");
     assert.deepEqual(editedPaper.items[0].snapshot.content.answers, ["B"]);
-    assert.equal(editedPaper.layout.questionLayouts?.[documentQuestion.id].answerLines, 8);
+    assert.equal(editedPaper.layout.questionLayouts?.[documentQuestion.id].answerSpaceMm, 56);
     assert.equal(
       documentState.questions.find((q) => q.id === documentQuestion.id)!.content.stem,
       "题库已更新",

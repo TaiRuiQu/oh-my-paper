@@ -2,6 +2,7 @@
 import Image from "next/image";
 import type { BankQuestion, QuestionContent } from "@/contracts/platform";
 import { PaperText } from "./document-canvas";
+import { DocumentOptions } from "./document-options";
 
 export function DocumentQuestionBody({
   question,
@@ -42,7 +43,7 @@ export function DocumentQuestionBody({
         />
       ))}
       {content.options.length > 0 && (
-        <div className="p-document-options">
+        <DocumentOptions>
           {content.options.map((option, n) => (
             <div className="p-document-option" key={option.label}>
               <span>{option.label}.</span>
@@ -53,7 +54,7 @@ export function DocumentQuestionBody({
               )}
             </div>
           ))}
-        </div>
+        </DocumentOptions>
       )}
       {content.parts.map((part, n) => (
         <div className="p-document-part" key={part.id}>
@@ -64,7 +65,7 @@ export function DocumentQuestionBody({
             )}
           </div>
           {part.options.length > 0 && (
-            <div className="p-document-options">
+            <DocumentOptions>
               {part.options.map((option, index) => (
                 <div className="p-document-option" key={option.label}>
                   <span>{option.label}.</span>
@@ -84,7 +85,7 @@ export function DocumentQuestionBody({
                   )}
                 </div>
               ))}
-            </div>
+            </DocumentOptions>
           )}
         </div>
       ))}

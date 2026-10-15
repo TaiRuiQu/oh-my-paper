@@ -271,9 +271,10 @@
   max-height: none;
   overflow: visible;
 }
-.fullscreen :global(.p-document-edit-tools),
-.fullscreen :global(.p-workbook-controls),
-.fullscreen :global(.p-pagination-control) {
+/* Per-question settings live in the making panel, outside the paper content. */
+:is(.withRail, .fullscreen) :global(.p-document-edit-tools),
+:is(.withRail, .fullscreen) :global(.p-workbook-controls),
+:is(.withRail, .fullscreen) :global(.p-pagination-control) {
   display: none;
 }
 @media (max-width: 1000px) {

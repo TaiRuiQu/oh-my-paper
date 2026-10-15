@@ -3,6 +3,7 @@ import type {
   DocumentFont,
   QuestionReviewRule,
   AssessmentPaper,
+  BankQuestion,
 } from "@/contracts/platform";
 export const DOCUMENT_DEFAULTS = {
   paperSize: "A4",
@@ -17,9 +18,13 @@ export const DOCUMENT_COLUMN_GAP_MM = 6;
 export const DOCUMENT_FOOTER_MM = 8;
 export const DOCUMENT_PX_PER_MM = 96 / 25.4;
 
-/** Separate answer rules are opt-in; blanks already printed in the stem remain intact. */
-export function documentAnswerLines(layout: DocumentLayout, questionId: string) {
-  return layout.questionLayouts?.[questionId]?.answerLines ?? 0;
+/** Written responses get blank space; choices and in-stem blanks need none by default. */
+export function documentAnswerSpaceMm(layout: DocumentLayout, question: BankQuestion) {
+  const needsWriting =
+    question.type === "SUBJECTIVE" ||
+    (question.type === "MIXED" &&
+      question.content.parts.some((part) => part.type === "SUBJECTIVE"));
+  return layout.questionLayouts?.[question.id]?.answerSpaceMm ?? (needsWriting ? 35 : 0);
 }
 export function pageDimensions(
   size: "A4" | "A3" = "A4",

@@ -1,8 +1,8 @@
 "use client";
 import { DocumentWorkbench } from "./document-workbench";
 import { DocumentExport } from "./document-export";
-import { DOCUMENT_DEFAULTS, documentAnswerLines } from "@/lib/document-layout";
-import { WorkbookAnswerLines } from "./workbook-answer-lines";
+import { DOCUMENT_DEFAULTS, documentAnswerSpaceMm } from "@/lib/document-layout";
+import { WorkbookAnswerSpace } from "./workbook-answer-space";
 import { GradeSelect, normalizeGrade } from "./grade-select";
 import { DocumentFormatControls, DocumentInsertTools } from "./document-controls";
 import Link from "next/link";
@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { useDomain } from "./domain-provider";
 import { useUnsavedChanges } from "./use-unsaved-changes";
 import { DocumentQuestionBody } from "./document-question";
+import { StudentIdentity } from "./student-identity";
 import { DocumentCanvas, PaperText } from "./document-canvas";
 import { Field, Panel, Empty } from "./primitives";
 import { MissingRecord, PageHeader, PageTabs } from "./page-header";
@@ -245,9 +246,7 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
   const { state, mutate, pending } = useDomain();
   const router = useRouter();
   const [name, setName] = useState(paper?.name ?? "");
-  const [instructions, setInstructions] = useState(
-    paper?.instructions ?? "姓名：____________    班级：____________    日期：____________",
-  );
+  const [instructions, setInstructions] = useState(paper?.instructions ?? "");
   const [subject, setSubject] = useState(paper?.subject ?? "数学");
   const [grade, setGrade] = useState(normalizeGrade(paper?.grade));
   const [dirty, setDirty] = useState(false);
@@ -384,12 +383,12 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                           }
                         />
                       </Field>
-                      <Field label="作答横线（0 为无）">
+                      <Field label="作答区域高度（mm）">
                         <Input
                           type="number"
                           min={0}
-                          max={30}
-                          value={documentAnswerLines(layout, selectedExercise.question.id)}
+                          max={200}
+                          value={documentAnswerSpaceMm(layout, selectedExercise.question)}
                           onChange={(e) =>
                             change(() =>
                               setLayout({
@@ -398,7 +397,7 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                                   ...layout.questionLayouts,
                                   [selectedExercise.question.id]: {
                                     ...layout.questionLayouts?.[selectedExercise.question.id],
-                                    answerLines: Number(e.target.value),
+                                    answerSpaceMm: Number(e.target.value),
                                   },
                                 },
                               }),
@@ -621,6 +620,7 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                 }
                 header={
                   <>
+                    <StudentIdentity />
                     <PaperText
                       title
                       label="作业名称"
@@ -637,13 +637,13 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                 empty={
                   <div className="p-empty-action">
                     <h3>选择练习题开始排版</h3>
-                    <p>默认不添加作答横线，可按题目需要增加横线、留白或分页。</p>
+                    <p>书写题默认预留空白作答区，可在练习设置中调整高度或分页。</p>
                   </div>
                 }
                 blocks={exercises.map((exercise, index) => {
                   const key = exercise.question.id;
                   const settings = layout.questionLayouts?.[key];
-                  const lines = documentAnswerLines(layout, key);
+                  const answerSpaceMm = documentAnswerSpaceMm(layout, exercise.question);
                   return {
                     key,
                     pageBreakBefore: settings?.pageBreakBefore,
@@ -769,54 +769,10 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                             ))}
                           </div>
                         ) : (
-                          <>
-                            <WorkbookAnswerLines
-                              lines={lines}
-                              label={`练习 ${index + 1} 作答空间`}
-                            />
-                            <div className="p-workbook-controls">
-                              <Field label="作答横线（0 为无）">
-                                <Input
-                                  type="number"
-                                  min={0}
-                                  max={30}
-                                  value={lines}
-                                  onChange={(e) =>
-                                    change(() =>
-                                      setLayout({
-                                        ...layout,
-                                        questionLayouts: {
-                                          ...layout.questionLayouts,
-                                          [key]: {
-                                            ...settings,
-                                            answerLines: Number(e.target.value),
-                                          },
-                                        },
-                                      }),
-                                    )
-                                  }
-                                />
-                              </Field>
-                              <label className="p-check">
-                                <input
-                                  type="checkbox"
-                                  checked={settings?.pageBreakBefore ?? false}
-                                  onChange={(e) =>
-                                    change(() =>
-                                      setLayout({
-                                        ...layout,
-                                        questionLayouts: {
-                                          ...layout.questionLayouts,
-                                          [key]: { ...settings, pageBreakBefore: e.target.checked },
-                                        },
-                                      }),
-                                    )
-                                  }
-                                />
-                                从新页开始
-                              </label>
-                            </div>
-                          </>
+                          <WorkbookAnswerSpace
+                            heightMm={answerSpaceMm}
+                            label={`练习 ${index + 1} 作答区域`}
+                          />
                         )}
                       </article>
                     ),
@@ -857,6 +813,7 @@ export function HomeworkExportPage({ id }: { id: string }) {
               layout={paper.layout}
               header={
                 <>
+                  <StudentIdentity />
                   <PaperText
                     readOnly
                     title
@@ -883,7 +840,9 @@ export function HomeworkExportPage({ id }: { id: string }) {
                     }}
                   >
                     <DocumentQuestionBody question={i.snapshot} index={n} />
-                    <WorkbookAnswerLines lines={documentAnswerLines(paper.layout, i.questionId)} />
+                    <WorkbookAnswerSpace
+                      heightMm={documentAnswerSpaceMm(paper.layout, i.snapshot)}
+                    />
                   </article>
                 ),
               }))}

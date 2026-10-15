@@ -23,7 +23,7 @@ const paper: Paper = {
     lineHeight: 2,
     fontFamily: "SimSun",
     textBlocks: [{ id: "text", text: "第一部分", beforeQuestionId: "q" }],
-    questionLayouts: { q: { answerLines: 3, pageBreakBefore: true, spaceAfterMm: 9 } },
+    questionLayouts: { q: { answerSpaceMm: 21, pageBreakBefore: true, spaceAfterMm: 9 } },
   },
   items: [
     {
@@ -64,7 +64,7 @@ async function image() {
   };
 }
 describe("downloadable teaching documents", () => {
-  it("creates a real editable DOCX with saved page geometry, equations, embedded images and answer lines", async () => {
+  it("creates a real editable DOCX with saved page geometry, equations, embedded images and blank answer space", async () => {
     const result = await renderPaperWord(paper, image);
     expect(result.subarray(0, 2).toString()).toBe("PK");
     const zip = await JSZip.loadAsync(result);
@@ -84,7 +84,8 @@ describe("downloadable teaching documents", () => {
     expect(xml).toContain("<m:f>");
     expect(xml).toContain("<m:sSup>");
     expect(xml).not.toContain("$\\frac");
-    expect(xml.match(/<w:pBdr>/g)).toHaveLength(3);
+    expect(xml).not.toContain("<w:pBdr>");
+    expect(xml).toContain('w:line="1191" w:lineRule="exact"');
     expect(
       Object.keys(zip.files).some(
         (name) => name.startsWith("word/media/") && name.endsWith(".png"),
@@ -95,7 +96,7 @@ describe("downloadable teaching documents", () => {
     const exam = await JSZip.loadAsync(await renderPaperWord({ ...paper, kind: "EXAM" }, image));
     expect(await exam.file("word/document.xml")!.async("string")).not.toContain("作答：");
   });
-  it("does not invent answer lines and preserves a teacher's local font in editable Word", async () => {
+  it("reserves default blank space and preserves a teacher's local font in editable Word", async () => {
     const copy = {
       ...paper,
       layout: { paperSize: "A4" as const, columns: 2, fontFamily: "霞鹜文楷" },
@@ -105,6 +106,7 @@ describe("downloadable teaching documents", () => {
     const styles = await zip.file("word/styles.xml")!.async("string");
     expect(xml).not.toContain("<w:pBdr>");
     expect(xml).not.toContain("作答：");
+    expect(xml).toContain('w:line="1984" w:lineRule="exact"');
     expect(xml).toContain('w:top="680"');
     expect(xml).toContain('w:bottom="1134"');
     expect(styles).toContain('w:eastAsia="霞鹜文楷"');
@@ -115,6 +117,47 @@ describe("downloadable teaching documents", () => {
         throw new Error("无权访问图片");
       }),
     ).rejects.toThrow("无权访问图片");
+  });
+  it("exports zero-height answer areas without an extra blank paragraph", async () => {
+    const copy = {
+      ...paper,
+      layout: { ...paper.layout, questionLayouts: { q: { answerSpaceMm: 0 } } },
+    };
+    const zip = await JSZip.loadAsync(await renderPaperWord(copy, image));
+    const xml = await zip.file("word/document.xml")!.async("string");
+    expect(xml).not.toContain('w:before="0" w:line="0"');
+    expect(xml).not.toContain('w:line="1191"');
+    expect(xml).not.toContain('w:line="1984"');
+    expect(xml).not.toContain("<w:pBdr>");
+  });
+  it("uses two rows of two in Word when four choices cannot fit on one row", async () => {
+    const item = paper.items[0];
+    const copy: Paper = {
+      ...paper,
+      kind: "EXAM",
+      layout: { paperSize: "A4", columns: 2 },
+      items: [
+        {
+          ...item,
+          snapshot: {
+            ...item.snapshot,
+            type: "SINGLE",
+            content: {
+              ...item.snapshot.content,
+              images: [],
+              options: ["abcdefgh", "ijklmnop", "qrstuvwx", "yzabcdef"].map((text, index) => ({
+                label: String.fromCharCode(65 + index),
+                text,
+              })),
+            },
+          },
+        },
+      ],
+    };
+    const zip = await JSZip.loadAsync(await renderPaperWord(copy, image));
+    const xml = await zip.file("word/document.xml")!.async("string");
+    expect(xml.match(/<w:tr>/g)).toHaveLength(2);
+    expect(xml.match(/<w:tc>/g)).toHaveLength(4);
   });
   it("keeps the number beside the stem, omits type and score, and places short choices in a borderless row", async () => {
     const item = paper.items[0];
