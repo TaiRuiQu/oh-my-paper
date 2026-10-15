@@ -36,7 +36,7 @@ export function ProviderModelsEditor({
       disabled={disabled}
       hint="模型 ID 用于调用接口；显示名称用于模型选择，留空时显示模型 ID。最多添加 30 个模型。"
       renderItem={(model, index, update) => (
-        <div className="p-form-grid">
+        <div className="p-form-grid p-provider-model-fields">
           <Field label={`模型 ${index + 1} ID`}>
             <input
               required
