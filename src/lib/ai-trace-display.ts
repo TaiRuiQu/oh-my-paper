@@ -12,6 +12,7 @@ export type AITraceActivity = {
 };
 
 const TOOL_LABELS: Record<string, string> = {
+  inspect_image: "查看图片",
   python: "运行 Python",
   shell: "运行命令",
   record_source_inventory: "核对扫描页题目数量",
@@ -45,6 +46,36 @@ function text(value: unknown): string | undefined {
 
 export function aiToolLabel(name: string) {
   return TOOL_LABELS[name] ?? name;
+}
+
+/** Decode escaped prose line breaks without changing TeX commands or code examples. */
+export function normalizeAITraceText(value: string) {
+  return value
+    .split(
+      /(```[\s\S]*?```|`[^`]*`|\$\$[\s\S]*?\$\$|\$[^\n$]*?\$|\\\([\s\S]*?\\\)|\\\[[\s\S]*?\\\])/g,
+    )
+    .map((part, index) => (index % 2 ? part : part.replace(/\\r\\n|\\n(?![a-zA-Z])/g, "\n")))
+    .join("");
+}
+
+export type AITraceGroup = { id: number; label: string; activities: AITraceActivity[] };
+
+/** Consecutive tool calls share a row; model messages and final checks remain boundaries. */
+export function aiTraceGroups(activities: AITraceActivity[]): AITraceGroup[] {
+  const groups: AITraceGroup[] = [];
+  const canGroup = (activity: AITraceActivity) =>
+    activity.type === "tool" && !["finish", "report_failure"].includes(activity.toolName ?? "");
+  for (const activity of activities) {
+    const previous = groups.at(-1);
+    if (canGroup(activity) && previous && canGroup(previous.activities[0])) {
+      previous.activities.push(activity);
+      const names = new Set(previous.activities.map((item) => item.toolName));
+      previous.label = names.size === 1 ? aiToolLabel(activity.toolName!) : "连续工具调用";
+    } else {
+      groups.push({ id: activity.id, label: activity.label, activities: [activity] });
+    }
+  }
+  return groups;
 }
 
 /** Group a tool's lifecycle without losing any raw events or mixing concurrent calls. */

@@ -8,7 +8,7 @@ import { PlatformAI } from "@/components/platform/ai";
 import { AIJobDetailPage } from "@/components/platform/ai-job-pages";
 import { AIExecutionTrace } from "@/components/platform/ai-execution-trace";
 import { apiRequest } from "@/lib/http-client";
-import { aiTraceActivities } from "@/lib/ai-trace-display";
+import { aiTraceActivities, aiTraceGroups } from "@/lib/ai-trace-display";
 import { aiTraceFixtures } from "./fixtures/ai-traces";
 
 const { push, refresh, notify } = vi.hoisted(() => ({
@@ -47,6 +47,19 @@ const job: AiJobDTO = {
   finishedAt: null,
 };
 let container: HTMLDivElement, root: Root;
+const traceRows = () => container.querySelectorAll('ol[aria-label="AI 执行记录"] > li');
+async function expandTrace() {
+  while (container.querySelector('ol[aria-label="AI 执行记录"] details:not([open])')) {
+    await act(async () => {
+      container
+        .querySelectorAll<HTMLDetailsElement>('ol[aria-label="AI 执行记录"] details:not([open])')
+        .forEach((details) => {
+          details.open = true;
+          details.dispatchEvent(new Event("toggle"));
+        });
+    });
+  }
+}
 beforeEach(() => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date("2026-10-15T02:00:35Z"));
@@ -90,7 +103,8 @@ it("updates a task's standalone timeline and preserves its complete execution re
   expect(container.textContent).toContain("private-event-details");
   await act(async () => vi.advanceTimersByTimeAsync(3000));
   expect(vi.mocked(apiRequest)).toHaveBeenCalledWith("/api/platform/ai/job");
-  expect(container.querySelectorAll("ol > li")).toHaveLength(2);
+  expect(traceRows()).toHaveLength(2);
+  await expandTrace();
   expect(container.textContent).toContain("全部题目已保存");
   expect(refresh).toHaveBeenCalledOnce();
 });
@@ -115,14 +129,13 @@ it.each(aiTraceFixtures)(
   async (fixture) => {
     await act(async () => root.render(<AIExecutionTrace job={fixture} />));
     expect(container.querySelector('section[aria-label="AI 执行过程"]')).toBeTruthy();
-    expect(container.querySelectorAll("ol > li")).toHaveLength(
-      aiTraceActivities(fixture.events).length,
-    );
+    expect(traceRows()).toHaveLength(aiTraceGroups(aiTraceActivities(fixture.events)).length);
     expect(container.querySelectorAll("ol details[open]")).toHaveLength(0);
-    expect(container.querySelector('pre[aria-label="任务参数"]')?.closest("details")?.open).toBe(
+    expect(container.querySelector('[aria-label="任务参数"]')?.closest("details")?.open).toBe(
       false,
     );
-    const records = [...container.querySelectorAll("ol pre")]
+    await expandTrace();
+    const records = [...container.querySelectorAll('ol pre[aria-label$="的完整记录"]')]
       .flatMap((pre) => JSON.parse(pre.textContent ?? "[]") as { record: number; event: unknown }[])
       .sort((a, b) => a.record - b.record)
       .map(({ event }) => event);
@@ -163,7 +176,7 @@ it("preserves the last known process on a polling failure and clears the error a
   await act(async () => vi.advanceTimersByTimeAsync(3000));
   expect(container.querySelector('[role="alert"]')?.textContent).toContain("网络中断");
   expect(container.querySelector('[role="status"]')?.textContent).toBe("核对扫描页题目数量");
-  expect(container.querySelectorAll("ol > li")).toHaveLength(3);
+  expect(traceRows()).toHaveLength(2);
   const refreshButton = [...container.querySelectorAll("button")].find(
     (button) => button.textContent === "刷新状态",
   )!;
@@ -171,4 +184,60 @@ it("preserves the last known process on a polling failure and clears the error a
   expect(container.querySelector('[role="alert"]')).toBeNull();
   expect(container.querySelector('[role="status"]')?.textContent).toBe("处理完成");
   expect(container.querySelectorAll('ol > li[data-state="running"]')).toHaveLength(0);
+});
+
+it("renders the result as a readable list with formulas even when the complete event has the same summary", async () => {
+  const fixture = aiTraceFixtures.find((item) => item.id === "trace-import-rich")!;
+  await act(async () => root.render(<AIJobDetailPage initialJob={fixture} />));
+  const result = [...container.querySelectorAll("section")].find(
+    (section) => section.querySelector("h2")?.textContent === "处理结果",
+  )!;
+  expect(result.querySelectorAll("ol > li")).toHaveLength(3);
+  expect(result.querySelector("strong")?.textContent).toBe("11 道题");
+  expect(result.querySelectorAll(".katex").length).toBeGreaterThan(3);
+  expect(result.textContent).not.toContain("\\n");
+  expect(traceRows()).toHaveLength(4);
+  expect(container.textContent).toContain("连续工具调用 · 8 次");
+  expect(container.textContent).toContain("1 次未成功");
+  expect(container.querySelector('pre[aria-label="命令"]')).toBeNull();
+});
+
+it("visualizes tool parameters, failures, output and images while retaining the original events", async () => {
+  const fixture = aiTraceFixtures.find((item) => item.id === "trace-import-rich")!;
+  await act(async () => root.render(<AIExecutionTrace job={fixture} />));
+  await expandTrace();
+  expect(container.querySelector('pre[aria-label="命令"]')?.textContent).toBe("python verify.py");
+  expect(container.querySelector('pre[aria-label="错误输出"]')?.textContent).toContain(
+    "No such file",
+  );
+  expect(container.querySelector('pre[aria-label="Python 代码"]')?.textContent).toContain(
+    "\nprint(",
+  );
+  expect(container.querySelector('pre[aria-label="标准输出"]')?.textContent).toContain(
+    "已核对全部 11 道题",
+  );
+  expect(
+    container.querySelector(
+      'a[href="/api/platform/assets/00000000-0000-0000-0000-000000000001"] img',
+    ),
+  ).toBeTruthy();
+  expect(container.querySelector('[aria-label="本轮用量"]')?.textContent).toContain(
+    "输入 Token1200",
+  );
+  expect(container.textContent).toContain("执行未成功 · 退出码 1");
+});
+
+it("shows running and interrupted calls inside a group without calling them completed", async () => {
+  const fixture = {
+    ...job,
+    events: [
+      { type: "tool", name: "python", toolCallId: "first", status: "started" },
+      { type: "tool", name: "shell", toolCallId: "second", status: "started" },
+    ],
+  };
+  await act(async () => root.render(<AIExecutionTrace job={fixture} />));
+  expect(traceRows()[0].textContent).toContain("2 次进行中");
+  await act(async () => root.render(<AIExecutionTrace job={{ ...fixture, status: "FAILED" }} />));
+  expect(traceRows()[0].textContent).toContain("2 次已中断");
+  expect(traceRows()[0].textContent).not.toContain("已完成");
 });

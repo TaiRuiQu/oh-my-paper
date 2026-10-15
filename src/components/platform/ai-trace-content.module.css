@@ -1,0 +1,96 @@
+.prose {
+  min-width: 0;
+  color: var(--ink);
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.prose :global(.markdown-content) > * + * {
+  margin-top: 10px;
+}
+
+.prose :is(ol, ul) {
+  padding-inline-start: 24px;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose :is(h1, h2, h3, h4) {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.prose table {
+  border-collapse: collapse;
+}
+
+.prose :is(th, td) {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  text-align: start;
+}
+
+.fields {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.fields > div {
+  display: grid;
+  grid-template-columns: minmax(80px, 120px) minmax(0, 1fr);
+  gap: 8px 16px;
+}
+
+.fields dt,
+.empty {
+  color: var(--muted);
+}
+
+.fields dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.items {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.items > li + li {
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.image {
+  display: grid;
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  font-size: 12px;
+}
+
+.image img {
+  display: block;
+  max-width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  object-position: left;
+}
+
+@media (max-width: 760px) {
+  .fields > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3px;
+  }
+}

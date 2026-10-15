@@ -65,7 +65,7 @@
 }
 
 .historySummary::-webkit-details-marker,
-.activity summary::-webkit-details-marker {
+.activity > summary::-webkit-details-marker {
   display: none;
 }
 
@@ -94,7 +94,7 @@
   min-width: 0;
 }
 
-.activity summary {
+.activity > summary {
   display: flex;
   align-items: baseline;
   gap: 9px;
@@ -105,7 +105,7 @@
   list-style: none;
 }
 
-.activity summary:hover,
+.activity > summary:hover,
 .historySummary:hover,
 .information > summary:hover {
   color: var(--ink);
@@ -124,6 +124,10 @@
 }
 
 .activityMeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px 10px;
   flex: 0 0 auto;
   margin-left: auto;
   font-size: 12px;
@@ -135,24 +139,93 @@
   flex: 0 0 13px;
 }
 
-.activities > li[data-state="running"] .activityLabel {
+[data-state="running"] > .activity > summary .activityLabel {
   color: var(--ink);
   font-weight: 550;
 }
 
-.activities > li[data-state="error"] .activityIcon,
-.activities > li[data-state="error"] .activityMeta {
+[data-state="error"] > .activity > summary .activityIcon,
+[data-state="error"] > .activity > summary .activityMeta,
+.failedCount {
   color: var(--danger);
 }
 
-.activities > li:last-child .activityLabel {
+.activities > li:last-child > .activity > summary .activityLabel {
   color: var(--ink);
 }
 
 .activityDetails {
   min-width: 0;
   margin: 2px 0 8px 24px;
+  padding: 8px 0 12px;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.groupItems {
+  margin: 0 0 8px 24px;
+  padding: 0 0 0 14px;
+  border-left: 1px solid var(--line);
+  list-style: none;
+}
+
+.callCount {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.detailSection {
+  min-width: 0;
+  margin-bottom: 16px;
+}
+
+.detailSection h3 {
+  margin: 12px 0 8px;
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.exitCode {
+  margin-bottom: 10px;
+  color: var(--muted);
+}
+
+.detailError {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 10px 0;
+  color: var(--danger);
+}
+
+.detailError > svg {
+  flex-shrink: 0;
+}
+
+.raw {
+  margin-top: 12px;
+  color: var(--muted);
   font-size: 12px;
+}
+
+.raw > summary {
+  width: fit-content;
+  min-height: 34px;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.trace summary:focus-visible,
+.trace pre:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.parameters {
+  padding: 4px 0 8px;
+  color: var(--ink);
+  font-size: 13px;
 }
 
 .activityDetails > p {
@@ -234,7 +307,7 @@
     flex-direction: column;
   }
 
-  .activity summary,
+  .activity > summary,
   .historySummary,
   .information > summary {
     min-height: 40px;
@@ -242,5 +315,21 @@
 
   .activityDetails {
     margin-left: 0;
+    font-size: 14px;
+  }
+
+  .groupItems {
+    margin-left: 6px;
+    padding-left: 10px;
+  }
+
+  .activityLabel {
+    font-size: 14px;
+  }
+
+  .activityMeta {
+    flex-shrink: 1;
+    max-width: 44%;
+    text-align: right;
   }
 }

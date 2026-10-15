@@ -8,6 +8,7 @@ import { AI_JOB_NAMES, aiJobHref, aiJobResult, aiJobResultLink } from "@/lib/ai-
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { PlatformAI } from "./ai";
 import { AIExecutionTrace } from "./ai-execution-trace";
+import { AITraceText } from "./ai-trace-content";
 import { useDomain } from "./domain-provider";
 import { PageHeader } from "./page-header";
 import { Panel } from "./primitives";
@@ -108,14 +109,13 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
         </p>
       )}
       <AIExecutionTrace job={job} />
-      {result?.summary &&
-        !job.events.some(
-          (event) =>
-            event &&
-            typeof event === "object" &&
-            (event as { type?: string; summary?: string }).type === "complete" &&
-            (event as { summary?: string }).summary === result.summary,
-        ) && <p className="p-notice">{result.summary}</p>}
+      {result?.summary && (
+        <Panel title="处理结果">
+          <div className="p-panel-content">
+            <AITraceText text={result.summary} />
+          </div>
+        </Panel>
+      )}
       {job.kind === "RECOMMEND" && recommendations?.length ? (
         <Panel title="推荐练习">
           {recommendations.map((recommendation, index) => {
@@ -138,9 +138,9 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
                 {question ? (
                   <QuestionBody question={question} />
                 ) : (
-                  <p className="p-muted">{data?.reason ?? data?.stem ?? "已生成推荐题目"}</p>
+                  <AITraceText text={data?.reason ?? data?.stem ?? "已生成推荐题目"} />
                 )}
-                {question && data?.reason && <p className="p-muted">{data.reason}</p>}
+                {question && data?.reason && <AITraceText text={data.reason} />}
               </article>
             );
           })}

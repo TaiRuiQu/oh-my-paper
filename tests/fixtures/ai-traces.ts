@@ -1,5 +1,8 @@
 import type { AiJobDTO } from "@/contracts/platform-ai";
 
+export const aiTraceRichSummary =
+  "已从源页面完整转录并暂存 **11 道题**，与页面清单一致。\\n\\n题目清单（按源顺序）：\\n1. 式子 $-2^5$ 表示（单选，答 C）\\n2. 互为相反数的一组：$(-1)^{2n+1}$ 与 $(-1)^{2n}$（单选，答 D）\\n3. 计算：$1.5^2$、$(-2)^5$、$9^2/4$。\\n\\n说明：学生手写答案仅作为识别线索，正确答案均由独立推导给出。";
+
 const base = {
   userId: "trace-preview-teacher",
   modelId: "trace-preview-model",
@@ -195,6 +198,90 @@ export const aiTraceFixtures: AiJobDTO[] = [
       },
       { type: "step", toolNames: ["search_candidates"] },
       { type: "complete", summary: "已根据薄弱知识点推荐 3 道巩固练习。" },
+    ],
+  },
+  {
+    ...base,
+    id: "trace-import-rich",
+    kind: "IMPORT",
+    status: "COMPLETED",
+    finishedAt: "2026-10-15T02:21:36.000Z",
+    input: { subject: "数学", grade: "七年级", name: "有理数及其运算" },
+    result: { summary: aiTraceRichSummary },
+    events: [
+      { type: "start", kind: "IMPORT" },
+      ...[1, 2, 3, 4, 5, 6].flatMap((number) => [
+        {
+          type: "tool",
+          name: "inspect_image",
+          toolCallId: `image-${number}`,
+          status: "started",
+          input: { page: 1, region: [0, 0.1 * number, 1, 0.1] },
+        },
+        {
+          type: "tool",
+          name: "inspect_image",
+          toolCallId: `image-${number}`,
+          status: "ended",
+          durationMs: 80,
+        },
+      ]),
+      {
+        type: "step",
+        toolNames: ["inspect_image"],
+        usage: { inputTokens: 1200, outputTokens: 460, totalTokens: 1660 },
+      },
+      {
+        type: "tool",
+        name: "shell",
+        toolCallId: "shell-error",
+        status: "started",
+        input: { command: "python verify.py", assets: [], images: [] },
+      },
+      { type: "tool", name: "shell", toolCallId: "shell-error", status: "ended", durationMs: 120 },
+      {
+        type: "sandbox",
+        name: "shell",
+        toolCallId: "shell-error",
+        exitCode: 1,
+        stdout: "",
+        stderr: "python: can't open file '/workspace/verify.py': No such file or directory",
+        images: [],
+      },
+      { type: "step", toolNames: ["shell"] },
+      {
+        type: "tool",
+        name: "python",
+        toolCallId: "python-ok",
+        status: "started",
+        input: {
+          code: "from PIL import Image\nprint('已核对全部 11 道题')",
+          assets: [],
+          images: ["crop.png"],
+        },
+      },
+      { type: "tool", name: "python", toolCallId: "python-ok", status: "ended", durationMs: 860 },
+      {
+        type: "sandbox",
+        name: "python",
+        toolCallId: "python-ok",
+        exitCode: 0,
+        stdout: "已核对全部 11 道题\n已保存独立题图 crop.png",
+        stderr: "",
+        images: [
+          { name: "crop.png", url: "/api/platform/assets/00000000-0000-0000-0000-000000000001" },
+        ],
+      },
+      { type: "step", toolNames: ["python"] },
+      {
+        type: "tool",
+        name: "finish",
+        toolCallId: "finish",
+        status: "started",
+        input: { summary: "已核对题目与源页。" },
+      },
+      { type: "tool", name: "finish", toolCallId: "finish", status: "ended", durationMs: 90 },
+      { type: "complete", summary: aiTraceRichSummary },
     ],
   },
 ];
