@@ -18,6 +18,7 @@ import { accessibleAsset, assetId, readOwnedAsset } from "../assets";
 import { generateCardTemplate } from "../cards";
 import { AccessError, RequestError } from "@/server/http/errors";
 import { createConsolidationFeatures } from "./consolidation";
+const QUESTION_TEXT_INSTRUCTIONS = String.raw`试题文本统一使用Markdown。题干stem、选项options[].text、标准答案answers[]的每一项、解析explanation、评分标准rubric，以及parts[]中对应字段里的所有数学表达式，都必须使用带分隔符的LaTeX：行内公式使用$...$，独立公式使用$$...$$。即使一条答案只有一个公式，也必须保留分隔符，禁止输出裸LaTeX，禁止用反引号或代码块代替公式分隔符。答案格式示例：{"answers":["$T_n=2n+1$","$S_n=\\dfrac{n}{3(2n+3)}$"]}；JSON字符串中的LaTeX反斜杠须正确转义。文字与公式混排时只包裹数学部分，普通文字和选择题答案标号保持原样。填空题仍按每个空分别提供答案，每个数组元素内的公式都要独立闭合。提交候选前自行检查所有文本字段的公式分隔符是否成对完整。`;
 const json = (v: unknown) => JSON.parse(JSON.stringify(v)) as Prisma.JsonValue;
 const questionSummary = (q: BankQuestion) => ({
   id: q.id,
@@ -220,7 +221,7 @@ export async function createTaskFeatures(options: {
     });
     tools.propose_question = batchTool({
       description:
-        "Stage completely transcribed source questions with detected type, subject, tags, correct answers, explanation and rubric. Use a stable sourceKey (page and printed number) so corrections replace drafts; never split choices or a passage into questions. Propose questions in source order. Include the printed score if available; otherwise choose an appropriate positive score. Include source image references only where needed.",
+        "Stage completely transcribed source questions with detected type, subject, tags, correct answers, explanation and rubric. All math must use $...$ or $$...$$ delimiters, including every answers[] entry and all mixed-part text fields; never submit bare LaTeX. Use a stable sourceKey (page and printed number) so corrections replace drafts; never split choices or a passage into questions. Propose questions in source order. Include the printed score if available; otherwise choose an appropriate positive score. Include source image references only where needed.",
       inputSchema: z.object({
         sourceKey: z.string().min(1).max(100),
         sourceUrl: z.string().optional(),
@@ -281,7 +282,7 @@ export async function createTaskFeatures(options: {
     sandboxContext.questions = state.questions.filter((q) => req.questionIds.includes(q.id));
     tools.propose_enrichment = batchTool({
       description:
-        "Stage knowledge tags, standard answers, explanation and grading rubric for requested questions. Preserve stem/options/images and existing question structure. Supply complete mixed parts with their original IDs.",
+        "Stage knowledge tags, standard answers, explanation and grading rubric for requested questions. All math must use $...$ or $$...$$ delimiters, including every answers[] entry, explanation, rubric and corresponding mixed-part fields; never submit bare LaTeX. Preserve stem/options/images and existing question structure. Supply complete mixed parts with their original IDs.",
       inputSchema: z.object({
         questionId: z.string(),
         knowledgeTags: z.array(z.string().min(1)),
@@ -811,6 +812,7 @@ export async function createTaskFeatures(options: {
     dispose: sandbox.dispose,
     prompt: JSON.stringify({ task: kind, requirements: input }),
     instructions:
+      (kind === "IMPORT" || kind === "ENRICH" ? QUESTION_TEXT_INSTRUCTIONS : "") +
       (kind === "IMPORT"
         ? "grade表示试题固定的适用年级（如高中一年级），不是学生届别（如2027届、2024级），不能根据当前年份推算或随时间变更。导入时，未指定的学科和年级必须根据全部材料自主识别，不能套用固定学科或年级；同一份作业或试卷内的题目须使用一致的学科和年级。用户指定的名称、学科和年级优先。创建作业或试卷时，若未指定名称，须在finish的name字段提交识别出的材料标题；材料无明确标题时，根据内容生成简洁中文标题。全部题目无法辨认且均已跳过时，无需生成标题。"
         : kind === "TEMPLATE"
