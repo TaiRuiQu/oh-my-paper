@@ -23,9 +23,7 @@ export async function retainedDigests(versions, loadManifest) {
 
 export async function retainedReleases(versions, loadManifest, count = 3) {
   const candidates = versions.filter((version) =>
-    version.metadata.container.tags.some(
-      (tag) => tag === "latest" || /^sha-[a-f0-9]{40}$/.test(tag),
-    ),
+    version.metadata.container.tags.some((tag) => !tag.startsWith("build-")),
   );
   const releases = [];
   for (const version of candidates) {

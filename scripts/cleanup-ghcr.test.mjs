@@ -58,6 +58,9 @@ test("retention selects complete releases and protects latest even when newer ta
   // A rerun or a named release of the same commit can move its SHA alias while
   // the v2 deployment entry point still points to the older complete index.
   versions[0].metadata.container.tags = ["latest"];
+  // A tag run can lose its SHA alias when a branch run of the same commit
+  // publishes later. Its named release must remain a rollback candidate.
+  versions[3].metadata.container.tags = ["v2.0.2"];
   assert.deepEqual(
     (
       await retainedReleases(versions, async () => ({
