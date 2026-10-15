@@ -82,12 +82,19 @@ Python/shell 调用代码、命令、退出码与文本输出写入本人专属 
 
 管理员在「系统管理 → 模型接入」编辑提供商时，可为每个模型单独选择思考强度：供应商默认、关闭（none）、最低（minimal）、低（low）、中（medium）、高（high）、更高（xhigh）、最高（max）。默认沿用供应商行为。
 
-设置保存在 `AiModel.reasoningEffort`，运行时通过 AI SDK 7 的统一 `reasoning` 参数应用于所有自主 Agent 步骤和考试单次评分。SDK 将其转换为 OpenAI Chat/Responses、Anthropic 或 Google 的原生设置；模型实际支持的档位由供应商决定。它与 Responses 上下文续接独立，开启续接时每轮仍保持所选强度。
+设置保存在 `AiModel.reasoningEffort`，运行时通过 AI SDK 7 的统一 `reasoning` 参数应用于所有自主 Agent 步骤和考试单次评分。SDK 将其转换为 OpenAI Chat/Responses、Anthropic 或 Google 的原生设置；模型实际支持的档位由供应商决定。HTTP 和 WebSocket 模式每轮都保持所选强度。
 
 OpenAI 兼容接口使用自定义模型 ID 时，显式选择强度会启用 SDK 的 `forceReasoning`，确保该参数不会因模型名称不在 SDK 识别名单中而被忽略；供应商默认档位不启用此选项。
 
-## Responses API 上下文续接
+## Responses API 连接模式
 
-`openai_responses` 可在 AI 供应商设置中选择「使用 previous_response_id」，默认关闭。无论是否开启，均保持 `store: true` 保存响应；该开关只控制是否通过 `previous_response_id` 续接。关闭时每轮发送完整对话历史（包含工具结果与图片），不要求供应商返回响应 ID。
+管理员在 Responses 供应商设置中选择「HTTP 模式」或「WebSocket 模式」，默认 HTTP；其他协议固定使用 HTTP。配置保存在 `AiProvider.transportMode`，旧的响应 ID 开关已移除。迁移后的现有供应商默认使用 HTTP。
 
-开启后，同一任务首轮发送完整任务要求，后续通过 `previous_response_id` 引用紧邻的上一轮响应，只发送本轮工具结果及其图片，不再重传整段历史。每轮继续发送 Agent 指令和工具定义；任务之间不共享响应 ID。供应商必须支持响应保存和 ID 续接，未返回响应 ID 时会明确报错。
+传输行为以 [openai/codex 提交 6fbd7be](https://github.com/openai/codex/blob/6fbd7be1518d259e30e6fef48f05f433d2461a20/codex-rs/core/src/client.rs) 为对照。两种模式均发送 `store: false`、`stream: true` 和 `include: ["reasoning.encrypted_content"]`，不发送 `max_output_tokens`。模型输出上限设置仅用于其他协议。
+
+- HTTP：每轮携带完整的指令、工具定义、文字、加密思考内容、工具调用、结果及图片，不发送 `previous_response_id` 或 `item_reference`。
+- WebSocket：每个 Agent 使用独立连接和会话标识；先通过 `generate: false` 预热。仅当请求设置未变且历史完整匹配上一请求及其输出时，通过连接内的 `previous_response_id` 发送新增输入。缺少响应 ID、历史修改或设置变化时发送完整上下文。
+- 断线、连接使用上限或响应缓存失效时重新连接，清除旧续接状态并发送完整上下文。与 Codex 默认值一致，WebSocket 建连最多等待 15 秒，断流最多重试五次，以 200 毫秒为起点指数退避并加入 ±10% 抖动；服务不支持升级（426）或连接持续失败时，此 Agent 的后续请求切换为 HTTP，并记录 `platform.ai.transport.http_fallback`。401、403、429 等上游错误保留其状态，不以切换协议掩盖。
+- Agent 完成、失败或取消时关闭连接；不同 Agent、不同学生和不同任务之间不共享响应 ID。考试单次评分同样使用所选连接模式。
+
+项目继续使用 AI SDK 的 `ToolLoopAgent` 执行工具、校验和统计成本。传输适配器读取 HTTP SSE 或 WebSocket 事件，将完成响应交给 SDK；这不是复制 Codex 的 Rust Agent、专用鉴权或产品工具。供应商仍须实现所选 Responses 传输协议；本地协议测试不代表已验收某一中转服务。

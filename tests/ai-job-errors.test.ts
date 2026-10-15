@@ -22,6 +22,7 @@ it("saves a readable failure and logs model identity without retrying the whole 
         providerName: "学校 AI 网关",
         providerId: "provider",
         apiType: "openai_responses",
+        transportMode: "websocket",
         apiKey: "must-not-be-logged",
       },
     });
@@ -53,6 +54,7 @@ it("saves a readable failure and logs model identity without retrying the whole 
     providerName: "学校 AI 网关",
     providerId: "provider",
     apiType: "openai_responses",
+    transportMode: "websocket",
     attempts: 3,
   });
   expect(output.mock.calls[0][0]).not.toContain("must-not-be-logged");

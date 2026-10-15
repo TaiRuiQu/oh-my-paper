@@ -382,6 +382,7 @@ describe("program-assigned grading", () => {
 
   it("does not issue another model request to repair invalid exam JSON", async () => {
     context = fixture("EXAM");
+    const close = vi.fn();
     const model = new MockLanguageModelV4({
       doGenerate: async () => ({
         content: [{ type: "text", text: "invalid json" }],
@@ -394,7 +395,7 @@ describe("program-assigned grading", () => {
       }),
     });
     mocks.model.mockResolvedValue({
-      model,
+      createSession: () => ({ model, close }),
       reasoning: "xhigh",
       identity: { providerId: "provider", apiType: "openai_chat" },
       maxOutputTokens: 1000,
@@ -405,12 +406,14 @@ describe("program-assigned grading", () => {
       runAiTask({ userId: "teacher", kind: "GRADE", input, jobId: "job" }),
     ).rejects.toThrow();
     expect(model.doGenerateCalls).toHaveLength(1);
+    expect(close).toHaveBeenCalledOnce();
     expect(mocks.costAdd).toHaveBeenCalledOnce();
     expect(mocks.command).not.toHaveBeenCalled();
   });
 
   it("sends one real SDK request per exam submission and accounts for every call", async () => {
     context = fixture("EXAM");
+    const close = vi.fn();
     const model = new MockLanguageModelV4({
       doGenerate: async () => ({
         content: [{ type: "text", text: JSON.stringify(examOutput()) }],
@@ -423,7 +426,7 @@ describe("program-assigned grading", () => {
       }),
     });
     mocks.model.mockResolvedValue({
-      model,
+      createSession: () => ({ model, close }),
       reasoning: "xhigh",
       identity: { providerId: "provider", apiType: "openai_chat" },
       maxOutputTokens: 1000,
@@ -432,6 +435,7 @@ describe("program-assigned grading", () => {
     });
     await runAiTask({ userId: "teacher", kind: "GRADE", input, jobId: "job" });
     expect(model.doGenerateCalls).toHaveLength(2);
+    expect(close).toHaveBeenCalledTimes(2);
     expect(model.doGenerateCalls.every((call) => call.reasoning === "xhigh")).toBe(true);
     expect(model.doGenerateCalls.every((call) => !call.tools?.length)).toBe(true);
     expect(mocks.costAdd).toHaveBeenCalledTimes(2);

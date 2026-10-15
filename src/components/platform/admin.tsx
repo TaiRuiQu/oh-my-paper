@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { AccountCredentials } from "@/contracts/auth";
-import type { ReasoningEffort } from "@/contracts/ai-models";
+import type { ReasoningEffort, ResponsesTransportMode } from "@/contracts/ai-models";
 import { AccountImport } from "./account-import";
 import importStyles from "./account-import.module.css";
 import type { ImportRole } from "@/contracts/account-import";
@@ -19,7 +19,7 @@ type Provider = {
   apiType: string;
   baseURL: string;
   maxOutputTokens: number;
-  usePreviousResponseId: boolean;
+  transportMode: ResponsesTransportMode;
   models: { id: string; name: string; displayName: string; reasoningEffort: ReasoningEffort }[];
 };
 export function Admin({
@@ -334,8 +334,10 @@ export function Admin({
                     apiType: stringField(d, "apiType"),
                     baseURL: stringField(d, "baseURL"),
                     apiKey: stringField(d, "apiKey") || undefined,
-                    maxOutputTokens: Number(d.get("maxOutputTokens")),
-                    usePreviousResponseId: d.get("usePreviousResponseId") === "true",
+                    maxOutputTokens: Number(
+                      d.get("maxOutputTokens") ?? editing?.maxOutputTokens ?? 16384,
+                    ),
+                    transportMode: stringField(d, "transportMode") || "http",
                     models: d.getAll("modelName").map((name, index) => ({
                       name: String(name).trim(),
                       displayName: String(d.getAll("modelDisplayName")[index] ?? "").trim(),
@@ -375,32 +377,34 @@ export function Admin({
               </div>
               {providerApiType === "openai_responses" && (
                 <Field
-                  label="使用 previous_response_id"
-                  hint="开启后通过响应 ID 续接上下文，减少历史重传；供应商需支持响应保存。关闭时每轮发送完整历史。"
+                  label="连接模式"
+                  hint="HTTP 每次发送完整上下文；WebSocket 复用连接，减少重复传输，连接不可用时自动切换为 HTTP。"
                 >
                   <select
-                    name="usePreviousResponseId"
-                    defaultValue={String(editing?.usePreviousResponseId ?? false)}
+                    name="transportMode"
+                    defaultValue={editing?.transportMode ?? "http"}
                     disabled={busy}
                   >
-                    <option value="false">关闭（默认）</option>
-                    <option value="true">开启</option>
+                    <option value="http">HTTP 模式</option>
+                    <option value="websocket">WebSocket 模式</option>
                   </select>
                 </Field>
               )}
-              <Field
-                label="每步最大输出 tokens"
-                hint="按供应商公布的模型输出上限设置，过大可能导致请求被拒绝。"
-              >
-                <input
-                  required
-                  type="number"
-                  min={1024}
-                  max={393216}
-                  name="maxOutputTokens"
-                  defaultValue={editing?.maxOutputTokens ?? 16384}
-                />
-              </Field>
+              {providerApiType !== "openai_responses" && (
+                <Field
+                  label="每步最大输出 tokens"
+                  hint="按供应商公布的模型输出上限设置，过大可能导致请求被拒绝。"
+                >
+                  <input
+                    required
+                    type="number"
+                    min={1024}
+                    max={393216}
+                    name="maxOutputTokens"
+                    defaultValue={editing?.maxOutputTokens ?? 16384}
+                  />
+                </Field>
+              )}
               <ProviderModelsEditor models={editing?.models} disabled={busy} />
               <div className="p-actions">
                 <button className="button" disabled={busy}>

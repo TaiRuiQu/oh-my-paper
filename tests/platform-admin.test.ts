@@ -48,9 +48,9 @@ describe("provider model names", () => {
       update: { displayName: "课堂助手", reasoningEffort: "provider-default", isPublic: true },
     });
   });
-  it.each([true, false])(
-    "persists response continuation choice %s and clears it for other protocols",
-    async (enabled) => {
+  it.each(["http", "websocket"])(
+    "persists transport mode %s and uses HTTP for other protocols",
+    async (transportMode) => {
       db.aiProvider.findUnique.mockResolvedValue({ id: "provider", encryptedApiKey: "saved-key" });
       db.aiProvider.update.mockResolvedValue({ id: "provider" });
       for (const apiType of ["openai_responses", "openai_chat", "anthropic", "google"]) {
@@ -58,23 +58,22 @@ describe("provider model names", () => {
           "admin",
           adminCommandSchema.parse({
             ...command,
-            provider: { ...command.provider, apiType, usePreviousResponseId: enabled },
+            provider: { ...command.provider, apiType, transportMode },
           }),
         );
         expect(db.aiProvider.update).toHaveBeenLastCalledWith({
           where: { id: "provider" },
           data: expect.objectContaining({
-            usePreviousResponseId: apiType === "openai_responses" && enabled,
+            transportMode: apiType === "openai_responses" ? transportMode : "http",
           }),
         });
       }
       const parsed = adminCommandSchema.parse(command);
-      if (parsed.type === "provider.save")
-        expect(parsed.provider.usePreviousResponseId).toBe(false);
+      if (parsed.type === "provider.save") expect(parsed.provider.transportMode).toBe("http");
       expect(
         adminCommandSchema.safeParse({
           ...command,
-          provider: { ...command.provider, usePreviousResponseId: "true" },
+          provider: { ...command.provider, transportMode: "invalid" },
         }).success,
       ).toBe(false);
     },

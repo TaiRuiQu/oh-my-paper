@@ -3,12 +3,13 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogle } from "@ai-sdk/google";
 import { defaultSettingsMiddleware, wrapLanguageModel, type LanguageModel } from "ai";
-import { reasoningEffortSchema } from "@/contracts/ai-models";
+import { reasoningEffortSchema, responsesTransportSchema } from "@/contracts/ai-models";
 import { getDb } from "@/server/db/client";
 import { decryptApiKey } from "@/server/ai/credentials";
 import { getActor } from "../service";
 import { AccessError, RequestError } from "@/server/http/errors";
-import { normalizeResponsesResponse } from "./responses";
+import { createResponsesTransport } from "./responses-transport";
+import { logEvent } from "@/server/logger";
 export async function loadAiModel(userId: string, modelId?: string) {
   const actor = await getActor(userId);
   const stored = await getDb().aiModel.findFirst({
@@ -25,35 +26,52 @@ export async function loadAiModel(userId: string, modelId?: string) {
     apiKey = decryptApiKey(p.encryptedApiKey),
     settings = { apiKey, baseURL: p.baseURL };
   const reasoning = reasoningEffortSchema.parse(stored.reasoningEffort);
-  let model: LanguageModel;
-  switch (p.apiType) {
-    case "openai_chat":
-      model = createOpenAI(settings).chat(stored.name);
-      break;
-    case "openai_responses":
-      model = createOpenAI({
-        ...settings,
-        fetch: async (input, init) => normalizeResponsesResponse(await fetch(input, init)),
-      }).responses(stored.name);
-      break;
-    case "anthropic":
-      model = createAnthropic(settings)(stored.name);
-      break;
-    case "google":
-      model = createGoogle(settings)(stored.name);
-      break;
-    default:
-      throw new RequestError(400, "不支持的模型协议。");
-  }
-  if (reasoning !== "provider-default" && ["openai_chat", "openai_responses"].includes(p.apiType))
-    model = wrapLanguageModel({
-      model,
-      middleware: defaultSettingsMiddleware({
-        settings: { providerOptions: { openai: { forceReasoning: true } } },
-      }),
-    });
+  const transportMode =
+    p.apiType === "openai_responses" ? responsesTransportSchema.parse(p.transportMode) : "http";
+  const createSession = () => {
+    const transport =
+      p.apiType === "openai_responses"
+        ? createResponsesTransport({
+            mode: transportMode,
+            timeoutMs: p.timeoutSeconds * 1000,
+            onFallback: () =>
+              logEvent("platform.ai.transport.http_fallback", {
+                providerId: p.id,
+                modelId: stored.id,
+              }),
+          })
+        : undefined;
+    let model: LanguageModel;
+    switch (p.apiType) {
+      case "openai_chat":
+        model = createOpenAI(settings).chat(stored.name);
+        break;
+      case "openai_responses":
+        model = createOpenAI({
+          ...settings,
+          fetch: transport!.fetch,
+        }).responses(stored.name);
+        break;
+      case "anthropic":
+        model = createAnthropic(settings)(stored.name);
+        break;
+      case "google":
+        model = createGoogle(settings)(stored.name);
+        break;
+      default:
+        throw new RequestError(400, "不支持的模型协议。");
+    }
+    if (reasoning !== "provider-default" && ["openai_chat", "openai_responses"].includes(p.apiType))
+      model = wrapLanguageModel({
+        model,
+        middleware: defaultSettingsMiddleware({
+          settings: { providerOptions: { openai: { forceReasoning: true } } },
+        }),
+      });
+    return { model, close: () => transport?.close() };
+  };
   return {
-    model,
+    createSession,
     baseURL: p.baseURL,
     identity: {
       modelId: stored.id,
@@ -61,8 +79,8 @@ export async function loadAiModel(userId: string, modelId?: string) {
       providerName: p.name,
       providerId: p.id,
       apiType: p.apiType,
+      transportMode,
     },
-    usePreviousResponseId: p.apiType === "openai_responses" && p.usePreviousResponseId,
     reasoning,
     maxOutputTokens: p.maxOutputTokens,
     timeoutMs: p.timeoutSeconds * 1000,

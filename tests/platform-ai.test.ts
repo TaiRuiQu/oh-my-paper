@@ -1147,7 +1147,7 @@ describe("SDK 7 autonomous agent loop", () => {
       },
     });
     mocked.loadAiModel.mockResolvedValue({
-      model,
+      createSession: () => ({ model, close: vi.fn() }),
       reasoning: "high",
       identity: {
         providerId: "provider",
@@ -1342,9 +1342,9 @@ describe("batched question processing and unreadable evidence", () => {
   });
 });
 
-it.each([true, false])(
-  "returns tool errors and continues concurrent calls with usePreviousResponseId=%s",
-  async (usePreviousResponseId) => {
+it.each(["http", "websocket"])(
+  "returns tool errors and retains complete history in %s mode",
+  async (transportMode) => {
     const sequence = [
       [
         { name: "finish", input: JSON.stringify({ summary: "过早完成" }) },
@@ -1364,9 +1364,7 @@ it.each([true, false])(
       doGenerate: async () => {
         const step = sequence[index++];
         return {
-          providerMetadata: usePreviousResponseId
-            ? { openai: { responseId: `resp_${index}` } }
-            : undefined,
+          providerMetadata: { openai: { responseId: `resp_${index}` } },
           content: step.map((c, n) => ({
             type: "tool-call" as const,
             toolCallId: `call-${index}-${n}`,
@@ -1383,9 +1381,8 @@ it.each([true, false])(
       },
     });
     mocked.loadAiModel.mockResolvedValue({
-      model,
-      identity: { providerId: "provider", apiType: "openai_responses" },
-      usePreviousResponseId,
+      createSession: () => ({ model, close: vi.fn() }),
+      identity: { providerId: "provider", apiType: "openai_responses", transportMode },
       maxOutputTokens: 16000,
       timeoutMs: 30000,
       maxConcurrency: 3,
@@ -1411,19 +1408,17 @@ it.each([true, false])(
     expect(feedback).toContain("questionId");
     expect(feedback).toContain("expected string");
     expect(model.doGenerateCalls[0].providerOptions).toMatchObject({
-      openai: { store: true, parallelToolCalls: true },
+      openai: { store: false, parallelToolCalls: true },
     });
     for (const [index, request] of model.doGenerateCalls.entries()) {
       if (!index) continue;
-      expect(request.providerOptions?.openai?.previousResponseId).toBe(
-        usePreviousResponseId ? `resp_${index}` : undefined,
-      );
+      expect(request.providerOptions?.openai?.previousResponseId).toBeUndefined();
       expect(
         request.prompt
           .filter((message) => message.role !== "system")
           .every((message) => message.role === "tool"),
-      ).toBe(usePreviousResponseId);
-      if (!usePreviousResponseId) expect(JSON.stringify(request.prompt)).toContain("call-1-0");
+      ).toBe(false);
+      expect(JSON.stringify(request.prompt)).toContain("call-1-0");
     }
     expect(JSON.stringify(events)).toContain("尚未提供有效候选结果");
     expect(events).toContainEqual(

@@ -204,7 +204,7 @@ export async function runClaimedAiJob(
         if (event && typeof event === "object" && !Array.isArray(event) && event.type === "start") {
           const model = event.model;
           if (model && typeof model === "object" && !Array.isArray(model))
-            for (const key of ["model", "providerName", "providerId", "apiType"])
+            for (const key of ["model", "providerName", "providerId", "apiType", "transportMode"])
               if (typeof model[key] === "string") modelContext[key] = model[key];
         }
         if (events.length < 200) events.push(event);

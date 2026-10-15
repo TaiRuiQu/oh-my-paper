@@ -33,6 +33,9 @@ describe("teacher-friendly AI explanations", () => {
     ["题目已被修改", "请使用最新内容重新提交"],
     ["Credit 余额为负", "请联系管理员补充额度"],
     ["APICallError HTTP 401", "请联系管理员检查 AI 服务配置"],
+    ["AI 接口拒绝访问，请检查密钥权限或账号权限（HTTP 403）。", "请联系管理员检查 AI 服务配置"],
+    ["图像不属于当前任务（ACCESS_403）", "请联系管理员确认访问权限"],
+    ["没有材料的访问权限", "请联系管理员确认访问权限"],
     ["HTTP 503 Service Unavailable", "请稍后重试"],
     ["TypeError: Cannot read properties of undefined", "这次处理没有完成"],
   ])("provides a practical next action for %s", (error, expected) => {

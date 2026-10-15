@@ -34,6 +34,7 @@ it.each(protocols)(
         id: "provider",
         name: "test",
         apiType,
+        transportMode: "http",
         baseURL: "https://model.test/v1",
         encryptedApiKey: "unused",
         maxOutputTokens: 16000,
@@ -89,18 +90,26 @@ it.each(protocols)(
     );
     vi.stubGlobal("fetch", fetchMock);
     const configuration = await loadAiModel("admin", "model");
+    const session = configuration.createSession();
     const result = await generateText({
-      model: configuration.model,
+      model: session.model,
       reasoning: configuration.reasoning,
       maxOutputTokens: configuration.maxOutputTokens,
       prompt: "Test reasoning setting",
       maxRetries: 0,
     });
+    session.close();
     expect(result.text).toBe("done");
     expect(fetchMock).toHaveBeenCalledOnce();
     const body = JSON.parse(String(fetchMock.mock.calls[0][1]?.body));
     if (apiType === "openai_chat") expect(body.reasoning_effort).toBe("high");
-    if (apiType === "openai_responses") expect(body.reasoning.effort).toBe("high");
+    if (apiType === "openai_responses") {
+      expect(body.reasoning.effort).toBe("high");
+      expect(body.store).toBe(false);
+      expect(body.stream).toBe(true);
+      expect(body.include).toContain("reasoning.encrypted_content");
+      expect(body).not.toHaveProperty("max_output_tokens");
+    }
     if (apiType === "anthropic") expect(body.output_config.effort).toBe("high");
     if (apiType === "google")
       expect(body.generationConfig.thinkingConfig.thinkingLevel).toBe("high");

@@ -82,7 +82,7 @@ model AiProvider {
   apiType String
   baseURL String
   encryptedApiKey String
-  usePreviousResponseId Boolean @default(false)
+  transportMode String @default("http")
   structuredOutputs Boolean @default(true)
   maxOutputTokens Int @default(16384)
   timeoutSeconds Int @default(240)

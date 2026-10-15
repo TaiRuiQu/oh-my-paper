@@ -850,6 +850,7 @@ async function main() {
       (p) => p.id === reasoningProvider.id,
     )!;
     assert.equal(savedReasoning.models[0].reasoningEffort, "high");
+    assert.equal(savedReasoning.transportMode, "http");
     const { loadAiModel } = await import("../src/server/platform/ai/model");
     assert.equal((await loadAiModel("teacher", savedReasoning.models[0].id)).reasoning, "high");
     await executeAdmin(
@@ -860,6 +861,7 @@ async function main() {
           id: reasoningProvider.id,
           name: "思考强度验收",
           apiType: "openai_responses",
+          transportMode: "websocket",
           baseURL: "https://example.test/v1",
           models: [{ name: "reasoning-test", displayName: "测试模型", reasoningEffort: "none" }],
         },
@@ -868,6 +870,11 @@ async function main() {
     savedReasoning = (await loadAdmin("admin")).providers.find(
       (p) => p.id === reasoningProvider.id,
     )!;
+    assert.equal(savedReasoning.transportMode, "websocket");
+    assert.equal(
+      (await loadAiModel("teacher", savedReasoning.models[0].id)).identity.transportMode,
+      "websocket",
+    );
     assert.equal(savedReasoning.models[0].reasoningEffort, "none");
     assert.equal((await loadAiModel("teacher", savedReasoning.models[0].id)).reasoning, "none");
     console.log(

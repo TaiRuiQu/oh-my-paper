@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+export const responsesTransportSchema = z.enum(["http", "websocket"]);
+export type ResponsesTransportMode = z.infer<typeof responsesTransportSchema>;
+
 export const reasoningEfforts = [
   "provider-default",
   "none",

@@ -1,6 +1,6 @@
 import "server-only";
 import { managedAccountSchema } from "@/contracts/auth";
-import { reasoningEffortSchema } from "@/contracts/ai-models";
+import { reasoningEffortSchema, responsesTransportSchema } from "@/contracts/ai-models";
 import { createManagedAccount } from "@/server/auth/accounts";
 import { z } from "zod";
 import { teachingPermissionsCommandSchema } from "@/contracts/permissions";
@@ -50,7 +50,7 @@ export const adminCommandSchema = z.discriminatedUnion("type", [
           (models) => new Set(models.map((model) => model.name)).size === models.length,
           "同一提供商的模型 ID 不能重复。",
         ),
-      usePreviousResponseId: z.boolean().default(false),
+      transportMode: responsesTransportSchema.default("http"),
       maxOutputTokens: z.number().int().min(1024).max(393216).default(16384),
     }),
   }),
@@ -70,7 +70,7 @@ export async function loadAdmin(id: string) {
       apiType: true,
       baseURL: true,
       maxOutputTokens: true,
-      usePreviousResponseId: true,
+      transportMode: true,
       models: {
         select: { id: true, name: true, displayName: true, reasoningEffort: true },
         orderBy: { name: "asc" },
@@ -165,7 +165,7 @@ export async function executeAdmin(id: string, input: z.infer<typeof adminComman
       apiType: data.apiType,
       baseURL: data.baseURL,
       maxOutputTokens: data.maxOutputTokens,
-      usePreviousResponseId: data.apiType === "openai_responses" && data.usePreviousResponseId,
+      transportMode: data.apiType === "openai_responses" ? data.transportMode : "http",
       encryptedApiKey: data.apiKey ? encryptApiKey(data.apiKey) : existing!.encryptedApiKey,
     };
     const saved = existing

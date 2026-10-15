@@ -144,19 +144,25 @@ it("edits, adds and removes model rows and saves IDs separately from display nam
   ]);
 });
 
-it.each([true, false])(
-  "loads and saves response continuation choice %s only for Responses",
-  async (enabled) => {
+it.each(["http", "websocket"])(
+  "loads and saves transport mode %s only for Responses",
+  async (transportMode) => {
     vi.mocked(apiRequest).mockResolvedValue({
-      providers: [{ ...provider, apiType: "openai_responses", usePreviousResponseId: enabled }],
+      providers: [{ ...provider, apiType: "openai_responses", transportMode }],
     });
     await renderAdmin();
     const edit = [...container.querySelectorAll("button")].find((b) => b.textContent === "编辑")!;
     await act(async () => edit.click());
-    const choice = container.querySelector<HTMLSelectElement>('[name="usePreviousResponseId"]')!;
-    expect(choice.value).toBe(String(enabled));
+    const choice = container.querySelector<HTMLSelectElement>('[name="transportMode"]')!;
+    expect(choice.value).toBe(transportMode);
+    expect(container.textContent).not.toMatch(/previous_response_id|previous response/i);
+    expect([...choice.options].map((option) => option.textContent)).toEqual([
+      "HTTP 模式",
+      "WebSocket 模式",
+    ]);
+    const nextMode = transportMode === "http" ? "websocket" : "http";
     await act(async () => {
-      choice.value = String(!enabled);
+      choice.value = nextMode;
       choice.dispatchEvent(new Event("change", { bubbles: true }));
       container
         .querySelector("form")!
@@ -165,7 +171,7 @@ it.each([true, false])(
     const request = vi
       .mocked(apiRequest)
       .mock.calls.find(([, options]) => options?.method === "POST")!;
-    expect(JSON.parse(String(request[1]!.body)).provider.usePreviousResponseId).toBe(!enabled);
+    expect(JSON.parse(String(request[1]!.body)).provider.transportMode).toBe(nextMode);
     await act(async () =>
       [...container.querySelectorAll("button")].find((b) => b.textContent === "编辑")!.click(),
     );
@@ -174,13 +180,13 @@ it.each([true, false])(
       apiType.value = "anthropic";
       apiType.dispatchEvent(new Event("change", { bubbles: true }));
     });
-    expect(container.querySelector('[name="usePreviousResponseId"]')).toBeNull();
+    expect(container.querySelector('[name="transportMode"]')).toBeNull();
     await act(async () => {
       apiType.value = "openai_responses";
       apiType.dispatchEvent(new Event("change", { bubbles: true }));
     });
-    expect(
-      container.querySelector<HTMLSelectElement>('[name="usePreviousResponseId"]')!.value,
-    ).toBe(String(enabled));
+    expect(container.querySelector<HTMLSelectElement>('[name="transportMode"]')!.value).toBe(
+      transportMode,
+    );
   },
 );

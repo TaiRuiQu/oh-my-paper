@@ -5,7 +5,6 @@ import type { AiKind } from "@/contracts/platform-ai";
 import { createTaskFeatures } from "./features";
 import { loadAiModel } from "./model";
 import { RequestError } from "@/server/http/errors";
-import { prepareResponsesStep } from "./responses";
 import { toolErrorDetails } from "./tools";
 import { createTaskCostTracker } from "./cost";
 import type { AgentTask, ExecuteModel } from "./agent-task";
@@ -90,171 +89,180 @@ export async function runAiTask(
         ),
       );
       const executeAgent = async (task: AgentTask) => {
-        const emitAgent = async (event: Prisma.JsonValue) =>
-          emit(
-            JSON.parse(
-              JSON.stringify({
-                ...(event as object),
-                ...(task.scope ? { agent: task.scope } : {}),
-              }),
-            ),
-          );
-        if (task.scope) await emitAgent({ type: "agent", status: "started" });
-        const agent = new ToolLoopAgent({
-          model: configuration.model,
-          reasoning: configuration.reasoning,
-          instructions: task.instructions,
-          tools: task.tools,
-          maxOutputTokens: configuration.maxOutputTokens,
-          maxRetries: 2,
-          providerOptions: ["openai_chat", "openai_responses"].includes(
-            configuration.identity.apiType,
-          )
-            ? {
-                openai: {
-                  parallelToolCalls: true,
-                  ...(configuration.identity.apiType === "openai_responses" ? { store: true } : {}),
-                },
-              }
-            : undefined,
-          repairToolCall: async ({ toolCall, error }) => {
-            // Let the same agent correct the call on its next turn; do not spend a separate model call.
-            await emitAgent({
-              type: "tool",
-              name: toolCall.toolName,
-              status: "ended",
-              toolCallId: toolCall.toolCallId,
-              input: toolCall.input,
-              error: JSON.stringify(toolErrorDetails(error)),
-            });
-            return null;
-          },
-          prepareStep:
-            configuration.identity.apiType === "openai_chat"
-              ? async ({ messages }) => ({ messages: chatToolImages(messages) })
-              : configuration.identity.apiType === "openai_responses" &&
-                  configuration.usePreviousResponseId
-                ? prepareResponsesStep
-                : undefined,
-          stopWhen: [isStepCount(2048), () => task.isComplete()],
-          onToolExecutionStart: async (e) => {
-            await emitAgent(
+        const session = configuration.createSession();
+        try {
+          const emitAgent = async (event: Prisma.JsonValue) =>
+            emit(
               JSON.parse(
                 JSON.stringify({
-                  type: "tool",
-                  name: e.toolCall.toolName,
-                  status: "started",
-                  toolCallId: e.toolCall.toolCallId,
-                  input: e.toolCall.input,
+                  ...(event as object),
+                  ...(task.scope ? { agent: task.scope } : {}),
                 }),
               ),
             );
-          },
-          onToolExecutionEnd: async (e) => {
-            await emitAgent({
-              type: "tool",
-              name: e.toolCall.toolName,
-              status: "ended",
-              durationMs: e.toolExecutionMs,
-              toolCallId: e.toolCall.toolCallId,
-              ...(e.toolOutput.type === "tool-error"
-                ? { error: JSON.stringify(toolErrorDetails(e.toolOutput.error)) }
-                : {}),
-            });
-            if (e.toolOutput.type === "tool-result") {
-              const output = e.toolOutput.output as {
-                results?: { index: number; success: boolean; error?: unknown }[];
-              } | null;
-              const failures = output?.results?.filter((entry) => !entry.success);
-              if (failures?.length)
-                await emitAgent({
-                  type: "tool",
-                  name: e.toolCall.toolName,
-                  status: "ended",
-                  toolCallId: e.toolCall.toolCallId,
-                  error: JSON.stringify(failures),
-                });
-            }
-            if (
-              ["python", "shell"].includes(e.toolCall.toolName) &&
-              e.toolOutput.type === "tool-result"
-            ) {
-              const output = e.toolOutput.output as {
-                exitCode: number;
-                stdout: string;
-                stderr: string;
-                images: { name: string; url?: string }[];
-              };
+          if (task.scope) await emitAgent({ type: "agent", status: "started" });
+          const agent = new ToolLoopAgent({
+            model: session.model,
+            reasoning: configuration.reasoning,
+            instructions: task.instructions,
+            tools: task.tools,
+            maxOutputTokens: configuration.maxOutputTokens,
+            maxRetries: 2,
+            providerOptions: ["openai_chat", "openai_responses"].includes(
+              configuration.identity.apiType,
+            )
+              ? {
+                  openai: {
+                    parallelToolCalls: true,
+                    ...(configuration.identity.apiType === "openai_responses"
+                      ? { store: false }
+                      : {}),
+                  },
+                }
+              : undefined,
+            repairToolCall: async ({ toolCall, error }) => {
+              // Let the same agent correct the call on its next turn; do not spend a separate model call.
+              await emitAgent({
+                type: "tool",
+                name: toolCall.toolName,
+                status: "ended",
+                toolCallId: toolCall.toolCallId,
+                input: toolCall.input,
+                error: JSON.stringify(toolErrorDetails(error)),
+              });
+              return null;
+            },
+            prepareStep:
+              configuration.identity.apiType === "openai_chat"
+                ? async ({ messages }) => ({ messages: chatToolImages(messages) })
+                : undefined,
+            stopWhen: [isStepCount(2048), () => task.isComplete()],
+            onToolExecutionStart: async (e) => {
               await emitAgent(
                 JSON.parse(
                   JSON.stringify({
-                    type: "sandbox",
+                    type: "tool",
                     name: e.toolCall.toolName,
+                    status: "started",
                     toolCallId: e.toolCall.toolCallId,
-                    exitCode: output.exitCode,
-                    stdout: output.stdout,
-                    stderr: output.stderr,
-                    images: output.images.map((image) => ({ name: image.name, url: image.url })),
+                    input: e.toolCall.input,
                   }),
                 ),
               );
-            }
-          },
-          onStepEnd: async (e) => {
-            cost.add(e.usage);
-            await emitAgent(
-              JSON.parse(
-                JSON.stringify({
-                  type: "step",
-                  finishReason: e.finishReason,
-                  toolNames: e.toolCalls.map((t) => t.toolName),
-                  usage: e.usage,
-                  cost: cost.snapshot(),
-                }),
-              ),
-            );
-          },
-        });
-        await agent.generate({
-          prompt: task.prompt,
-          // Provider timeout bounds each step; full tasks may include hundreds of questions.
-          timeout: { totalMs: 60 * 60 * 1000, stepMs: Math.max(configuration.timeoutMs, 1000) },
-        });
-        if (!task.isComplete())
-          throw new RequestError(422, "AI未完成全部要求，请查看任务说明后重试。");
-        if (task.scope) await emitAgent({ type: "agent", status: "ended" });
+            },
+            onToolExecutionEnd: async (e) => {
+              await emitAgent({
+                type: "tool",
+                name: e.toolCall.toolName,
+                status: "ended",
+                durationMs: e.toolExecutionMs,
+                toolCallId: e.toolCall.toolCallId,
+                ...(e.toolOutput.type === "tool-error"
+                  ? { error: JSON.stringify(toolErrorDetails(e.toolOutput.error)) }
+                  : {}),
+              });
+              if (e.toolOutput.type === "tool-result") {
+                const output = e.toolOutput.output as {
+                  results?: { index: number; success: boolean; error?: unknown }[];
+                } | null;
+                const failures = output?.results?.filter((entry) => !entry.success);
+                if (failures?.length)
+                  await emitAgent({
+                    type: "tool",
+                    name: e.toolCall.toolName,
+                    status: "ended",
+                    toolCallId: e.toolCall.toolCallId,
+                    error: JSON.stringify(failures),
+                  });
+              }
+              if (
+                ["python", "shell"].includes(e.toolCall.toolName) &&
+                e.toolOutput.type === "tool-result"
+              ) {
+                const output = e.toolOutput.output as {
+                  exitCode: number;
+                  stdout: string;
+                  stderr: string;
+                  images: { name: string; url?: string }[];
+                };
+                await emitAgent(
+                  JSON.parse(
+                    JSON.stringify({
+                      type: "sandbox",
+                      name: e.toolCall.toolName,
+                      toolCallId: e.toolCall.toolCallId,
+                      exitCode: output.exitCode,
+                      stdout: output.stdout,
+                      stderr: output.stderr,
+                      images: output.images.map((image) => ({ name: image.name, url: image.url })),
+                    }),
+                  ),
+                );
+              }
+            },
+            onStepEnd: async (e) => {
+              cost.add(e.usage);
+              await emitAgent(
+                JSON.parse(
+                  JSON.stringify({
+                    type: "step",
+                    finishReason: e.finishReason,
+                    toolNames: e.toolCalls.map((t) => t.toolName),
+                    usage: e.usage,
+                    cost: cost.snapshot(),
+                  }),
+                ),
+              );
+            },
+          });
+          await agent.generate({
+            prompt: task.prompt,
+            // Provider timeout bounds each step; full tasks may include hundreds of questions.
+            timeout: { totalMs: 60 * 60 * 1000, stepMs: Math.max(configuration.timeoutMs, 1000) },
+          });
+          if (!task.isComplete())
+            throw new RequestError(422, "AI未完成全部要求，请查看任务说明后重试。");
+          if (task.scope) await emitAgent({ type: "agent", status: "ended" });
+        } finally {
+          session.close();
+        }
       };
       const executeModel: ExecuteModel = async (task) => {
-        const result = await generateText({
-          model: configuration.model,
-          reasoning: configuration.reasoning,
-          system: task.instructions,
-          messages: task.messages,
-          output: Output.object({ schema: task.outputSchema }),
-          maxOutputTokens: configuration.maxOutputTokens,
-          maxRetries: 0,
-          timeout: Math.max(configuration.timeoutMs, 1000),
-          providerOptions:
-            configuration.identity.apiType === "openai_responses"
-              ? { openai: { store: true } }
-              : undefined,
-          onStepEnd: async (event) => {
-            cost.add(event.usage);
-            await emit(
-              JSON.parse(
-                JSON.stringify({
-                  type: "step",
-                  agent: task.scope,
-                  finishReason: event.finishReason,
-                  toolNames: [],
-                  usage: event.usage,
-                  cost: cost.snapshot(),
-                }),
-              ),
-            );
-          },
-        });
-        return result.output;
+        const session = configuration.createSession();
+        try {
+          const result = await generateText({
+            model: session.model,
+            reasoning: configuration.reasoning,
+            system: task.instructions,
+            messages: task.messages,
+            output: Output.object({ schema: task.outputSchema }),
+            maxOutputTokens: configuration.maxOutputTokens,
+            maxRetries: 0,
+            timeout: Math.max(configuration.timeoutMs, 1000),
+            providerOptions:
+              configuration.identity.apiType === "openai_responses"
+                ? { openai: { store: false } }
+                : undefined,
+            onStepEnd: async (event) => {
+              cost.add(event.usage);
+              await emit(
+                JSON.parse(
+                  JSON.stringify({
+                    type: "step",
+                    agent: task.scope,
+                    finishReason: event.finishReason,
+                    toolNames: [],
+                    usage: event.usage,
+                    cost: cost.snapshot(),
+                  }),
+                ),
+              );
+            },
+          });
+          return result.output;
+        } finally {
+          session.close();
+        }
       };
       if ("run" in features) await features.run({ agent: executeAgent, model: executeModel });
       else await executeAgent(features);

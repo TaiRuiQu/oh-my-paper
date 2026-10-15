@@ -21,7 +21,7 @@ function issue(value: unknown) {
   if (/看不清|无法辨认|模糊|遮挡|unreadable/i.test(text)) return "部分题目或作答看不清。";
   if (/越界|超出纸张|重叠|答题区域/.test(text)) return "答题区域没有排好。";
   if (/已被修改|作答已.*修改|权限已改变|任务状态已改变/.test(text)) return "材料在处理期间有变化。";
-  if (/无权|权限|ACCESS_40[134]/.test(text)) return "目前无法查看这些材料。";
+  if (/ACCESS_40[134]/.test(text)) return "目前无法查看这些材料。";
   if (
     /完整标准答案|答案.*不完整|没有生成完整答案|必须提供答案解析|必须提供评分标准|必须生成考查知识点/.test(
       text,
@@ -42,6 +42,7 @@ function issue(value: unknown) {
     )
   )
     return "AI 服务暂时无法使用。";
+  if (/无权|权限/.test(text)) return "目前无法查看这些材料。";
   if (/超时|timeout|timed out/i.test(text)) return "这次处理等待时间较长。";
   if (/网络|中断|HTTP 5\d\d|上游|网关|服务.*不可用|Service Unavailable|fetch failed/i.test(text))
     return "AI 服务连接暂时不稳定。";
