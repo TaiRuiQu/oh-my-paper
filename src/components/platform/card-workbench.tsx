@@ -4,14 +4,7 @@ import { DocumentExport } from "./document-export";
 import { BarcodeLabels } from "./barcode-labels";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-  type PointerEvent,
-  type CSSProperties,
-} from "react";
+import { useRef, useState, useCallback, type PointerEvent, type CSSProperties } from "react";
 import {
   ArrowRight,
   Plus,
@@ -35,6 +28,7 @@ import {
   X,
   ZoomIn,
   ZoomOut,
+  Sparkles,
 } from "lucide-react";
 import {
   Sheet,
@@ -61,6 +55,7 @@ import { Input } from "@/components/ui/input";
 import { Field, Panel } from "./primitives";
 import { useDomain } from "./domain-provider";
 import { useUnsavedChanges } from "./use-unsaved-changes";
+import { usePaperZoom } from "./use-paper-zoom";
 import { MissingRecord, PageHeader, PageTabs } from "./page-header";
 
 export function CardsListPage() {
@@ -75,12 +70,20 @@ export function CardsListPage() {
         title="答题卡工作台"
         description="按考试试卷制作答题卡，直接在卡面调整题区、学号填涂区和定位点。"
         actions={
-          <Button asChild>
-            <Link href="/exams/cards/new">
-              <Plus />
-              制作答题卡
-            </Link>
-          </Button>
+          <>
+            <Button asChild variant="outline">
+              <Link href="/exams/cards/ai">
+                <Sparkles />
+                AI 自动排版
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link href="/exams/cards/new">
+                <Plus />
+                制作答题卡
+              </Link>
+            </Button>
+          </>
         }
       />
       <Panel title="已制作的答题卡">
@@ -251,22 +254,15 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
   const [selection, setSelection] = useState<Selection>();
   const [page, setPage] = useState(1);
   const [error, setError] = useState("");
-  const [manualZoom, setManualZoom] = useState<number | null>(null);
-  const [viewportWidth, setViewportWidth] = useState(0);
   const viewport = useRef<HTMLDivElement>(null);
   const hasCard = !!paper && !!layout;
-  useEffect(() => {
-    const element = viewport.current;
-    if (!element) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setViewportWidth(entry.contentRect.width);
-    });
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [hasCard]);
-  const zoom = manualZoom ?? (viewportWidth && layout ? viewportWidth / layout.width : 1);
+  const { zoom, fitWidth, setZoom, fitToWidth } = usePaperZoom(
+    viewport,
+    layout?.width ?? 794,
+    hasCard,
+  );
   function adjustZoom(step: number) {
-    setManualZoom(Math.max(0.1, Math.min(3, Math.round((zoom + step) * 100) / 100)));
+    setZoom(Math.max(0.1, Math.min(3, Math.round((zoom + step) * 100) / 100)));
   }
   const [dirty, setDirty] = useState(false);
   const [paperDirty, setPaperDirty] = useState(false);
@@ -1218,16 +1214,33 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
         propertiesPanel={rail}
         panelActions={dock}
         actions={
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            disabled={!historySize || editLocked}
-            onClick={undo}
-          >
-            <Undo2 />
-            撤销
-          </Button>
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (dirty) {
+                  setError("请先保存当前答题卡和试题，再使用 AI 自动排版。");
+                  return;
+                }
+                router.push(`/exams/cards/ai?paperId=${encodeURIComponent(paperId)}`);
+              }}
+            >
+              <Sparkles />
+              AI 自动排版
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={!historySize || editLocked}
+              onClick={undo}
+            >
+              <Undo2 />
+              撤销
+            </Button>
+          </>
         }
         notice={
           <>
@@ -1302,7 +1315,7 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
                   size="sm"
                   aria-label={`当前缩放 ${Math.round(zoom * 100)}%，点击恢复 100%`}
                   title="恢复 100%"
-                  onClick={() => setManualZoom(1)}
+                  onClick={() => setZoom(1)}
                 >
                   {Math.round(zoom * 100)}%
                 </Button>
@@ -1322,8 +1335,8 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
                 type="button"
                 variant="ghost"
                 size="sm"
-                aria-pressed={manualZoom === null}
-                onClick={() => setManualZoom(null)}
+                aria-pressed={fitWidth}
+                onClick={fitToWidth}
               >
                 <ScanLine />
                 适应宽度
@@ -1354,8 +1367,7 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
               className="p-card-preview"
               style={
                 {
-                  "--card-width":
-                    manualZoom === null && !viewportWidth ? "100%" : `${layout.width * zoom}px`,
+                  "--card-width": `${layout.width * zoom}px`,
                 } as CSSProperties
               }
             >

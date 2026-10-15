@@ -68,10 +68,39 @@ async function click(name: string) {
   await act(async () => button(name).click());
 }
 async function resizeTo(width: number) {
+  Object.defineProperty(container.querySelector(".p-card-preview-scroll"), "clientWidth", {
+    value: width,
+    configurable: true,
+  });
   await act(async () =>
     resize([{ contentRect: { width } }] as ResizeObserverEntry[], {} as ResizeObserver),
   );
 }
+
+it("defaults to half the desktop window, fits smaller viewports, and lets explicit fitting use the full canvas", async () => {
+  await resizeTo(900);
+  expect(width()).toBe(`${window.innerWidth / 2}px`);
+  expect(button("适应宽度").getAttribute("aria-pressed")).toBe("false");
+  await click("适应宽度");
+  expect(width()).toBe("900px");
+});
+
+it("refits the default preview on window resize and uses available width on phones", async () => {
+  const original = window.innerWidth;
+  try {
+    Object.defineProperty(window, "innerWidth", { value: 1920, configurable: true });
+    await resizeTo(1200);
+    expect(parseFloat(width())).toBeCloseTo(960);
+    Object.defineProperty(window, "innerWidth", { value: 1600, configurable: true });
+    await act(async () => window.dispatchEvent(new Event("resize")));
+    expect(parseFloat(width())).toBeCloseTo(800);
+    Object.defineProperty(window, "innerWidth", { value: 390, configurable: true });
+    await resizeTo(320);
+    expect(parseFloat(width())).toBeCloseTo(320);
+  } finally {
+    Object.defineProperty(window, "innerWidth", { value: original, configurable: true });
+  }
+});
 function width() {
   return container
     .querySelector<HTMLElement>(".p-card-stage .p-card-preview")!
@@ -108,6 +137,7 @@ it("limits manual zoom to 10–300 percent", async () => {
 
 it("switches A4 to portrait and A3 to landscape while retaining fit and identification mode", async () => {
   await resizeTo(600);
+  await click("适应宽度");
   await act(async () =>
     [...container.querySelectorAll<HTMLInputElement>('input[name="number-style"]')][1].click(),
   );

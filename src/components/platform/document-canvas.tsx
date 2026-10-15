@@ -21,6 +21,7 @@ import { renderPrintRichText } from "@/lib/document-text";
 import type { DocumentLayout } from "@/contracts/platform";
 import { Button } from "@/components/ui/button";
 import { ZoomIn, ZoomOut } from "lucide-react";
+import { usePaperZoom } from "./use-paper-zoom";
 
 export function PaperText({
   value,
@@ -132,33 +133,18 @@ export function DocumentCanvas({
   const host = useRef<HTMLDivElement>(null);
   const printedPages = useRef<HTMLDivElement>(null);
   const measure = useRef<HTMLFieldSetElement>(null);
-  const [zoom, setZoom] = useState(0.75);
-  const [fitWidth, setFitWidth] = useState(true);
   const [pages, setPages] = useState<number[][][]>([[blocks.map((_, n) => n)]]);
   const physical = layout.paperSize === "A3" ? [297, 420] : [210, 297];
   const [pageWidthMm, pageHeightMm] =
     layout.orientation === "landscape" ? physical.toReversed() : physical;
   const width = pageWidthMm * DOCUMENT_PX_PER_MM;
+  const { zoom, setZoom, fitToWidth } = usePaperZoom(host, width);
   const height = pageHeightMm * DOCUMENT_PX_PER_MM;
   const margin = (layout.marginMm ?? DOCUMENT_DEFAULTS.marginMm) * DOCUMENT_PX_PER_MM;
   const columnGap = DOCUMENT_COLUMN_GAP_MM * DOCUMENT_PX_PER_MM;
   const footerHeight = DOCUMENT_FOOTER_MM * DOCUMENT_PX_PER_MM;
   const columns = layout.columns;
   const signature = blocks.map((b) => `${b.key}:${b.pageBreakBefore}`).join("|");
-  useEffect(() => {
-    const element = host.current;
-    if (!element || !fitWidth) return;
-    const fit = () => {
-      const padding = getComputedStyle(element);
-      const available =
-        element.clientWidth - parseFloat(padding.paddingLeft) - parseFloat(padding.paddingRight);
-      if (available > 0) setZoom(available / width);
-    };
-    const observer = new ResizeObserver(fit);
-    observer.observe(element);
-    fit();
-    return () => observer.disconnect();
-  }, [width, fitWidth]);
   useEffect(() => {
     const element = measure.current;
     if (!element) return;
@@ -263,7 +249,6 @@ export function DocumentCanvas({
             variant="outline"
             size="sm"
             onClick={() => {
-              setFitWidth(false);
               setZoom(1);
             }}
           >
@@ -276,8 +261,7 @@ export function DocumentCanvas({
             aria-label="缩小纸张"
             disabled={zoom <= 0.3}
             onClick={() => {
-              setFitWidth(false);
-              setZoom((current) => Math.max(0.3, current - 0.1));
+              setZoom(Math.max(0.3, zoom - 0.1));
             }}
           >
             <ZoomOut />
@@ -289,13 +273,12 @@ export function DocumentCanvas({
             variant="ghost"
             aria-label="放大纸张"
             onClick={() => {
-              setFitWidth(false);
-              setZoom((current) => current + 0.1);
+              setZoom(zoom + 0.1);
             }}
           >
             <ZoomIn />
           </Button>
-          <Button type="button" variant="ghost" size="sm" onClick={() => setFitWidth(true)}>
+          <Button type="button" variant="ghost" size="sm" onClick={fitToWidth}>
             适应宽度
           </Button>
         </div>

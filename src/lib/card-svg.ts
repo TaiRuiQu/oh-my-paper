@@ -9,7 +9,41 @@ import {
 } from "./cards";
 import { escapePrintText as text } from "./document-text";
 import { documentFont } from "./document-layout";
-import type { CardTemplate } from "@/contracts/platform";
+import type { CardRegion, CardTemplate } from "@/contracts/platform";
+
+function groupTitle(region: CardRegion) {
+  if (
+    region.kind === "CHOICE" &&
+    (!region.label ||
+      /^(单选题|多选题|不定项选择题|单项选择题|多项选择题|选择题)$/.test(region.label))
+  )
+    return "选择题";
+  return region.label ?? (region.kind === "BLANK" ? "填空题" : "解答题");
+}
+
+/** Merge adjacent rows visually while retaining every question's scan and editing geometry. */
+export function cardRegionGroups(layout: CardTemplate["layout"], page: number) {
+  const groups: CardRegion[][] = [];
+  for (const region of layout.regions.filter((r) => r.page === page)) {
+    const group = groups.at(-1);
+    const previous = group?.at(-1);
+    const close = (a: number, b: number) => Math.abs(a - b) < 0.5 / layout.width;
+    const gap = previous ? (region.y - previous.y - previous.height) * layout.height : Infinity;
+    if (
+      previous &&
+      region.kind !== "WRITING" &&
+      previous.kind === region.kind &&
+      groupTitle(previous) === groupTitle(region) &&
+      close(previous.x, region.x) &&
+      close(previous.width, region.width) &&
+      gap >= -0.01 &&
+      gap <= 12.5
+    ) {
+      group!.push(region);
+    } else groups.push([region]);
+  }
+  return groups;
+}
 export function renderCardSvg(template: CardTemplate, page = 1, validate = true): string {
   if (validate) validateCardTemplate(template);
   if (
@@ -34,14 +68,25 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
   const barcode = n.mode === "BARCODE";
   const numberBox = studentNumberBox(l);
   const notesWidth = Math.max(230, w - 410);
-  const notes = [
+  const noteParagraphs = [
     barcode
       ? "1. 答题前，考生先将自己的姓名、准考证号填写清楚，将条形码准确粘贴在考生信息条形码粘贴区。"
       : "1. 答题前，考生先将自己的姓名、准考证号填写清楚，并在准考证号填涂区逐列填涂对应数字。",
     "2. 答题时，必须使用0.5毫米的黑色墨水签字笔书写；作图时，可用2B铅笔，笔迹要清楚；选择题填涂时，必须用2B铅笔按图示规范填涂。",
     "3. 必须在题目所指示的答题区域内作答，超出答题区域的答案无效；在草稿纸、试题卷上答题无效。",
     "4. 保持答题卡清洁、完整，严禁折叠，严禁在答题卡上做任何标记，严禁使用涂改液和修正带。",
-  ].flatMap((note) => annotationTextLines(note, ((notesWidth - 18) * 14) / 9));
+  ];
+  let notesSize = 9;
+  const wrapNotes = () =>
+    noteParagraphs.flatMap((note) =>
+      annotationTextLines(note, ((notesWidth - 18) * 14) / notesSize),
+    );
+  let notes = wrapNotes();
+  while (notes.length * notesSize * 1.2 > 80 && notesSize > 6) {
+    notesSize -= 0.25;
+    notes = wrapNotes();
+  }
+  const groups = cardRegionGroups(l, page);
   const codeX = l.markers[0].x * w + 23;
   const codeY = l.markers[0].y * h - 5;
   const numberLeft = numberBox.x * w;
@@ -53,7 +98,17 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
   ${label(60, 108, "姓名：____________  班级：____________", 14)}
   ${rect(55, 122, notesWidth, 126, 'fill="none" stroke="#333" stroke-width="1"')}
   ${label(64, 136, "注意事项：", 11, 'font-weight="bold"')}
-  ${notes.map((line, index) => label(64, 149 + index * 10.5, line, 9)).join("")}
+  ${notes
+    .map((line, index) =>
+      label(
+        64,
+        149 + index * notesSize * 1.2,
+        line,
+        notesSize,
+        `data-card-note="true" textLength="${(annotationLineWidth(line) * notesSize) / 14}" lengthAdjust="spacingAndGlyphs"`,
+      ),
+    )
+    .join("")}
   ${label(64, 241, "5. 正确填涂：", 9)}${rect(125, 233, 16, 9, 'fill="black"')}${label(150, 241, "错误填涂：", 9)}
   ${Array.from({ length: 6 }, (_, i) => rect(210 + i * 26, 233, 18, 9, 'fill="none" stroke="black" stroke-width="0.7"') + (i === 0 ? '<path d="M210 242L228 233" stroke="black"/>' : i === 1 ? '<path d="M236 233L254 242M236 242L254 233" stroke="black"/>' : i === 2 ? rect(262, 233, 9, 9, 'fill="black"') : i === 3 ? rect(288, 233, 3, 9, 'fill="black"') : i === 4 ? '<path d="M314 233L332 242" stroke="black"/>' : rect(340, 239, 18, 3, 'fill="black"'))).join("")}
   ${l.showAbsent !== false ? rect(55, 248, notesWidth, 12, 'fill="none" stroke="#333" stroke-width="0.7"') + label(64, 257, "此栏考生禁填    缺考标记 □（教师填写）", 8) : ""}
@@ -82,7 +137,7 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
           'text-anchor="middle"',
         ) +
         label(numberLeft, numberTop + 135, "准考证号：________________", 11)
-      : label(numberLeft, numberTop - 7, "六位学号 / 考号（每列填一个数字）", 11) +
+      : label(numberLeft, numberTop - 7, "考号填涂区", 11) +
         `<g data-number-boxes="true">${Array.from({ length: n.digits }, (_, column) => rect(numberLeft + column * n.cellWidth * w, numberTop, n.cellWidth * w, 18, 'fill="none" stroke="black" stroke-width="0.8"')).join("")}</g>` +
         Array.from({ length: n.digits * 10 }, (_, i) => {
           const x = (n.x + Math.floor(i / 10) * n.cellWidth) * w,
@@ -94,6 +149,24 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
         }).join("")
   }
   ${Array.from({ length: columns }, (_, c) => rect(50 + c * (cw + 12), 265, cw + 10, h - 328, 'fill="none" stroke="#333" stroke-width="1.1"')).join("")}
+  ${groups
+    .map((group) => {
+      const first = group[0],
+        last = group.at(-1)!;
+      const title = groupTitle(first);
+      return `<g data-card-group="${first.kind}">${rect(
+        first.x * w,
+        first.y * h,
+        first.width * w,
+        (last.y + last.height - first.y) * h,
+        'fill="none" stroke="black" stroke-width="1.2"',
+      )}${
+        first.kind !== "WRITING"
+          ? label(first.x * w + 8, first.y * h + 20, title, 12, 'font-weight="bold"')
+          : ""
+      }</g>`;
+    })
+    .join("")}
   ${l.regions
     .filter((r) => r.page === page)
     .map((r) => {
@@ -104,11 +177,12 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
       const number = l.regions.indexOf(r) + 1;
       const material = cardMaterialBox(r, l);
       return (
-        rect(x, y, rw, rh, 'fill="none" stroke="black" stroke-width="1.2"') +
         label(
           x + 8,
-          y + 20,
-          `${number}. ${r.label ?? (r.kind === "CHOICE" ? (r.multiple ? "多项选择题" : "单项选择题") : r.kind === "BLANK" ? "填空题" : "解答题")}`,
+          r.kind === "CHOICE"
+            ? (choiceBubbles(r, l)[0]?.y ?? y + 44) + 3
+            : y + (r.kind === "BLANK" ? 45 : 20),
+          r.kind === "WRITING" ? `${number}. ${r.label ?? "解答题"}` : `${number}.`,
           12,
           'font-weight="bold"',
         ) +
@@ -139,7 +213,7 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
           )
           .join("") +
         (r.kind === "BLANK"
-          ? `<path d="M ${x + 12} ${y + 45} H ${x + rw - 12}" stroke="#666" stroke-width="0.6"/>`
+          ? `<path d="M ${x + 40} ${y + 45} H ${x + rw - 12}" stroke="#666" stroke-width="0.6"/>`
           : "") +
         (r.image &&
         material.height > 0 &&

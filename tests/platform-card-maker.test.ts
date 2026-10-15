@@ -1,7 +1,8 @@
+// @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import type { BankQuestion, CardLayout, Paper } from "@/contracts/platform";
-import { generateCardTemplate, choiceBubbles } from "@/lib/cards";
-import { renderCardSvg } from "@/lib/card-svg";
+import { generateCardTemplate, choiceBubbles, studentNumberBox } from "@/lib/cards";
+import { renderCardSvg, cardRegionGroups } from "@/lib/card-svg";
 import { commandSchema } from "@/server/platform/schemas";
 
 const question: BankQuestion = {
@@ -41,6 +42,81 @@ const paper: Paper = {
 };
 
 describe("answer card maker print and persistence contract", () => {
+  const groupedPaper = (): Paper => ({
+    ...paper,
+    subject: "数学",
+    items: ["SINGLE", "SINGLE", "MULTIPLE", "BLANK", "BLANK", "SUBJECTIVE"].map((type, index) => ({
+      ...paper.items[0],
+      id: `item-${index}`,
+      position: index,
+      snapshot: {
+        ...question,
+        type: type as BankQuestion["type"],
+        content: {
+          ...question.content,
+          options: ["SINGLE", "MULTIPLE"].includes(type)
+            ? ["A", "B", "C", "D"].map((label) => ({ label, text: label }))
+            : [],
+        },
+      },
+    })),
+  });
+  it("merges consecutive single/multiple choice and blank rows without changing scan coordinates or numbering", () => {
+    const card = generateCardTemplate(groupedPaper());
+    card.layout.regions[0].label = "单选题";
+    card.layout.regions[2].label = "多选题";
+    expect(cardRegionGroups(card.layout, 1).map((g) => g.length)).toEqual([3, 2, 1]);
+    const svg = new DOMParser().parseFromString(renderCardSvg(card), "image/svg+xml");
+    expect(svg.querySelectorAll('[data-card-group="CHOICE"]')).toHaveLength(1);
+    expect(svg.querySelectorAll('[data-card-group="BLANK"]')).toHaveLength(1);
+    for (const [index, region] of card.layout.regions.entries()) {
+      if (region.kind !== "CHOICE") continue;
+      const number = [...svg.querySelectorAll("text")].find(
+        (t) => t.textContent === `${index + 1}.`,
+      )!;
+      const firstBubble = choiceBubbles(region, card.layout)[0];
+      expect(Number(number.getAttribute("y"))).toBe(firstBubble.y + 3);
+      expect(Number(number.getAttribute("x"))).toBeLessThan(firstBubble.x - 9);
+    }
+    expect(svg.documentElement.textContent).not.toContain("单项选择题");
+    expect(card.layout.regions.map((r) => r.itemId)).toEqual(groupedPaper().items.map((i) => i.id));
+  });
+  it("repeats group headings across columns and pages, and separates rows moved away from their group", () => {
+    const p = groupedPaper();
+    p.items = Array.from({ length: 60 }, (_, i) => ({ ...p.items[0], id: `item-${i}` }));
+    const card = generateCardTemplate(p, {}, { paperSize: "A4", columns: 2 });
+    expect(card.layout.pageCount).toBeGreaterThan(1);
+    expect(cardRegionGroups(card.layout, 1)).toHaveLength(2);
+    expect(cardRegionGroups(card.layout, 2).length).toBeGreaterThan(0);
+    const second = card.layout.regions[1];
+    second.x += 1 / card.layout.width;
+    expect(
+      cardRegionGroups(card.layout, 1)
+        .slice(0, 3)
+        .map((g) => g.length),
+    ).toEqual([1, 1, 12]);
+  });
+  for (const paperSize of ["A4", "A3"] as const) {
+    it(`${paperSize}: contains notes above the fill examples and separates handwritten exam numbers from the first fill row`, () => {
+      const card = generateCardTemplate(groupedPaper(), {}, { paperSize });
+      const doc = new DOMParser().parseFromString(renderCardSvg(card), "image/svg+xml");
+      for (const line of doc.querySelectorAll("[data-card-note]")) {
+        expect(
+          Number(line.getAttribute("x")) + Number(line.getAttribute("textLength")),
+        ).toBeLessThan(card.layout.width - 355);
+        expect(Number(line.getAttribute("y"))).toBeLessThan(229);
+      }
+      const box = studentNumberBox(card.layout);
+      const writing = doc.querySelector("[data-number-boxes] rect")!;
+      const writingBottom =
+        Number(writing.getAttribute("y")) + Number(writing.getAttribute("height"));
+      const firstFillTop = card.layout.studentNumber.y * card.layout.height - 5;
+      expect(firstFillTop - writingBottom).toBeGreaterThanOrEqual(4);
+      expect(box.y * card.layout.height).toBeCloseTo(Number(writing.getAttribute("y")));
+      expect(doc.documentElement.textContent).toContain("考号填涂区");
+      expect(doc.documentElement.textContent).not.toContain("每列填一个数字");
+    });
+  }
   it("retains card display choices through paper and column changes", () => {
     const format: CardLayout = {
       ...generateCardTemplate(paper).layout,

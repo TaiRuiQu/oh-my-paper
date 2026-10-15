@@ -81,7 +81,7 @@ describe("answer cards and scans", () => {
     expect(template.layout.regions.map((r) => r.itemId)).toEqual(p.items.map((i) => i.id));
     const html = renderCardHtml(template);
     expect(html.match(/<svg/g)).toHaveLength(template.layout.pageCount);
-    expect(html).toContain("六位学号");
+    expect(html).toContain("考号填涂区");
     template.layout.regions[0].height = 0.01;
     expect(() => validateCardTemplate(template, p)).toThrow();
   });

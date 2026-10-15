@@ -23,9 +23,11 @@ export function PlatformAI({
   notify,
   fixedKind,
   importKind,
+  initialPaperId,
 }: {
   fixedKind?: "EXAM" | "HOMEWORK";
   importKind?: "EXAM" | "HOMEWORK";
+  initialPaperId?: string;
   state: PlatformState;
   tab: string;
   refresh: () => Promise<void>;
@@ -107,7 +109,11 @@ export function PlatformAI({
               ? `图片识别${importKind === "HOMEWORK" ? "作业" : "试卷"}`
               : names[mode]
           }
-          description="AI 会根据您提交的材料进行处理，完成后请核对结果。题目可继续编辑，评分仍需按评阅要求复核。"
+          description={
+            mode === "TEMPLATE"
+              ? "根据整卷内容安排题区和作答空间，生成后可继续编辑。任务提交后可离开页面，完成后从任务记录查看答题卡。"
+              : "AI 会根据您提交的材料进行处理，完成后请核对结果。题目可继续编辑，评分仍需按评阅要求复核。"
+          }
         >
           <div className="p-form">
             <Field label="使用模型">
@@ -142,7 +148,13 @@ export function PlatformAI({
               <BatchGradingForm state={state} start={start} busy={busy || !models.length} />
             )}
             {(mode === "TEMPLATE" || mode === "RECOMMEND") && (
-              <AISelect mode={mode} state={state} start={start} busy={busy || !models.length} />
+              <AISelect
+                mode={mode}
+                state={state}
+                start={start}
+                busy={busy || !models.length}
+                initialPaperId={initialPaperId}
+              />
             )}
           </div>
         </Panel>
@@ -603,12 +615,17 @@ function AISelect({
   state,
   start,
   busy,
+  initialPaperId,
 }: {
   mode: "TEMPLATE" | "RECOMMEND";
   state: PlatformState;
   start: Start;
   busy: boolean;
+  initialPaperId?: string;
 }) {
+  const papers = state.papers.filter(
+    (p) => p.kind === "EXAM" && (p.ownerId === state.actor.id || state.actor.role === "ADMIN"),
+  );
   return (
     <form
       className="p-ai-form"
@@ -627,10 +644,16 @@ function AISelect({
       }}
     >
       <Field label={mode === "TEMPLATE" ? "对应试卷" : "查看学生"}>
-        <select required={mode !== "RECOMMEND" || state.actor.role !== "STUDENT"} name="target">
+        <select
+          required={mode !== "RECOMMEND" || state.actor.role !== "STUDENT"}
+          name="target"
+          defaultValue={
+            mode === "TEMPLATE" && papers.some((p) => p.id === initialPaperId) ? initialPaperId : ""
+          }
+        >
           <option value="">{state.actor.role === "STUDENT" ? "我的学习情况" : "请选择"}</option>
           {mode === "TEMPLATE"
-            ? state.papers.map((p) => (
+            ? papers.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}
                 </option>
@@ -659,7 +682,7 @@ function AISelect({
         </div>
       )}
       <button className="button" disabled={busy}>
-        {mode === "TEMPLATE" ? "智能制作答题卡" : "分析薄弱点并推荐练习"}
+        {mode === "TEMPLATE" ? "开始 AI 自动排版" : "分析薄弱点并推荐练习"}
       </button>
     </form>
   );

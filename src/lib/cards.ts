@@ -12,7 +12,7 @@ export const CARD_PRESETS = SUBJECTS.map((subject) => ({
   name: `高考${subject}答题卡`,
   subject,
   objectiveHeight: 52,
-  blankHeight: 110,
+  blankHeight: 56,
   subjectiveHeight: subject === "语文" ? 300 : 190,
 }));
 type CardFormat = Pick<
@@ -60,7 +60,7 @@ function baseLayout(format: CardFormat = {}): CardLayout {
       mode: format.studentNumber?.mode ?? "OMR",
       digits: 6,
       x: (width - 270) / width,
-      y: 86 / height,
+      y: 94 / height,
       cellWidth: 29 / width,
       cellHeight: 16 / height,
     },
@@ -80,11 +80,12 @@ export function defaultCardPresets(): CardTemplate[] {
 }
 export function studentNumberBox(layout: CardLayout) {
   const n = layout.studentNumber;
+  const topOffset = n.mode === "BARCODE" ? 22 : 28;
   return {
     x: n.x - n.cellWidth / 2,
-    y: n.y - 22 / layout.height,
+    y: n.y - topOffset / layout.height,
     width: n.cellWidth * n.digits,
-    height: n.mode === "BARCODE" ? 112 / layout.height : n.cellHeight * 9 + 28 / layout.height,
+    height: n.mode === "BARCODE" ? 112 / layout.height : n.cellHeight * 9 + 34 / layout.height,
   };
 }
 export function generateCardTemplate(
@@ -117,7 +118,7 @@ export function generateCardTemplate(
   const { width, height } = template.layout;
   const columns = template.layout.columns ?? 1;
   const columnWidth = (width - 110 - (columns - 1) * 12) / columns;
-  for (const item of paper.items) {
+  for (const [index, item] of paper.items.entries()) {
     const kind =
       item.snapshot.type === "SINGLE" || item.snapshot.type === "MULTIPLE"
         ? "CHOICE"
@@ -133,7 +134,7 @@ export function generateCardTemplate(
     if (!Number.isFinite(regionHeight) || regionHeight < 40 || regionHeight > 760)
       throw new Error("答题区域高度须在 40 至 760 之间");
     const optionColumns = Math.max(1, Math.floor((columnWidth - 60) / 32));
-    const choiceHeight = 42 + Math.ceil(item.snapshot.content.options.length / optionColumns) * 22;
+    const choiceHeight = 30 + Math.ceil(item.snapshot.content.options.length / optionColumns) * 22;
     const actualHeight = Math.min(
       height - 340,
       Math.max(
@@ -164,7 +165,15 @@ export function generateCardTemplate(
       options: kind === "CHOICE" ? item.snapshot.content.options.map((option) => option.label) : [],
       multiple: item.snapshot.type === "MULTIPLE",
     });
-    y += actualHeight + 12;
+    const nextItem = paper.items[index + 1];
+    const nextKind =
+      nextItem &&
+      (["SINGLE", "MULTIPLE"].includes(nextItem.snapshot.type)
+        ? "CHOICE"
+        : nextItem.snapshot.type === "BLANK"
+          ? "BLANK"
+          : "WRITING");
+    y += actualHeight + (kind !== "WRITING" && nextKind === kind ? 1 : 12);
   }
   template.layout.pageCount = page;
   template.layout.annotations = template.layout.annotations?.map((a) => ({

@@ -165,7 +165,8 @@ describe("desktop document formats and question-level independent grading", () =
             }
           const svg = renderCardSvg(template);
           expect(svg).not.toContain("<circle");
-          expect(svg).toContain("1. 单项选择题");
+          expect(svg).toContain(">选择题</text>");
+          expect(svg).not.toContain("1. 单项选择题");
           expect(renderCardHtml(template)).toContain(`size:${paperSize} ${cardOrientation}`);
           expect(renderPaperHtml(document)).toContain(`size:${paperSize} ${orientation}`);
         });
