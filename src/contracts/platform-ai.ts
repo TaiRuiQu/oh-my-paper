@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { consolidationPaperSchema } from "./revision-papers";
 export const MAX_AI_IMPORT_PAGES = 20;
 export const MAX_AI_BATCH_PAGES = 100;
 export const aiKinds = [
@@ -9,6 +10,7 @@ export const aiKinds = [
   "GRADE",
   "BATCH_GRADE",
   "RECOMMEND",
+  "CONSOLIDATE",
 ] as const;
 export type AiKind = (typeof aiKinds)[number];
 export type BatchGradingResult = {
@@ -28,6 +30,7 @@ export type BatchGradingResult = {
 const id = z.string().min(1).max(128);
 const questionType = z.enum(["SINGLE", "MULTIPLE", "BLANK", "SUBJECTIVE", "MIXED"]);
 export const aiInputSchemas = {
+  CONSOLIDATE: consolidationPaperSchema,
   IMPORT: z.strictObject({
     assetUrls: z
       .array(z.string().regex(/^\/api\/platform\/assets\/[\w-]+$/))
@@ -110,6 +113,11 @@ export const aiInputSchemas = {
   }),
 };
 export const aiRequestSchema = z.discriminatedUnion("kind", [
+  z.strictObject({
+    kind: z.literal("CONSOLIDATE"),
+    input: aiInputSchemas.CONSOLIDATE,
+    modelId: id,
+  }),
   z.strictObject({ kind: z.literal("IMPORT"), input: aiInputSchemas.IMPORT, modelId: id }),
   z.strictObject({ kind: z.literal("ENRICH"), input: aiInputSchemas.ENRICH, modelId: id }),
   z.strictObject({ kind: z.literal("ASSEMBLE"), input: aiInputSchemas.ASSEMBLE, modelId: id }),

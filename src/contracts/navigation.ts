@@ -26,6 +26,7 @@ export function navigationFor(role: Role): NavigationGroup[] {
         items: [
           { href: "/workspace", label: "学习概览" },
           { href: "/workspace/ai", label: "AI 任务记录" },
+          { href: "/workspace/revision-papers", label: "错题复习组卷" },
         ],
       },
       {
@@ -50,6 +51,7 @@ export function navigationFor(role: Role): NavigationGroup[] {
         { href: "/workspace", label: role === "ADMIN" ? "系统概览" : "教学概览" },
         { href: "/workspace/activity", label: "最近工作" },
         { href: "/workspace/ai", label: "AI 任务记录" },
+        { href: "/workspace/revision-papers", label: "错题复习组卷" },
         { href: "/workspace/classes", label: "班级与学生" },
       ],
     },

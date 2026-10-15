@@ -28,7 +28,11 @@ function issue(value: unknown) {
     )
   )
     return "部分题目的答案或解析还不完整，需要继续补充。";
-  if (/题库.*不足|组卷题数不足|无法满足知识点占比|推荐数量不足|题型数量不符合/.test(text))
+  if (
+    /题库.*不足|组卷题数不足|巩固卷题数不足|题库中符合条件|无法满足知识点占比|推荐数量不足|题型数量不符合/.test(
+      text,
+    )
+  )
     return "可选题目暂时无法满足本次要求。";
   if (/超.*满分|小问分数|评分上限|给分/.test(text)) return "部分题目的评分需要重新核对。";
   if (/余额|CREDITS_EXHAUSTED|Credit/.test(text)) return "可用的 AI 额度不足。";

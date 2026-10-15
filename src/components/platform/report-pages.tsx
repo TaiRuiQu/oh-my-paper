@@ -10,6 +10,7 @@ import { Analytics, KnowledgeTable } from "./analytics";
 import { QuestionBody } from "./questions";
 import { AssessmentNavigation } from "./assessment-pages";
 import { MarkdownText } from "@/components/markdown-text";
+import { RevisionPaperLink } from "./revision-paper-pages";
 
 export function ReportListPage() {
   const { state, area } = useDomain();
@@ -57,7 +58,11 @@ export function ReportListPage() {
                       </td>
                       <td>{a.papers.map((p) => p.subject).join("、")}</td>
                       <td>
-                        {results.length} / {a.studentIds?.length ?? 0} 人
+                        {results.length} /{" "}
+                        {state.classrooms
+                          .filter((c) => a.classroomIds.includes(c.id))
+                          .reduce((n, c) => n + c.students.length, 0)}{" "}
+                        人
                       </td>
                       <td>
                         {results.length
@@ -247,6 +252,11 @@ export function LearningReportPage({
         </>
       ) : view === "wrong" ? (
         <Panel title="错题记录" description={`${report.wrongQuestions.length} 道错题`}>
+          {report.wrongQuestions.length > 0 && (
+            <div className="p-panel-content">
+              <RevisionPaperLink studentId={report.studentId} subject={subject} />
+            </div>
+          )}
           <div className="p-toolbar">
             <select
               aria-label="筛选错题学科"

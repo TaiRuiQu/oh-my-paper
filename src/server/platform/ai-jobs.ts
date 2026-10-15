@@ -5,6 +5,8 @@ import { AccessError, RequestError } from "@/server/http/errors";
 import { getActor, loadState } from "./service";
 import { assertCanReview } from "./access";
 import { batchGradingContext, type BatchGradingInput } from "./batch-grading";
+import { consolidationContext } from "./revision-papers";
+import type { ConsolidationPaperInput } from "@/contracts/revision-papers";
 import { aiRequestSchema } from "@/contracts/platform-ai";
 import { runAiTask } from "./ai/runner";
 import type { LogContext } from "@/server/logger";
@@ -44,12 +46,21 @@ export async function enqueueAiJob(userId: string, raw: unknown) {
     throw new RequestError(400, parsed.error.issues.map((issue) => issue.message).join(" "));
   const { kind, modelId, input } = parsed.data;
   const actor = await getActor(userId);
-  if (actor.role === "STUDENT" && kind !== "RECOMMEND")
+  if (actor.role === "STUDENT" && kind !== "RECOMMEND" && kind !== "CONSOLIDATE")
     throw new AccessError(403, "需要教师权限。");
   const state = await loadState(actor, undefined, {
     reviewing: kind === "GRADE" || kind === "BATCH_GRADE",
   });
   const ids = input as Record<string, unknown>;
+  if (kind === "CONSOLIDATE") {
+    const request = input as ConsolidationPaperInput;
+    const context = await consolidationContext(userId, request);
+    if (context.candidates.length < request.count)
+      throw new RequestError(
+        422,
+        `题库中符合条件且未作答的题目只有 ${context.candidates.length} 道，请减少题数或补充题库。`,
+      );
+  }
   if (kind === "IMPORT" || kind === "BATCH_GRADE") {
     const urls = ids.assetUrls as string[];
     for (const url of urls) {

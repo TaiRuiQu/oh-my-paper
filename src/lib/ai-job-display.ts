@@ -1,4 +1,5 @@
 import type { AiJobDTO, AiKind } from "@/contracts/platform-ai";
+import { revisionPaperHref } from "./revision-papers";
 
 export const AI_JOB_NAMES: Record<AiKind, string> = {
   IMPORT: "图片识别导入",
@@ -8,6 +9,7 @@ export const AI_JOB_NAMES: Record<AiKind, string> = {
   GRADE: "AI 阅卷",
   BATCH_GRADE: "AI 班级批量批改",
   RECOMMEND: "巩固练习推荐",
+  CONSOLIDATE: "生成巩固卷",
 };
 
 export const AI_JOB_STATUSES: Record<AiJobDTO["status"], string> = {
@@ -46,6 +48,8 @@ export function aiJobResultLink(job: AiJobDTO): { href: string; label: string } 
     };
   }
   const result = aiJobResult(job);
+  if (job.kind === "CONSOLIDATE" && result?.result?.paperId)
+    return { href: revisionPaperHref(result.result.paperId), label: "查看巩固卷与导出" };
   if (result?.result?.paperId)
     return {
       href: `${result.result.paperKind === "HOMEWORK" ? "/homework" : "/exams/papers"}/${result.result.paperId}/edit`,

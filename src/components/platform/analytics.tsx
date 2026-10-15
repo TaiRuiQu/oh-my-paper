@@ -10,6 +10,7 @@ import type {
 } from "@/contracts/platform";
 import { Empty, Panel } from "./primitives";
 import { QuestionBody } from "./questions";
+import { RevisionPaperLink } from "./revision-paper-pages";
 export function KnowledgeTable({ knowledge }: { knowledge: KnowledgeStat[] }) {
   return knowledge.length ? (
     <div className="p-table" role="region" aria-label="知识点掌握情况" tabIndex={0}>
@@ -281,6 +282,13 @@ export function Analytics({
                 </div>
                 <div className="p-panel-content">
                   <h3>错题汇总 · {report.wrongQuestions.length} 题</h3>
+                  {report.wrongQuestions.length > 0 && (
+                    <RevisionPaperLink
+                      studentId={report.studentId}
+                      assessmentId={assessmentId}
+                      kind={kind}
+                    />
+                  )}
                 </div>
                 {report.wrongQuestions.length ? (
                   report.wrongQuestions.map((w) => (

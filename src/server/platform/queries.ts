@@ -72,7 +72,7 @@ export async function loadState(
     where:
       a.role === "ADMIN"
         ? {}
-        : a.role === "STUDENT" || options.reviewing
+        : options.reviewing
           ? { id: { in: paperIds } }
           : { OR: [{ ownerId: a.id }, { id: { in: paperIds } }] },
     orderBy: { updatedAt: "desc" },
