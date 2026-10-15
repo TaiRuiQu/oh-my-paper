@@ -2018,7 +2018,7 @@ td .button {
 }
 .p-nav-collapse[data-expanded="true"] {
   grid-template-rows: 1fr;
-  margin-top: 2px;
+  margin-top: 4px;
   opacity: 1;
 }
 .p-nav-collapse > .p-nav-children {

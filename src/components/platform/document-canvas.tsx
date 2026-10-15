@@ -152,7 +152,7 @@ export function DocumentCanvas({
       const padding = getComputedStyle(element);
       const available =
         element.clientWidth - parseFloat(padding.paddingLeft) - parseFloat(padding.paddingRight);
-      setZoom(Math.min(1, Math.max(0.3, available / width)));
+      if (available > 0) setZoom(available / width);
     };
     const observer = new ResizeObserver(fit);
     observer.observe(element);
@@ -274,10 +274,10 @@ export function DocumentCanvas({
             size="icon"
             variant="ghost"
             aria-label="缩小纸张"
-            disabled={zoom <= 0.4}
+            disabled={zoom <= 0.3}
             onClick={() => {
               setFitWidth(false);
-              setZoom(Math.max(0.3, zoom - 0.1));
+              setZoom((current) => Math.max(0.3, current - 0.1));
             }}
           >
             <ZoomOut />
@@ -288,10 +288,9 @@ export function DocumentCanvas({
             size="icon"
             variant="ghost"
             aria-label="放大纸张"
-            disabled={zoom >= 1.2}
             onClick={() => {
               setFitWidth(false);
-              setZoom(Math.min(1.2, zoom + 0.1));
+              setZoom((current) => current + 0.1);
             }}
           >
             <ZoomIn />
