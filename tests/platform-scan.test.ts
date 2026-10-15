@@ -12,6 +12,8 @@ import {
   validateCardTemplate,
   choiceBubbles,
 } from "../src/server/platform/cards";
+import { studentNumberBox } from "@/lib/cards";
+import { renderStudentBarcodeSvg } from "@/server/platform/barcodes";
 import {
   renderCardHtml,
   renderCardSvg,
@@ -186,6 +188,85 @@ describe("answer cards and scans", () => {
     expect(result.studentNumber).toBeNull();
     expect(result.needsReview).toBe(true);
   }, 20000);
+  it("reads separately printed barcode labels and flags missing, invalid, or conflicting labels", async () => {
+    const dir = await directory();
+    const template = generateCardTemplate(paper(1));
+    template.layout.studentNumber.mode = "BARCODE";
+    const box = studentNumberBox(template.layout);
+    const label = (number: string) =>
+      renderStudentBarcodeSvg(
+        { id: "student", classroomId: "class", userId: null, name: "张三", studentNumber: number },
+        "高一（1）班",
+      );
+    const paste = (labels: string[]) =>
+      renderCardSvg(template).replace(
+        "</svg>",
+        `<g transform="translate(${box.x * 794 + 7},${box.y * 1123 + 10})">${labels.map((svg, i) => `<g transform="translate(0,${i * 48}) scale(1,${labels.length > 1 ? 0.5 : 1})">${svg}</g>`).join("")}</g></svg>`,
+      );
+    for (const [name, labels, expected] of [
+      ["valid", [label("012345")], "012345"],
+      ["blank", [], null],
+      ["conflicting", [label("012345"), label("123456")], null],
+    ] as const) {
+      const source = join(dir, `${name}.png`);
+      await sharp(Buffer.from(paste([...labels])))
+        .png()
+        .toFile(source);
+      const result = await processCardScan({
+        inputPath: source,
+        template,
+        outputDir: join(dir, name),
+      });
+      expect(result.studentNumber).toBe(expected);
+      expect(result.alignment.studentNumber).toMatchObject({
+        mode: "BARCODE",
+        needsReview: expected === null,
+      });
+      if (expected === null) expect(result.needsReview).toBe(true);
+    }
+    const valid = join(dir, "valid.png");
+    const photo = join(dir, "photo.png");
+    await promisify(execFile)(resolve(".venv/bin/python"), [
+      "-c",
+      "import cv2,numpy as np,sys; im=cv2.imread(sys.argv[1]); h,w=im.shape[:2]; src=np.float32([[0,0],[w,0],[w,h],[0,h]]); dst=np.float32([[100,50],[890,120],[820,1250],[40,1160]]); out=cv2.warpPerspective(im,cv2.getPerspectiveTransform(src,dst),(1000,1300),borderValue=(255,255,255)); cv2.imwrite(sys.argv[2],out)",
+      valid,
+      photo,
+    ]);
+    expect(
+      (await processCardScan({ inputPath: photo, template, outputDir: join(dir, "photo-out") }))
+        .studentNumber,
+    ).toBe("012345");
+    const rotated = join(dir, "rotated.png");
+    await sharp(valid).rotate(180).png().toFile(rotated);
+    expect(
+      (
+        await processCardScan({
+          inputPath: rotated,
+          template,
+          outputDir: join(dir, "rotation-out"),
+        })
+      ).studentNumber,
+    ).toBe("012345");
+  }, 20000);
+
+  it("places the template/page code beside the top-left marker and joins all writing boxes", () => {
+    const template = generateCardTemplate(paper());
+    const svg = renderCardSvg(template);
+    expect(svg).toContain('<g data-page-code="1"><rect x="51" y="23"');
+    expect(svg).not.toContain("页面识别码 · 请勿涂改");
+    const writing = svg.match(/<g data-number-boxes="true">(.*?)<\/g>/)![1];
+    const rects = [...writing.matchAll(/<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)"/g)];
+    expect(rects).toHaveLength(6);
+    rects
+      .slice(1)
+      .forEach((rect, index) =>
+        expect(Number(rect[1])).toBeCloseTo(Number(rects[index][1]) + Number(rects[index][3])),
+      );
+    expect(svg).toContain("0.5毫米");
+    expect(svg).toContain("严禁折叠");
+    expect(svg).toContain("5. 正确填涂");
+  });
+
   it("crops irregular workbook pages using teacher-specified coordinates", async () => {
     const dir = await directory(),
       source = join(dir, "workbook.png");

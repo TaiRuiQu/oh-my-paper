@@ -107,6 +107,12 @@
         ],
         "createdAt": "2026-10-15T03:52:03.128Z",
         "reason": "Codex: intentional document-font test fixtures verify teacher font selection, not interface typography"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "nsimsun\"')",
+        "createdAt": "2026-10-15T07:48:08.718Z",
+        "reason": "Codex: tests/platform-workbench-v3.test.ts asserts the document-selected NSimSun print font; this is a functional test fixture, not application UI typography."
       }
     ]
   }

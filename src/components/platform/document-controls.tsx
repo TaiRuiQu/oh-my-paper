@@ -17,9 +17,11 @@ const READ_LOCAL_FONTS = "__read_local_fonts__";
 export function DocumentFormatControls({
   layout,
   onChange,
+  showOrientation = true,
 }: {
   layout: DocumentLayout;
   onChange: (value: DocumentLayout) => void;
+  showOrientation?: boolean;
 }) {
   const fontSelectId = useId();
   const fontFamily = layout.fontFamily ?? DOCUMENT_DEFAULTS.fontFamily;
@@ -55,17 +57,19 @@ export function DocumentFormatControls({
   };
   return (
     <>
-      <Field label="方向">
-        <select
-          value={layout.orientation ?? "portrait"}
-          onChange={(e) =>
-            onChange({ ...layout, orientation: e.target.value as "portrait" | "landscape" })
-          }
-        >
-          <option value="portrait">纵向</option>
-          <option value="landscape">横向</option>
-        </select>
-      </Field>
+      {showOrientation && (
+        <Field label="方向">
+          <select
+            value={layout.orientation ?? "portrait"}
+            onChange={(e) =>
+              onChange({ ...layout, orientation: e.target.value as "portrait" | "landscape" })
+            }
+          >
+            <option value="portrait">纵向</option>
+            <option value="landscape">横向</option>
+          </select>
+        </Field>
+      )}
       <div className="p-field">
         <label htmlFor={fontSelectId}>字体</label>
         <select

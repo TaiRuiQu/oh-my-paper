@@ -166,7 +166,14 @@ export type CardLayout = {
   height: number;
   pageCount: number;
   markers: { x: number; y: number }[];
-  studentNumber: { digits: number; x: number; y: number; cellWidth: number; cellHeight: number };
+  studentNumber: {
+    mode?: "OMR" | "BARCODE";
+    digits: number;
+    x: number;
+    y: number;
+    cellWidth: number;
+    cellHeight: number;
+  };
   regions: CardRegion[];
 };
 export type CardTemplate = {

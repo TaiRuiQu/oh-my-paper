@@ -57,14 +57,14 @@ await check("项目依赖", () => {
   }
   return `${Object.keys(packages).length} 个直接依赖版本匹配`;
 });
-await check("Python / OpenCV / NumPy / Pillow", () => {
+await check("Python / OpenCV / NumPy / Pillow / ZXing", () => {
   const python =
     process.env.CARD_SCAN_PYTHON ||
     (existsSync(resolve(".venv/bin/python")) ? resolve(".venv/bin/python") : "python3");
   assert.ok(existsSync(resolve("tools/card-scan/scan.py")));
   return run(python, [
     "-c",
-    "import cv2,numpy,PIL; print('OpenCV '+cv2.__version__+' / NumPy '+numpy.__version__+' / Pillow '+PIL.__version__)",
+    "import cv2,numpy,PIL,zxingcpp; print('OpenCV '+cv2.__version__+' / NumPy '+numpy.__version__+' / Pillow '+PIL.__version__+' / ZXing 条码识别可用')",
   ]);
 });
 await check("AI Python / shell 沙箱", () =>

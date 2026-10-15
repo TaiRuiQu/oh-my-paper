@@ -126,9 +126,12 @@ it("preserves card references when only question text or answers change", async 
   const deleteCards = vi.fn();
   const update = vi.fn().mockResolvedValue({ id: paper.id });
   const db = {
-    paper: { findUnique: vi.fn().mockResolvedValue(paper), update },
-    paperItem: { findMany: vi.fn().mockResolvedValue([original]), deleteMany: vi.fn() },
-    assessmentPaper: { count: vi.fn().mockResolvedValue(0) },
+    paper: {
+      findUnique: vi.fn().mockResolvedValue(paper),
+      findUniqueOrThrow: vi.fn().mockResolvedValue(paper),
+      update,
+    },
+    assessment: { count: vi.fn().mockResolvedValue(0) },
     question: { findMany: vi.fn().mockResolvedValue([]) },
     cardTemplate: { deleteMany: deleteCards },
   };
@@ -164,5 +167,5 @@ it("preserves card references when only question text or answers change", async 
     },
   );
   expect(deleteCards).not.toHaveBeenCalled();
-  expect(update.mock.calls[0][0].data.items.create[0].id).toBe(original.id);
+  expect(update.mock.calls[0][0].data.items[0].id).toBe(original.id);
 });

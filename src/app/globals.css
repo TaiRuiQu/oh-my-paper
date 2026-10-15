@@ -1537,7 +1537,7 @@ td .button {
 .p-card-sheet {
   width: 100%;
   min-width: 360px;
-  max-width: 794px;
+  max-width: var(--card-natural-width, 794px);
   margin: auto;
   background: #fff;
   position: relative;
@@ -2108,7 +2108,7 @@ td .button {
   min-width: var(--card-width, 794px);
 }
 .p-pagination {
-  padding: 20px 0;
+  padding: 20px 16px;
 }
 @media (prefers-reduced-motion: reduce) {
   .p-nav-group-heading,

@@ -1,9 +1,17 @@
 "use client";
 import { DocumentWorkbench } from "./document-workbench";
 import { DocumentExport } from "./document-export";
+import { BarcodeLabels } from "./barcode-labels";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState, useCallback, type PointerEvent, type CSSProperties } from "react";
+import {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  type PointerEvent,
+  type CSSProperties,
+} from "react";
 import {
   ArrowRight,
   Plus,
@@ -25,6 +33,8 @@ import {
   Trash2,
   Undo2,
   X,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
 import {
   Sheet,
@@ -35,7 +45,12 @@ import {
 } from "@/components/ui/sheet";
 import type { CardLayout, CardTemplate, Paper } from "@/contracts/platform";
 import { SUBJECTS } from "@/contracts/platform";
-import { generateCardTemplate, validateCardTemplate, fitAnnotationText } from "@/lib/cards";
+import {
+  generateCardTemplate,
+  validateCardTemplate,
+  fitAnnotationText,
+  studentNumberBox,
+} from "@/lib/cards";
 import { renderCardSvg } from "@/lib/card-svg";
 import { Textarea } from "@/components/ui/textarea";
 import { DocumentFormatControls } from "./document-controls";
@@ -236,7 +251,23 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
   const [selection, setSelection] = useState<Selection>();
   const [page, setPage] = useState(1);
   const [error, setError] = useState("");
-  const [fitPaper, setFitPaper] = useState(true);
+  const [manualZoom, setManualZoom] = useState<number | null>(null);
+  const [viewportWidth, setViewportWidth] = useState(0);
+  const viewport = useRef<HTMLDivElement>(null);
+  const hasCard = !!paper && !!layout;
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setViewportWidth(entry.contentRect.width);
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [hasCard]);
+  const zoom = manualZoom ?? (viewportWidth && layout ? viewportWidth / layout.width : 1);
+  function adjustZoom(step: number) {
+    setManualZoom(Math.max(0.1, Math.min(3, Math.round((zoom + step) * 100) / 100)));
+  }
   const [dirty, setDirty] = useState(false);
   const [paperDirty, setPaperDirty] = useState(false);
   const [preview, setPreview] = useState(false);
@@ -631,7 +662,13 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
                     key={size}
                     type="button"
                     aria-pressed={layout.paperSize === size}
-                    onClick={() => reformat({ ...layout, paperSize: size })}
+                    onClick={() =>
+                      reformat({
+                        ...layout,
+                        paperSize: size,
+                        orientation: size === "A3" ? "landscape" : "portrait",
+                      })
+                    }
                   >
                     {size} 纸
                   </button>
@@ -667,45 +704,73 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
                   </button>
                 ))}
               </div>
-              <p className="p-muted">两栏、三栏默认使用 A3 横向纸张。</p>
+              <p className="p-muted">A4 纵向，A3 横向；两栏、三栏默认使用 A3。</p>
               <details className="p-maker-advanced">
-                <summary>
-                  方向与字体 · {layout.orientation === "landscape" ? "横向" : "纵向"}
-                </summary>{" "}
+                <summary>字体设置</summary>
                 <div className="p-maker-format">
                   <DocumentFormatControls
+                    showOrientation={false}
                     layout={{
                       ...layout,
                       paperSize: layout.paperSize ?? "A4",
                       columns: layout.columns ?? 1,
                     }}
-                    onChange={(v) =>
-                      v.orientation !== layout.orientation
-                        ? reformat({ ...layout, ...v })
-                        : change({ ...layout, fontFamily: v.fontFamily })
-                    }
+                    onChange={(v) => change({ ...layout, fontFamily: v.fontFamily })}
                   />
                 </div>
               </details>
             </div>
           </section>
-          <section className="p-maker-section">
-            <h3>选择考号版式</h3>
-            <div className="p-maker-fields">
-              <label className="p-radio-label">
-                <input type="radio" checked readOnly name="number-style" />
-                准考证号填涂
-              </label>
-              <p className="p-muted">六位考号，与扫描识别一致。</p>
-              <button
-                type="button"
-                className="p-text-action"
-                onClick={() => setSelection({ kind: "number" })}
-              >
-                调整考号区位置与间距
-              </button>
-            </div>
-          </section>
+        </fieldset>
+        <section className="p-maker-section">
+          <h3>选择考号版式</h3>
+          <div className="p-maker-fields">
+            <label className="p-radio-label">
+              <input
+                type="radio"
+                disabled={editLocked || pending}
+                checked={layout.studentNumber.mode !== "BARCODE"}
+                name="number-style"
+                onChange={() =>
+                  change({ ...layout, studentNumber: { ...layout.studentNumber, mode: "OMR" } })
+                }
+              />
+              准考证号填涂
+            </label>
+            <label className="p-radio-label">
+              <input
+                type="radio"
+                disabled={editLocked || pending}
+                checked={layout.studentNumber.mode === "BARCODE"}
+                name="number-style"
+                onChange={() =>
+                  change({
+                    ...layout,
+                    studentNumber: { ...layout.studentNumber, mode: "BARCODE" },
+                  })
+                }
+              />
+              粘贴条形码
+            </label>
+            <p className="p-muted">
+              {layout.studentNumber.mode === "BARCODE"
+                ? "预留贴码区，扫描读取条码中的六位考号。"
+                : "六位考号，每列填涂一个数字。"}
+            </p>
+            {layout.studentNumber.mode === "BARCODE" && (
+              <BarcodeLabels pageCount={layout.pageCount} />
+            )}
+            <button
+              type="button"
+              className="p-text-action"
+              disabled={editLocked || pending}
+              onClick={() => setSelection({ kind: "number" })}
+            >
+              调整考号区位置与间距
+            </button>
+          </div>
+        </section>
+        <fieldset disabled={editLocked || pending} className="p-maker-fieldset">
           <section className="p-maker-section">
             <h3>设置禁止作答区</h3>
             <div className="p-maker-fields p-radio-row">
@@ -848,7 +913,7 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
             </label>
             <div className="p-maker-fields">
               <p className="p-muted">
-                页面识别码始终保留，用于扫描定位和分页；当前不支持二维码与条形码考号。
+                页面识别码始终保留，用于核对答题卡模板和页码；考号支持填涂或条形码识别。
               </p>
               <Button
                 type="button"
@@ -862,7 +927,7 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
                       text: "点击输入附加文字",
                       page,
                       x: 60 / layout.width,
-                      y: 244 / layout.height,
+                      y: (layout.height - 90) / layout.height,
                       width: (layout.width - 120) / layout.width,
                       height: 19.6 / layout.height,
                     },
@@ -1010,7 +1075,7 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
                     </Button>
                   </>
                 )}
-                {selection?.kind === "number" && (
+                {selection?.kind === "number" && layout.studentNumber.mode !== "BARCODE" && (
                   <div className="p-form-grid">
                     {(["cellWidth", "cellHeight"] as const).map((field) => (
                       <Field key={field} label={field === "cellWidth" ? "列间距 %" : "行间距 %"}>
@@ -1219,14 +1284,49 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
               </Button>
             </div>
             <div className="p-actions">
+              <div className="p-card-zoom" role="group" aria-label="画布缩放">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  aria-label="缩小"
+                  title="缩小"
+                  disabled={zoom <= 0.1}
+                  onClick={() => adjustZoom(-0.1)}
+                >
+                  <ZoomOut />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  aria-label={`当前缩放 ${Math.round(zoom * 100)}%，点击恢复 100%`}
+                  title="恢复 100%"
+                  onClick={() => setManualZoom(1)}
+                >
+                  {Math.round(zoom * 100)}%
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  aria-label="放大"
+                  title="放大"
+                  disabled={zoom >= 3}
+                  onClick={() => adjustZoom(0.1)}
+                >
+                  <ZoomIn />
+                </Button>
+              </div>
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => setFitPaper(!fitPaper)}
+                aria-pressed={manualZoom === null}
+                onClick={() => setManualZoom(null)}
               >
                 <ScanLine />
-                {fitPaper ? "100% 查看" : "适应屏幕"}
+                适应宽度
               </Button>
               <Button
                 type="button"
@@ -1244,14 +1344,20 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
             </div>
           </div>
           <div
+            ref={viewport}
             className="p-card-preview-scroll"
             role="region"
             aria-label="答题卡编辑画布"
             tabIndex={0}
           >
             <div
-              className={`p-card-preview${fitPaper ? "" : " is-full-size"}`}
-              style={{ "--card-width": `${layout.width}px` } as CSSProperties}
+              className="p-card-preview"
+              style={
+                {
+                  "--card-width":
+                    manualZoom === null && !viewportWidth ? "100%" : `${layout.width * zoom}px`,
+                } as CSSProperties
+              }
             >
               <CardSheet
                 template={current}
@@ -1466,16 +1572,18 @@ function CardSheet({
     onChange(next);
   }
 
-  const n = layout.studentNumber;
+  const n = studentNumberBox(layout);
   return (
     <div
       ref={ref}
       className={`p-card-sheet${onChange ? " editable" : ""}`}
-      style={{
-        aspectRatio: `${layout.width}/${layout.height}`,
-        fontFamily: documentFont(layout.fontFamily),
-        maxWidth: `${layout.width}px`,
-      }}
+      style={
+        {
+          aspectRatio: `${layout.width}/${layout.height}`,
+          fontFamily: documentFont(layout.fontFamily),
+          "--card-natural-width": `${layout.width}px`,
+        } as CSSProperties
+      }
     >
       <div
         className="p-card-artwork"
@@ -1520,13 +1628,13 @@ function CardSheet({
           drag.current = undefined;
         }}
         onKeyDown={(e) => keyboard(e, { kind: "number" })}
-        aria-label="六位学号填涂区"
+        aria-label={layout.studentNumber.mode === "BARCODE" ? "考号条形码粘贴区" : "六位学号填涂区"}
         className={`p-card-number${isSelected({ kind: "number" }) ? " selected" : ""}`}
         style={{
-          left: `${(n.x - 9 / layout.width) * 100}%`,
-          top: `${(n.y - 25 / layout.height) * 100}%`,
-          width: `${(n.cellWidth * 5 + 18 / layout.width) * 100}%`,
-          height: `${(n.cellHeight * 9 + 34 / layout.height) * 100}%`,
+          left: `${n.x * 100}%`,
+          top: `${n.y * 100}%`,
+          width: `${n.width * 100}%`,
+          height: `${n.height * 100}%`,
         }}
       ></div>
       {layout.regions.map((r, index) => {

@@ -152,8 +152,9 @@ describe("desktop document formats and question-level independent grading", () =
           const document = { ...paper, layout: { paperSize, orientation, columns } };
           const template = generateCardTemplate(document),
             l = template.layout;
+          const cardOrientation = paperSize === "A3" ? "landscape" : "portrait";
           expect({ width: l.width, height: l.height }).toEqual(
-            pageDimensions(paperSize, orientation),
+            pageDimensions(paperSize, cardOrientation),
           );
           expect(l.regions).toHaveLength(24);
           for (const region of l.regions)
@@ -165,7 +166,7 @@ describe("desktop document formats and question-level independent grading", () =
           const svg = renderCardSvg(template);
           expect(svg).not.toContain("<circle");
           expect(svg).toContain("1. 单项选择题");
-          expect(renderCardHtml(template)).toContain(`size:${paperSize} ${orientation}`);
+          expect(renderCardHtml(template)).toContain(`size:${paperSize} ${cardOrientation}`);
           expect(renderPaperHtml(document)).toContain(`size:${paperSize} ${orientation}`);
         });
       }

@@ -27,12 +27,13 @@ type CardFormat = Pick<
   | "showSubject"
   | "locked"
 > &
-  Partial<Pick<CardLayout, "width" | "height">>;
+  Partial<Pick<CardLayout, "width" | "height" | "studentNumber">>;
 function baseLayout(format: CardFormat = {}): CardLayout {
-  const { width, height } = pageDimensions(format.paperSize, format.orientation);
+  const orientation = format.paperSize === "A3" ? "landscape" : "portrait";
+  const { width, height } = pageDimensions(format.paperSize, orientation);
   return {
     paperSize: format.paperSize ?? "A4",
-    orientation: format.orientation ?? "portrait",
+    orientation,
     columns: format.columns ?? 1,
     fontFamily: format.fontFamily ?? "NSimSun",
     omrVersion: 2,
@@ -56,6 +57,7 @@ function baseLayout(format: CardFormat = {}): CardLayout {
       { x: 28 / width, y: (height - 28) / height },
     ],
     studentNumber: {
+      mode: format.studentNumber?.mode ?? "OMR",
       digits: 6,
       x: (width - 270) / width,
       y: 86 / height,
@@ -75,6 +77,15 @@ export function defaultCardPresets(): CardTemplate[] {
     preset: true,
     layout: baseLayout(),
   }));
+}
+export function studentNumberBox(layout: CardLayout) {
+  const n = layout.studentNumber;
+  return {
+    x: n.x - n.cellWidth / 2,
+    y: n.y - 22 / layout.height,
+    width: n.cellWidth * n.digits,
+    height: n.mode === "BARCODE" ? 112 / layout.height : n.cellHeight * 9 + 28 / layout.height,
+  };
 }
 export function generateCardTemplate(
   paper: Paper,
@@ -198,13 +209,10 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
   if (new Set(layout.markers.map((m) => `${m.x}:${m.y}`)).size !== 4)
     throw new Error("定位点不能重复");
   const number = layout.studentNumber;
+  const numberBox = studentNumberBox(layout);
   if (
-    !within(
-      number.x - 5 / width,
-      number.y - 5 / height,
-      number.cellWidth * 5 + 10 / width,
-      number.cellHeight * 9 + 10 / height,
-    ) ||
+    !within(numberBox.x, numberBox.y, numberBox.width, numberBox.height) ||
+    (number.mode !== undefined && !["OMR", "BARCODE"].includes(number.mode)) ||
     number.cellWidth < 16 / width ||
     number.cellHeight < 12 / height
   )
@@ -222,10 +230,7 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
       throw new Error("题目答题区域坐标无效");
     if (region.y < 245 / height || region.y + region.height > (height - 63) / height)
       throw new Error("题目答题区域须避开页眉识别区和页脚");
-    const studentLeft = number.x - 5 / width,
-      studentTop = number.y - 5 / height,
-      studentWidth = number.cellWidth * 5 + 10 / width,
-      studentHeight = number.cellHeight * 9 + 10 / height;
+    const { x: studentLeft, y: studentTop, width: studentWidth, height: studentHeight } = numberBox;
     if (
       region.x < studentLeft + studentWidth &&
       region.x + region.width > studentLeft &&
@@ -293,13 +298,13 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
       annotation.y < y + h &&
       annotation.y + annotation.height > y;
     if (
+      intersects(numberBox.x, numberBox.y, numberBox.width, numberBox.height) ||
       intersects(
-        number.x - 10 / width,
-        number.y - 25 / height,
-        number.cellWidth * 5 + 20 / width,
-        number.cellHeight * 9 + 35 / height,
+        (layout.markers[0].x * width + 23) / width,
+        layout.markers[0].y - 5 / height,
+        368 / width,
+        10 / height,
       ) ||
-      intersects(60 / width, 185 / height, 380 / width, 22 / height) ||
       layout.markers.some((m) =>
         intersects(m.x - 9 / width, m.y - 9 / height, 18 / width, 18 / height),
       ) ||

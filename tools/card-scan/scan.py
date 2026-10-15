@@ -3,11 +3,15 @@ import json
 from pathlib import Path
 import cv2
 import numpy as np
+import re
+import zxingcpp
 
 cv2.setNumThreads(1)
 
-def page_code(gray):
-    return ''.join('1' if np.mean(gray[193:197,round(65+i*8)+1:round(65+i*8)+5] < 150) > .6 else '0' for i in range(46))
+def page_code(gray, layout):
+    x = layout['markers'][0]['x'] * layout['width'] + 23
+    y = layout['markers'][0]['y'] * layout['height'] - 5
+    return ''.join('1' if np.mean(gray[round(y)+3:round(y)+7,round(x+i*8)+1:round(x+i*8)+5] < 150) > .6 else '0' for i in range(46))
 
 def align(image, layout):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -41,7 +45,7 @@ def align(image, layout):
         corrected = cv2.warpPerspective(image,transform,(layout['width'],layout['height']),flags=cv2.INTER_CUBIC,borderValue=(255,255,255))
         gray = cv2.cvtColor(corrected,cv2.COLOR_BGR2GRAY)
         _, evidence = student_omr(gray,layout)
-        code = page_code(gray)
+        code = page_code(gray, layout)
         guard_error = int(not code.startswith('101') or not code.endswith('110'))
         possibilities.append((guard_error,len(evidence['ambiguousColumns']),orientation,corrected,source,transform))
     _, _, orientation, corrected, source, transform = min(possibilities,key=lambda p:(p[0],p[1],p[2]))
@@ -67,6 +71,16 @@ def student_omr(gray, layout):
         evidence.append(scores)
     return None if errors else result, {'columns':evidence,'ambiguousColumns':errors}
 
+def student_barcode(gray, layout):
+    n = layout['studentNumber']
+    left = round((n['x'] - n['cellWidth']/2) * layout['width'])
+    top = round(n['y'] * layout['height'] - 22)
+    width = round(n['digits'] * n['cellWidth'] * layout['width'])
+    area = gray[max(0,top):top+112, max(0,left):left+width]
+    results = zxingcpp.read_barcodes(area, formats=zxingcpp.BarcodeFormat.Code128 | zxingcpp.BarcodeFormat.Code39 | zxingcpp.BarcodeFormat.ITF)
+    numbers = sorted(set(result.text for result in results if re.fullmatch(r'[0-9]{6}', result.text)))
+    return numbers[0] if len(numbers) == 1 else None, {'mode':'BARCODE','candidates':numbers,'needsReview':len(numbers) != 1}
+
 def validate_box(box):
     values = [box[key] for key in ['x','y','width','height']]
     if not all(isinstance(value,(float,int)) and np.isfinite(value) for value in values): raise ValueError('Invalid crop coordinates')
@@ -86,13 +100,13 @@ def crop(image, region, out, index):
 def scan(image, layout, page, output, expected_code=None):
     corrected, metadata = align(image,layout)
     gray = cv2.cvtColor(corrected,cv2.COLOR_BGR2GRAY)
-    actual_code = page_code(gray)
+    actual_code = page_code(gray, layout)
     if expected_code and actual_code != expected_code:
         if not actual_code.startswith('101') or not actual_code.endswith('110'): raise ValueError('CARD_PAGE_CODE_MISSING: 页面识别码不清晰，请按模板重新打印')
         if actual_code[3:35] != expected_code[3:35]: raise ValueError('CARD_TEMPLATE_MISMATCH: 答题卡不属于所选模板')
         raise ValueError('CARD_PAGE_ORDER: 答题卡页码与上传顺序不符，请按每位学生的页码排序')
     metadata['pageCode'] = actual_code
-    student, evidence = student_omr(gray,layout)
+    student, evidence = student_barcode(gray,layout) if layout['studentNumber'].get('mode') == 'BARCODE' else student_omr(gray,layout)
     metadata['studentNumber'] = evidence
     answers, review = [], student is None
     for region in layout['regions']:

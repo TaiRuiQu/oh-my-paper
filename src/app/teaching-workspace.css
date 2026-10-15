@@ -297,6 +297,14 @@ td {
 .p-card-stage-toolbar .p-actions {
   gap: 3px;
 }
+.p-card-zoom {
+  display: flex;
+  align-items: center;
+}
+.p-card-zoom [data-slot="button"][aria-label^="当前缩放"] {
+  min-width: 52px;
+  font-variant-numeric: tabular-nums;
+}
 .p-card-stage-toolbar select {
   width: auto;
   min-height: 30px;
@@ -323,14 +331,26 @@ td {
   border: 0;
   max-height: none;
   overflow: visible;
-  width: min(100%, 794px);
+  width: var(--card-width, 100%);
+}
+.p-card-stage .p-card-sheet {
+  min-width: 0;
+  max-width: none;
 }
 .p-card-sheet {
   box-shadow: 0 3px 14px rgb(36 53 44 / 14%);
 }
-.p-card-stage .p-card-preview.is-full-size {
-  width: var(--card-width);
-  min-width: var(--card-width);
+.p-barcode-label-sheet > .p-card-preview {
+  min-height: 0;
+  overflow: auto;
+}
+.p-barcode-label-page + .p-barcode-label-page {
+  margin-top: 16px;
+}
+.p-barcode-label-page > svg {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 .p-card-stage-footer {
   display: flex;

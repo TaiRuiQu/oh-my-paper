@@ -187,6 +187,7 @@ export const cardLayoutSchema = z
       .array(z.strictObject({ x: z.number().min(0).max(1), y: z.number().min(0).max(1) }))
       .length(4),
     studentNumber: z.strictObject({
+      mode: z.enum(["OMR", "BARCODE"]).optional(),
       digits: z.number().int().min(1).max(20),
       x: z.number().min(0).max(1),
       y: z.number().min(0).max(1),
