@@ -20,7 +20,7 @@ export async function executeSubmissionsCommand(
           ? await db.aiJob.findUnique({ where: { id: context.jobId } })
           : null;
       const batchInput =
-        aiJob?.kind === "BATCH_GRADE"
+        aiJob?.kind === "GRADE"
           ? (aiJob.input as { assessmentId: string; paperId: string; classroomId: string })
           : null;
       const batch =

@@ -227,7 +227,7 @@ async function main() {
     const { scopePageState } = await import("../src/server/platform/page-state");
     const { enqueueAiJob } = await import("../src/server/platform/ai-jobs");
     const { accessibleAsset, saveImage } = await import("../src/server/platform/assets");
-    const { createTaskFeatures } = await import("../src/server/platform/ai/features");
+    const { createGradingFeatures } = await import("../src/server/platform/ai/grading");
     for (const id of [
       "admin",
       "school",
@@ -460,9 +460,14 @@ async function main() {
       enqueueAiJob("school", {
         kind: "GRADE",
         modelId: "unused-model",
-        input: { submissionId: submissionIds[1][0] },
+        input: {
+          assessmentId: exam.id,
+          classroomId: classes[1],
+          paperId: papers[0],
+          submissionIds: [submissionIds[1][0]],
+        },
       }),
-      /不存在|无权访问/,
+      /不存在|无权访问|批改权限/,
     );
     const itemId = adminPapers.find((p) => p.id === papers[1])!.items[0].id;
     await assert.rejects(
@@ -811,7 +816,12 @@ async function main() {
     await assert.rejects(mark("subject", gradeSubs[0][1], "FIRST", 2, itemId), /无权访问/);
     await assert.rejects(mark("outside", gradeSubs[0][0], "FIRST", 2), /无权访问/);
     await assert.rejects(mark("head", gradeSubs[0][0], "FIRST", 2), /无权访问/);
-    const gradeInput = { submissionId: gradeSubs[1][0] };
+    const gradeInput = {
+      assessmentId: gradeExam.id,
+      classroomId: classes[1],
+      paperId: papers[0],
+      submissionIds: [gradeSubs[1][0]],
+    };
     const gradeJob = await db.aiJob.create({
       data: {
         userId: "grade-peer",
@@ -821,35 +831,23 @@ async function main() {
         input: gradeInput,
       },
     });
-    const grader = await createTaskFeatures({
+    const grader = await createGradingFeatures({
       userId: "grade-peer",
-      kind: "GRADE",
       input: gradeInput,
       jobId: gradeJob.id,
     });
     try {
-      const call = async (name: string, input: unknown) => {
-        const output = await grader.tools[name].execute!(input, {
-          toolCallId: randomUUID(),
-          messages: [],
-          context: undefined,
-        });
-        if (output && typeof output === "object" && "results" in output) {
-          const results = (output as { results: { success: boolean }[] }).results;
-          assert(
-            results.length > 0 && results.every((entry) => entry.success),
-            JSON.stringify(output),
-          );
-        }
-        return output;
-      };
-      await call("read_answer", { items: [{ itemId: mathItemId }] });
-      await call("propose_grade", {
-        items: [{ itemId: mathItemId, score: 8, feedback: "跨班AI首评候选" }],
+      await grader.run({
+        agent: async () => {
+          throw new Error("考试不应启动 Agent");
+        },
+        model: async () => ({
+          grades: [{ itemId: mathItemId, score: 8, feedback: "跨班AI首评", partScores: [] }],
+          skipped: [],
+        }),
       });
-      await call("finish", { summary: "已完成本学科候选评分" });
       await grant("grade-peer", []);
-      await assert.rejects(grader.commit(), /无权访问/);
+      await assert.rejects(grader.commit(), /无权访问|批改权限/);
       assert.equal(await db.review.count({ where: { submissionId: gradeSubs[1][0] } }), 0);
       assert.equal(
         (await db.aiJob.findUniqueOrThrow({ where: { id: gradeJob.id } })).status,

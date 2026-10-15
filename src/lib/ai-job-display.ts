@@ -6,8 +6,7 @@ export const AI_JOB_NAMES: Record<AiKind, string> = {
   ENRICH: "知识点与参考答案",
   ASSEMBLE: "智能组卷",
   TEMPLATE: "智能答题卡",
-  GRADE: "AI 阅卷",
-  BATCH_GRADE: "AI 班级批量批改",
+  GRADE: "AI 批改",
   RECOMMEND: "巩固练习推荐",
   CONSOLIDATE: "生成巩固卷",
 };
@@ -39,7 +38,7 @@ export function aiJobResult(job: AiJobDTO) {
 
 export function aiJobResultLink(job: AiJobDTO): { href: string; label: string } | undefined {
   if (job.status !== "COMPLETED") return;
-  if (job.kind === "BATCH_GRADE") {
+  if (job.kind === "GRADE") {
     const input = job.input as { assessmentId: string };
     const result = aiJobResult(job)?.result as { assessmentKind?: string } | undefined;
     return {

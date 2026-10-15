@@ -10,6 +10,7 @@ const db = vi.hoisted(() => ({
 vi.mock("@/server/db/client", () => ({ getDb: () => db }));
 vi.mock("@/server/auth/accounts", () => ({ createManagedAccount: vi.fn() }));
 import { adminCommandSchema, executeAdmin } from "@/server/platform/admin";
+import { reasoningEfforts } from "@/contracts/ai-models";
 
 beforeEach(() => {
   vi.resetAllMocks();
@@ -40,10 +41,11 @@ describe("provider model names", () => {
         providerId: "provider",
         name: "vendor/model-id",
         displayName: "课堂助手",
+        reasoningEffort: "provider-default",
         reasoningEfforts: ["default"],
         isPublic: true,
       },
-      update: { displayName: "课堂助手", isPublic: true },
+      update: { displayName: "课堂助手", reasoningEffort: "provider-default", isPublic: true },
     });
   });
   it.each([true, false])(
@@ -83,7 +85,9 @@ describe("provider model names", () => {
     const valid = parseModels([{ name: " model-id ", displayName: " " }]);
     expect(valid.success).toBe(true);
     if (valid.success && valid.data.type === "provider.save")
-      expect(valid.data.provider.models).toEqual([{ name: "model-id", displayName: "" }]);
+      expect(valid.data.provider.models).toEqual([
+        { name: "model-id", displayName: "", reasoningEffort: "provider-default" },
+      ]);
     expect(parseModels([{ name: "", displayName: "助手" }]).success).toBe(false);
     expect(
       parseModels([
@@ -92,6 +96,51 @@ describe("provider model names", () => {
       ]).success,
     ).toBe(false);
     expect(parseModels([]).success).toBe(false);
+  });
+  it.each(reasoningEfforts)(
+    "persists per-model reasoning effort %s on creation and update",
+    async (reasoningEffort) => {
+      db.aiProvider.findUnique.mockResolvedValue({ id: "provider", encryptedApiKey: "saved-key" });
+      db.aiProvider.update.mockResolvedValue({ id: "provider" });
+      await executeAdmin(
+        "admin",
+        adminCommandSchema.parse({
+          ...command,
+          provider: {
+            ...command.provider,
+            models: [
+              { name: "first", displayName: "", reasoningEffort },
+              { name: "second", displayName: "", reasoningEffort: "low" },
+            ],
+          },
+        }),
+      );
+      expect(db.aiModel.upsert).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          create: expect.objectContaining({ reasoningEffort }),
+          update: expect.objectContaining({ reasoningEffort }),
+        }),
+      );
+      expect(db.aiModel.upsert).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          create: expect.objectContaining({ reasoningEffort: "low" }),
+          update: expect.objectContaining({ reasoningEffort: "low" }),
+        }),
+      );
+    },
+  );
+  it("rejects unsupported reasoning effort values", () => {
+    expect(
+      adminCommandSchema.safeParse({
+        ...command,
+        provider: {
+          ...command.provider,
+          models: [{ name: "model", displayName: "", reasoningEffort: "invalid" }],
+        },
+      }).success,
+    ).toBe(false);
   });
 });
 

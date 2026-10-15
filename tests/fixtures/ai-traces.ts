@@ -136,7 +136,12 @@ export const aiTraceFixtures: AiJobDTO[] = [
     id: "trace-grade-running",
     kind: "GRADE",
     status: "RUNNING",
-    input: { submissionId: "example-submission" },
+    input: {
+      assessmentId: "example-assessment",
+      classroomId: "example-classroom",
+      paperId: "example-paper",
+      submissionIds: ["example-submission"],
+    },
     events: [
       { type: "start", kind: "GRADE" },
       {

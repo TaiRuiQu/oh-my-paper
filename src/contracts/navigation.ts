@@ -77,6 +77,7 @@ export function navigationFor(role: Role): NavigationGroup[] {
       items: [
         { href: "/exams", label: "考试管理" },
         { href: "/exams/papers", label: "组卷工作台" },
+        { href: "/exams/import", label: "扫描导入试卷" },
         { href: "/exams/cards", label: "答题卡" },
         { href: "/exams/scanning", label: "扫描答题卡" },
         { href: "/exams/grading", label: "阅卷中心" },

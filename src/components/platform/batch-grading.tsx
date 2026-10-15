@@ -15,13 +15,15 @@ export function BatchGradingForm({
 }: {
   state: PlatformState;
   busy: boolean;
-  start: (kind: "BATCH_GRADE", input: unknown) => Promise<{ id: string } | undefined>;
+  start: (kind: "GRADE", input: unknown) => Promise<{ id: string } | undefined>;
 }) {
   const [assessmentId, setAssessmentId] = useState("");
   const [classroomId, setClassroomId] = useState("");
   const [paperId, setPaperId] = useState("");
   const [templateId, setTemplateId] = useState("");
   const [pages, setPages] = useState<UploadedPage[]>([]);
+  const [pagesPerStudent, setPagesPerStudent] = useState(1);
+  const [studentIds, setStudentIds] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [failure, setFailure] = useState("");
   const assessment = state.assessments.find((a) => a.id === assessmentId);
@@ -44,6 +46,27 @@ export function BatchGradingForm({
   const selectedTemplate =
     templates.length === 1 ? templates[0].id : templates.find((t) => t.id === templateId)?.id;
   const needsTemplate = assessment?.kind === "EXAM" && pages.length > 0;
+  const groupSize =
+    assessment?.kind === "EXAM"
+      ? (templates.find((t) => t.id === selectedTemplate)?.layout.pageCount ?? 0)
+      : Number.isInteger(pagesPerStudent) &&
+          pagesPerStudent >= 1 &&
+          pagesPerStudent <= MAX_AI_BATCH_PAGES
+        ? pagesPerStudent
+        : 0;
+  const groupCount = groupSize > 0 ? Math.ceil(pages.length / groupSize) : 0;
+  const assignedStudents = studentIds.slice(0, groupCount);
+  const groupingError =
+    pages.length && groupSize > 0 && pages.length % groupSize
+      ? `已上传 ${pages.length} 页，不能按每人 ${groupSize} 页完整分组，请补齐或移除多余页面。`
+      : "";
+  const invalidGrouping =
+    pages.length > 0 &&
+    (!groupSize ||
+      !!groupingError ||
+      assignedStudents.length !== groupCount ||
+      assignedStudents.some((id) => !classroom?.students.some((s) => s.id === id)) ||
+      new Set(assignedStudents).size !== groupCount);
   const pending = state.submissions.filter(
     (s) =>
       s.assessmentId === assessmentId &&
@@ -92,20 +115,22 @@ export function BatchGradingForm({
           !classroom ||
           !selectedPaper ||
           (needsTemplate && !selectedTemplate) ||
+          invalidGrouping ||
           (!pages.length && !pending.length)
         )
           return;
-        await start("BATCH_GRADE", {
+        await start("GRADE", {
           assessmentId,
           classroomId,
           paperId: selectedPaper,
           assetUrls: pages.map((p) => p.url),
           ...(needsTemplate ? { templateId: selectedTemplate } : {}),
+          ...(pages.length ? { pagesPerStudent: groupSize, studentIds: assignedStudents } : {}),
         });
       }}
     >
       <p>
-        选择班级，上传全班作业或答题卡。作业按学生独立批改；考试按答题卡模板自动切题，逐人逐题独立批改，无需手工框选。
+        选择班级，按学生顺序上传练习册或答题卡。练习册按人定位作答并批改；考试按模板切题后，一次返回每位学生的整份评分。
       </p>
       <div className="p-form-grid">
         <Field label="作业 / 考试安排">
@@ -118,6 +143,7 @@ export function BatchGradingForm({
               setClassroomId("");
               setPaperId("");
               setTemplateId("");
+              setStudentIds([]);
             }}
           >
             <option value="">选择安排</option>
@@ -139,6 +165,7 @@ export function BatchGradingForm({
               setClassroomId(e.target.value);
               setPaperId("");
               setTemplateId("");
+              setStudentIds([]);
             }}
           >
             <option value="">选择班级</option>
@@ -157,6 +184,7 @@ export function BatchGradingForm({
             onChange={(e) => {
               setPaperId(e.target.value);
               setTemplateId("");
+              setStudentIds([]);
             }}
           >
             <option value="">选择题本</option>
@@ -173,7 +201,10 @@ export function BatchGradingForm({
               required={needsTemplate}
               disabled={disabled || !selectedPaper}
               value={selectedTemplate ?? ""}
-              onChange={(e) => setTemplateId(e.target.value)}
+              onChange={(e) => {
+                setTemplateId(e.target.value);
+                setStudentIds([]);
+              }}
             >
               <option value="">选择扫描材料使用的模板</option>
               {templates.map((t) => (
@@ -182,6 +213,23 @@ export function BatchGradingForm({
                 </option>
               ))}
             </select>
+          </Field>
+        )}
+        {assessment?.kind === "HOMEWORK" && (
+          <Field label="每位学生页数">
+            <input
+              type="number"
+              min={1}
+              max={MAX_AI_BATCH_PAGES}
+              step={1}
+              required
+              disabled={disabled}
+              value={pagesPerStudent || ""}
+              onChange={(e) => {
+                setPagesPerStudent(Number(e.target.value));
+                setStudentIds([]);
+              }}
+            />
           </Field>
         )}
       </div>
@@ -207,9 +255,51 @@ export function BatchGradingForm({
         />
       </Field>
       <p className="p-muted">
-        支持多张图片及多页 PDF，每批最多 100
-        页。无需指定学生或框选题目；姓名或考号无法确认的页面会保留待确认，其余作业继续批改。
+        支持多张图片及多页 PDF，每批最多 100 页。必须先上传第一个人的第 1 页、第 2
+        页……，再上传第二个人的全部页面。PDF 按原页码展开；请按下面的分组指定学生。
       </p>
+      {needsTemplate && groupSize > 0 && <p className="p-muted">答题卡模板每人 {groupSize} 页。</p>}
+      {groupingError && (
+        <p className="p-notice error" role="alert">
+          {groupingError}
+        </p>
+      )}
+      {classroom && groupCount > 0 && (
+        <fieldset disabled={disabled}>
+          <legend>按上传分组指定学生</legend>
+          <div className="p-form-grid">
+            {Array.from({ length: groupCount }, (_, index) => (
+              <Field
+                key={index}
+                label={`第 ${index + 1} 位 · 上传第 ${index * groupSize + 1}–${Math.min((index + 1) * groupSize, pages.length)} 页`}
+              >
+                <select
+                  required
+                  value={studentIds[index] ?? ""}
+                  onChange={(e) =>
+                    setStudentIds((current) =>
+                      Array.from({ length: groupCount }, (_, i) =>
+                        i === index ? e.target.value : (current[i] ?? ""),
+                      ),
+                    )
+                  }
+                >
+                  <option value="">选择这组材料的学生</option>
+                  {classroom.students.map((s) => (
+                    <option
+                      key={s.id}
+                      value={s.id}
+                      disabled={assignedStudents.some((id, i) => i !== index && id === s.id)}
+                    >
+                      {s.studentNumber} · {s.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            ))}
+          </div>
+        </fieldset>
+      )}
       {uploading && <p role="status">正在上传并展开扫描页，请稍候…</p>}
       {failure && (
         <p className="p-notice error" role="alert">
@@ -229,7 +319,10 @@ export function BatchGradingForm({
                   type="button"
                   className="button secondary"
                   disabled={disabled}
-                  onClick={() => setPages((current) => current.filter((p) => p.id !== page.id))}
+                  onClick={() => {
+                    setPages((current) => current.filter((p) => p.id !== page.id));
+                    setStudentIds([]);
+                  }}
                   aria-label={`移除 ${page.name}`}
                 >
                   移除
@@ -254,6 +347,7 @@ export function BatchGradingForm({
           !classroom ||
           !selectedPaper ||
           (needsTemplate && !selectedTemplate) ||
+          invalidGrouping ||
           (!pages.length && !pending.length)
         }
       >

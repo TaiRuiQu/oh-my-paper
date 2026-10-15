@@ -94,7 +94,7 @@ Review 唯一键为 `(submissionId,itemId,round)`。round 为 FIRST、SECOND、A
 
 ## AI 班级批量批改
 
-`BATCH_GRADE` 输入：
+统一使用 `GRADE`：
 
 ```ts
 {
@@ -102,42 +102,28 @@ Review 唯一键为 `(submissionId,itemId,round)`。round 为 FIRST、SECOND、A
   classroomId: string;
   paperId: string;
   templateId?: string; // 上传考试答题卡时必填，须属于所选试卷
-  assetUrls: string[]; // 默认 []，最多 100 页、150 MB
-  studentHints: { sourceUrl: string; studentId: string }[]; // 默认 []
+  assetUrls?: string[]; // 有序上传，最多 100 页、150 MB；默认 []
+  pagesPerStudent?: number; // 练习册上传必填；考试由模板确定，传入时须与模板一致
+  studentIds?: string[]; // 上传时必填，按分组顺序指定学生；同一学生不能重复
+  submissionIds?: string[]; // 不上传时可选，只批改指定的未评分答卷
 }
 ```
 
-教师选择安排、班级、题本并上传全班图片或多页 PDF。无需逐个选择学生、无需人工逐题框选。未上传材料时，批量评阅该班已录入且没有评分的作答。
+上传必须依次为第一个人的第 1 至 N 页、第二个人的第 1 至 N 页。程序每 N 页分组，按 `studentIds` 顺序直接分配，不运行材料归属或排序 Agent。总页数必须等于学生数乘以每人页数；学生必须属于班级，已有评分不可覆盖。不上传材料时，批改本班已录入且没有评分的作答。
 
-作业先由材料归属 Agent 自主识别姓名、考号并合并页面，再为每位学生启动独立的评分 Agent，自主查看材料、定位跨页作答并批改整份作业。
+考试使用指定模板校正、验证模板及页码、按区域切题。可辨认的考号必须与分配学生一致，页码必须符合上传顺序；不一致时拒绝任务。程序将每位学生的全部作答裁剪图、题目配图、标准答案、评分标准和分值直接交给模型，通过一次 `generateText` 结构化调用返回整份答卷的逐题得分、中文原因和综合题逐小问得分。考试不启动评分 Agent、工具循环或模型修复调用。
 
-考试上传时指定答题卡模板。扫描工具按定位点校正、验证模板识别码、读取考号与实际页码并逐题裁剪，支持乱序页面；随后按“学生 × 题目”启动独立评分 Agent。已录入的考试作答直接按学生、题目拆分，不必再次上传。混合题仍是一道题，由该题 Agent 完整逐小问评分。
+练习册每位学生只启动一个自主 `ToolLoopAgent`，可用 `read_answer`、`python`、`shell`、`record_answers`、`propose_grade`、`skip_questions`、`finish`、`report_failure`。Agent 在分配页面内自主定位跨页作答、查看裁剪图、计算并评分；对话、沙箱、图片权限与证据记录按学生隔离。
 
-每个评分 Agent 使用独立对话、沙箱及证据查看记录，工具和图片权限限于分配的学生／题目。考试 Agent 只读取本题作答裁剪图与本题内容，不提供其他题目的图片或重新切题工具。Agent 在分配范围内自主决定读取、查看、计算和评分过程；任务调度逐个执行独立 Agent，遵守现有供应商并发限制。所有 Agent 的用量累计到同一个后台任务。
+模型必须覆盖全部题目，每题评分或记录跳过原因，不能重复、遗漏或添加题目。模糊作答保存在 `result.skipped`，不捏造零分。扫描失败原图及原因保存在 `result.pendingPages`，可在学生作答页人工补录。所有模型用量累计到同一任务；AI 只提交 FIRST 首评，双评与仲裁规则保持生效。
 
-工具按职责提供给材料归属 Agent 或评分 Agent：
-
-| 工具                | 作用                                                |
-| ------------------- | --------------------------------------------------- |
-| read_classroom      | 材料归属 Agent 读取真实名册与待归属页               |
-| read_answer         | 评分 Agent 读取自己范围内的题目、标准答案与学生作答 |
-| python / shell      | 查看原始页和作答图，按需处理材料                    |
-| register_submission | 根据可见姓名或考号唯一匹配学生，合并多页            |
-| record_answers      | 作业评分 Agent 定位作答区域，生成裁剪图，支持跨页   |
-| propose_grade       | 按学生和题目批量提交首评分数及评语                  |
-| defer_pages         | 记录无法确认学生的页，继续其他作业                  |
-| skip_questions      | 记录无法辨认或缺失的题，保留未评分状态              |
-| finish              | 完成本 Agent 的页面归属或评分覆盖检查               |
-
-同名、考号矛盾、缺少身份的材料不能按上传顺序猜测学生。result.pendingPages 保存原图与原因；教师在任务结果中确认学生后，用 studentHints 重新提交这些页面。已确认学生但看不清作答的题保存在 result.skipped，供人工核对。未上传的学生不会生成虚假作答或零分。
-
-所有独立 Agent 完成后统一校验覆盖范围，再原子提交作答、评分、历史和任务结果。任务结果还保存 students 列表，包含姓名、submissionId、已评分和待核对题数；考试结果保留 templateId，以便确认待处理页面后使用同一模板重试。AI 任务通过 AiJob 队列后台执行，离开页面仍继续。提交时再次验证权限、题目、批改配置、学生身份、作答和已有评分，防止覆盖处理期间的人工修改。失败提交回滚业务数据并清理新裁剪图。
+全部处理完成后，在一个事务中保存作答、评分、历史、裁剪图及任务结果。提交时再次验证权限、题目、批改配置、模板、学生、作答和已有评分。失败则回滚并清理新文件。
 
 ## 自主任务与配置
 
-AiProvider 一对多 AiModel；AiModel 一对多可选 AiSetting。任务直接传 modelId，当前执行路径不通过 AiSetting 选模型。AiJob 通过 kind 和 input 引用业务目标；模型删除不会级联删除历史任务。
+AiProvider 一对多 AiModel；AiModel 保存逐模型思考强度 reasoningEffort（默认 provider-default），一对多可选 AiSetting。任务直接传 modelId，当前执行路径不通过 AiSetting 选模型。AiJob 通过 kind 和 input 引用业务目标；模型删除不会级联删除历史任务。
 
-现有任务包括 IMPORT（导入）、ENRICH（答案与知识点）、ASSEMBLE（真实题库组卷）、TEMPLATE（答题卡）、GRADE（单份已录入作答）、BATCH_GRADE（班级批量批改）、RECOMMEND（真实题库推题）。其他功能新增任务以 `src/contracts/platform-ai.ts` 为准。
+现有任务包括 IMPORT（导入）、ENRICH（答案与知识点）、ASSEMBLE（真实题库组卷）、TEMPLATE（答题卡）、GRADE（程序分配的单份或班级批改）、RECOMMEND（真实题库推题）。其他功能新增任务以 `src/contracts/platform-ai.ts` 为准。
 
 EmbeddingSetting 独立配置向量化服务。QuestionSearchIndex 保存当前 version/revision/indexedRevision 及同步状态，Worker 将向量写入 Qdrant；不设 Question 外键是为了在原题删除后保留外部索引清理标记。
 

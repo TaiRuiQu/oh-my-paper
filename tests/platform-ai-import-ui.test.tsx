@@ -152,3 +152,52 @@ it("requires a title when the user chooses manual entry before uploading", async
   expect(container.querySelector('[role="alert"]')?.textContent).toContain("请输入名称");
   expect(uploadDocument).not.toHaveBeenCalled();
 });
+
+it.each(["image/png", "application/pdf"])(
+  "creates an exam paper from %s and retains expanded page order",
+  async (type) => {
+    await act(async () =>
+      root.render(
+        <PlatformAI
+          state={{} as PlatformState}
+          tab="questions"
+          importKind="EXAM"
+          refresh={refresh}
+          notify={notify}
+        />,
+      ),
+    );
+    const urls = ["first", "second", "third"].map((id) => `/api/platform/assets/${id}`);
+    vi.mocked(uploadDocument).mockResolvedValue({
+      id: "exam-document",
+      url: urls[0],
+      pageCount: 3,
+      pages: urls.map((url, i) => ({
+        id: String(i),
+        url,
+        page: i + 1,
+        name: `试卷第${i + 1}页`,
+        size: 5,
+      })),
+    });
+    expect(field<HTMLSelectElement>("试卷名称").value).toBe("auto");
+    await act(async () => {
+      const input = container.querySelector<HTMLInputElement>('input[type="file"]')!;
+      expect(input.accept).toContain(".pdf");
+      expect(input.multiple).toBe(true);
+      Object.defineProperty(input, "files", {
+        configurable: true,
+        value: [new File(["exam"], type === "application/pdf" ? "试卷.pdf" : "试卷.png", { type })],
+      });
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+    await act(async () =>
+      [...container.querySelectorAll("button")]
+        .find((button) => button.textContent === "识别并创建试卷")!
+        .click(),
+    );
+    expect(uploadDocument).toHaveBeenCalledWith(expect.any(File), 20);
+    expect(submittedInput()).toEqual({ assetUrls: urls, kind: "EXAM" });
+    expect(push).toHaveBeenCalledWith("/workspace/ai/job");
+  },
+);

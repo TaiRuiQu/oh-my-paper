@@ -3,8 +3,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { getDb } from "@/server/db/client";
 import { AccessError, RequestError } from "@/server/http/errors";
 import { getActor, loadState } from "./service";
-import { assertCanReview } from "./access";
-import { batchGradingContext, type BatchGradingInput } from "./batch-grading";
+import { gradingContext, type GradingInput } from "./grading";
 import { consolidationContext } from "./revision-papers";
 import type { ConsolidationPaperInput } from "@/contracts/revision-papers";
 import { aiRequestSchema } from "@/contracts/platform-ai";
@@ -49,7 +48,7 @@ export async function enqueueAiJob(userId: string, raw: unknown) {
   if (actor.role === "STUDENT" && kind !== "RECOMMEND" && kind !== "CONSOLIDATE")
     throw new AccessError(403, "需要教师权限。");
   const state = await loadState(actor, undefined, {
-    reviewing: kind === "GRADE" || kind === "BATCH_GRADE",
+    reviewing: kind === "GRADE",
   });
   const ids = input as Record<string, unknown>;
   if (kind === "CONSOLIDATE") {
@@ -61,7 +60,7 @@ export async function enqueueAiJob(userId: string, raw: unknown) {
         `题库中符合条件且未作答的题目只有 ${context.candidates.length} 道，请减少题数或补充题库。`,
       );
   }
-  if (kind === "IMPORT" || kind === "BATCH_GRADE") {
+  if (kind === "IMPORT" || kind === "GRADE") {
     const urls = ids.assetUrls as string[];
     for (const url of urls) {
       const id = /^\/api\/platform\/assets\/([\w-]+)$/.exec(url)?.[1];
@@ -88,29 +87,8 @@ export async function enqueueAiJob(userId: string, raw: unknown) {
     )
   )
     throw new AccessError(404, "试卷不存在。");
-  if (kind === "BATCH_GRADE") {
-    await batchGradingContext(getDb(), state, input as BatchGradingInput);
-  }
   if (kind === "GRADE") {
-    const submission = state.submissions.find((submission) => submission.id === ids.submissionId);
-    if (!submission) throw new AccessError(404, "答卷不存在。");
-    const classroom = state.classrooms.find((row) =>
-      row.students.some((student) => student.id === submission.studentId),
-    );
-    const assessment = state.assessments.find((a) => a.id === submission.assessmentId);
-    const config = assessment?.papers.find((paper) => paper.paperId === submission.paperId);
-    if (!classroom || !config || !assessment) throw new AccessError(404, "答卷不存在。");
-    await assertCanReview(getDb(), state.actor, assessment, classroom.id, config.subject);
-    if (
-      state.assessments.find((assessment) => assessment.id === submission.assessmentId)?.published
-    )
-      throw new RequestError(409, "请先撤回发布，再进行 AI 阅卷。");
-    if (
-      state.reviews.some(
-        (review) => review.submissionId === submission.id && review.round === "FIRST",
-      )
-    )
-      throw new RequestError(409, "答卷已有第一评，不能自动覆盖。");
+    await gradingContext(getDb(), state, input as GradingInput);
   }
   if (kind === "RECOMMEND") {
     const report = ids.studentId

@@ -1,21 +1,27 @@
 # Agent 工具与沙箱
 
-平台有六类自主 Agent，均由 AI SDK `ToolLoopAgent` 根据任务和工具结果自主决定下一步。工具入口为 `src/server/platform/ai/features.ts`，不预设模型必须执行的固定流程。
+平台自主 Agent 由 AI SDK `ToolLoopAgent` 根据任务和工具结果自主决定下一步。工具入口为 `src/server/platform/ai/features.ts`，不预设模型必须执行的固定流程。
 
 ## 工具清单
 
-所有 Agent 共同拥有 `python`、`shell`、`skip_questions`、`finish` 与 `report_failure`。其余工具负责读取受权业务对象或提交经过验证的业务结果：
+自主 Agent 共同拥有 `python`、`shell`、`skip_questions`、`finish` 与 `report_failure`。其余工具负责读取受权业务对象或提交经过验证的业务结果：
 
-| Agent                     | 业务工具                                                                          |
-| ------------------------- | --------------------------------------------------------------------------------- |
-| 图片导入 `IMPORT`         | `record_source_inventory`、`propose_question`                                     |
-| 答案与知识点补全 `ENRICH` | `read_question`、`propose_enrichment`                                             |
-| 智能组卷 `ASSEMBLE`       | `search_questions`、`read_question`、`propose_paper`                              |
-| 答题卡 `TEMPLATE`         | `read_paper`、`read_paper_question`、`generate_layout`、`propose_template`        |
-| 阅卷 `GRADE`              | `list_items`、`read_answer`、`propose_grade`                                      |
-| 巩固练习 `RECOMMEND`      | `read_learning`、`search_candidates`、`read_candidate`、`propose_recommendations` |
+| Agent                     | 业务工具                                                                                      |
+| ------------------------- | --------------------------------------------------------------------------------------------- |
+| 图片导入 `IMPORT`         | `record_source_inventory`、`propose_question`                                                 |
+| 答案与知识点补全 `ENRICH` | `read_question`、`propose_enrichment`                                                         |
+| 智能组卷 `ASSEMBLE`       | `search_questions`、`read_question`、`propose_paper`                                          |
+| 答题卡 `TEMPLATE`         | `read_paper`、`read_paper_question`、`generate_layout`、`render_template`、`propose_template` |
+| 练习册批改 `GRADE`        | `read_answer`、`record_answers`、`propose_grade`                                              |
+| 巩固练习 `RECOMMEND`      | `read_learning`、`search_candidates`、`read_candidate`、`propose_recommendations`             |
 
 `generate_layout` 提供现有答题卡引擎的可编辑初稿，模型也可自行计算布局后提交。业务提交工具保留账号权限、真实题目 ID、题型完整性、评分上限、多人评阅和事务校验；沙箱无法直接连接数据库或绕过这些规则。
+
+TEMPLATE 使用专用提示词，要求按题意、解答步骤、作图及作文篇幅分配书写空间，按需读取完整题目，核对综合题小问安排、分页与留白，并保留扫描定位与考号识别约束。`render_template` 接受完整 `layout` 和 `pages`（默认 `[1]`，每次 1–3 个不同页码），复用编辑器及打印的 `renderCardSvg`，直接返回真实 JPEG 像素；单图长边最多 1800px、最多 512 KiB。工具只读取当前试卷授权的配图并在本地内嵌，不访问远程地址，不保存模板或新增配图资产。草稿页码编码不作为正式扫描凭证。模型必须查看最终布局的全部页面后才能 `propose_template`；预览证据与整份布局绑定，修改布局后须重新预览全部页。程序能验证预览覆盖，具体书写空间和视觉效果仍由模型判断。
+
+## 评分任务分配
+
+`GRADE` 由程序按上传顺序、每人页数及 `studentIds` 分配，不再启动学生识别、页面排序或考试逐题评分 Agent。练习册每人一个自主 Agent；考试按模板裁剪后，每份答卷仅调用一次 `generateText` + `Output.object`，直接传入全部题目、答案、评分标准、作答图与题图，返回逐题评分、原因、综合题小问分及跳过项。考试不提供工具或沙箱，也不额外调用模型修复结果。详见 [数据模型](data-model.zh-CN.md#ai-班级批量批改)。
 
 ## 批量、并行与错误反馈
 
@@ -35,7 +41,7 @@
 
 ## 看不清题目的处理
 
-模型遇到无法辨认的题目或学生作答时，用 `skip_questions` 记录原因并继续处理其他题目，不因此调用 `report_failure`。输入条目为 `{id, reason, sourceUrl?}`：IMPORT 的 `id` 是稳定 `sourceKey`，GRADE/TEMPLATE 为 `itemId`，其余任务为 `questionId`；IMPORT 同时指定已查看页面的 `sourceUrl`。
+模型遇到无法辨认的题目或学生作答时，用 `skip_questions` 记录原因并继续处理其他题目，不因此调用 `report_failure`。输入条目为 `{id, reason, sourceUrl?}`：IMPORT 的 `id` 是稳定 `sourceKey`，TEMPLATE 为 `itemId`；练习册 GRADE 使用 `{studentId, itemId, reason}`，其余任务为 `questionId`；IMPORT 同时指定已查看页面的 `sourceUrl`。
 
 跳过项不写入题目或评分，替换同题暂存草稿；后续成功报告可替换跳过项。IMPORT 的成功题目数加跳过数必须匹配逐页清单，ENRICH/GRADE 必须覆盖全部成功项或跳过项。全部题目跳过也能正常 `finish`，结果持久化为 `result.skipped`，任务详情展示题目、原因和可用原图。因无法辨认而未能生成组卷、答题卡或推荐结果时，模型在完成摘要明确说明，不生成不合要求的替代结果。
 
@@ -71,6 +77,12 @@ Bubblewrap 为每个任务建立独立用户、PID、挂载和网络命名空间
 可信父进程在清理所有子孙进程后读取输出图片，拒绝符号链接、特殊文件和越界路径。沙箱工具调用串行使用任务工作区，超时清理调用进程；沙箱异常退出可重建并明确告知工作区重置。任务退出时在 `finally` 中销毁沙箱和宿主临时目录，不存在未隔离的回退执行路径。
 
 Python/shell 调用代码、命令、退出码与文本输出写入本人专属 `/workspace/ai/[id]` 执行轨迹。运行诊断及部署步骤见 [部署指南](deployment.zh-CN.md)。`pnpm test:sandbox` 在真实 Bubblewrap 中验证隔离、依赖、文件共享、图像输出、资源限制与清理；`pnpm test:ai-domain` 验证这些工具与业务提交的衔接。
+
+## 模型思考强度
+
+管理员在「系统管理 → 模型接入」编辑提供商时，可为每个模型单独选择思考强度：供应商默认、关闭（none）、最低（minimal）、低（low）、中（medium）、高（high）、更高（xhigh）、最高（max）。默认沿用供应商行为。
+
+设置保存在 `AiModel.reasoningEffort`，运行时通过 AI SDK 7 的统一 `reasoning` 参数应用于所有自主 Agent 步骤和考试单次评分。SDK 将其转换为 OpenAI Chat/Responses、Anthropic 或 Google 的原生设置；模型实际支持的档位由供应商决定。它与 Responses 上下文续接独立，开启续接时每轮仍保持所选强度。
 
 ## Responses API 上下文续接
 

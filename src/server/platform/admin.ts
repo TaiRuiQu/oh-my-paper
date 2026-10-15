@@ -1,5 +1,6 @@
 import "server-only";
 import { managedAccountSchema } from "@/contracts/auth";
+import { reasoningEffortSchema } from "@/contracts/ai-models";
 import { createManagedAccount } from "@/server/auth/accounts";
 import { z } from "zod";
 import { teachingPermissionsCommandSchema } from "@/contracts/permissions";
@@ -40,6 +41,7 @@ export const adminCommandSchema = z.discriminatedUnion("type", [
           z.strictObject({
             name: z.string().trim().min(1).max(120),
             displayName: z.string().trim().max(120),
+            reasoningEffort: reasoningEffortSchema.default("provider-default"),
           }),
         )
         .min(1)
@@ -69,7 +71,10 @@ export async function loadAdmin(id: string) {
       baseURL: true,
       maxOutputTokens: true,
       usePreviousResponseId: true,
-      models: { select: { id: true, name: true, displayName: true }, orderBy: { name: "asc" } },
+      models: {
+        select: { id: true, name: true, displayName: true, reasoningEffort: true },
+        orderBy: { name: "asc" },
+      },
     },
     orderBy: { name: "asc" },
   });
@@ -169,17 +174,18 @@ export async function executeAdmin(id: string, input: z.infer<typeof adminComman
     await tx.aiModel.deleteMany({
       where: { providerId: saved.id, name: { notIn: data.models.map((model) => model.name) } },
     });
-    for (const { name, displayName } of data.models)
+    for (const { name, displayName, reasoningEffort } of data.models)
       await tx.aiModel.upsert({
         where: { providerId_name: { providerId: saved.id, name } },
         create: {
           providerId: saved.id,
           name,
           displayName,
+          reasoningEffort,
           reasoningEfforts: ["default"],
           isPublic: true,
         },
-        update: { displayName, isPublic: true },
+        update: { displayName, reasoningEffort, isPublic: true },
       });
     return saved;
   });

@@ -66,6 +66,7 @@ async function main() {
         name: source.name,
         isPublic: true,
         reasoningEfforts: ["default"],
+        reasoningEffort: source.reasoningEffort,
       },
     });
     await db.user.create({
@@ -318,7 +319,7 @@ async function main() {
         },
       })
     ).id;
-    await run("GRADE", { submissionId });
+    await run("GRADE", { assessmentId, classroomId, paperId, submissionIds: [submissionId] });
     const reviews = await db.review.findMany({
       where: { submissionId },
       orderBy: { itemId: "asc" },

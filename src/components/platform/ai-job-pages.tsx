@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { AiJobDTO, BatchGradingResult } from "@/contracts/platform-ai";
-import { BatchGradingResults } from "./batch-grading-results";
+import type { AiJobDTO, GradingResult } from "@/contracts/platform-ai";
+import { GradingResults } from "./batch-grading-results";
 import { aiTeacherFailure } from "@/lib/ai-teacher-display";
 import { AI_JOB_NAMES, aiJobHref, aiJobResult, aiJobResultLink } from "@/lib/ai-job-display";
 import { apiRequest, jsonBody } from "@/lib/http-client";
@@ -83,7 +83,7 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
   const recommendations = result?.recommendations ?? result?.result?.recommendations;
   const skipped = result?.result?.skipped;
   const skippedQuestionLabel = (id: string, index: number) => {
-    if (job.kind === "BATCH_GRADE") {
+    if (job.kind === "GRADE") {
       const [studentId, itemId] = id.split(":");
       const student = state.classrooms.flatMap((c) => c.students).find((s) => s.id === studentId);
       const item = state.papers.flatMap((p) => p.items).find((i) => i.id === itemId);
@@ -161,12 +161,8 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
           </div>
         </Panel>
       )}
-      {job.kind === "BATCH_GRADE" && job.status === "COMPLETED" && result?.result && (
-        <BatchGradingResults
-          job={job}
-          state={state}
-          result={result.result as unknown as BatchGradingResult}
-        />
+      {job.kind === "GRADE" && job.status === "COMPLETED" && result?.result && (
+        <GradingResults result={result.result as unknown as GradingResult} />
       )}
       {job.kind === "RECOMMEND" && recommendations?.length ? (
         <Panel title="推荐练习">

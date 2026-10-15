@@ -1,5 +1,5 @@
 import "server-only";
-import { ToolLoopAgent, isStepCount, type ModelMessage } from "ai";
+import { ToolLoopAgent, isStepCount, generateText, Output, type ModelMessage } from "ai";
 import type { Prisma } from "@/generated/prisma/client";
 import type { AiKind } from "@/contracts/platform-ai";
 import { createTaskFeatures } from "./features";
@@ -8,7 +8,8 @@ import { RequestError } from "@/server/http/errors";
 import { prepareResponsesStep } from "./responses";
 import { toolErrorDetails } from "./tools";
 import { createTaskCostTracker } from "./cost";
-import type { AgentTask } from "./agent-task";
+import type { AgentTask, ExecuteModel } from "./agent-task";
+import { createGradingFeatures } from "./grading";
 export type AiTaskOptions = {
   userId: string;
   kind: AiKind;
@@ -68,7 +69,10 @@ export async function runAiTask(
     throw new RequestError(429, "该模型供应商已达到并发上限，请稍后重试。");
   active.set(key, count + 1);
   try {
-    const features = await createTaskFeatures(options);
+    const features =
+      options.kind === "GRADE"
+        ? await createGradingFeatures(options)
+        : await createTaskFeatures({ ...options, kind: options.kind });
     try {
       const emit = options.onEvent ?? (async () => {});
       const cost = await createTaskCostTracker({
@@ -98,6 +102,7 @@ export async function runAiTask(
         if (task.scope) await emitAgent({ type: "agent", status: "started" });
         const agent = new ToolLoopAgent({
           model: configuration.model,
+          reasoning: configuration.reasoning,
           instructions: task.instructions,
           tools: task.tools,
           maxOutputTokens: configuration.maxOutputTokens,
@@ -219,8 +224,39 @@ export async function runAiTask(
           throw new RequestError(422, "AI未完成全部要求，请查看任务说明后重试。");
         if (task.scope) await emitAgent({ type: "agent", status: "ended" });
       };
-      if ("runAgents" in features && typeof features.runAgents === "function")
-        await features.runAgents(executeAgent);
+      const executeModel: ExecuteModel = async (task) => {
+        const result = await generateText({
+          model: configuration.model,
+          reasoning: configuration.reasoning,
+          system: task.instructions,
+          messages: task.messages,
+          output: Output.object({ schema: task.outputSchema }),
+          maxOutputTokens: configuration.maxOutputTokens,
+          maxRetries: 0,
+          timeout: Math.max(configuration.timeoutMs, 1000),
+          providerOptions:
+            configuration.identity.apiType === "openai_responses"
+              ? { openai: { store: true } }
+              : undefined,
+          onStepEnd: async (event) => {
+            cost.add(event.usage);
+            await emit(
+              JSON.parse(
+                JSON.stringify({
+                  type: "step",
+                  agent: task.scope,
+                  finishReason: event.finishReason,
+                  toolNames: [],
+                  usage: event.usage,
+                  cost: cost.snapshot(),
+                }),
+              ),
+            );
+          },
+        });
+        return result.output;
+      };
+      if ("run" in features) await features.run({ agent: executeAgent, model: executeModel });
       else await executeAgent(features);
       const output = await features.commit();
       await emit({ type: "complete", summary: output.summary });

@@ -46,7 +46,9 @@ AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列。`en
 
 ## AI 自主任务
 
-共享输入定义为 `src/contracts/platform-ai.ts`，基础任务包括 IMPORT / ENRICH / ASSEMBLE / TEMPLATE / GRADE / BATCH_GRADE / RECOMMEND。执行器使用 AI SDK 7 `ToolLoopAgent`，由模型选择检索、读取、查看图片、裁切、提出候选和完成工具；没有预先固定的模型调用工作流。
+共享输入定义为 `src/contracts/platform-ai.ts`，基础任务包括 IMPORT / ENRICH / ASSEMBLE / TEMPLATE / GRADE / RECOMMEND。自主任务使用 AI SDK 7 `ToolLoopAgent`，由模型选择工具；考试批改由程序提供完整证据，每份答卷单次结构化调用。
+
+模型接入按模型保存 `AiModel.reasoningEffort`：`provider-default / none / minimal / low / medium / high / xhigh / max`，默认供应商设置。管理员可逐模型编辑，运行时通过 AI SDK 7 统一的 `reasoning` 参数传给全部 Agent 步骤及考试单次调用，由 SDK 转换为各协议的原生参数。Responses 续接仍保留这项设置。
 
 所有写入候选在内存中暂存，`finish` 校验成功项与明确跳过的不可辨认题目覆盖要求后，才在同一数据库事务写入业务数据、AI 评阅来源及 `AiJob.COMPLETED/result`。跳过项不写入题目或评分，原因保存在 `result.skipped` 并在任务详情展示；全部题目无法辨认也可正常完成。任务行锁和领域锁防止竞争提交；题目更新、作答变更、已有评阅或权限撤回会拒绝过期提交。模型输出不能直接修改所属用户或绕过现有业务校验。
 
@@ -61,7 +63,7 @@ PDF 在客户端通过浏览器打印保存，使用预览中的版面与本机�
 
 - ENRICH 仅可读取和修改指定题的考点、答案、解析及评分标准；保留题干、选项、配图和混合子题编号，已有逐空答案保留空数。配图须先查看。
 - ASSEMBLE 从真实题库选择并读取题目，验证学科、年级、准确题型数量、平均难度与知识点分布。百分比通过最大余数法分配整数题数，多标签题使用容量匹配且每题只贡献一次。题库条件无法满足时明确失败，不编造题目；因无法辨认而跳过后不能组卷时，正常结束并在摘要说明未生成试卷。
-- TEMPLATE 自主读取整卷题型摘要，按需读取题目正文，生成、调整并提交布局；最终仍受题区覆盖、坐标及重叠校验。
+- TEMPLATE 使用专用提示词，按题意、步骤、作图和作文篇幅分配空间；自主读取、生成、调整布局，以 `render_template` 查看与编辑器和打印共用渲染器的真实页面图片。提交前须预览最终布局全部页，修改后重新预览，仍受题区覆盖、坐标及重叠校验；预览只读，不新增配图资产。
 - GRADE 批量读取原题、答案、解析、评分标准和实际作答；有作答图必须逐一查看。混合题须逐小问给分并验证比例上限与总分，结构化存入 `Review.partScores`；结果写入 `Review.source=AI` 和 `aiJobId`，只允许 FIRST，DOUBLE 仍等待独立人工第二评和必要的第三评仲裁。
 - RECOMMEND 读取本人或获授权学生的真实错题，从同学科真实题库匹配父题及混合子题知识点；排除本人已提交作答的题，保留尚未作答的组卷题作为候选。推荐要求具体理由和准确数量，并在提交前重新校验学生权限、错题和候选题。
 
@@ -97,15 +99,17 @@ AI 执行轨迹的 Python / shell 输出图片在工具返回前写入共享 `st
 
 ## 班级批量批改
 
-`BATCH_GRADE` 输入 `{assessmentId,classroomId,paperId,templateId?:string,assetUrls?:string[],studentHints?:{sourceUrl,studentId}[]}`。教师按班级一次上传图片或多页 PDF，最多 100 页 / 150 MB；不传图片则批改班内已录入且没有评分的作答。
+`GRADE` 统一处理已录入作答与上传材料。输入为 `{assessmentId,classroomId,paperId,templateId?,assetUrls?,pagesPerStudent?,studentIds?,submissionIds?}`。最多 100 页 / 150 MB；有序图片或 PDF 展开后的页面必须先放同一学生的全部页，再放下一位。
 
-作业由材料归属 Agent 识别学生并合并页面，再为每位学生创建独立评分 Agent，自主查看、切题、逐题首评。考试上传须指定所选试卷的答题卡模板，扫描工具按定位点与页面识别码校正、验证模板、识别实际页码和考号并切题，支持乱序多页材料；之后每个学生的每道题创建独立评分 Agent，混合题由该 Agent 完整逐小问评分。已录入的考试直接按学生、题目拆分。
+上传练习册须指定 `pagesPerStudent`，考试页数取答题卡模板；`studentIds` 明确每组的归属顺序。程序校验页数、学生范围与已有评分后直接分配材料，删除原材料归属、排序和逐题考试评分 Agent。不传材料时批改本班无评分的答卷，也可用 `submissionIds` 限定范围。
 
-各评分 Agent 有独立对话、沙箱、图片白名单和证据查看记录；作业限于一个学生，考试限于一个学生的一道题，不提供跨题切题工具。调度逐个执行独立 Agent，所有模型用量累计到原 `AiJob`。评分 Agent 在授权范围内自主选择查看、计算、评分或记录无法辨认的题目。单个 Agent 失败不会写入半成品评分。
+考试先确定性校正并按模板切题，再将每位学生所有题目的作答图、题图与评分依据直接提供给单次 `generateText` + `Output.object` 调用，一次返回整份答卷的分数、评语与逐小问分数；没有工具、沙箱或额外模型修复调用。模板页码与上传顺序、可读考号与分配学生不符时拒绝。扫描失败页及原因保存在 `result.pendingPages`，缺失区域或模糊答案保存在 `result.skipped`。
 
-未匹配学生或扫描异常的页保存在 `result.pendingPages`，考试结果保留 `templateId`，教师确认学生后可用相同模板重提这些页面；模糊题保存在 `result.skipped`，不会捏造零分。所有页面须登记或待确认、所有已识别学生的题目须评分或跳过，全部 Agent 完成后同事务保存作答、Review、ReviewEvent、资产及任务结果。提交前重新检查权限、题本与模板设置、学生身份、作答与已有评分。
+练习册每名学生使用一个独立 `ToolLoopAgent`，自主查看页面、定位跨页作答、裁剪、核验并提交评分。每个 Agent 独立对话、沙箱、授权图像与证据查看记录，只能处理分配学生的全部题目。
 
-练习册首页统一显示姓名、班级、六位考号填写与填涂区，预览、PDF 打印与 Word 导出共享几何。原人工练习册录入与答题卡扫描仍可用于人工处理。
+全部题目必须评分或明确跳过；AI 仅提供 FIRST 首评。所有模型用量累计到同一个 `AiJob`，全部处理成功后原子保存作答、Review、ReviewEvent、资产与任务结果，提交前重查权限、题本、模板、学生、作答和已有评分。
+
+考试试卷扫描导入入口为 `/exams/import`，在考试管理、组卷工作台及考试导航提供链接。图片及 PDF 通过 `IMPORT` 的 `kind: EXAM` 创建可编辑试卷，识别题目、材料与分值，保留原页面顺序，一次最多 20 页。
 
 ### 答题卡条形码与标签纸
 

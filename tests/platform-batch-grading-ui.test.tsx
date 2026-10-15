@@ -3,11 +3,10 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { BatchGradingForm } from "@/components/platform/batch-grading";
-import { BatchGradingResults } from "@/components/platform/batch-grading-results";
+import { GradingResults } from "@/components/platform/batch-grading-results";
 import type { PlatformState } from "@/contracts/platform";
-import type { AiJobDTO, BatchGradingResult } from "@/contracts/platform-ai";
+import type { GradingResult } from "@/contracts/platform-ai";
 import { uploadDocument } from "@/lib/document-upload";
-import { apiRequest } from "@/lib/http-client";
 const { push } = vi.hoisted(() => ({ push: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
 vi.mock("@/lib/document-upload", () => ({ uploadDocument: vi.fn() }));
@@ -83,23 +82,26 @@ async function upload() {
     control.dispatchEvent(new Event("change", { bubbles: true }));
   });
 }
-it("uploads class materials and submits one task without student selection or answer boxes", async () => {
+it("assigns uploaded page groups to explicit students before submitting", async () => {
   await act(async () => root.render(<BatchGradingForm state={state} busy={false} start={start} />));
   await select(0, "assignment");
   await select(1, "class");
   await upload();
-  expect(container.querySelectorAll("select")).toHaveLength(3);
+  expect(container.querySelectorAll("select")).toHaveLength(4);
+  await select(3, student.id);
   expect(uploadDocument).toHaveBeenCalledWith(expect.any(File), 100);
   await act(async () =>
     container
       .querySelector("form")!
       .dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })),
   );
-  expect(start).toHaveBeenCalledWith("BATCH_GRADE", {
+  expect(start).toHaveBeenCalledWith("GRADE", {
     assessmentId: "assignment",
     classroomId: "class",
     paperId: "paper",
     assetUrls: [page.url],
+    pagesPerStudent: 1,
+    studentIds: [student.id],
   });
 });
 it("requires the matching answer-card template for uploaded exam pages", async () => {
@@ -111,6 +113,7 @@ it("requires the matching answer-card template for uploaded exam pages", async (
       paperId: "paper",
       name: id,
       preset: false,
+      layout: { pageCount: 1 },
     })),
   } as PlatformState;
   await act(async () => root.render(<BatchGradingForm state={exam} busy={false} start={start} />));
@@ -126,9 +129,10 @@ it("requires the matching answer-card template for uploaded exam pages", async (
   await submit();
   expect(start).not.toHaveBeenCalled();
   await select(3, "card-b");
+  await select(4, student.id);
   await submit();
   expect(start).toHaveBeenCalledWith(
-    "BATCH_GRADE",
+    "GRADE",
     expect.objectContaining({ templateId: "card-b", assetUrls: [page.url] }),
   );
 });
@@ -154,7 +158,7 @@ it("can bulk grade existing unreviewed class work without uploading again", asyn
       .querySelector("form")!
       .dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })),
   );
-  expect(start).toHaveBeenCalledWith("BATCH_GRADE", expect.objectContaining({ assetUrls: [] }));
+  expect(start).toHaveBeenCalledWith("GRADE", expect.objectContaining({ assetUrls: [] }));
 });
 it("keeps successfully uploaded pages and reports a later file upload failure", async () => {
   await act(async () => root.render(<BatchGradingForm state={state} busy={false} start={start} />));
@@ -164,43 +168,18 @@ it("keeps successfully uploaded pages and reports a later file upload failure", 
   expect(container.textContent).toContain("已上传 1 页");
   expect(container.querySelector('[role="alert"]')?.textContent).toContain("PDF 无法读取");
 });
-it.each(["HOMEWORK", "EXAM"] as const)(
-  "confirms an unidentified %s page and preserves the template when retrying",
-  async (kind) => {
-    vi.mocked(apiRequest).mockResolvedValue({ id: "recovered" });
-    const result: BatchGradingResult = {
-      assessmentId: "assignment",
-      assessmentKind: kind,
-      ...(kind === "EXAM" ? { templateId: "card" } : {}),
-      classroomId: "class",
-      paperId: "paper",
-      students: [],
-      pendingPages: [{ sourceUrl: page.url, reason: "未写姓名" }],
-    };
-    await act(async () =>
-      root.render(
-        <BatchGradingResults
-          state={state}
-          job={{ id: "job", modelId: "model" } as AiJobDTO}
-          result={result}
-        />,
-      ),
-    );
-    await select(0, student.id);
-    await act(async () => container.querySelector("button")!.click());
-    const body = JSON.parse(String(vi.mocked(apiRequest).mock.calls[0][1]?.body));
-    expect(body).toEqual({
-      kind: "BATCH_GRADE",
-      modelId: "model",
-      input: {
-        assessmentId: "assignment",
-        classroomId: "class",
-        paperId: "paper",
-        ...(kind === "EXAM" ? { templateId: "card" } : {}),
-        assetUrls: [page.url],
-        studentHints: [{ sourceUrl: page.url, studentId: student.id }],
-      },
-    });
-    expect(push).toHaveBeenCalledWith("/workspace/ai/recovered");
-  },
-);
+it("shows scan failures with original images without the removed identity retry flow", async () => {
+  const result: GradingResult = {
+    assessmentId: "assignment",
+    assessmentKind: "EXAM",
+    classroomId: "class",
+    paperId: "paper",
+    students: [],
+    pendingPages: [{ sourceUrl: page.url, reason: "定位点不清晰" }],
+  };
+  await act(async () => root.render(<GradingResults result={result} />));
+  expect(container.textContent).toContain("定位点不清晰");
+  expect(container.querySelector("a")?.getAttribute("href")).toBe(page.url);
+  expect(container.querySelector("select")).toBeNull();
+  expect(container.querySelector("button")).toBeNull();
+});

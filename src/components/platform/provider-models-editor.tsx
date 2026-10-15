@@ -3,9 +3,18 @@
 import { useState } from "react";
 import { EditableList } from "./editable-list";
 import { Field } from "./primitives";
+import {
+  reasoningEfforts,
+  reasoningEffortLabels,
+  type ReasoningEffort,
+} from "@/contracts/ai-models";
 
-type Model = { name: string; displayName: string };
-const emptyModel = (): Model => ({ name: "", displayName: "" });
+type Model = { name: string; displayName: string; reasoningEffort: ReasoningEffort };
+const emptyModel = (): Model => ({
+  name: "",
+  displayName: "",
+  reasoningEffort: "provider-default",
+});
 
 export function ProviderModelsEditor({
   models,
@@ -46,6 +55,25 @@ export function ProviderModelsEditor({
               value={model.displayName}
               onChange={(e) => update({ ...model, displayName: e.target.value })}
             />
+          </Field>
+          <Field
+            label={`模型 ${index + 1} 思考强度`}
+            hint="更充分的思考通常耗时更长。按模型支持的档位选择，或使用供应商默认设置。"
+          >
+            <select
+              name="modelReasoningEffort"
+              disabled={disabled}
+              value={model.reasoningEffort}
+              onChange={(e) =>
+                update({ ...model, reasoningEffort: e.target.value as ReasoningEffort })
+              }
+            >
+              {reasoningEfforts.map((effort) => (
+                <option key={effort} value={effort}>
+                  {reasoningEffortLabels[effort]}
+                </option>
+              ))}
+            </select>
           </Field>
         </div>
       )}

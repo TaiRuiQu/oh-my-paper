@@ -41,6 +41,7 @@ async function main() {
       tasks.push(features);
       return features;
     };
+    const { createGradingFeatures } = await import("../src/server/platform/ai/grading");
     const { saveImage, accessibleAsset } = await import("../src/server/platform/assets");
     for (const id of ["teacher", "second"])
       await db.user.create({ data: { id, name: id, email: `${id}@domain.test`, role: "TEACHER" } });
@@ -322,35 +323,39 @@ async function main() {
         },
       })
     ).id;
-    const gradeInput = { submissionId },
+    const gradeInput = { assessmentId, classroomId, paperId, submissionIds: [submissionId] },
       gradeJob = await makeJob("GRADE", gradeInput),
-      grader = await createTaskFeatures({
+      grader = await createGradingFeatures({
         userId: "teacher",
-        kind: "GRADE",
         input: gradeInput,
         jobId: gradeJob.id,
       });
-    await call(grader, "read_answer", { items: [{ itemId: paper.items[0].id }] });
-    await call(grader, "propose_grade", {
-      items: [
-        {
-          itemId: paper.items[0].id,
-          score: 5,
-          feedback: "第二小问解释错误",
-          parts: [
-            { partId: "1", score: 4, feedback: "两个空正确" },
-            { partId: "2", score: 1, feedback: "解释错误" },
-          ],
-        },
-      ],
+    tasks.push(grader);
+    await grader.run({
+      agent: async () => {
+        throw new Error("考试不应启动 Agent");
+      },
+      model: async () => ({
+        grades: [
+          {
+            itemId: paper.items[0].id,
+            score: 5,
+            feedback: "第二小问解释错误",
+            partScores: [
+              { partId: "1", score: 4, feedback: "两个空正确" },
+              { partId: "2", score: 1, feedback: "解释错误" },
+            ],
+          },
+        ],
+        skipped: [],
+      }),
     });
-    await call(grader, "finish", { summary: "AI首评完成" });
     await grader.commit();
     const first = await db.review.findFirstOrThrow({ where: { submissionId } });
     assert.equal(first.source, "AI");
     assert.equal(first.aiJobId, gradeJob.id);
     assert.equal(first.round, "FIRST");
-    assert(first.feedback.includes("(1) 4分"));
+    assert.equal((first.partScores as unknown[]).length, 2);
     assert.equal(
       (await db.scanSubmission.findUniqueOrThrow({ where: { id: submissionId } })).status,
       "REVIEW",
@@ -540,9 +545,8 @@ async function main() {
       })
     ).id;
     const batchPaper = (await loadState(actor)).papers.find((p) => p.id === batchPaperId)!;
-    const { createBatchGradingFeatures } = await import("../src/server/platform/ai/batch-grading");
-    const createBatch = async (request: { input: unknown; jobId: string }) => {
-      const task = await createBatchGradingFeatures({ userId: "teacher", ...request });
+    const createGrading = async (request: { input: unknown; jobId: string }) => {
+      const task = await createGradingFeatures({ userId: "teacher", ...request });
       tasks.push(task);
       return task;
     };
@@ -571,204 +575,167 @@ async function main() {
     );
     const secondPage = await saveImage("teacher", sourceBuffer, "第二位学生.png");
     const continuationPage = await saveImage("teacher", sourceBuffer, "第一位学生续页.png");
-    const unknownPage = await saveImage("teacher", sourceBuffer, "无考号.png");
+    const secondContinuation = await saveImage("teacher", sourceBuffer, "第二位学生续页.png");
     const batchInput = {
       assessmentId: batchAssessmentId,
       classroomId,
       paperId: batchPaperId,
-      assetUrls: [source.url, continuationPage.url, secondPage.url, unknownPage.url],
+      assetUrls: [source.url, continuationPage.url, secondPage.url, secondContinuation.url],
+      pagesPerStudent: 2,
+      studentIds: [studentId, secondStudent],
     };
-    const batchJob = await makeJob("BATCH_GRADE", batchInput);
-    const batch = await createBatch({
-      input: batchInput,
-      jobId: batchJob.id,
-    });
-    await batch.runAgents(async (agent) => {
-      if (agent.scope?.stage === "identify") {
-        await call(agent, "read_classroom", {});
-        await assert.rejects(
-          call(agent, "register_submission", {
-            items: [{ sourceUrls: [source.url], studentNumber: "000001" }],
-          }),
-          /先查看/,
+    await assert.rejects(
+      createGradingFeatures({
+        userId: "teacher",
+        input: { ...batchInput, assetUrls: batchInput.assetUrls.slice(1) },
+      }),
+      /扫描页数/,
+    );
+    const batchJob = await makeJob("GRADE", batchInput);
+    const batch = await createGrading({ input: batchInput, jobId: batchJob.id });
+    let homeworkAgents = 0;
+    await batch.run({
+      model: async () => {
+        throw new Error("练习册应使用 Agent");
+      },
+      agent: async (agent) => {
+        homeworkAgents++;
+        assert.equal(agent.tools.register_submission, undefined);
+        assert.equal(agent.tools.defer_pages, undefined);
+        const assigned = JSON.parse(agent.prompt) as { studentId: string; sources: string[] };
+        assert.deepEqual(
+          assigned.sources,
+          assigned.studentId === studentId
+            ? batchInput.assetUrls.slice(0, 2)
+            : batchInput.assetUrls.slice(2),
         );
-        for (const [index, url] of batchInput.assetUrls.entries())
-          await image(agent, url, `batch-${index}.png`);
-        await assert.rejects(
-          call(agent, "register_submission", {
-            items: [{ sourceUrls: [source.url], name: "学生" }],
-          }),
-          /唯一匹配/,
-        );
-        await call(agent, "register_submission", {
-          items: [
-            { sourceUrls: [source.url], name: "学生", studentNumber: "1" },
-            { sourceUrls: [secondPage.url], name: "学生", studentNumber: "000002" },
-          ],
-        });
-        await call(agent, "register_submission", {
-          items: [{ sourceUrls: [continuationPage.url], studentNumber: "000001" }],
-        });
-        await assert.rejects(call(agent, "finish", { summary: "完成" }), /原始页/);
-        await call(agent, "defer_pages", {
-          items: [{ sourceUrl: unknownPage.url, reason: "未写姓名考号，无法确认学生" }],
-        });
-      } else {
-        const sid = agent.scope!.studentId!;
-        const urls = sid === studentId ? [source.url, continuationPage.url] : [secondPage.url];
         await call(agent, "read_answer", {});
-        for (const [index, url] of urls.entries()) await image(agent, url, `${sid}-${index}.png`);
-        await assert.rejects(
-          call(agent, "record_answers", {
-            items: [
-              {
-                studentId: sid,
-                itemId: batchPaper.items[0].id,
-                text: "2,4",
-                regions: [{ sourceUrl: urls[0], x: 0.9, y: 0, width: 0.5, height: 0.2 }],
-              },
-            ],
-          }),
-          /作答区域/,
-        );
+        for (const [index, url] of assigned.sources.entries())
+          await image(agent, url, `ordered-${index}.png`);
         const answer = (await call(agent, "record_answers", {
           items: [
             {
-              studentId: sid,
+              studentId: assigned.studentId,
               itemId: batchPaper.items[0].id,
-              text: "2,4",
-              regions: urls.map((sourceUrl) => ({
+              text: "2，4。步骤正确",
+              regions: assigned.sources.map((sourceUrl) => ({
                 sourceUrl,
-                x: 0,
-                y: 0.2,
-                width: 0.8,
+                x: 0.1,
+                y: 0.1,
+                width: 0.5,
                 height: 0.3,
               })),
             },
           ],
         })) as { images: string[] };
-        const score = {
-          studentId: sid,
+        for (const [index, url] of answer.images.entries())
+          await image(agent, url, `crop-${index}.png`);
+        const grade = {
+          studentId: assigned.studentId,
           itemId: batchPaper.items[0].id,
-          score: 5,
-          feedback: "解释需要完善",
+          score: 10,
+          feedback: "正确",
           partScores: [
-            { partId: "1", score: 4, feedback: "填空正确" },
-            { partId: "2", score: 1, feedback: "解释不完整" },
+            { partId: "1", score: 4, feedback: "正确" },
+            { partId: "2", score: 6, feedback: "正确" },
           ],
         };
-        await assert.rejects(call(agent, "propose_grade", { items: [score] }), /先查看/);
-        for (const [index, url] of answer.images.entries())
-          await image(agent, url, `answer-${sid}-${index}.png`);
         await assert.rejects(
-          call(agent, "propose_grade", { items: [{ ...score, score: 10 }] }),
-          /合计/,
+          call(agent, "propose_grade", { items: [{ ...grade, score: 11 }] }),
+          /满分/,
         );
-        await call(agent, "propose_grade", { items: [score] });
-      }
-      await call(agent, "finish", { summary: "完成" });
+        await call(agent, "propose_grade", { items: [grade] });
+        await call(agent, "finish", { summary: "本学生练习册完成" });
+      },
     });
     await batch.commit();
+    assert.equal(homeworkAgents, 2);
     const batchSubs = await db.scanSubmission.findMany({
       where: { assessmentId: batchAssessmentId },
     });
     assert.equal(batchSubs.length, 2);
-    assert(batchSubs.every((s) => s.status === "GRADED"));
-    assert.equal(batchSubs.find((s) => s.studentId === studentId)!.sourceFiles.length, 2);
-    assert.equal(
-      (batchSubs.find((s) => s.studentId === studentId)!.answers as { images: string[] }[])[0]
-        .images.length,
-      2,
-    );
+    assert(batchSubs.every((s) => s.status === "GRADED" && s.sourceFiles.length === 2));
     assert.equal(await db.review.count({ where: { aiJobId: batchJob.id } }), 2);
     assert.equal(await db.reviewEvent.count({ where: { aiJobId: batchJob.id } }), 2);
-    const batchResult = (await db.aiJob.findUniqueOrThrow({ where: { id: batchJob.id } }))
-      .result as { result: { pendingPages: { sourceUrl: string }[] } };
-    assert.equal(batchResult.result.pendingPages[0].sourceUrl, unknownPage.url);
-    console.log(
-      "✓ Class batch grades multiple students with automatic crops, rejects ambiguous identity and invalid scores, and preserves unidentified pages without blocking the class",
-    );
-    const confirmedStudent = (
-      await command({
-        type: "student.save",
-        student: { classroomId, name: "补确认", studentNumber: "000003", userId: null },
-      })
-    ).id;
-    const confirmedInput = {
-      ...batchInput,
-      assetUrls: [unknownPage.url],
-      studentHints: [{ sourceUrl: unknownPage.url, studentId: confirmedStudent }],
-    };
-    const confirmedJob = await makeJob("BATCH_GRADE", confirmedInput);
-    const confirmed = await createBatch({
-      input: confirmedInput,
-      jobId: confirmedJob.id,
-    });
-    await confirmed.runAgents(async (agent) => {
-      if (agent.scope?.stage === "identify") {
-        await image(agent, unknownPage.url, "confirmed.png");
-        await call(agent, "register_submission", { items: [{ sourceUrls: [unknownPage.url] }] });
-      } else {
-        await image(agent, unknownPage.url, "confirmed-answer.png");
-        await call(agent, "skip_questions", {
-          items: [
-            { studentId: confirmedStudent, itemId: batchPaper.items[0].id, reason: "作答模糊" },
-          ],
-        });
-      }
-      await call(agent, "finish", { summary: "作答看不清留待人工核对" });
-    });
-    await confirmed.commit();
-    assert.equal(await db.review.count({ where: { aiJobId: confirmedJob.id } }), 0);
-    assert.equal(
-      await db.scanSubmission.count({
-        where: { assessmentId: batchAssessmentId, studentId: confirmedStudent },
-      }),
-      1,
-    );
-    const protectedJob = await makeJob("BATCH_GRADE", batchInput);
-    const protectedBatch = await createBatch({
-      input: batchInput,
-      jobId: protectedJob.id,
-    });
-    await image(protectedBatch, source.url, "protected.png");
     await assert.rejects(
-      call(protectedBatch, "register_submission", {
-        items: [{ sourceUrls: [source.url], studentNumber: "000001" }],
-      }),
+      createGradingFeatures({ userId: "teacher", input: batchInput }),
       /已有评分/,
     );
     console.log(
-      "✓ Teacher confirmation recovers unidentified pages, unreadable answers remain ungraded, and existing scores cannot be overwritten",
+      "✓ Ordered homework pages are program-assigned to isolated per-student agents; crops, scores, history and task completion are atomic",
     );
 
-    const existingBatchInput = {
+    const confirmedStudent = (
+      await command({
+        type: "student.save",
+        student: { classroomId, name: "待核对", studentNumber: "000003", userId: null },
+      })
+    ).id;
+    const unreadableInput = {
+      ...batchInput,
+      assetUrls: [secondPage.url],
+      pagesPerStudent: 1,
+      studentIds: [confirmedStudent],
+    };
+    const unreadableJob = await makeJob("GRADE", unreadableInput);
+    const unreadableHomework = await createGrading({
+      input: unreadableInput,
+      jobId: unreadableJob.id,
+    });
+    const skipHomework = async (agent: AgentTask) => {
+      const data = JSON.parse(agent.prompt) as { studentId: string; sources: string[] };
+      for (const [index, url] of data.sources.entries())
+        await image(agent, url, `skip-${index}.png`);
+      await call(agent, "skip_questions", {
+        items: [
+          {
+            studentId: data.studentId,
+            itemId: batchPaper.items[0].id,
+            reason: "作答模糊待人工核对",
+          },
+        ],
+      });
+      await call(agent, "finish", { summary: "待人工核对" });
+    };
+    await unreadableHomework.run({
+      agent: skipHomework,
+      model: async () => {
+        throw new Error("unexpected model");
+      },
+    });
+    await unreadableHomework.commit();
+    assert.equal(await db.review.count({ where: { aiJobId: unreadableJob.id } }), 0);
+    const unreadableSubmission = await db.scanSubmission.findFirstOrThrow({
+      where: { assessmentId: batchAssessmentId, studentId: confirmedStudent },
+    });
+    const existingInput = {
       assessmentId: batchAssessmentId,
       classroomId,
       paperId: batchPaperId,
-      assetUrls: [],
+      submissionIds: [unreadableSubmission.id],
     };
-    const staleBatchJob = await makeJob("BATCH_GRADE", existingBatchInput);
-    const staleBatch = await createBatch({
-      input: existingBatchInput,
-      jobId: staleBatchJob.id,
-    });
-    await staleBatch.runAgents(async (agent) => {
-      await image(agent, unknownPage.url, "stale-source.png");
-      await call(agent, "skip_questions", {
-        items: [
-          { studentId: confirmedStudent, itemId: batchPaper.items[0].id, reason: "模糊待人工确认" },
-        ],
+    const staleJob = await makeJob("GRADE", existingInput);
+    const stale = await createGrading({ input: existingInput, jobId: staleJob.id });
+    const revokedJob = await makeJob("GRADE", existingInput);
+    const revoked = await createGrading({ input: existingInput, jobId: revokedJob.id });
+    for (const task of [stale, revoked])
+      await task.run({
+        agent: skipHomework,
+        model: async () => {
+          throw new Error("unexpected model");
+        },
       });
-      await call(agent, "finish", { summary: "待人工确认" });
+    await db.teachingAssignment.deleteMany({
+      where: { userId: "teacher", role: "SUBJECT_TEACHER", classroomId },
     });
-    const confirmedSubmission = await db.scanSubmission.findFirstOrThrow({
-      where: { assessmentId: batchAssessmentId, studentId: confirmedStudent },
+    await assert.rejects(revoked.commit(), /权限|不存在/);
+    await db.teachingAssignment.create({
+      data: { userId: "teacher", role: "SUBJECT_TEACHER", classroomId, subject: "数学" },
     });
     await command({
       type: "review.save",
       review: {
-        submissionId: confirmedSubmission.id,
+        submissionId: unreadableSubmission.id,
         itemId: batchPaper.items[0].id,
         round: "FIRST",
         score: 5,
@@ -779,37 +746,10 @@ async function main() {
         ],
       },
     });
-    await assert.rejects(staleBatch.commit(), /上传全班|变化/);
-    assert.equal(await db.review.count({ where: { aiJobId: staleBatchJob.id } }), 0);
-    assert.equal(
-      (await db.aiJob.findUniqueOrThrow({ where: { id: staleBatchJob.id } })).status,
-      "RUNNING",
-    );
-    const revokedJob = await makeJob("BATCH_GRADE", batchInput);
-    const revoked = await createBatch({
-      input: batchInput,
-      jobId: revokedJob.id,
-    });
-    await revoked.runAgents(async (agent) => {
-      for (const [index, url] of batchInput.assetUrls.entries()) {
-        await image(agent, url, `revoked-${index}.png`);
-        await call(agent, "defer_pages", { items: [{ sourceUrl: url, reason: "需要确认学生" }] });
-      }
-      await call(agent, "finish", { summary: "材料待确认" });
-    });
-    await db.teachingAssignment.deleteMany({
-      where: { userId: "teacher", role: "SUBJECT_TEACHER", classroomId },
-    });
-    await assert.rejects(revoked.commit(), /权限|不存在/);
-    assert.equal(
-      (await db.aiJob.findUniqueOrThrow({ where: { id: revokedJob.id } })).status,
-      "RUNNING",
-    );
-    await db.teachingAssignment.create({
-      data: { userId: "teacher", role: "SUBJECT_TEACHER", classroomId, subject: "数学" },
-    });
+    await assert.rejects(stale.commit(), /范围|已有评分|变化/);
+    assert.equal(await db.review.count({ where: { aiJobId: staleJob.id } }), 0);
     console.log(
-      "✓ Class batch commit revalidates concurrent manual grading and revoked teaching permissions without writing stale AI scores or task completion",
+      "✓ Unreadable answers remain ungraded; permission revocation and concurrent human reviews prevent stale commits",
     );
 
     const { generateCardTemplate } = await import("../src/server/platform/cards");
@@ -833,51 +773,48 @@ async function main() {
         .toBuffer(),
       "考试答题卡.png",
     );
-    const examBatchInput = {
+    const examInput = {
       assessmentId,
       classroomId,
       paperId,
       templateId: card.id,
       assetUrls: [cardSource.url],
-      studentHints: [{ sourceUrl: cardSource.url, studentId: secondStudent }],
+      studentIds: [secondStudent],
     };
     await assert.rejects(
-      createBatchGradingFeatures({
-        userId: "teacher",
-        input: { ...examBatchInput, templateId: undefined },
-      }),
+      createGradingFeatures({ userId: "teacher", input: { ...examInput, templateId: undefined } }),
       /答题卡模板/,
     );
-    const examBatchJob = await makeJob("BATCH_GRADE", examBatchInput);
-    const examBatch = await createBatch({ input: examBatchInput, jobId: examBatchJob.id });
-    const examScopes: AgentTask["scope"][] = [];
-    await examBatch.runAgents(async (agent) => {
-      examScopes.push(agent.scope);
-      assert.equal(agent.scope?.studentId, secondStudent);
-      assert.equal(agent.scope?.itemId, paper.items[0].id);
-      assert.equal(agent.tools.record_answers, undefined);
-      const evidence = (await call(agent, "read_answer", {})) as {
-        answers: { images: string[] }[];
-      };
-      for (const url of evidence.answers[0].images) await image(agent, url, "card-answer.png");
-      await call(agent, "propose_grade", {
-        items: [
-          {
-            studentId: secondStudent,
-            itemId: paper.items[0].id,
-            score: 0,
-            feedback: "本题作答区空白",
-            partScores: [
-              { partId: "1", score: 0, feedback: "未作答" },
-              { partId: "2", score: 0, feedback: "未作答" },
-            ],
-          },
-        ],
-      });
-      await call(agent, "finish", { summary: "本题批改完成" });
+    const examJob = await makeJob("GRADE", examInput);
+    const exam = await createGrading({ input: examInput, jobId: examJob.id });
+    let examCalls = 0;
+    await exam.run({
+      agent: async () => {
+        throw new Error("考试不应启动 Agent");
+      },
+      model: async (task) => {
+        examCalls++;
+        assert.equal(task.scope.studentId, secondStudent);
+        const content = task.messages[0].content as { type: string }[];
+        assert(content.some((part) => part.type === "file"));
+        return {
+          grades: [
+            {
+              itemId: paper.items[0].id,
+              score: 0,
+              feedback: "作答区空白",
+              partScores: [
+                { partId: "1", score: 0, feedback: "未作答" },
+                { partId: "2", score: 0, feedback: "未作答" },
+              ],
+            },
+          ],
+          skipped: [],
+        };
+      },
     });
-    const examOutput = await examBatch.commit();
-    assert.equal(examScopes.length, paper.items.length);
+    const examOutput = await exam.commit();
+    assert.equal(examCalls, 1);
     assert.equal((examOutput.result as { templateId: string }).templateId, card.id);
     const savedExam = await db.scanSubmission.findUniqueOrThrow({
       where: {
@@ -886,15 +823,56 @@ async function main() {
     });
     assert.equal(savedExam.kind, "CARD");
     assert.equal(savedExam.templateId, card.id);
-    assert.equal(await db.review.count({ where: { aiJobId: examBatchJob.id } }), 1);
+    assert.equal(await db.review.count({ where: { aiJobId: examJob.id } }), 1);
     console.log(
-      "✓ Exam batch uses real template alignment/cropping, launches one agent per student/question, and atomically saves CARD submissions and reviews",
+      "✓ Exams use actual template cropping and one structured model call per student without an agent loop",
     );
 
-    const { executeAdmin } = await import("../src/server/platform/admin");
+    const { executeAdmin, adminCommandSchema, loadAdmin } =
+      await import("../src/server/platform/admin");
     await db.user.create({
       data: { id: "admin", name: "管理员", email: "admin@domain.test", role: "ADMIN" },
     });
+    const reasoningProvider = await executeAdmin(
+      "admin",
+      adminCommandSchema.parse({
+        type: "provider.save",
+        provider: {
+          name: "思考强度验收",
+          apiType: "openai_responses",
+          baseURL: "https://example.test/v1",
+          apiKey: "isolated-test-key",
+          models: [{ name: "reasoning-test", displayName: "测试模型", reasoningEffort: "high" }],
+        },
+      }),
+    );
+    let savedReasoning = (await loadAdmin("admin")).providers.find(
+      (p) => p.id === reasoningProvider.id,
+    )!;
+    assert.equal(savedReasoning.models[0].reasoningEffort, "high");
+    const { loadAiModel } = await import("../src/server/platform/ai/model");
+    assert.equal((await loadAiModel("teacher", savedReasoning.models[0].id)).reasoning, "high");
+    await executeAdmin(
+      "admin",
+      adminCommandSchema.parse({
+        type: "provider.save",
+        provider: {
+          id: reasoningProvider.id,
+          name: "思考强度验收",
+          apiType: "openai_responses",
+          baseURL: "https://example.test/v1",
+          models: [{ name: "reasoning-test", displayName: "测试模型", reasoningEffort: "none" }],
+        },
+      }),
+    );
+    savedReasoning = (await loadAdmin("admin")).providers.find(
+      (p) => p.id === reasoningProvider.id,
+    )!;
+    assert.equal(savedReasoning.models[0].reasoningEffort, "none");
+    assert.equal((await loadAiModel("teacher", savedReasoning.models[0].id)).reasoning, "none");
+    console.log(
+      "✓ Per-model reasoning effort persists, reloads for administrators and reaches the runtime configuration",
+    );
     const provider = await db.aiProvider.create({
       data: {
         name: "待删除服务",

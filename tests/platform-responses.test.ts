@@ -54,6 +54,7 @@ describe("Responses stored tool continuation", () => {
         previous_response_id?: string;
         input: { type?: string; role?: string; call_id?: string }[];
         tools: unknown[];
+        reasoning?: { effort?: string };
       }[] = [];
       const model = createOpenAI({
         apiKey: "test-key",
@@ -84,10 +85,11 @@ describe("Responses stored tool continuation", () => {
             usage: { input_tokens: 10, output_tokens: 10 },
           });
         },
-      }).responses("test-model");
+      }).responses("gpt-6-astra");
       const agent = new ToolLoopAgent({
         model,
         instructions: "Keep these instructions on every request.",
+        reasoning: "high",
         providerOptions: { openai: { store: true, parallelToolCalls: true } },
         prepareStep: usePreviousResponseId ? prepareResponsesStep : undefined,
         tools: {
@@ -118,6 +120,7 @@ describe("Responses stored tool continuation", () => {
       expect(JSON.stringify(requests[0])).toContain("Initial task context");
       for (const [index, request] of requests.entries()) {
         expect(request.store).toBe(true);
+        expect(request.reasoning?.effort).toBe("high");
         expect(request.tools).toHaveLength(1);
         expect(JSON.stringify(request)).toContain("Keep these instructions on every request.");
         if (!index) continue;

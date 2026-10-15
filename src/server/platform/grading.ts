@@ -7,9 +7,22 @@ import { AccessError, RequestError } from "@/server/http/errors";
 import { assertCanReview, type Db } from "./access";
 import { validateCardTemplate } from "./cards";
 
-export type BatchGradingInput = z.infer<typeof aiInputSchemas.BATCH_GRADE>;
+export type GradingInput = z.infer<typeof aiInputSchemas.GRADE>;
 
-export async function batchGradingContext(db: Db, state: PlatformState, input: BatchGradingInput) {
+export function groupGradingPages(input: GradingInput, pagesPerStudent: number) {
+  if (!Number.isInteger(pagesPerStudent) || pagesPerStudent < 1)
+    throw new RequestError(400, "请设置每位学生的扫描页数。");
+  if (input.pagesPerStudent && input.pagesPerStudent !== pagesPerStudent)
+    throw new RequestError(400, "每人页数必须与答题卡模板一致。");
+  if (input.assetUrls.length !== input.studentIds.length * pagesPerStudent)
+    throw new RequestError(400, "扫描页数须等于学生人数乘以每人页数，请检查上传顺序与缺页。");
+  return input.studentIds.map((studentId, index) => ({
+    studentId,
+    sourceFiles: input.assetUrls.slice(index * pagesPerStudent, (index + 1) * pagesPerStudent),
+  }));
+}
+
+export async function gradingContext(db: Db, state: PlatformState, input: GradingInput) {
   const assessment = state.assessments.find((a) => a.id === input.assessmentId);
   const paper = state.papers.find((p) => p.id === input.paperId);
   const classroom = state.classrooms.find((c) => c.id === input.classroomId);
@@ -27,8 +40,8 @@ export async function batchGradingContext(db: Db, state: PlatformState, input: B
   if (!classroom.students.length)
     throw new RequestError(400, "请先录入这个班级的学生名册，以便识别作业归属。");
   if (!paper.items.length) throw new RequestError(400, "请先添加题目与批改依据。");
-  if (input.studentHints.some((hint) => !classroom.students.some((s) => s.id === hint.studentId)))
-    throw new RequestError(400, "确认的学生必须属于所选班级。");
+  if (input.studentIds.some((id) => !classroom.students.some((s) => s.id === id)))
+    throw new RequestError(400, "分配的学生必须属于所选班级。");
   const template = input.templateId
     ? state.templates.find((t) => t.id === input.templateId && t.paperId === paper.id && !t.preset)
     : undefined;
@@ -38,6 +51,12 @@ export async function batchGradingContext(db: Db, state: PlatformState, input: B
     if (!template) throw new RequestError(400, "上传考试扫描页时请选择答题卡模板，以便自动切题。");
     validateCardTemplate(template, paper);
   }
+  const groups = input.assetUrls.length
+    ? groupGradingPages(
+        input,
+        assessment.kind === "EXAM" ? template!.layout.pageCount : (input.pagesPerStudent ?? 0),
+      )
+    : [];
   if (input.assetUrls.length) {
     const ids = input.assetUrls.map((url) => url.split("/").at(-1)!);
     const assets = await db.platformAsset.findMany({
@@ -60,8 +79,18 @@ export async function batchGradingContext(db: Db, state: PlatformState, input: B
       s.paperId === paper.id &&
       classroom.students.some((student) => student.id === s.studentId),
   );
-  const pending = submissions.filter((s) => !state.reviews.some((r) => r.submissionId === s.id));
+  const pending = submissions.filter(
+    (s) =>
+      !state.reviews.some((r) => r.submissionId === s.id) &&
+      (!input.submissionIds || input.submissionIds.includes(s.id)),
+  );
+  if (input.submissionIds?.some((id) => !pending.some((s) => s.id === id)))
+    throw new RequestError(400, "所选答卷不属于本次批改范围，或已有评分。");
+  if (
+    groups.some((g) => submissions.some((s) => s.studentId === g.studentId && !pending.includes(s)))
+  )
+    throw new RequestError(409, "分配的学生已有评分，请核对材料，不能覆盖。");
   if (!input.assetUrls.length && !pending.length)
     throw new RequestError(400, "请上传全班作业，或先录入待批改作答。");
-  return { assessment, classroom, paper, config, submissions, pending, template };
+  return { assessment, classroom, paper, config, submissions, pending, template, groups };
 }

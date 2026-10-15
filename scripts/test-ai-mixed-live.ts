@@ -63,6 +63,7 @@ async function main() {
         providerId: provider.id,
         name: source.name,
         reasoningEfforts: ["default"],
+        reasoningEffort: source.reasoningEffort,
         isPublic: true,
       },
     });
@@ -195,7 +196,7 @@ async function main() {
         },
       })
     ).id;
-    const input = { submissionId };
+    const input = { assessmentId, classroomId, paperId, submissionIds: [submissionId] };
     const job = await db.aiJob.create({
       data: {
         userId: "teacher",

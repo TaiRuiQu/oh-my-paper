@@ -9,12 +9,11 @@ export const aiKinds = [
   "ASSEMBLE",
   "TEMPLATE",
   "GRADE",
-  "BATCH_GRADE",
   "RECOMMEND",
   "CONSOLIDATE",
 ] as const;
 export type AiKind = (typeof aiKinds)[number];
-export type BatchGradingResult = {
+export type GradingResult = {
   assessmentId: string;
   assessmentKind: "EXAM" | "HOMEWORK";
   classroomId: string;
@@ -83,8 +82,7 @@ export const aiInputSchemas = {
         c.addIssue({ code: "custom", message: "题型与知识点不能重复。" });
     }),
   TEMPLATE: z.strictObject({ paperId: id, name: z.string().max(200).optional() }),
-  GRADE: z.strictObject({ submissionId: id }),
-  BATCH_GRADE: z
+  GRADE: z
     .strictObject({
       assessmentId: id,
       classroomId: id,
@@ -94,20 +92,23 @@ export const aiInputSchemas = {
         .array(z.string().regex(/^\/api\/platform\/assets\/[\w-]+$/))
         .max(MAX_AI_BATCH_PAGES)
         .default([]),
-      studentHints: z
-        .array(z.strictObject({ sourceUrl: z.string(), studentId: id }))
-        .max(MAX_AI_BATCH_PAGES)
-        .default([]),
+      pagesPerStudent: z.number().int().min(1).max(MAX_AI_BATCH_PAGES).optional(),
+      studentIds: z.array(id).max(MAX_AI_BATCH_PAGES).default([]),
+      submissionIds: z.array(id).min(1).max(500).optional(),
     })
     .superRefine((input, ctx) => {
       if (new Set(input.assetUrls).size !== input.assetUrls.length)
         ctx.addIssue({ code: "custom", message: "扫描页不能重复。" });
-      if (
-        new Set(input.studentHints.map((hint) => hint.sourceUrl)).size !==
-          input.studentHints.length ||
-        input.studentHints.some((hint) => !input.assetUrls.includes(hint.sourceUrl))
-      )
-        ctx.addIssue({ code: "custom", message: "学生确认信息必须唯一对应本批扫描页。" });
+      if (new Set(input.studentIds).size !== input.studentIds.length)
+        ctx.addIssue({ code: "custom", message: "学生不能重复。" });
+      if (input.submissionIds && new Set(input.submissionIds).size !== input.submissionIds.length)
+        ctx.addIssue({ code: "custom", message: "答卷不能重复。" });
+      if (input.assetUrls.length && input.submissionIds)
+        ctx.addIssue({ code: "custom", message: "上传材料与已录入答卷不能同时批改。" });
+      if (input.assetUrls.length && !input.studentIds.length)
+        ctx.addIssue({ code: "custom", message: "请按上传分组指定学生顺序。" });
+      if (!input.assetUrls.length && (input.studentIds.length || input.pagesPerStudent))
+        ctx.addIssue({ code: "custom", message: "学生顺序与每人页数仅用于上传材料。" });
     }),
   RECOMMEND: z.strictObject({
     studentId: id.optional(),
@@ -126,11 +127,6 @@ export const aiRequestSchema = z.discriminatedUnion("kind", [
   z.strictObject({ kind: z.literal("ASSEMBLE"), input: aiInputSchemas.ASSEMBLE, modelId: id }),
   z.strictObject({ kind: z.literal("TEMPLATE"), input: aiInputSchemas.TEMPLATE, modelId: id }),
   z.strictObject({ kind: z.literal("GRADE"), input: aiInputSchemas.GRADE, modelId: id }),
-  z.strictObject({
-    kind: z.literal("BATCH_GRADE"),
-    input: aiInputSchemas.BATCH_GRADE,
-    modelId: id,
-  }),
   z.strictObject({ kind: z.literal("RECOMMEND"), input: aiInputSchemas.RECOMMEND, modelId: id }),
 ]);
 export type AiJobDTO = {

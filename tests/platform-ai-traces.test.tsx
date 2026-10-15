@@ -424,7 +424,11 @@ it("shows persisted unreadable questions and their reasons after a task complete
 
 it("shows the real question number for a skipped answer and keeps internal IDs out of the teacher's view", async () => {
   vi.mocked(useDomain).mockReturnValueOnce({
-    state: { questions: [], papers: [{ items: [{ id: "private-item-id", position: 4 }] }] },
+    state: {
+      questions: [],
+      classrooms: [{ students: [{ id: "private-student-id", name: "小明" }] }],
+      papers: [{ items: [{ id: "private-item-id", position: 4 }] }],
+    },
     refresh,
     notify,
   } as unknown as ReturnType<typeof useDomain>);
@@ -437,7 +441,15 @@ it("shows the real question number for a skipped answer and keeps internal IDs o
           kind: "GRADE",
           result: {
             summary: "已处理可辨认题目",
-            result: { skipped: [{ id: "private-item-id", reason: "作答看不清" }] },
+            result: {
+              assessmentId: "assessment",
+              assessmentKind: "EXAM",
+              classroomId: "class",
+              paperId: "paper",
+              students: [],
+              pendingPages: [],
+              skipped: [{ id: "private-student-id:private-item-id", reason: "作答看不清" }],
+            },
           },
         }}
       />,

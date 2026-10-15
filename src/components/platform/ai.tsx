@@ -93,7 +93,7 @@ export function PlatformAI({
         : tab === "templates"
           ? "TEMPLATE"
           : tab === "reviews"
-            ? "BATCH_GRADE"
+            ? "GRADE"
             : tab === "analytics"
               ? "RECOMMEND"
               : null;
@@ -138,7 +138,7 @@ export function PlatformAI({
             {mode === "ASSEMBLE" && (
               <AIAssembly start={start} busy={busy || !models.length} fixedKind={fixedKind} />
             )}{" "}
-            {mode === "BATCH_GRADE" && (
+            {mode === "GRADE" && (
               <BatchGradingForm state={state} start={start} busy={busy || !models.length} />
             )}
             {(mode === "TEMPLATE" || mode === "RECOMMEND") && (

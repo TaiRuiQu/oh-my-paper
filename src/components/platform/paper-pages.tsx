@@ -59,6 +59,9 @@ export function PaperListPage({ exporting = false }: { exporting?: boolean }) {
         actions={
           <>
             <Button asChild variant="outline">
+              <Link href="/exams/import">扫描导入试卷</Link>
+            </Button>
+            <Button asChild variant="outline">
               <Link href={homework ? "/questions" : "/exams/assemble"}>
                 {homework ? "前往题库" : "AI 辅助组卷"}
               </Link>

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import type { AccountCredentials } from "@/contracts/auth";
+import type { ReasoningEffort } from "@/contracts/ai-models";
 import { AccountImport } from "./account-import";
 import importStyles from "./account-import.module.css";
 import type { ImportRole } from "@/contracts/account-import";
@@ -19,7 +20,7 @@ type Provider = {
   baseURL: string;
   maxOutputTokens: number;
   usePreviousResponseId: boolean;
-  models: { id: string; name: string; displayName: string }[];
+  models: { id: string; name: string; displayName: string; reasoningEffort: ReasoningEffort }[];
 };
 export function Admin({
   state,
@@ -338,6 +339,7 @@ export function Admin({
                     models: d.getAll("modelName").map((name, index) => ({
                       name: String(name).trim(),
                       displayName: String(d.getAll("modelDisplayName")[index] ?? "").trim(),
+                      reasoningEffort: String(d.getAll("modelReasoningEffort")[index]),
                     })),
                   },
                 });

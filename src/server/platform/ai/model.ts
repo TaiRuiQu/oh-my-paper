@@ -3,6 +3,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogle } from "@ai-sdk/google";
 import type { LanguageModel } from "ai";
+import { reasoningEffortSchema } from "@/contracts/ai-models";
 import { getDb } from "@/server/db/client";
 import { decryptApiKey } from "@/server/ai/credentials";
 import { getActor } from "../service";
@@ -54,6 +55,7 @@ export async function loadAiModel(userId: string, modelId?: string) {
       apiType: p.apiType,
     },
     usePreviousResponseId: p.apiType === "openai_responses" && p.usePreviousResponseId,
+    reasoning: reasoningEffortSchema.parse(stored.reasoningEffort),
     maxOutputTokens: p.maxOutputTokens,
     timeoutMs: p.timeoutSeconds * 1000,
     maxConcurrency: p.maxConcurrency,

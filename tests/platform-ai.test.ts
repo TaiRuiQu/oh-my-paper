@@ -726,80 +726,6 @@ describe("AI autonomous tools and constraints", () => {
       }),
     ).rejects.toThrow(/标准答案/);
   });
-  it("mixed grading requires every subpart score, correct weighted maxima and matching total", async () => {
-    const s = state();
-    s.papers[0].items[0].snapshot = {
-      ...question,
-      type: "MIXED",
-      content: {
-        ...question.content,
-        parts: [
-          {
-            id: "1",
-            type: "BLANK",
-            stem: "填空",
-            options: [],
-            answers: ["2"],
-            explanation: "",
-            rubric: "",
-            knowledgeTags: ["代数"],
-            score: 4,
-          },
-          {
-            id: "2",
-            type: "SUBJECTIVE",
-            stem: "证明",
-            options: [],
-            answers: ["证明"],
-            explanation: "",
-            rubric: "步骤给分",
-            knowledgeTags: ["几何"],
-            score: 6,
-          },
-        ],
-      },
-    };
-    mocked.loadState.mockResolvedValue(s);
-    const f = await createTaskFeatures({
-      userId: "teacher",
-      kind: "GRADE",
-      input: { submissionId: "submission" },
-      jobId: "job",
-    });
-    await call(f, "read_answer", { items: [{ itemId: "item" }] });
-    await expect(
-      call(f, "propose_grade", { items: [{ itemId: "item", score: 8, feedback: "部分正确" }] }),
-    ).rejects.toThrow(/逐小问/);
-    await expect(
-      call(f, "propose_grade", {
-        items: [
-          {
-            itemId: "item",
-            score: 8,
-            feedback: "部分正确",
-            parts: [
-              { partId: "1", score: 5, feedback: "正确" },
-              { partId: "2", score: 3, feedback: "部分" },
-            ],
-          },
-        ],
-      }),
-    ).rejects.toThrow(/权重/);
-    await call(f, "propose_grade", {
-      items: [
-        {
-          itemId: "item",
-          score: 8,
-          feedback: "部分正确",
-          parts: [
-            { partId: "1", score: 4, feedback: "正确" },
-            { partId: "2", score: 4, feedback: "证明缺少一步" },
-          ],
-        },
-      ],
-    });
-    await call(f, "finish", { summary: "混合题完成" });
-  });
   it("recommendations include unused paper questions and mixed-part tags but reject a different subject's shared tag", async () => {
     const s = state();
     s.analytics.students[0].wrongQuestions[0].question = {
@@ -909,6 +835,16 @@ describe("AI autonomous tools and constraints", () => {
     await expect(call(f, "generate_layout", {})).rejects.toThrow(/读取试卷/);
     await call(f, "read_paper", {});
     const template = await call(f, "generate_layout", {});
+    await expect(
+      call(f, "propose_template", { layout: (template as { layout: unknown }).layout }),
+    ).rejects.toThrow(/预览/);
+    const previewInput = { layout: (template as { layout: unknown }).layout, pages: [1] };
+    const preview = await call(f, "render_template", previewInput);
+    await f.tools.render_template.toModelOutput!({
+      input: previewInput,
+      output: preview,
+      toolCallId: "preview",
+    });
     await call(f, "propose_template", { layout: (template as { layout: unknown }).layout });
     await call(f, "finish", { summary: "卡片完成" });
     await f.commit();
@@ -1031,98 +967,6 @@ describe("AI autonomous tools and constraints", () => {
       question.content.stem,
     );
     expect(mocked.executeCommand.mock.calls[0][1].question.knowledgeTags).toEqual(["整数加法"]);
-  });
-  it("requires full grading evidence and rejects over-scoring; AI commits only first reviews", async () => {
-    mocked.jobFind.mockResolvedValue({
-      id: "job",
-      userId: "teacher",
-      kind: "GRADE",
-      status: "RUNNING",
-    });
-    const s = state();
-    s.submissions[0].answers[0].images = ["/api/platform/assets/image"];
-    mocked.loadState.mockResolvedValue(s);
-    const f = await createTaskFeatures({
-      userId: "teacher",
-      kind: "GRADE",
-      input: { submissionId: "submission" },
-      jobId: "job",
-    });
-    expect(f.tools).not.toHaveProperty("propose_question");
-    await call(f, "read_answer", { items: [{ itemId: "item" }] });
-    await expect(
-      call(f, "propose_grade", { items: [{ itemId: "item", score: 11, feedback: "wrong" }] }),
-    ).rejects.toThrow(/满分/);
-    await expect(
-      call(f, "propose_grade", { items: [{ itemId: "item", score: 10, feedback: "correct" }] }),
-    ).rejects.toThrow(/截图/);
-    s.submissions[0].answers[0].images = [];
-    mocked.loadState.mockResolvedValue(s);
-    const next = await createTaskFeatures({
-      userId: "teacher",
-      kind: "GRADE",
-      input: { submissionId: "submission" },
-      jobId: "job",
-    });
-    await call(next, "read_answer", { items: [{ itemId: "item" }] });
-    await call(next, "propose_grade", {
-      items: [{ itemId: "item", score: 10, feedback: "依据标准答案正确" }],
-    });
-    await call(next, "finish", { summary: "首评完成" });
-    await next.commit();
-    expect(mocked.executeCommand.mock.calls[0][1].review.round).toBe("FIRST");
-  });
-  it("requires the question diagram as grading evidence and allows mounting the original answer page", async () => {
-    const sharp = (await import("sharp")).default;
-    const buffer = await sharp({
-      create: { width: 100, height: 140, channels: 3, background: "white" },
-    })
-      .png()
-      .toBuffer();
-    const diagram = "/api/platform/assets/question-diagram";
-    const handwriting = "/api/platform/assets/handwriting";
-    const page = "/api/platform/assets/answer-page";
-    const gradingState = state();
-    gradingState.papers[0].items[0].snapshot = {
-      ...question,
-      content: { ...question.content, images: [diagram] },
-    };
-    gradingState.submissions[0].answers[0].images = [handwriting];
-    gradingState.submissions[0].sourceFiles = [page];
-    mocked.loadState.mockResolvedValue(gradingState);
-    mocked.accessibleAsset.mockResolvedValue({ buffer });
-    const features = await createTaskFeatures({
-      userId: "teacher",
-      kind: "GRADE",
-      input: { submissionId: "submission" },
-      jobId: "job",
-    });
-    await call(features, "read_answer", { items: [{ itemId: "item" }] });
-    await viewImage(features, handwriting);
-    const original = (await call(features, "python", {
-      code: "print('inspect original answer page')",
-      assets: [page],
-      images: [],
-    })) as { previews: { url: string }[] };
-    expect(original.previews.map((preview) => preview.url)).toEqual([page]);
-    await expect(
-      call(features, "propose_grade", {
-        items: [{ itemId: "item", score: 8, feedback: "作答已查看" }],
-      }),
-    ).rejects.toThrow(/先查看全部/);
-    await viewImage(features, diagram);
-    await call(features, "propose_grade", {
-      items: [
-        {
-          itemId: "item",
-          score: 8,
-          feedback: "结合题干图像和作答给分",
-        },
-      ],
-    });
-    await call(features, "finish", { summary: "图像证据完整" });
-    expect(mocked.accessibleAsset).toHaveBeenCalledWith("teacher", "answer-page");
-    expect(mocked.executeCommand).not.toHaveBeenCalled();
   });
   it("refuses student mutations and another student's recommendations", async () => {
     const s = state();
@@ -1304,6 +1148,7 @@ describe("SDK 7 autonomous agent loop", () => {
     });
     mocked.loadAiModel.mockResolvedValue({
       model,
+      reasoning: "high",
       identity: {
         providerId: "provider",
         providerName: "fixture",
@@ -1328,6 +1173,7 @@ describe("SDK 7 autonomous agent loop", () => {
     });
     expect(result.summary).toBe("自主组卷完成");
     expect(model.doGenerateCalls).toHaveLength(4);
+    expect(model.doGenerateCalls.every((call) => call.reasoning === "high")).toBe(true);
     expect(mocked.costAdd).toHaveBeenCalledTimes(4);
     expect(events).toContainEqual(
       expect.objectContaining({
@@ -1410,41 +1256,6 @@ describe("batched question processing and unreadable evidence", () => {
     expect(output.result).toMatchObject({
       skipped: [{ id: "q2", reason: "题图模糊，无法确认条件" }],
     });
-  });
-  it("grades multiple answers and leaves skipped handwriting ungraded", async () => {
-    const s = state();
-    s.papers[0].items.push({ ...s.papers[0].items[0], id: "item2", position: 1 });
-    s.submissions[0].answers.push({ itemId: "item2", text: "无法辨认", images: [] });
-    mocked.loadState.mockResolvedValue(s);
-    mocked.submissionFind.mockResolvedValue(s.submissions[0]);
-    mocked.jobFind.mockResolvedValue({
-      id: "job",
-      userId: "teacher",
-      kind: "GRADE",
-      status: "RUNNING",
-    });
-    const f = await createTaskFeatures({
-      userId: "teacher",
-      kind: "GRADE",
-      input: { submissionId: "submission" },
-      jobId: "job",
-    });
-    expect(
-      (await batch(f, "read_answer", [{ itemId: "item" }, { itemId: "item2" }])).results.every(
-        (r) => r.success,
-      ),
-    ).toBe(true);
-    const reports = await batch(f, "propose_grade", [
-      { itemId: "item", score: 10, feedback: "答案正确" },
-      { itemId: "item2", score: 99, feedback: "不应保存" },
-    ]);
-    expect(reports.results[1].error?.message).toContain("超过题目满分");
-    await batch(f, "skip_questions", [{ id: "item2", reason: "手写答案无法辨认，请人工评阅" }]);
-    await call(f, "finish", { summary: "已评1题，1题待人工评阅" });
-    const output = await f.commit();
-    expect(mocked.executeCommand).toHaveBeenCalledOnce();
-    expect(mocked.executeCommand.mock.calls[0][1].review.itemId).toBe("item");
-    expect(output.result).toMatchObject({ skipped: [{ id: "item2" }] });
   });
   it("imports multiple reports, counts skips against inventory and can finish an entirely unreadable paper", async () => {
     const sharp = (await import("sharp")).default;

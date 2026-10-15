@@ -21,7 +21,10 @@ const mocks = vi.hoisted(() => ({
   storage: { temp: "", storage: "" },
   sandboxes: [] as unknown[],
 }));
-vi.mock("@/server/platform/batch-grading", () => ({ batchGradingContext: mocks.context }));
+vi.mock("@/server/platform/grading", async (original) => ({
+  ...(await original<typeof import("@/server/platform/grading")>()),
+  gradingContext: mocks.context,
+}));
 vi.mock("@/server/platform/service", () => ({
   loadState: mocks.loadState,
   executeCommand: mocks.command,
@@ -75,8 +78,396 @@ vi.mock("@/server/platform/ai/sandbox-tools", async () => {
     },
   };
 });
-import { createBatchGradingFeatures } from "@/server/platform/ai/batch-grading";
+import { createGradingFeatures } from "@/server/platform/ai/grading";
 import { runAiTask } from "@/server/platform/ai/runner";
+import { aiInputSchemas } from "@/contracts/platform-ai";
+import { groupGradingPages } from "@/server/platform/grading";
+
+const examOutput = () => ({
+  grades: ["i1", "i2"].map((itemId) => ({
+    itemId,
+    score: 10,
+    feedback: "答案正确",
+    partScores: [],
+  })),
+  skipped: [],
+});
+
+describe("program-assigned grading", () => {
+  it("uses one homework agent per student with isolated evidence and no identity tools", async () => {
+    const tasks: AgentTask[] = [];
+    await features.run({
+      model: vi.fn(),
+      agent: async (task) => {
+        tasks.push(task);
+        expect(task.tools.register_submission).toBeUndefined();
+        expect(task.tools.defer_pages).toBeUndefined();
+        const other = task.scope!.studentId === "s1" ? "s2" : "s1";
+        expect(task.prompt).not.toContain(`sub-${other}`);
+        await expect(call(task, "python", { assets: [asset(`${other}-i1`)] })).rejects.toThrow(
+          /不属于/,
+        );
+        await expect(
+          call(task, "propose_grade", {
+            items: [{ studentId: other, itemId: "i1", score: 1, feedback: "错", partScores: [] }],
+          }),
+        ).rejects.toThrow(/其他学生/);
+        await grade(task);
+      },
+    });
+    expect(tasks.map((t) => t.scope?.studentId)).toEqual(["s1", "s2"]);
+    await features.commit();
+    expect(mocks.command).toHaveBeenCalledTimes(4);
+    expect(mocks.command.mock.calls.every(([, command]) => command.review.round === "FIRST")).toBe(
+      true,
+    );
+  });
+
+  it("assigns consecutive ordered homework pages without an identity agent", async () => {
+    context.submissions = [];
+    context.pending = [];
+    await features.dispose();
+    features = await createGradingFeatures({
+      userId: "teacher",
+      input: {
+        ...input,
+        assetUrls: ["p1", "p2", "p3", "p4"].map(asset),
+        pagesPerStudent: 2,
+        studentIds: ["s2", "s1"],
+      },
+      jobId: "job",
+    });
+    const students: string[] = [];
+    await features.run({
+      model: vi.fn(),
+      agent: async (task) => {
+        const data = JSON.parse(task.prompt);
+        students.push(data.studentId);
+        expect(data.sources).toEqual(
+          (data.studentId === "s2" ? ["p1", "p2"] : ["p3", "p4"]).map(asset),
+        );
+        await call(task, "read_answer");
+        await expect(
+          call(task, "record_answers", {
+            items: [
+              {
+                studentId: data.studentId,
+                itemId: "i1",
+                regions: [{ sourceUrl: data.sources[0], x: 0, y: 0, width: 1, height: 1 }],
+              },
+            ],
+          }),
+        ).rejects.toThrow(/已查看/);
+        await call(task, "python", { assets: data.sources });
+        for (const itemId of ["i1", "i2"]) {
+          const answer = (await call(task, "record_answers", {
+            items: [
+              {
+                studentId: data.studentId,
+                itemId,
+                text: "2",
+                regions: data.sources.map((sourceUrl: string) => ({
+                  sourceUrl,
+                  x: 0,
+                  y: 0,
+                  width: 1,
+                  height: 1,
+                })),
+              },
+            ],
+          })) as { images: string[] };
+          await call(task, "python", { assets: answer.images });
+          await call(task, "propose_grade", {
+            items: [
+              { studentId: data.studentId, itemId, score: 10, feedback: "正确", partScores: [] },
+            ],
+          });
+        }
+        await call(task, "finish", { summary: "完成" });
+      },
+    });
+    expect(students).toEqual(["s2", "s1"]);
+    await features.commit();
+    expect(mocks.command.mock.calls.filter(([, c]) => c.type === "submission.save")).toHaveLength(
+      2,
+    );
+  });
+
+  it("grades all exam answers in one structured call per student without any sandbox", async () => {
+    context = fixture("EXAM");
+    await features.dispose();
+    features = await createGradingFeatures({ userId: "teacher", input, jobId: "job" });
+    const agent = vi.fn();
+    const model = vi.fn(async (task) => {
+      const message = task.messages[0];
+      const data = JSON.parse(message.content[0].text);
+      expect(data.paper.items).toHaveLength(2);
+      expect(data.answers).toHaveLength(2);
+      expect(message.content.filter((part: { type: string }) => part.type === "file")).toHaveLength(
+        2,
+      );
+      expect(JSON.stringify(data)).not.toContain(data.studentId === "s1" ? "s2" : "s1");
+      return examOutput();
+    });
+    await features.run({ agent, model });
+    expect(model).toHaveBeenCalledTimes(2);
+    expect(agent).not.toHaveBeenCalled();
+    expect(mocks.sandboxes).toHaveLength(0);
+    await features.commit();
+    expect(mocks.command).toHaveBeenCalledTimes(4);
+  });
+
+  it.each(["missing", "duplicate", "unknown", "over-score", "non-mixed-parts"])(
+    "rejects %s exam results before saving",
+    async (kind) => {
+      context = fixture("EXAM");
+      await features.dispose();
+      features = await createGradingFeatures({ userId: "teacher", input, jobId: "job" });
+      const output = examOutput();
+      if (kind === "missing") output.grades.pop();
+      if (kind === "duplicate") output.grades[1].itemId = "i1";
+      if (kind === "unknown") output.grades[1].itemId = "other";
+      if (kind === "over-score") output.grades[0].score = 11;
+      if (kind === "non-mixed-parts")
+        (output.grades[0].partScores as unknown[]) = [{ partId: "p", score: 1, feedback: "错" }];
+      await expect(features.run({ agent: vi.fn(), model: async () => output })).rejects.toThrow();
+      await expect(features.commit()).rejects.toThrow(/未完成/);
+      expect(mocks.command).not.toHaveBeenCalled();
+    },
+  );
+
+  it("keeps unreadable exam answers ungraded and persists the reason", async () => {
+    context = fixture("EXAM");
+    await features.dispose();
+    features = await createGradingFeatures({ userId: "teacher", input, jobId: "job" });
+    await features.run({
+      agent: vi.fn(),
+      model: async () => ({
+        grades: [],
+        skipped: ["i1", "i2"].map((itemId) => ({ itemId, reason: "字迹模糊" })),
+      }),
+    });
+    const output = await features.commit();
+    expect(output.result).toMatchObject({
+      students: expect.arrayContaining([
+        expect.objectContaining({ gradedQuestions: 0, skippedQuestions: 2 }),
+      ]),
+      skipped: expect.arrayContaining([expect.objectContaining({ reason: "字迹模糊" })]),
+    });
+    expect(mocks.command).not.toHaveBeenCalled();
+  });
+
+  it("uses the same mixed-question weighted score validation in single calls", async () => {
+    context = fixture("EXAM");
+    const item = context.paper.items[0];
+    item.snapshot.type = "MIXED";
+    item.snapshot.content.parts = [
+      { id: "a", score: 4 },
+      { id: "b", score: 6 },
+    ] as typeof item.snapshot.content.parts;
+    await features.dispose();
+    features = await createGradingFeatures({ userId: "teacher", input, jobId: "job" });
+    const output = examOutput();
+    output.grades[0].score = 8;
+    (output.grades[0].partScores as unknown[]) = [
+      { partId: "a", score: 5, feedback: "超分" },
+      { partId: "b", score: 3, feedback: "部分" },
+    ];
+    await expect(features.run({ agent: vi.fn(), model: async () => output })).rejects.toThrow(
+      /逐小问/,
+    );
+    expect(mocks.command).not.toHaveBeenCalled();
+  });
+
+  it("crops exam cards using the assigned page numbers and preserves ordered source files", async () => {
+    context = fixture("EXAM");
+    context.submissions = [];
+    context.pending = [];
+    await features.dispose();
+    const urls = [asset("page1"), asset("page2")];
+    mocks.scan.mockImplementation(async ({ inputPath, outputDir, page, autoPage }) => {
+      expect(autoPage).toBeUndefined();
+      expect(await readFile(inputPath)).toBeInstanceOf(Buffer);
+      const path = join(mocks.storage.temp, `crop-${page}.png`);
+      await writeFile(path, (await mocks.readAsset()).buffer);
+      expect(outputDir).toContain("page-");
+      return {
+        studentNumber: "000001",
+        alignment: { page, corrected: true },
+        needsReview: false,
+        answers: [
+          {
+            itemId: `i${page}`,
+            text: "2",
+            images: [path],
+            box: { page, x: 0, y: 0, width: 1, height: 1 },
+          },
+        ],
+      };
+    });
+    features = await createGradingFeatures({
+      userId: "teacher",
+      input: {
+        ...input,
+        assetUrls: urls,
+        templateId: "template",
+        pagesPerStudent: 2,
+        studentIds: ["s1"],
+      },
+      jobId: "job",
+    });
+    const model = vi.fn(async () => examOutput());
+    await features.run({ agent: vi.fn(), model });
+    expect(model).toHaveBeenCalledOnce();
+    await features.commit();
+    expect(mocks.command).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        type: "submission.save",
+        submission: expect.objectContaining({
+          kind: "CARD",
+          templateId: "template",
+          sourceFiles: urls,
+        }),
+      }),
+      expect.anything(),
+    );
+  });
+
+  it("does not commit a failed agent and disposes its sandbox", async () => {
+    await expect(
+      features.run({
+        model: vi.fn(),
+        agent: async () => {
+          throw new Error("provider failed");
+        },
+      }),
+    ).rejects.toThrow("provider failed");
+    await expect(features.commit()).rejects.toThrow(/未完成/);
+    expect(mocks.command).not.toHaveBeenCalled();
+    expect(mocks.sandboxes).toContainEqual(expect.objectContaining({ disposed: true }));
+  });
+
+  it.each(["page", "student"])(
+    "rejects an exam %s mismatch without writing scores",
+    async (kind) => {
+      context = fixture("EXAM");
+      context.pending = [];
+      context.submissions = [];
+      await features.dispose();
+      mocks.scan.mockResolvedValue({
+        studentNumber: kind === "student" ? "000002" : "000001",
+        alignment: { page: kind === "page" ? 2 : 1 },
+        answers: [],
+        needsReview: false,
+      });
+      features = await createGradingFeatures({
+        userId: "teacher",
+        input: {
+          ...input,
+          templateId: "template",
+          assetUrls: [asset("p1"), asset("p2")],
+          pagesPerStudent: 2,
+          studentIds: ["s1"],
+        },
+        jobId: "job",
+      });
+      const model = vi.fn();
+      await expect(features.run({ agent: vi.fn(), model })).rejects.toThrow(/顺序/);
+      expect(model).not.toHaveBeenCalled();
+      await expect(features.commit()).rejects.toThrow(/未完成/);
+      expect(mocks.command).not.toHaveBeenCalled();
+    },
+  );
+
+  it("does not issue another model request to repair invalid exam JSON", async () => {
+    context = fixture("EXAM");
+    const model = new MockLanguageModelV4({
+      doGenerate: async () => ({
+        content: [{ type: "text", text: "invalid json" }],
+        finishReason: { unified: "stop", raw: undefined },
+        usage: {
+          inputTokens: { total: 10, noCache: 10, cacheRead: undefined, cacheWrite: undefined },
+          outputTokens: { total: 10, text: 10, reasoning: undefined },
+        },
+        warnings: [],
+      }),
+    });
+    mocks.model.mockResolvedValue({
+      model,
+      reasoning: "xhigh",
+      identity: { providerId: "provider", apiType: "openai_chat" },
+      maxOutputTokens: 1000,
+      timeoutMs: 10000,
+      maxConcurrency: 1,
+    });
+    await expect(
+      runAiTask({ userId: "teacher", kind: "GRADE", input, jobId: "job" }),
+    ).rejects.toThrow();
+    expect(model.doGenerateCalls).toHaveLength(1);
+    expect(mocks.costAdd).toHaveBeenCalledOnce();
+    expect(mocks.command).not.toHaveBeenCalled();
+  });
+
+  it("sends one real SDK request per exam submission and accounts for every call", async () => {
+    context = fixture("EXAM");
+    const model = new MockLanguageModelV4({
+      doGenerate: async () => ({
+        content: [{ type: "text", text: JSON.stringify(examOutput()) }],
+        finishReason: { unified: "stop", raw: undefined },
+        usage: {
+          inputTokens: { total: 10, noCache: 10, cacheRead: undefined, cacheWrite: undefined },
+          outputTokens: { total: 10, text: 10, reasoning: undefined },
+        },
+        warnings: [],
+      }),
+    });
+    mocks.model.mockResolvedValue({
+      model,
+      reasoning: "xhigh",
+      identity: { providerId: "provider", apiType: "openai_chat" },
+      maxOutputTokens: 1000,
+      timeoutMs: 10000,
+      maxConcurrency: 1,
+    });
+    await runAiTask({ userId: "teacher", kind: "GRADE", input, jobId: "job" });
+    expect(model.doGenerateCalls).toHaveLength(2);
+    expect(model.doGenerateCalls.every((call) => call.reasoning === "xhigh")).toBe(true);
+    expect(model.doGenerateCalls.every((call) => !call.tools?.length)).toBe(true);
+    expect(mocks.costAdd).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("ordered page contract", () => {
+  it("splits three pages per student without sorting or identifying pages", () => {
+    const request = aiInputSchemas.GRADE.parse({
+      ...input,
+      assetUrls: ["a", "b", "c", "d", "e", "f"].map(asset),
+      pagesPerStudent: 3,
+      studentIds: ["s2", "s1"],
+    });
+    expect(groupGradingPages(request, 3)).toEqual([
+      { studentId: "s2", sourceFiles: ["a", "b", "c"].map(asset) },
+      { studentId: "s1", sourceFiles: ["d", "e", "f"].map(asset) },
+    ]);
+    expect(() =>
+      groupGradingPages({ ...request, assetUrls: request.assetUrls.slice(1) }, 3),
+    ).toThrow(/扫描页数/);
+    expect(() => groupGradingPages(request, 2)).toThrow(/模板一致/);
+  });
+  it("rejects missing or duplicated student assignments", () => {
+    expect(aiInputSchemas.GRADE.safeParse({ ...input, assetUrls: [asset("p")] }).success).toBe(
+      false,
+    );
+    expect(
+      aiInputSchemas.GRADE.safeParse({
+        ...input,
+        assetUrls: [asset("p")],
+        studentIds: ["s1", "s1"],
+      }).success,
+    ).toBe(false);
+  });
+});
 
 const asset = (id: string) => `/api/platform/assets/${id}`;
 const input = {
@@ -85,10 +476,8 @@ const input = {
   paperId: "paper",
   assetUrls: [] as string[],
 };
-let features: Awaited<ReturnType<typeof createBatchGradingFeatures>>;
-let context: Awaited<
-  ReturnType<typeof import("@/server/platform/batch-grading").batchGradingContext>
->;
+let features: Awaited<ReturnType<typeof createGradingFeatures>>;
+let context: Awaited<ReturnType<typeof import("@/server/platform/grading").gradingContext>>;
 function fixture(kind: "EXAM" | "HOMEWORK") {
   const students = ["s1", "s2"].map((id, i) => ({
     id,
@@ -180,7 +569,18 @@ beforeEach(async () => {
   mocks.storage.temp = await mkdtemp(join(tmpdir(), "omp-agents-"));
   mocks.storage.storage = mocks.storage.temp;
   context = fixture("HOMEWORK");
-  mocks.context.mockImplementation(async () => context);
+  mocks.context.mockImplementation(async (_db, _state, request) => ({
+    ...context,
+    groups: request.assetUrls.length
+      ? request.studentIds.map((studentId: string, i: number) => ({
+          studentId,
+          sourceFiles: request.assetUrls.slice(
+            i * request.pagesPerStudent,
+            (i + 1) * request.pagesPerStudent,
+          ),
+        }))
+      : [],
+  }));
   mocks.loadState.mockResolvedValue({ reviews: [] } as unknown as PlatformState);
   const buffer = await sharp({
     create: { width: 100, height: 100, channels: 3, background: "white" },
@@ -191,7 +591,7 @@ beforeEach(async () => {
   mocks.command.mockResolvedValue({ id: "saved" });
   mocks.job.mockResolvedValue({
     id: "job",
-    kind: "BATCH_GRADE",
+    kind: "GRADE",
     status: "RUNNING",
     userId: "teacher",
   });
@@ -202,295 +602,9 @@ beforeEach(async () => {
       platformAsset: { create: mocks.assetCreate },
     }),
   );
-  features = await createBatchGradingFeatures({ userId: "teacher", input, jobId: "job" });
+  features = await createGradingFeatures({ userId: "teacher", input, jobId: "job" });
 });
 afterEach(async () => {
   await features.dispose();
   await rm(mocks.storage.temp, { force: true, recursive: true });
-});
-
-describe("independent grading agents", () => {
-  it("uses one scoped homework agent per student and prevents cross-student tools/assets", async () => {
-    const tasks: AgentTask[] = [];
-    await features.runAgents(async (task) => {
-      tasks.push(task);
-      expect(task.scope?.itemId).toBeUndefined();
-      const other = task.scope!.studentId === "s1" ? "s2" : "s1";
-      expect(task.prompt).not.toContain(`sub-${other}`);
-      await expect(call(task, "python", { assets: [asset(`${other}-i1`)] })).rejects.toThrow(
-        /不属于/,
-      );
-      await expect(
-        call(task, "propose_grade", {
-          items: [{ studentId: other, itemId: "i1", score: 1, feedback: "错", partScores: [] }],
-        }),
-      ).rejects.toThrow(/其他学生/);
-      await grade(task);
-    });
-    expect(tasks.map((t) => t.scope)).toEqual([
-      { stage: "grade", studentId: "s1" },
-      { stage: "grade", studentId: "s2" },
-    ]);
-    await features.commit();
-    expect(mocks.command).toHaveBeenCalledTimes(4);
-  });
-  it("creates one exam agent per student/question with isolated evidence and no recropping tool", async () => {
-    context = fixture("EXAM");
-    await features.dispose();
-    features = await createBatchGradingFeatures({ userId: "teacher", input, jobId: "job" });
-    const scopes: AgentTask["scope"][] = [];
-    await features.runAgents(async (task) => {
-      scopes.push(task.scope);
-      const other = task.scope!.itemId === "i1" ? "i2" : "i1";
-      expect(task.tools.record_answers).toBeUndefined();
-      await call(task, "read_answer");
-      await expect(
-        call(task, "python", { assets: [asset(`${task.scope!.studentId}-${other}`)] }),
-      ).rejects.toThrow(/不属于/);
-      await expect(
-        call(task, "propose_grade", {
-          items: [
-            {
-              studentId: task.scope!.studentId,
-              itemId: other,
-              score: 1,
-              feedback: "错",
-              partScores: [],
-            },
-          ],
-        }),
-      ).rejects.toThrow(/评阅范围/);
-      await expect(
-        call(task, "propose_grade", {
-          items: [
-            {
-              studentId: task.scope!.studentId,
-              itemId: task.scope!.itemId,
-              score: 1,
-              feedback: "错",
-              partScores: [],
-            },
-          ],
-        }),
-      ).rejects.toThrow(/查看/);
-      await grade(task);
-    });
-    expect(scopes).toEqual(
-      ["s1", "s2"].flatMap((studentId) =>
-        ["i1", "i2"].map((itemId) => ({ stage: "grade", studentId, itemId })),
-      ),
-    );
-    expect(features.isComplete()).toBe(true);
-  });
-  it("runs a separate identity agent before per-student homework grading and merges continuation pages", async () => {
-    context.submissions = [];
-    context.pending = [];
-    await features.dispose();
-    features = await createBatchGradingFeatures({
-      userId: "teacher",
-      input: { ...input, assetUrls: [asset("p1"), asset("p2"), asset("unknown")] },
-      jobId: "job",
-    });
-    const stages: string[] = [];
-    await features.runAgents(async (task) => {
-      stages.push(task.scope!.stage);
-      if (task.scope!.stage === "identify") {
-        expect(task.tools.propose_grade).toBeUndefined();
-        await call(task, "python", { assets: [asset("p1"), asset("p2"), asset("unknown")] });
-        await call(task, "register_submission", {
-          items: [{ sourceUrls: [asset("p1"), asset("p2")], studentNumber: "1" }],
-        });
-        await call(task, "defer_pages", {
-          items: [{ sourceUrl: asset("unknown"), reason: "无姓名考号" }],
-        });
-      } else {
-        await call(task, "read_answer");
-        // Identity-agent inspections do not count as this grading agent's evidence.
-        await expect(
-          call(task, "record_answers", {
-            items: [
-              {
-                studentId: "s1",
-                itemId: "i1",
-                text: "2",
-                regions: [{ sourceUrl: asset("p1"), x: 0, y: 0, width: 1, height: 1 }],
-              },
-            ],
-          }),
-        ).rejects.toThrow(/已查看/);
-        await call(task, "python", { assets: [asset("p1"), asset("p2")] });
-        for (const itemId of ["i1", "i2"]) {
-          const answer = (await call(task, "record_answers", {
-            items: [
-              {
-                studentId: "s1",
-                itemId,
-                text: "2",
-                regions: ["p1", "p2"].map((id) => ({
-                  sourceUrl: asset(id),
-                  x: 0,
-                  y: 0,
-                  width: 1,
-                  height: 1,
-                })),
-              },
-            ],
-          })) as { images: string[] };
-          await call(task, "python", { assets: answer.images });
-          await call(task, "propose_grade", {
-            items: [{ studentId: "s1", itemId, score: 10, feedback: "正确", partScores: [] }],
-          });
-        }
-      }
-      await call(task, "finish", { summary: "完成" });
-    });
-    expect(stages).toEqual(["identify", "grade"]);
-    const result = await features.commit();
-    expect(result.result).toMatchObject({
-      students: [{ studentId: "s1", gradedQuestions: 2 }],
-      pendingPages: [{ sourceUrl: asset("unknown") }],
-    });
-  });
-  it("scans unordered exam cards using the template, merges pages and preserves unknown/duplicate pages", async () => {
-    context = fixture("EXAM");
-    context.submissions = [];
-    context.pending = [];
-    await features.dispose();
-    const urls = [asset("p2"), asset("p1"), asset("unknown"), asset("duplicate")];
-    mocks.scan.mockImplementation(async ({ inputPath, outputDir, autoPage }) => {
-      expect(autoPage).toBe(true);
-      expect(await readFile(inputPath)).toBeInstanceOf(Buffer);
-      const index = Number(/input-(\d+)/.exec(inputPath)![1]);
-      const page = index === 0 ? 2 : 1;
-      const path = join(mocks.storage.temp, `crop-${index}.png`);
-      await writeFile(path, (await mocks.readAsset()).buffer);
-      expect(outputDir).toContain("page-");
-      return {
-        studentNumber: index === 2 ? null : "000001",
-        alignment: { page, corrected: true },
-        needsReview: false,
-        answers: [
-          {
-            itemId: `i${page}`,
-            text: "2",
-            images: [path],
-            box: { page, x: 0, y: 0, width: 1, height: 1 },
-          },
-        ],
-      };
-    });
-    features = await createBatchGradingFeatures({
-      userId: "teacher",
-      input: { ...input, templateId: "template", assetUrls: urls },
-      jobId: "job",
-    });
-    const scopes: AgentTask["scope"][] = [];
-    await features.runAgents(async (task) => {
-      scopes.push(task.scope);
-      await grade(task);
-    });
-    expect(scopes).toHaveLength(2);
-    const output = await features.commit();
-    expect(output.result).toMatchObject({
-      templateId: "template",
-      students: [{ studentId: "s1", gradedQuestions: 2 }],
-      pendingPages: [{ sourceUrl: urls[2] }, { sourceUrl: urls[3] }],
-    });
-    expect(mocks.command).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        type: "submission.save",
-        submission: expect.objectContaining({
-          kind: "CARD",
-          templateId: "template",
-          sourceFiles: [urls[1], urls[0]],
-        }),
-      }),
-      expect.anything(),
-    );
-  });
-  it("does not commit incomplete or failed agent runs and disposes their sandboxes", async () => {
-    await expect(
-      features.runAgents(async () => {
-        throw new Error("provider failed");
-      }),
-    ).rejects.toThrow("provider failed");
-    await expect(features.commit()).rejects.toThrow(/未完成/);
-    expect(mocks.command).not.toHaveBeenCalled();
-    expect(mocks.sandboxes).toContainEqual(expect.objectContaining({ disposed: true }));
-  });
-  it("constructs a fresh SDK conversation for each exam question and accumulates all model usage", async () => {
-    context = fixture("EXAM");
-    // Text-only recorded answers let this SDK-level test focus on conversation separation.
-    for (const sub of context.pending) for (const answer of sub.answers) answer.images = [];
-    const model = new MockLanguageModelV4({
-      doGenerate: async ({ prompt }) => {
-        const first = prompt.find((m) => m.role === "user")!;
-        const data = JSON.parse((first.content as { type: string; text: string }[])[0].text);
-        const steps = prompt.filter((m) => m.role === "assistant").length;
-        const sequence = [
-          { toolName: "read_answer", input: {} },
-          {
-            toolName: "propose_grade",
-            input: {
-              items: [
-                {
-                  studentId: data.studentId,
-                  itemId: data.paper.items[0].id,
-                  score: 10,
-                  feedback: "正确",
-                  partScores: [],
-                },
-              ],
-            },
-          },
-          { toolName: "finish", input: { summary: "完成" } },
-        ];
-        const call = sequence[steps];
-        return {
-          content: [
-            {
-              type: "tool-call",
-              toolCallId: `call-${steps}`,
-              toolName: call.toolName,
-              input: JSON.stringify(call.input),
-            },
-          ],
-          finishReason: { unified: "tool-calls", raw: undefined },
-          usage: {
-            inputTokens: { total: 10, noCache: 10, cacheRead: undefined, cacheWrite: undefined },
-            outputTokens: { total: 10, text: 10, reasoning: undefined },
-          },
-          warnings: [],
-        };
-      },
-    });
-    mocks.model.mockResolvedValue({
-      model,
-      identity: { providerId: "provider", apiType: "openai_chat" },
-      maxOutputTokens: 1000,
-      timeoutMs: 10000,
-      maxConcurrency: 1,
-    });
-    const events: unknown[] = [];
-    await runAiTask({
-      userId: "teacher",
-      kind: "BATCH_GRADE",
-      input,
-      jobId: "job",
-      onEvent: async (event) => {
-        events.push(event);
-      },
-    });
-    expect(model.doGenerateCalls).toHaveLength(12);
-    expect(model.doGenerateCalls.filter((c) => c.prompt.length === 2)).toHaveLength(4);
-    expect(mocks.costAdd).toHaveBeenCalledTimes(12);
-    expect(
-      events.filter(
-        (e) =>
-          (e as { type: string; status: string }).type === "agent" &&
-          (e as { status: string }).status === "started",
-      ),
-    ).toHaveLength(4);
-  });
 });

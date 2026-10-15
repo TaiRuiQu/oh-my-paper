@@ -40,12 +40,19 @@ export function AssessmentListPage() {
             : "安排考试科目与参试班级，跟进扫描、阅卷和成绩发布。"
         }
         actions={
-          <Button asChild>
-            <Link href={`${root}/new`}>
-              <Plus />
-              {homework ? "布置作业" : "安排考试"}
-            </Link>
-          </Button>
+          <>
+            {!homework && (
+              <Button asChild variant="outline">
+                <Link href="/exams/import">扫描导入试卷</Link>
+              </Button>
+            )}
+            <Button asChild>
+              <Link href={`${root}/new`}>
+                <Plus />
+                {homework ? "布置作业" : "安排考试"}
+              </Link>
+            </Button>
+          </>
         }
       />
       <Panel title={`全部${noun}`} description={`${state.assessments.length} 条记录`}>

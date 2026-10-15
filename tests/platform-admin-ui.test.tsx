@@ -17,7 +17,7 @@ const provider = {
   apiType: "openai_chat",
   baseURL: "https://example.test/v1",
   maxOutputTokens: 16384,
-  models: [{ id: "m", name: "model-api-id", displayName: "教学模型" }],
+  models: [{ id: "m", name: "model-api-id", displayName: "教学模型", reasoningEffort: "high" }],
 };
 let container: HTMLDivElement, root: Root;
 const notify = vi.fn(),
@@ -104,7 +104,13 @@ it("edits, adds and removes model rows and saves IDs separately from display nam
   expect(container.querySelector<HTMLInputElement>('[name="modelDisplayName"]')!.value).toBe(
     "教学模型",
   );
+  expect(container.querySelector<HTMLSelectElement>('[name="modelReasoningEffort"]')!.value).toBe(
+    "high",
+  );
   await act(async () => findButton("添加模型").click());
+  expect(
+    container.querySelectorAll<HTMLSelectElement>('[name="modelReasoningEffort"]')[1].value,
+  ).toBe("provider-default");
   async function fill(name: string, index: number, value: string) {
     const input = container.querySelectorAll<HTMLInputElement>(`[name="${name}"]`)[index];
     await act(async () => {
@@ -114,6 +120,13 @@ it("edits, adds and removes model rows and saves IDs separately from display nam
   }
   await fill("modelName", 1, "vendor/model,with-comma");
   await fill("modelDisplayName", 1, "课堂模型");
+  await act(async () => {
+    const select = container.querySelectorAll<HTMLSelectElement>(
+      '[name="modelReasoningEffort"]',
+    )[1];
+    select.value = "xhigh";
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+  });
   await act(async () =>
     container.querySelector<HTMLButtonElement>('[aria-label="删除模型 1"]')!.click(),
   );
@@ -127,7 +140,7 @@ it("edits, adds and removes model rows and saves IDs separately from display nam
     .mocked(apiRequest)
     .mock.calls.find(([, options]) => options?.method === "POST")!;
   expect(JSON.parse(String(request[1]!.body)).provider.models).toEqual([
-    { name: "vendor/model,with-comma", displayName: "课堂模型" },
+    { name: "vendor/model,with-comma", displayName: "课堂模型", reasoningEffort: "xhigh" },
   ]);
 });
 

@@ -96,6 +96,7 @@ model AiModel {
   provider AiProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
   name String
   displayName String @default("")
+  reasoningEffort String @default("provider-default")
   reasoningEfforts String[]
   settings AiSetting[]
   isPublic Boolean @default(false)
