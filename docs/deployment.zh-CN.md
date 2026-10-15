@@ -2,7 +2,9 @@
 
 本文描述当前 v2 镜像部署方式。已有 0.1.15 生产环境请先阅读 [从 0.1.15 升级到 v2](upgrade-from-v0.1.15.zh-CN.md)，不要直接执行全新部署步骤。
 
-生产服务由 PostgreSQL、Web、AI Worker 和 Caddy 组成。v2 的应用镜像发布在 GHCR：`oh-my-paper`、`oh-my-paper-migrate` 和 `oh-my-paper-ai-worker`。服务器定时器每五分钟检查并拉取 `latest` 镜像；GitHub Actions 负责验证和发布镜像，不会替服务器同步 Compose 文件或部署脚本。
+生产服务由 PostgreSQL、Web、AI Worker 和 Caddy 组成。v2 的应用镜像发布在 GHCR：`oh-my-paper`、`oh-my-paper-migrate` 和 `oh-my-paper-ai-worker`。三个镜像全部验收、推送成功后，GitHub Actions 才会在 `oh-my-paper` 发布统一入口 `latest`，其中记录三个镜像的固定 digest。服务器定时器每五分钟读取一次入口并更新整组镜像；GitHub Actions 不会替服务器同步 Compose 文件或部署脚本。
+
+服务器需要 Docker Engine、Compose 和 Buildx 插件，以及 Python 3。可用 `docker compose version`、`docker buildx version`、`python3 --version` 检查。
 
 ## 全新服务器部署
 
@@ -25,7 +27,7 @@ sudo chown 1000:1000 storage tmp
 - `BETTER_AUTH_SECRET`：持久认证密钥。
 - `PROVIDER_KEY_ENCRYPTION_KEY`：持久提供商密钥加密密钥。
 - `QDRANT_API_KEY`：随机向量数据库访问密钥，Compose 内部 Qdrant 与应用共用。
-- `APP_VERSION=latest`：跟踪最新 v2 镜像。
+- `APP_VERSION=latest`：跟踪最新完整 v2 发布，也可指定 `sha-<完整 40 位提交 SHA>` 或 release tag。
 
 已有部署必须保留原认证密钥、提供商加密密钥和数据库凭据。私有仓库或私有 GHCR 镜像先登录：
 
@@ -37,8 +39,8 @@ sudo docker login ghcr.io
 
 ```bash
 cd ~/oh-my-paper
-sudo docker compose -f compose.yaml -f compose.release.yaml pull
-sudo docker compose -f compose.yaml -f compose.release.yaml up -d --remove-orphans --wait --wait-timeout 180
+sudo docker compose -f compose.yaml pull db qdrant proxy
+sudo bash deploy/update.sh
 sudo docker compose -f compose.yaml -f compose.release.yaml ps -a
 sudo docker compose -f compose.yaml -f compose.release.yaml logs --tail=100 migrate web ai-worker
 curl -fsS https://你的域名/api/health
@@ -144,7 +146,7 @@ sudo systemctl list-timers --all oh-my-paper-update.timer
 
 oneshot service 成功后显示 `inactive (dead)` 是正常的；应检查 `status=0/SUCCESS`。timer 应显示 `active (waiting)`，并有下一次触发时间。不要 enable service 本身，只 enable timer。
 
-脚本默认从 `APP_VERSION` 读取版本；未设置时跟踪 `latest`。手动更新也要使用 `sudo`：
+脚本从 Compose 环境（包括 `.env`）读取 `APP_VERSION`；未设置时跟踪 `latest`。它只读取一次发布入口，校验三个 digest 后全部拉取成功，才保存 `deploy/.release.json` 并启动服务。入口不完整、读取失败或任一镜像拉取失败时，保留原运行服务和原本地清单。`compose.release.yaml` 使用这份本地清单，因此第一次启动必须执行更新脚本，之后的手动 Compose 操作也会使用固定 digest。手动更新也要使用 `sudo`：
 
 ```bash
 cd ~/oh-my-paper
@@ -156,7 +158,7 @@ sudo bash deploy/update.sh
 ```bash
 sudo systemctl disable --now oh-my-paper-update.timer
 sed -i '/^APP_VERSION=/d' .env
-printf '\nAPP_VERSION=sha-xxxxxxx\n' >> .env
+printf '\nAPP_VERSION=sha-<完整40位提交SHA>\n' >> .env
 sudo bash deploy/update.sh
 ```
 
@@ -165,6 +167,8 @@ sudo bash deploy/update.sh
 ```bash
 sudo systemctl enable --now oh-my-paper-update.timer
 ```
+
+现有 v2 服务器启用此修复时，需先同步本次 `deploy/update.sh`、`deploy/resolve-release.py` 和 `compose.release.yaml`，确认新 CI 的「Publish complete release and clean GHCR」成功后，再手动运行一次更新脚本。无需修改已有 timer unit；只拉取应用镜像不会更新服务器上的脚本。构建尚未全部成功时，统一入口保持上次完整发布。
 
 ## 日常检查
 

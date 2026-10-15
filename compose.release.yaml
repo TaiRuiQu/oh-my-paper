@@ -1,11 +1,17 @@
-# Published v2 images. APP_VERSION may pin a v2 release tag.
+# deploy/update.sh resolves one complete release into this local digest lock.
 services:
   migrate:
     build: !reset null
-    image: ghcr.io/tairuiqu/oh-my-paper-migrate:${APP_VERSION:-latest}
+    extends:
+      file: deploy/.release.json
+      service: migrate
   web:
     build: !reset null
-    image: ghcr.io/tairuiqu/oh-my-paper:${APP_VERSION:-latest}
+    extends:
+      file: deploy/.release.json
+      service: web
   ai-worker:
     build: !reset null
-    image: ghcr.io/tairuiqu/oh-my-paper-ai-worker:${APP_VERSION:-latest}
+    extends:
+      file: deploy/.release.json
+      service: ai-worker
