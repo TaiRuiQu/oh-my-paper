@@ -24,7 +24,7 @@ it.each(protocols)(
         ? "claude-sonnet-5.5"
         : apiType === "google"
           ? "gemini-3.8-flash"
-          : "gpt-6-astra";
+          : "school-model-alias";
     mocks.findModel.mockResolvedValue({
       id: "model",
       name,

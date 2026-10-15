@@ -84,6 +84,8 @@ Python/shell 调用代码、命令、退出码与文本输出写入本人专属 
 
 设置保存在 `AiModel.reasoningEffort`，运行时通过 AI SDK 7 的统一 `reasoning` 参数应用于所有自主 Agent 步骤和考试单次评分。SDK 将其转换为 OpenAI Chat/Responses、Anthropic 或 Google 的原生设置；模型实际支持的档位由供应商决定。它与 Responses 上下文续接独立，开启续接时每轮仍保持所选强度。
 
+OpenAI 兼容接口使用自定义模型 ID 时，显式选择强度会启用 SDK 的 `forceReasoning`，确保该参数不会因模型名称不在 SDK 识别名单中而被忽略；供应商默认档位不启用此选项。
+
 ## Responses API 上下文续接
 
 `openai_responses` 可在 AI 供应商设置中选择「使用 previous_response_id」，默认关闭。无论是否开启，均保持 `store: true` 保存响应；该开关只控制是否通过 `previous_response_id` 续接。关闭时每轮发送完整对话历史（包含工具结果与图片），不要求供应商返回响应 ID。

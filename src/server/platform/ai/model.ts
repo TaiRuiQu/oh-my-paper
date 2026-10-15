@@ -2,7 +2,7 @@ import "server-only";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogle } from "@ai-sdk/google";
-import type { LanguageModel } from "ai";
+import { defaultSettingsMiddleware, wrapLanguageModel, type LanguageModel } from "ai";
 import { reasoningEffortSchema } from "@/contracts/ai-models";
 import { getDb } from "@/server/db/client";
 import { decryptApiKey } from "@/server/ai/credentials";
@@ -24,6 +24,7 @@ export async function loadAiModel(userId: string, modelId?: string) {
   const p = stored.provider,
     apiKey = decryptApiKey(p.encryptedApiKey),
     settings = { apiKey, baseURL: p.baseURL };
+  const reasoning = reasoningEffortSchema.parse(stored.reasoningEffort);
   let model: LanguageModel;
   switch (p.apiType) {
     case "openai_chat":
@@ -44,6 +45,13 @@ export async function loadAiModel(userId: string, modelId?: string) {
     default:
       throw new RequestError(400, "不支持的模型协议。");
   }
+  if (reasoning !== "provider-default" && ["openai_chat", "openai_responses"].includes(p.apiType))
+    model = wrapLanguageModel({
+      model,
+      middleware: defaultSettingsMiddleware({
+        settings: { providerOptions: { openai: { forceReasoning: true } } },
+      }),
+    });
   return {
     model,
     baseURL: p.baseURL,
@@ -55,7 +63,7 @@ export async function loadAiModel(userId: string, modelId?: string) {
       apiType: p.apiType,
     },
     usePreviousResponseId: p.apiType === "openai_responses" && p.usePreviousResponseId,
-    reasoning: reasoningEffortSchema.parse(stored.reasoningEffort),
+    reasoning,
     maxOutputTokens: p.maxOutputTokens,
     timeoutMs: p.timeoutSeconds * 1000,
     maxConcurrency: p.maxConcurrency,
