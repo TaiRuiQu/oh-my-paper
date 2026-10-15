@@ -13,6 +13,7 @@ import {
 import { apiRequest } from "@/lib/http-client";
 import { MarkdownText } from "@/components/markdown-text";
 import { Field, Panel, Submit, splitList } from "./primitives";
+import { QuestionOptionsEditor } from "./question-options-editor";
 export type Mutate = (command: PlatformCommand) => Promise<{ id?: string; error?: string }>;
 export const QUESTION_LABELS: Record<QuestionType, string> = {
   SINGLE: "单选题",
@@ -41,29 +42,6 @@ const freshPart = (): QuestionPart => ({
   knowledgeTags: [],
   score: 5,
 });
-function OptionsInput({
-  options,
-  onChange,
-}: {
-  options: QuestionContent["options"];
-  onChange: (options: QuestionContent["options"]) => void;
-}) {
-  return (
-    <Field label="选项" hint="每行一个选项，按 A、B、C… 顺序自动编号">
-      <textarea
-        value={options.map((o) => o.text).join("\n")}
-        onChange={(e) =>
-          onChange(
-            e.target.value
-              .split("\n")
-              .map((text, i) => ({ label: String.fromCharCode(65 + i), text })),
-          )
-        }
-        placeholder="选项 A 的内容\n选项 B 的内容"
-      />
-    </Field>
-  );
-}
 export function QuestionBody({ question }: { question: BankQuestion }) {
   return (
     <>
@@ -145,7 +123,7 @@ export function QuestionEditor({
   return (
     <Panel
       title={question ? "编辑试题" : "创建试题"}
-      description="支持 Markdown 和数学公式。填空题的每个答案与题目中的空按顺序对应。"
+      description="填写题干、选项与答案，也可上传配图。选择题可直接勾选正确答案。"
       actions={
         <button className="button secondary" onClick={close}>
           关闭编辑
@@ -190,7 +168,14 @@ export function QuestionEditor({
             />
           </Field>
           <Field label="题型">
-            <select value={type} onChange={(e) => setType(e.target.value as QuestionType)}>
+            <select
+              value={type}
+              onChange={(e) => {
+                const next = e.target.value as QuestionType;
+                setType(next);
+                if (next === "SINGLE") patch({ answers: content.answers.slice(0, 1) });
+              }}
+            >
               {Object.entries(QUESTION_LABELS).map(([k, v]) => (
                 <option key={k} value={k}>
                   {v}
@@ -215,24 +200,25 @@ export function QuestionEditor({
             required
             value={content.stem}
             onChange={(e) => patch({ stem: e.target.value })}
-            placeholder="输入题目内容，可使用 $...$ 数学公式"
+            placeholder="填写题目内容"
           />
         </Field>
         {(type === "SINGLE" || type === "MULTIPLE") && (
-          <OptionsInput options={content.options} onChange={(options) => patch({ options })} />
-        )}
-        <Field
-          label={
-            type === "BLANK"
-              ? "各空标准答案（每行一个空）"
-              : "标准答案（每行一个，选择题填写 A、B 等选项）"
-          }
-        >
-          <textarea
-            value={content.answers.join("\n")}
-            onChange={(e) => patch({ answers: e.target.value.split("\n").filter(Boolean) })}
+          <QuestionOptionsEditor
+            options={content.options}
+            answers={content.answers}
+            multiple={type === "MULTIPLE"}
+            onChange={patch}
           />
-        </Field>
+        )}
+        {type !== "SINGLE" && type !== "MULTIPLE" && (
+          <Field label={type === "BLANK" ? "各空标准答案（每行一个空）" : "参考答案"}>
+            <textarea
+              value={content.answers.join("\n")}
+              onChange={(e) => patch({ answers: e.target.value.split("\n").filter(Boolean) })}
+            />
+          </Field>
+        )}
         <div className="p-form-grid">
           <Field label="解析">
             <textarea
@@ -308,7 +294,12 @@ export function QuestionEditor({
                     <select
                       value={p.type}
                       onChange={(e) =>
-                        patchPart(i, { type: e.target.value as QuestionPart["type"] })
+                        patchPart(i, {
+                          type: e.target.value as QuestionPart["type"],
+                          ...(e.target.value === "SINGLE"
+                            ? { answers: p.answers.slice(0, 1) }
+                            : {}),
+                        })
                       }
                     >
                       {Object.entries(QUESTION_LABELS)
@@ -337,19 +328,23 @@ export function QuestionEditor({
                   />
                 </Field>
                 {(p.type === "SINGLE" || p.type === "MULTIPLE") && (
-                  <OptionsInput
+                  <QuestionOptionsEditor
                     options={p.options}
-                    onChange={(options) => patchPart(i, { options })}
+                    answers={p.answers}
+                    multiple={p.type === "MULTIPLE"}
+                    onChange={(value) => patchPart(i, value)}
                   />
                 )}
-                <Field label="各空答案 / 参考答案（每行一个）">
-                  <textarea
-                    value={p.answers.join("\n")}
-                    onChange={(e) =>
-                      patchPart(i, { answers: e.target.value.split("\n").filter(Boolean) })
-                    }
-                  />
-                </Field>
+                {p.type !== "SINGLE" && p.type !== "MULTIPLE" && (
+                  <Field label="各空答案 / 参考答案（每行一个）">
+                    <textarea
+                      value={p.answers.join("\n")}
+                      onChange={(e) =>
+                        patchPart(i, { answers: e.target.value.split("\n").filter(Boolean) })
+                      }
+                    />
+                  </Field>
+                )}
                 <Field label="小问评分标准">
                   <input
                     value={p.rubric}
