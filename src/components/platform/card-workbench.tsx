@@ -44,6 +44,7 @@ import {
   validateCardTemplate,
   fitAnnotationText,
   studentNumberBox,
+  cardPageHasHeader,
 } from "@/lib/cards";
 import { renderCardSvg } from "@/lib/card-svg";
 import { Textarea } from "@/components/ui/textarea";
@@ -718,6 +719,31 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
             </div>
           </section>
         </fieldset>
+        <fieldset disabled={editLocked || pending} className="p-maker-fieldset">
+          <section className="p-maker-section">
+            <h3>顶部信息区</h3>
+            <div className="p-maker-fields">
+              <Field
+                label="显示页面"
+                hint="包含注意事项、班级姓名和考号区；切换后自动重新排布题区。"
+              >
+                <select
+                  value={layout.headerMode ?? "EVERY_PAGE"}
+                  onChange={(event) =>
+                    reformat({
+                      ...layout,
+                      headerMode: event.target.value as CardLayout["headerMode"],
+                    })
+                  }
+                >
+                  <option value="EVERY_PAGE">每页都有</option>
+                  <option value="ODD_PAGES">仅奇数页有（双面打印）</option>
+                  <option value="FIRST_PAGE">只有第一页有（按顺序扫描）</option>
+                </select>
+              </Field>
+            </div>
+          </section>
+        </fieldset>
         <section className="p-maker-section">
           <h3>选择考号版式</h3>
           <div className="p-maker-fields">
@@ -754,13 +780,23 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
                 : "六位考号，每列填涂一个数字。"}
             </p>
             {layout.studentNumber.mode === "BARCODE" && (
-              <BarcodeLabels pageCount={layout.pageCount} />
+              <BarcodeLabels
+                key={`${layout.headerMode}-${layout.pageCount}`}
+                pageCount={
+                  Array.from({ length: layout.pageCount }, (_, index) => index + 1).filter((p) =>
+                    cardPageHasHeader(layout, p),
+                  ).length
+                }
+              />
             )}
             <button
               type="button"
               className="p-text-action"
               disabled={editLocked || pending}
-              onClick={() => setSelection({ kind: "number" })}
+              onClick={() => {
+                if (!cardPageHasHeader(layout, page)) setPage(1);
+                setSelection({ kind: "number" });
+              }}
             >
               调整考号区位置与间距
             </button>
@@ -1630,25 +1666,29 @@ function CardSheet({
           />
         );
       })}
-      <div
-        tabIndex={onChange ? 0 : undefined}
-        role="group"
-        onClick={() => select?.({ kind: "number" })}
-        onPointerDown={(e) => begin(e, { kind: "number" })}
-        onPointerMove={moving}
-        onPointerUp={() => {
-          drag.current = undefined;
-        }}
-        onKeyDown={(e) => keyboard(e, { kind: "number" })}
-        aria-label={layout.studentNumber.mode === "BARCODE" ? "考号条形码粘贴区" : "六位学号填涂区"}
-        className={`p-card-number${isSelected({ kind: "number" }) ? " selected" : ""}`}
-        style={{
-          left: `${n.x * 100}%`,
-          top: `${n.y * 100}%`,
-          width: `${n.width * 100}%`,
-          height: `${n.height * 100}%`,
-        }}
-      ></div>
+      {cardPageHasHeader(layout, page) && (
+        <div
+          tabIndex={onChange ? 0 : undefined}
+          role="group"
+          onClick={() => select?.({ kind: "number" })}
+          onPointerDown={(e) => begin(e, { kind: "number" })}
+          onPointerMove={moving}
+          onPointerUp={() => {
+            drag.current = undefined;
+          }}
+          onKeyDown={(e) => keyboard(e, { kind: "number" })}
+          aria-label={
+            layout.studentNumber.mode === "BARCODE" ? "考号条形码粘贴区" : "六位学号填涂区"
+          }
+          className={`p-card-number${isSelected({ kind: "number" }) ? " selected" : ""}`}
+          style={{
+            left: `${n.x * 100}%`,
+            top: `${n.y * 100}%`,
+            width: `${n.width * 100}%`,
+            height: `${n.height * 100}%`,
+          }}
+        ></div>
+      )}
       {layout.regions.map((r, index) => {
         if (r.page !== page) return null;
         const value: Selection = { kind: "region", index };

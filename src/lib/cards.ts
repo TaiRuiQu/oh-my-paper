@@ -22,6 +22,7 @@ type CardFormat = Pick<
   | "columns"
   | "fontFamily"
   | "annotations"
+  | "headerMode"
   | "showAbsent"
   | "showFooter"
   | "showSubject"
@@ -36,6 +37,7 @@ function baseLayout(format: CardFormat = {}): CardLayout {
     orientation,
     columns: format.columns ?? 1,
     fontFamily: format.fontFamily ?? "NSimSun",
+    headerMode: format.headerMode ?? "EVERY_PAGE",
     omrVersion: 2,
     annotations: format.annotations?.map((a) => {
       const aw = Math.min(a.width * (format.width ?? width), width - 120);
@@ -88,6 +90,19 @@ export function studentNumberBox(layout: CardLayout) {
     height: n.mode === "BARCODE" ? 112 / layout.height : n.cellHeight * 9 + 34 / layout.height,
   };
 }
+export function cardPageHasHeader(layout: Pick<CardLayout, "headerMode">, page: number) {
+  switch (layout.headerMode) {
+    case "FIRST_PAGE":
+      return page === 1;
+    case "ODD_PAGES":
+      return page % 2 === 1;
+    default:
+      return true;
+  }
+}
+export function cardPageContentTop(layout: Pick<CardLayout, "headerMode">, page: number) {
+  return cardPageHasHeader(layout, page) ? 275 : 95;
+}
 export function generateCardTemplate(
   paper: Paper,
   overrides: Partial<CardPreset> = {},
@@ -112,9 +127,9 @@ export function generateCardTemplate(
       locked: format.locked,
     },
   };
-  let y = 275,
-    page = 1,
+  let page = 1,
     column = 0;
+  let y = cardPageContentTop(template.layout, page);
   const { width, height } = template.layout;
   const columns = template.layout.columns ?? 1;
   const columnWidth = (width - 110 - (columns - 1) * 12) / columns;
@@ -151,7 +166,7 @@ export function generateCardTemplate(
         page++;
         column = 0;
       }
-      y = 275;
+      y = cardPageContentTop(template.layout, page);
     }
     template.layout.regions.push({
       itemId: item.id,
@@ -203,6 +218,11 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
     layout.pageCount > 100
   )
     throw new Error("答题卡必须包含 A4/A3 横向或纵向页面、1–4 栏、四个定位点和六位学号");
+  if (
+    layout.headerMode !== undefined &&
+    !["EVERY_PAGE", "ODD_PAGES", "FIRST_PAGE"].includes(layout.headerMode)
+  )
+    throw new Error("顶部信息区须选择每页、仅奇数页或仅首页显示");
   const { width, height } = layout;
   const within = (x: number, y: number, w = 0, h = 0) =>
     [x, y, w, h].every(Number.isFinite) &&
@@ -237,10 +257,14 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
       region.height < 0.02
     )
       throw new Error("题目答题区域坐标无效");
-    if (region.y < 245 / height || region.y + region.height > (height - 63) / height)
+    if (
+      region.y < (cardPageContentTop(layout, region.page) - 10) / height ||
+      region.y + region.height > (height - 63) / height
+    )
       throw new Error("题目答题区域须避开页眉识别区和页脚");
     const { x: studentLeft, y: studentTop, width: studentWidth, height: studentHeight } = numberBox;
     if (
+      cardPageHasHeader(layout, region.page) &&
       region.x < studentLeft + studentWidth &&
       region.x + region.width > studentLeft &&
       region.y < studentTop + studentHeight &&
@@ -307,7 +331,8 @@ export function validateCardTemplate(template: CardTemplate, paper?: Paper): Car
       annotation.y < y + h &&
       annotation.y + annotation.height > y;
     if (
-      intersects(numberBox.x, numberBox.y, numberBox.width, numberBox.height) ||
+      (cardPageHasHeader(layout, annotation.page) &&
+        intersects(numberBox.x, numberBox.y, numberBox.width, numberBox.height)) ||
       intersects(
         (layout.markers[0].x * width + 23) / width,
         layout.markers[0].y - 5 / height,

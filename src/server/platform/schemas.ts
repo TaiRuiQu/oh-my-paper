@@ -167,6 +167,7 @@ export const regionSchema = z
   .refine((b) => b.x + b.width <= 1.000001 && b.y + b.height <= 1.000001, "区域必须位于页面内。");
 export const cardLayoutSchema = z
   .strictObject({
+    headerMode: z.enum(["EVERY_PAGE", "ODD_PAGES", "FIRST_PAGE"]).optional(),
     showAbsent: z.boolean().optional(),
     showFooter: z.boolean().optional(),
     showSubject: z.boolean().optional(),

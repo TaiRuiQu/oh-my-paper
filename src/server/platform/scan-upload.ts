@@ -10,6 +10,7 @@ import { resolveScanSources } from "./scan-sources";
 import { saveImage } from "./assets";
 import { cropWorkbook, processCardScan } from "./scan";
 import { boxSchema } from "./schemas";
+import { cardPageHasHeader } from "./cards";
 import type { ScanSubmission, SubmissionAnswer } from "./types";
 
 const workbookBoxes = z
@@ -83,7 +84,10 @@ export async function uploadScans(actorId: string, form: FormData) {
     return `扫描保存失败，请重试或联系管理员（${errorId}）。`;
   };
   try {
+    let batchStudentId: string | undefined;
     for (const [index, file] of files.entries()) {
+      const page = kind === "CARD" ? (index % template!.layout.pageCount) + 1 : index + 1;
+      if (kind === "CARD" && page === 1) batchStudentId = undefined;
       let sourceUrl: string | undefined;
       try {
         const source = file.assetUrl
@@ -93,7 +97,6 @@ export async function uploadScans(actorId: string, form: FormData) {
         const inputPath = join(temporary, `input-${index}.png`);
         await writeFile(inputPath, source.buffer);
         // Multi-page cards are uploaded in contiguous page order per student.
-        const page = kind === "CARD" ? (index % template!.layout.pageCount) + 1 : index + 1;
         const pageRegions = boxes.filter((box) => box.page === page);
         const result =
           kind === "CARD"
@@ -115,14 +118,25 @@ export async function uploadScans(actorId: string, form: FormData) {
                   alignment: { manual: true, corrected: false, uncropped: true },
                   needsReview: false,
                 };
+        const hasHeader = kind === "CARD" && cardPageHasHeader(template!.layout, page);
         const matches = override
           ? students.filter((student) => student.id === override)
-          : students.filter(
-              (student) => student.studentNumber.padStart(6, "0") === result.studentNumber,
-            );
+          : kind === "CARD" && !hasHeader
+            ? students.filter((student) => student.id === batchStudentId)
+            : students.filter(
+                (student) => student.studentNumber.padStart(6, "0") === result.studentNumber,
+              );
         if (matches.length !== 1)
           throw new RequestError(422, "学号无法唯一匹配。请查看原图，选择学生后重传。");
         const student = matches[0];
+        if (kind === "CARD") {
+          if (page > 1 && student.id !== batchStudentId)
+            throw new RequestError(
+              422,
+              "同一份答题卡的学生身份不一致，请按每位学生的页码顺序重新上传。",
+            );
+          batchStudentId = student.id;
+        }
         const group = groups.get(student.id) || {
           sourceFiles: [],
           answers: [],
@@ -163,6 +177,7 @@ export async function uploadScans(actorId: string, form: FormData) {
     const ids: string[] = [];
     for (const [studentId, group] of groups) {
       if (
+        (kind === "CARD" && group.pages.size !== template!.layout.pageCount) ||
         group.answers.length !== paper.items.length ||
         new Set(group.answers.map((answer) => answer.itemId)).size !== paper.items.length
       ) {

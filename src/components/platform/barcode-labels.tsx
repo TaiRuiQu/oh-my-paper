@@ -68,7 +68,7 @@ export function BarcodeLabels({ pageCount }: { pageCount: number }) {
           <SheetHeader>
             <SheetTitle>考号条码标签</SheetTitle>
             <SheetDescription>
-              按班级生成独立的 A4 标签纸，裁切后粘贴到每页答题卡的贴码区。
+              按班级生成独立的 A4 标签纸，裁切后粘贴到答题卡的贴码区。
             </SheetDescription>
           </SheetHeader>
           <div className="p-maker-fields">
@@ -89,7 +89,7 @@ export function BarcodeLabels({ pageCount }: { pageCount: number }) {
                 ))}
               </select>
             </Field>
-            <Field label="每人份数" hint={`当前答题卡共 ${pageCount} 页，每页粘贴一枚。`}>
+            <Field label="每人份数" hint={`当前答题卡有 ${pageCount} 页包含贴码区，每处粘贴一枚。`}>
               <Input
                 type="number"
                 min={1}

@@ -159,6 +159,7 @@ export type CardRegion = Box & {
   writingStyle?: "plain" | "lines" | "grid";
 };
 export type CardLayout = {
+  headerMode?: "EVERY_PAGE" | "ODD_PAGES" | "FIRST_PAGE";
   showAbsent?: boolean;
   showFooter?: boolean;
   showSubject?: boolean;

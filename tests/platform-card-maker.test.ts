@@ -1,7 +1,13 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import type { BankQuestion, CardLayout, Paper } from "@/contracts/platform";
-import { generateCardTemplate, choiceBubbles, studentNumberBox } from "@/lib/cards";
+import {
+  generateCardTemplate,
+  choiceBubbles,
+  studentNumberBox,
+  validateCardTemplate,
+  cardPageContentTop,
+} from "@/lib/cards";
 import { renderCardSvg, cardRegionGroups } from "@/lib/card-svg";
 import { commandSchema } from "@/server/platform/schemas";
 
@@ -121,6 +127,7 @@ describe("answer card maker print and persistence contract", () => {
     const format: CardLayout = {
       ...generateCardTemplate(paper).layout,
       showAbsent: false,
+      headerMode: "ODD_PAGES",
       showFooter: false,
       showSubject: false,
       locked: true,
@@ -130,6 +137,7 @@ describe("answer card maker print and persistence contract", () => {
     };
     const card = generateCardTemplate(paper, {}, format);
     expect(card.layout).toMatchObject({
+      headerMode: "ODD_PAGES",
       showAbsent: false,
       showFooter: false,
       showSubject: false,
@@ -144,6 +152,52 @@ describe("answer card maker print and persistence contract", () => {
     expect(svg).not.toContain(">语文答题卡<");
     expect(svg).toContain("data-page-code");
     expect(svg.match(/font-size="7"/g)).toHaveLength(60);
+  });
+  for (const headerMode of ["EVERY_PAGE", "ODD_PAGES", "FIRST_PAGE"] as const) {
+    for (const paperSize of ["A4", "A3"] as const) {
+      it(`${paperSize} ${headerMode}: prints and reserves the header only on the configured pages in every column`, () => {
+        const p = {
+          ...paper,
+          items: Array.from({ length: 40 }, (_, index) => ({
+            ...paper.items[0],
+            id: `item-${index}`,
+          })),
+        };
+        const card = generateCardTemplate(p, {}, { headerMode, paperSize, columns: 2 });
+        expect(card.layout.pageCount).toBeGreaterThanOrEqual(4);
+        for (let page = 1; page <= card.layout.pageCount; page++) {
+          const visible =
+            headerMode === "EVERY_PAGE" ||
+            page === 1 ||
+            (headerMode === "ODD_PAGES" && page % 2 === 1);
+          const svg = new DOMParser().parseFromString(renderCardSvg(card, page), "image/svg+xml");
+          expect(svg.querySelector("parsererror")).toBeNull();
+          expect(!!svg.querySelector("[data-card-header]")).toBe(visible);
+          expect(svg.documentElement.textContent?.includes("姓名：")).toBe(visible);
+          expect(svg.documentElement.textContent?.includes("注意事项：")).toBe(visible);
+          expect(svg.querySelectorAll("[data-number-boxes]").length).toBe(visible ? 1 : 0);
+          expect(svg.querySelector(`[data-page-code="${page}"]`)).not.toBeNull();
+          const regions = card.layout.regions.filter((region) => region.page === page);
+          for (const x of new Set(regions.map((region) => region.x))) {
+            expect(regions.find((region) => region.x === x)!.y * card.layout.height).toBeCloseTo(
+              visible ? 275 : 95,
+            );
+          }
+        }
+        expect(() => validateCardTemplate(card, p)).not.toThrow();
+      });
+    }
+  }
+  it("allows answers and annotations in the unused number area only on pages without a header", () => {
+    const card = generateCardTemplate(paper, {}, { headerMode: "FIRST_PAGE" });
+    card.layout.pageCount = 2;
+    const box = studentNumberBox(card.layout);
+    card.layout.regions[0] = { ...card.layout.regions[0], page: 2, y: 95 / card.layout.height };
+    card.layout.annotations = [{ ...box, id: "note", page: 2, text: "附加说明" }];
+    expect(() => validateCardTemplate(card)).not.toThrow();
+    card.layout.headerMode = "EVERY_PAGE";
+    expect(() => validateCardTemplate(card)).toThrow();
+    expect(cardPageContentTop(card.layout, 2)).toBe(275);
   });
   it("prints essay grids and ruled lines with escaped labels", () => {
     const card = generateCardTemplate(paper);
@@ -163,6 +217,7 @@ describe("answer card maker print and persistence contract", () => {
     const card = generateCardTemplate(paper);
     card.layout.showAbsent = false;
     card.layout.showFooter = false;
+    card.layout.headerMode = "FIRST_PAGE";
     card.layout.regions[0].writingStyle = "grid";
     const parsed = commandSchema.parse({
       type: "template.save",
@@ -189,6 +244,7 @@ describe("answer card maker print and persistence contract", () => {
     expect(parsed.type).toBe("template.save");
     if (parsed.type !== "template.save") throw new Error("Unexpected command");
     expect(parsed.template.layout.showAbsent).toBe(false);
+    expect(parsed.template.layout.headerMode).toBe("FIRST_PAGE");
     expect(parsed.template.layout.regions[0].writingStyle).toBe("grid");
     expect(parsed.paperDraft?.itemIds).toEqual(["item"]);
   });

@@ -6,9 +6,9 @@ import { CardEditorPage } from "@/components/platform/card-workbench";
 import { generateCardTemplate } from "@/lib/cards";
 import type { Paper } from "@/contracts/platform";
 
-const mock = vi.hoisted(() => ({ state: {} as Record<string, unknown> }));
+const mock = vi.hoisted(() => ({ state: {} as Record<string, unknown>, mutate: vi.fn() }));
 vi.mock("@/components/platform/domain-provider", () => ({
-  useDomain: () => ({ state: mock.state, pending: false }),
+  useDomain: () => ({ state: mock.state, pending: false, mutate: mock.mutate }),
 }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }) }));
 vi.mock("@/components/platform/questions", () => ({ QuestionEditor: () => null }));
@@ -150,4 +150,69 @@ it("switches A4 to portrait and A3 to landscape while retaining fit and identifi
   expect(container.querySelector(".p-card-stage-footer")?.textContent).toContain("纵向");
   expect(container.querySelector(".p-card-sheet")?.getAttribute("style")).toContain("794/1123");
   expect(container.querySelector('option[value="landscape"]')).toBeNull();
+});
+
+it("switches header pages, hides the number editing target on continuation pages, and persists the selection", async () => {
+  const paper = (mock.state.papers as Paper[])[0];
+  paper.items = Array.from({ length: 16 }, (_, index) => ({
+    id: `item-${index}`,
+    questionId: `q-${index}`,
+    position: index,
+    score: 10,
+    section: "解答题",
+    snapshot: {
+      id: `q-${index}`,
+      ownerId: "teacher",
+      type: "SUBJECTIVE",
+      subject: "数学",
+      grade: "高一",
+      difficulty: 0.5,
+      knowledgeTags: [],
+      createdAt: "",
+      updatedAt: "",
+      content: {
+        stem: "解答题",
+        options: [],
+        answers: [],
+        explanation: "",
+        rubric: "",
+        images: [],
+        parts: [],
+      },
+    },
+  }));
+  const card = generateCardTemplate(paper);
+  mock.state.templates = [card];
+  await act(async () => root.render(<CardEditorPage key="multi-page" id={card.id} />));
+  const mode = [...container.querySelectorAll<HTMLSelectElement>("select")].find((select) =>
+    select.querySelector('option[value="ODD_PAGES"]'),
+  )!;
+  expect(mode.value).toBe("EVERY_PAGE");
+  expect([...mode.options].map((option) => option.textContent)).toEqual([
+    "每页都有",
+    "仅奇数页有（双面打印）",
+    "只有第一页有（按顺序扫描）",
+  ]);
+  async function selectMode(value: string) {
+    await act(async () => {
+      mode.value = value;
+      mode.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  }
+  await selectMode("ODD_PAGES");
+  await click("下一页");
+  expect(container.querySelector("[data-card-header]")).toBeNull();
+  expect(container.querySelector(".p-card-number")).toBeNull();
+  await click("下一页");
+  expect(container.querySelector("[data-card-header]")).not.toBeNull();
+  expect(container.querySelector(".p-card-number")).not.toBeNull();
+  await selectMode("FIRST_PAGE");
+  await click("下一页");
+  await click("下一页");
+  expect(container.querySelector("[data-card-header]")).toBeNull();
+  mock.mutate.mockResolvedValue({});
+  await click("保存");
+  expect(mock.mutate.mock.calls.at(-1)?.[0].template.layout.headerMode).toBe("FIRST_PAGE");
+  await click("锁定");
+  expect(mode.disabled || mode.closest("fieldset")?.disabled).toBe(true);
 });

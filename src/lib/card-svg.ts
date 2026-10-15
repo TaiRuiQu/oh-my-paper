@@ -6,6 +6,8 @@ import {
   annotationLineWidth,
   cardMaterialBox,
   studentNumberBox,
+  cardPageHasHeader,
+  cardPageContentTop,
 } from "./cards";
 import { escapePrintText as text } from "./document-text";
 import { documentFont } from "./document-layout";
@@ -92,9 +94,14 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
   const numberLeft = numberBox.x * w;
   const numberTop = numberBox.y * h;
   const numberWidth = numberBox.width * w;
+  const contentTop = cardPageContentTop(l, page);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><title>${text(template.name)} · 第 ${page} 页</title>${rect(0, 0, w, h, 'fill="white"')}<g font-family="${text(documentFont(l.fontFamily))}" fill="black">${l.markers.map((m) => rect(m.x * w - 7, m.y * h - 7, 14, 14, 'fill="black"')).join("")}
   ${rect(45, 45, w - 90, h - 100, 'fill="none" stroke="#333" stroke-width="1.5"')}
   ${label(60, 69, template.name.length > 22 ? `${template.name.slice(0, 22)}…` : template.name, 20, 'font-weight="bold"')}
+  <g data-page-code="${page}">${Array.from(cardPageCode(template.id, page), (bit, i) => (bit === "1" ? rect(codeX + i * 8, codeY, 6, 10, 'fill="black"') : "")).join("")}</g>
+  ${
+    cardPageHasHeader(l, page)
+      ? `<g data-card-header="true">
   ${label(60, 108, "姓名：____________  班级：____________", 14)}
   ${rect(55, 122, notesWidth, 126, 'fill="none" stroke="#333" stroke-width="1"')}
   ${label(64, 136, "注意事项：", 11, 'font-weight="bold"')}
@@ -112,7 +119,6 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
   ${label(64, 241, "5. 正确填涂：", 9)}${rect(125, 233, 16, 9, 'fill="black"')}${label(150, 241, "错误填涂：", 9)}
   ${Array.from({ length: 6 }, (_, i) => rect(210 + i * 26, 233, 18, 9, 'fill="none" stroke="black" stroke-width="0.7"') + (i === 0 ? '<path d="M210 242L228 233" stroke="black"/>' : i === 1 ? '<path d="M236 233L254 242M236 242L254 233" stroke="black"/>' : i === 2 ? rect(262, 233, 9, 9, 'fill="black"') : i === 3 ? rect(288, 233, 3, 9, 'fill="black"') : i === 4 ? '<path d="M314 233L332 242" stroke="black"/>' : rect(340, 239, 18, 3, 'fill="black"'))).join("")}
   ${l.showAbsent !== false ? rect(55, 248, notesWidth, 12, 'fill="none" stroke="#333" stroke-width="0.7"') + label(64, 257, "此栏考生禁填    缺考标记 □（教师填写）", 8) : ""}
-  <g data-page-code="${page}">${Array.from(cardPageCode(template.id, page), (bit, i) => (bit === "1" ? rect(codeX + i * 8, codeY, 6, 10, 'fill="black"') : "")).join("")}</g>
   ${
     barcode
       ? rect(
@@ -148,7 +154,10 @@ export function renderCardSvg(template: CardTemplate, page = 1, validate = true)
           );
         }).join("")
   }
-  ${Array.from({ length: columns }, (_, c) => rect(50 + c * (cw + 12), 265, cw + 10, h - 328, 'fill="none" stroke="#333" stroke-width="1.1"')).join("")}
+  </g>`
+      : ""
+  }
+  ${Array.from({ length: columns }, (_, c) => rect(50 + c * (cw + 12), contentTop - 10, cw + 10, h - contentTop - 53, 'fill="none" stroke="#333" stroke-width="1.1"')).join("")}
   ${groups
     .map((group) => {
       const first = group[0],

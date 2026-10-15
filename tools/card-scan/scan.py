@@ -113,9 +113,14 @@ def scan(image, layout, page, output, expected_code=None, page_codes=None):
         raise ValueError('CARD_PAGE_ORDER: 答题卡页码与上传顺序不符，请按每位学生的页码排序')
     metadata['pageCode'] = actual_code
     metadata['page'] = page
-    student, evidence = student_barcode(gray,layout) if layout['studentNumber'].get('mode') == 'BARCODE' else student_omr(gray,layout)
+    header_mode = layout.get('headerMode', 'EVERY_PAGE')
+    has_header = header_mode == 'EVERY_PAGE' or (header_mode == 'ODD_PAGES' and page % 2 == 1) or (header_mode == 'FIRST_PAGE' and page == 1)
+    if has_header:
+        student, evidence = student_barcode(gray,layout) if layout['studentNumber'].get('mode') == 'BARCODE' else student_omr(gray,layout)
+    else:
+        student, evidence = None, {'skipped':True,'reason':'HEADER_HIDDEN'}
     metadata['studentNumber'] = evidence
-    answers, review = [], student is None
+    answers, review = [], has_header and student is None
     for region in layout['regions']:
         if region['page'] != page: continue
         path = crop(corrected,region,output,len(answers))

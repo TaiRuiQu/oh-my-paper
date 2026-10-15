@@ -218,6 +218,34 @@ describe("answer cards and scans", () => {
     expect(result.studentNumber).toBeNull();
     expect(result.needsReview).toBe(true);
   }, 20000);
+  for (const headerMode of ["ODD_PAGES", "FIRST_PAGE"] as const) {
+    for (const mode of ["OMR", "BARCODE"] as const) {
+      it(`${headerMode} ${mode}: scans a headerless page without reading a student number or flagging it for review`, async () => {
+        const dir = await directory();
+        const template = generateCardTemplate(paper(16), {}, { headerMode });
+        template.layout.studentNumber.mode = mode;
+        const source = join(dir, "no-header.png");
+        await sharp(Buffer.from(renderCardSvg(template, 2)))
+          .png()
+          .toFile(source);
+        const scan = await processCardScan({
+          inputPath: source,
+          template,
+          autoPage: true,
+          outputDir: join(dir, "no-header"),
+        });
+        expect(scan.alignment.page).toBe(2);
+        expect(scan.studentNumber).toBeNull();
+        expect(scan.alignment.studentNumber).toEqual({ skipped: true, reason: "HEADER_HIDDEN" });
+        expect(scan.needsReview).toBe(false);
+        expect(scan.answers.map((answer) => answer.itemId)).toEqual(
+          template.layout.regions
+            .filter((region) => region.page === 2)
+            .map((region) => region.itemId),
+        );
+      }, 20000);
+    }
+  }
   it("reads separately printed barcode labels and flags missing, invalid, or conflicting labels", async () => {
     const dir = await directory();
     const template = generateCardTemplate(paper(1));
