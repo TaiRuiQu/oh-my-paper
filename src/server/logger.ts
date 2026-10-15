@@ -39,6 +39,10 @@ export function describeError(error: unknown, extraSecrets: readonly string[] = 
     message: string;
     code?: string;
     statusCode?: number;
+    retryable?: boolean;
+    attempts?: number;
+    requestId?: string;
+    endpoint?: string;
     finishReason?: string;
     validation?: ReturnType<typeof validationDetails>;
     stack?: string;
@@ -71,6 +75,23 @@ export function describeError(error: unknown, extraSecrets: readonly string[] = 
       message: redactErrorText(message, sensitive),
       code: token(item.code),
       statusCode,
+      retryable: typeof item.isRetryable === "boolean" ? item.isRetryable : undefined,
+      attempts:
+        type === "AI_RetryError" && Array.isArray(item.errors) ? item.errors.length : undefined,
+      requestId:
+        type === "AI_APICallError"
+          ? redactErrorText(
+              token(record(item.responseHeaders)["x-request-id"]) ??
+                token(record(item.responseHeaders)["request-id"]) ??
+                token(record(item.responseHeaders)["x-goog-request-id"]) ??
+                "",
+              sensitive,
+            ) || undefined
+          : undefined,
+      endpoint:
+        type === "AI_APICallError" && typeof item.url === "string"
+          ? redactErrorText(item.url, sensitive)
+          : undefined,
       finishReason: token(item.finishReason),
       validation,
       stack:
@@ -86,6 +107,7 @@ export function describeError(error: unknown, extraSecrets: readonly string[] = 
     value = item.cause ?? item.lastError;
   }
   const api = chain.find((item) => item.statusCode && item.type === "AI_APICallError");
+  const attempts = chain.find((item) => item.attempts)?.attempts;
   const problem = chain.find((item) => item.validation);
   const appError = error instanceof AppError ? error : null;
   const node = chain.find((item) => item.code);
@@ -106,11 +128,21 @@ export function describeError(error: unknown, extraSecrets: readonly string[] = 
       401: "AI 接口认证失败，请检查 API key 和认证配置（HTTP 401）。",
       403: "AI 接口拒绝访问，请检查密钥权限或账号权限（HTTP 403）。",
       404: "AI 接口或模型不存在，请检查 Base URL 和模型名称（HTTP 404）。",
+      408: "AI 上游服务处理请求超时（HTTP 408），请稍后重试。",
+      413: "发送给 AI 接口的内容过大（HTTP 413），请减少图片数量或文件大小后重试。",
+      422: "AI 接口无法处理请求内容（HTTP 422），请检查模型能力和请求参数。",
       429: "AI 接口请求受限，请检查额度或稍后重试（HTTP 429）。",
+      500: "AI 上游服务发生内部错误（HTTP 500），请稍后重试；若持续失败，请管理员联系供应商排查。",
+      502: "AI 网关未能从上游取得有效响应（HTTP 502），请稍后重试；若持续失败，请管理员检查中转服务及供应商状态。",
+      503: "AI 上游服务暂时不可用（HTTP 503），可能正在过载、维护，或其中转服务发生故障。请稍后重试；若持续失败，请管理员检查供应商或中转服务状态。",
+      504: "AI 网关等待上游响应超时（HTTP 504），请稍后重试；若持续失败，请管理员检查中转服务及供应商状态。",
+      529: "AI 上游服务过载（HTTP 529），请稍后重试。",
     };
     message =
       messages[api.statusCode!] ?? `AI 接口请求失败（HTTP ${api.statusCode}），请稍后重试。`;
   }
+  if (!appError && api && attempts && attempts > 1)
+    message += `本次模型请求共尝试 ${attempts} 次（含 ${attempts - 1} 次自动重试），最终仍未成功。`;
   if (!message && timeout) {
     code = "TIMEOUT";
     message = "请求超时或已中断，请检查网络和超时设置后重试。";
@@ -146,6 +178,11 @@ export function describeError(error: unknown, extraSecrets: readonly string[] = 
   return {
     code: code || "INTERNAL_ERROR",
     message: redactErrorText(message, sensitive),
+    statusCode: api?.statusCode,
+    retryable: api?.retryable,
+    attempts,
+    requestId: api?.requestId,
+    endpoint: api?.endpoint,
     causes: chain,
   };
 }

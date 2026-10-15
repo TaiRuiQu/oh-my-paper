@@ -6,6 +6,7 @@ import { getActor, loadState } from "./service";
 import { assertCanReview } from "./access";
 import { aiRequestSchema } from "@/contracts/platform-ai";
 import { runAiTask } from "./ai/runner";
+import type { LogContext } from "@/server/logger";
 
 const json = (value: unknown) => JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 export async function getAiJob(userId: string, id: string) {
@@ -196,6 +197,7 @@ export async function runClaimedAiJob(
       .catch(() => {});
   }, 15_000);
   const events: unknown[] = [];
+  const modelContext: LogContext = { modelId: job.modelId };
   try {
     const result = await runnerAdapter({
       userId: job.userId,
@@ -204,6 +206,12 @@ export async function runClaimedAiJob(
       modelId: job.modelId,
       jobId: job.id,
       onEvent: async (event) => {
+        if (event && typeof event === "object" && !Array.isArray(event) && event.type === "start") {
+          const model = event.model;
+          if (model && typeof model === "object" && !Array.isArray(model))
+            for (const key of ["model", "providerName", "providerId", "apiType"])
+              if (typeof model[key] === "string") modelContext[key] = model[key];
+        }
         if (events.length < 200) events.push(event);
         await getDb().aiJob.updateMany({
           where: { id: job.id, status: "RUNNING", workerId },
@@ -217,11 +225,15 @@ export async function runClaimedAiJob(
     });
   } catch (error) {
     const { logError } = await import("@/server/logger");
-    const diagnostic = logError("platform.ai.job.failed", error, { jobId: job.id, kind: job.kind });
+    const diagnostic = logError("platform.ai.job.failed", error, {
+      jobId: job.id,
+      kind: job.kind,
+      ...modelContext,
+    });
     const message =
       error instanceof RequestError || error instanceof AccessError
         ? error.message
-        : `${diagnostic.message}（${diagnostic.errorId}）`;
+        : `${diagnostic.message}（错误编号：${diagnostic.errorId}）`;
     await getDb().aiJob.updateMany({
       where: { id: job.id, status: "RUNNING", workerId },
       data: { status: "FAILED", error: message, finishedAt: new Date() },
