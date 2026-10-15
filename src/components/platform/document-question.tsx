@@ -6,10 +6,12 @@ import { PaperText } from "./document-canvas";
 /** The editable canvas and export preview use the same printable text geometry. */
 export function DocumentQuestionBody({
   question,
+  index,
   onChange,
   labelPrefix = "试题",
 }: {
   question: BankQuestion;
+  index: number;
   labelPrefix?: string;
   onChange?: (value: Partial<QuestionContent>) => void;
 }) {
@@ -25,7 +27,10 @@ export function DocumentQuestionBody({
   );
   return (
     <div className="p-document-question-body">
-      {text("题干", content.stem, (stem) => onChange?.({ stem }))}
+      <div className="p-document-stem">
+        <strong className="p-document-question-number">{index + 1}.</strong>
+        {text("题干", content.stem, (stem) => onChange?.({ stem }))}
+      </div>
       {content.images.map((url, n) => (
         <Image
           key={url}
@@ -37,63 +42,53 @@ export function DocumentQuestionBody({
           alt={`题目材料 ${n + 1}`}
         />
       ))}
-      {content.options.map((option, n) => (
-        <div className="p-document-option" key={option.label}>
-          <span>{option.label}.</span>
-          {text(`选项 ${option.label}`, option.text, (value) =>
-            onChange?.({
-              options: content.options.map((o, i) => (i === n ? { ...o, text: value } : o)),
-            }),
-          )}
-        </div>
-      ))}
-      {content.parts.map((part, n) => (
-        <div className="p-document-part" key={part.id}>
-          <strong>（{n + 1}）</strong>
-          <small>（{part.score} 分）</small>
-          {text(`小问 ${n + 1} 题干`, part.stem, (stem) =>
-            onChange?.({ parts: content.parts.map((p, i) => (i === n ? { ...p, stem } : p)) }),
-          )}
-          {part.options.map((option, index) => (
+      {content.options.length > 0 && (
+        <div className="p-document-options">
+          {content.options.map((option, n) => (
             <div className="p-document-option" key={option.label}>
               <span>{option.label}.</span>
-              {text(`小问 ${n + 1} 选项 ${option.label}`, option.text, (value) =>
+              {text(`选项 ${option.label}`, option.text, (value) =>
                 onChange?.({
-                  parts: content.parts.map((p, i) =>
-                    i === n
-                      ? {
-                          ...p,
-                          options: p.options.map((o, j) =>
-                            j === index ? { ...o, text: value } : o,
-                          ),
-                        }
-                      : p,
-                  ),
+                  options: content.options.map((o, i) => (i === n ? { ...o, text: value } : o)),
                 }),
               )}
             </div>
           ))}
         </div>
+      )}
+      {content.parts.map((part, n) => (
+        <div className="p-document-part" key={part.id}>
+          <div className="p-document-stem">
+            <span>（{n + 1}）</span>
+            {text(`小问 ${n + 1} 题干`, part.stem, (stem) =>
+              onChange?.({ parts: content.parts.map((p, i) => (i === n ? { ...p, stem } : p)) }),
+            )}
+          </div>
+          {part.options.length > 0 && (
+            <div className="p-document-options">
+              {part.options.map((option, index) => (
+                <div className="p-document-option" key={option.label}>
+                  <span>{option.label}.</span>
+                  {text(`小问 ${n + 1} 选项 ${option.label}`, option.text, (value) =>
+                    onChange?.({
+                      parts: content.parts.map((p, i) =>
+                        i === n
+                          ? {
+                              ...p,
+                              options: p.options.map((o, j) =>
+                                j === index ? { ...o, text: value } : o,
+                              ),
+                            }
+                          : p,
+                      ),
+                    }),
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       ))}
-    </div>
-  );
-}
-
-export function DocumentQuestionHeading({
-  index,
-  section,
-  score,
-}: {
-  index: number;
-  section: string;
-  score: number;
-}) {
-  return (
-    <div className="p-document-question-heading">
-      <strong>
-        {index + 1}. {section}
-      </strong>
-      <span>{score} 分</span>
     </div>
   );
 }

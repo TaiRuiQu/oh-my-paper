@@ -10,7 +10,7 @@ export const DOCUMENT_DEFAULTS = {
   columns: 2,
   marginMm: 12,
   fontSizePt: 11,
-  lineHeight: 1.65,
+  lineHeight: 1.35,
   fontFamily: "NSimSun",
 } as const satisfies DocumentLayout;
 export const DOCUMENT_COLUMN_GAP_MM = 6;

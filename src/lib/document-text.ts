@@ -5,7 +5,7 @@ export function escapePrintText(value: unknown): string {
     (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]!,
   );
 }
-/** Safe text plus native MathML avoids external fonts and preserves printed formulas. */
+/** KaTeX's HTML uses its bundled math fonts; MathML remains available to screen readers. */
 export function renderPrintRichText(value: string): string {
   const expression = /\$\$([\s\S]+?)\$\$|\$([^\n$]+?)\$|\\\(([\s\S]+?)\\\)|\\\[([\s\S]+?)\\\]/g;
   let output = "",
@@ -14,7 +14,7 @@ export function renderPrintRichText(value: string): string {
     output += escapePrintText(value.slice(offset, match.index));
     const math = match[1] ?? match[2] ?? match[3] ?? match[4];
     output += katex.renderToString(math, {
-      output: "mathml",
+      output: "htmlAndMathml",
       displayMode: !!(match[1] ?? match[4]),
       throwOnError: false,
       trust: false,

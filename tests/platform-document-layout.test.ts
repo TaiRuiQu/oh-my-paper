@@ -49,13 +49,18 @@ const paper: Paper = {
 describe("persisted document layout and module boundaries", () => {
   it("defaults to compact divided columns and leaves answers inside the question content", () => {
     const layout = { ...DOCUMENT_DEFAULTS };
-    expect(layout).toMatchObject({ columns: 2, marginMm: 12, fontSizePt: 11, lineHeight: 1.65 });
+    expect(layout).toMatchObject({ columns: 2, marginMm: 12, fontSizePt: 11, lineHeight: 1.35 });
     expect(documentAnswerLines(layout, "q")).toBe(0);
     const html = renderPaperHtml({ ...paper, layout });
     expect(html).toContain("margin:12mm 12mm 20mm");
     expect(html).toContain("column-count:2;column-gap:6mm;column-rule:0.5pt solid #666");
     expect(html).not.toContain('class="p-workbook-lines"');
     expect(html).not.toContain("作答：");
+    expect(html).toContain(
+      '<strong class="p-document-question-number">1.</strong><div class="p-document-text">',
+    );
+    expect(html).not.toContain("5 分");
+    expect(html).not.toContain('class="p-document-question-heading"');
   });
   it("accepts a named local font and safely quotes the family in printable CSS", () => {
     const layout = { ...DOCUMENT_DEFAULTS, fontFamily: "霞鹜文楷 Screen" };
@@ -89,6 +94,8 @@ describe("persisted document layout and module boundaries", () => {
     expect(html).toContain("padding-bottom:10mm");
     expect(html.match(/<div><\/div>/g)).toHaveLength(6);
     expect(html).toContain("<math");
+    expect(html).toContain('class="katex-html" aria-hidden="true"');
+    expect(html).toContain('href="/print-fonts/katex/katex.min.css"');
     expect(html).not.toContain("<script>");
     expect(renderPaperHtml({ ...paper, kind: "EXAM" })).not.toContain('class="p-workbook-lines"');
   });

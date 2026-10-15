@@ -116,4 +116,38 @@ describe("downloadable teaching documents", () => {
       }),
     ).rejects.toThrow("无权访问图片");
   });
+  it("keeps the number beside the stem, omits type and score, and places short choices in a borderless row", async () => {
+    const item = paper.items[0];
+    const copy = {
+      ...paper,
+      layout: { paperSize: "A4" as const, columns: 2 },
+      items: [
+        {
+          ...item,
+          section: "单选题",
+          snapshot: {
+            ...item.snapshot,
+            content: {
+              ...item.snapshot.content,
+              stem: "选择正确答案。",
+              images: [],
+              options: ["2", "$-2$", "0", "4"].map((text, index) => ({
+                label: String.fromCharCode(65 + index),
+                text,
+              })),
+            },
+          },
+        },
+      ],
+    };
+    const zip = await JSZip.loadAsync(await renderPaperWord(copy, image));
+    const xml = await zip.file("word/document.xml")!.async("string");
+    expect(xml).toContain("1. 选择正确答案。");
+    expect(xml).not.toContain("单选题");
+    expect(xml).not.toContain("10 分");
+    expect(xml.match(/<w:tr>/g)).toHaveLength(1);
+    expect(xml.match(/<w:tc>/g)).toHaveLength(4);
+    expect(xml).toContain('w:val="none"');
+    expect(xml).toContain("<m:oMath ");
+  });
 });

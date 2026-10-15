@@ -110,7 +110,8 @@ describe("answer cards and scans", () => {
     const printed = renderPaperHtml(p);
     expect(printed).toContain("<math");
     expect(printed).toContain("另一选项");
-    expect(printed).toContain("（3 分）");
+    expect(printed).toContain("（1）");
+    expect(printed).not.toContain("（3 分）");
     expect(renderPrintRichText("<script>alert(1)</script> $x$")).not.toContain("<script>");
   });
   it("aligns a perspective photograph, reads six-digit ID and single/multiple marks, and crops answers", async () => {

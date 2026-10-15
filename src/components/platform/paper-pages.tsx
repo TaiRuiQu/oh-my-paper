@@ -1,4 +1,5 @@
 "use client";
+import { DocumentWorkbench } from "./document-workbench";
 import { DocumentExport } from "./document-export";
 import { DOCUMENT_DEFAULTS } from "@/lib/document-layout";
 import { GradeSelect, normalizeGrade } from "./grade-select";
@@ -22,7 +23,7 @@ import { Field, Panel, Empty } from "./primitives";
 import { QuestionBody, QUESTION_LABELS } from "./questions";
 import { useDomain } from "./domain-provider";
 import { useUnsavedChanges } from "./use-unsaved-changes";
-import { DocumentQuestionBody, DocumentQuestionHeading } from "./document-question";
+import { DocumentQuestionBody } from "./document-question";
 import { DocumentCanvas, PaperText } from "./document-canvas";
 import { MissingRecord, PageHeader, PageTabs } from "./page-header";
 import { RecordNameEditor } from "./record-name-editor";
@@ -418,55 +419,44 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
         back={{ href: paper ? `${root}/${paper.id}` : root, label: paper?.name ?? `全部${noun}` }}
       />
       {paper && <PaperNavigation paper={paper} active={`${root}/${paper.id}/${view}`} />}
-      {used && <p className="p-notice">此版本已布置。修改后另存为新版本，再布置给班级。</p>}
       <form
         onSubmit={(e) => {
           e.preventDefault();
           void save(!!used);
         }}
       >
-        <div className="p-paper-tools">
-          <div className="p-actions">
-            <Badge variant="secondary">
-              {items.length} 题 · {items.reduce((n, i) => n + i.score, 0)} 分
-            </Badge>
-            <span className={dirty ? "p-dirty" : "p-muted"}>
-              {dirty ? "有未保存的修改" : paper ? "已保存" : "新建草稿"}
-            </span>
-          </div>
-          <div className="p-actions">
-            {paper && !used && (
-              <Button
-                type="button"
-                variant="outline"
-                disabled={pending || !name}
-                onClick={() => void save(true)}
-              >
-                <Copy />
-                另存一份
+        <DocumentWorkbench
+          title={name.trim() || title}
+          status={
+            <>
+              <Badge variant="secondary">
+                {items.length} 题 · {items.reduce((n, i) => n + i.score, 0)} 分
+              </Badge>
+              <span className={dirty ? "p-dirty" : "p-muted"}>
+                {dirty ? "有未保存的修改" : paper ? "已保存" : "新建草稿"}
+              </span>
+            </>
+          }
+          actions={
+            <div className="p-actions">
+              {paper && !used && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={pending || !name}
+                  onClick={() => void save(true)}
+                >
+                  <Copy />
+                  另存一份
+                </Button>
+              )}
+              <Button type="submit" disabled={pending || !name.trim()}>
+                <Save />
+                {pending ? "正在保存…" : used ? "另存为新版本" : `保存${noun}`}
               </Button>
-            )}
-            <Button type="submit" disabled={pending || !name.trim()}>
-              <Save />
-              {pending ? "正在保存…" : used ? "另存为新版本" : `保存${noun}`}
-            </Button>
-          </div>
-        </div>
-        <div className="p-paper-workbench">
-          <aside className="p-paper-outline" aria-label="试题目录">
-            <h2>试题目录</h2>
-            {items.length ? (
-              items.map((i, n) => (
-                <a href={`#paper-item-${n}`} key={i.questionId}>
-                  {n + 1}. {i.section || QUESTION_LABELS[i.snapshot.type]}
-                  <span>{i.score} 分</span>
-                </a>
-              ))
-            ) : (
-              <Empty>添加试题后显示目录。</Empty>
-            )}
-          </aside>
-          <div>
+            </div>
+          }
+          ribbon={
             <div className="p-document-ribbon">
               <DocumentFormatControls
                 layout={layout}
@@ -531,261 +521,305 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
                 />
               </Field>
             </div>
-            {selectedQuestion && (
-              <div className="p-mobile-document-tools">
-                <h3>题目设置</h3>
-                <div className="p-form-grid">
-                  <Field label="当前题目">
-                    <select
-                      value={selectedQuestionIndex}
-                      onChange={(e) => setSelectedIndex(Number(e.target.value))}
-                    >
-                      {items.map((i, n) => (
-                        <option key={i.questionId} value={n}>
-                          第 {n + 1} 题 · {i.section}
-                        </option>
-                      ))}
-                    </select>
-                  </Field>
-                  <Field label="分值">
-                    <Input
-                      type="number"
-                      min={0}
-                      step={0.5}
-                      value={selectedQuestion.score}
-                      onChange={(e) =>
-                        patch(selectedQuestionIndex, { score: Number(e.target.value) })
-                      }
+          }
+          notice={
+            used && <p className="p-notice">此版本已布置。修改后另存为新版本，再布置给班级。</p>
+          }
+        >
+          <div className="p-paper-workbench">
+            <aside className="p-paper-outline" aria-label="试题目录">
+              <h2>试题目录</h2>
+              {items.length ? (
+                items.map((i, n) => (
+                  <a href={`#paper-item-${n}`} key={i.questionId}>
+                    {n + 1}. {i.section || QUESTION_LABELS[i.snapshot.type]}
+                    <span>{i.score} 分</span>
+                  </a>
+                ))
+              ) : (
+                <Empty>添加试题后显示目录。</Empty>
+              )}
+            </aside>
+            <div>
+              <DocumentCanvas
+                layout={layout}
+                onTextBlocksChange={(textBlocks) =>
+                  edit(() => setLayout({ ...layout, textBlocks }))
+                }
+                header={
+                  <>
+                    <PaperText
+                      title
+                      label={`${noun}名称`}
+                      value={name}
+                      onChange={(value) => edit(() => setName(value))}
                     />
-                  </Field>
-                  <Field label="栏目">
-                    <Input
-                      value={selectedQuestion.section}
-                      onChange={(e) => patch(selectedQuestionIndex, { section: e.target.value })}
+                    <div className="p-document-subtitle">
+                      {subject} · {grade}
+                    </div>
+                    <PaperText
+                      label="卷面说明"
+                      value={instructions}
+                      onChange={(value) => edit(() => setInstructions(value))}
                     />
-                  </Field>
-                </div>
-                <div className="p-actions">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={selectedQuestionIndex === 0}
-                    onClick={() => {
-                      move(selectedQuestionIndex, selectedQuestionIndex - 1);
-                      setSelectedIndex(selectedQuestionIndex - 1);
-                    }}
-                  >
-                    上移题目
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={selectedQuestionIndex === items.length - 1}
-                    onClick={() => {
-                      move(selectedQuestionIndex, selectedQuestionIndex + 1);
-                      setSelectedIndex(selectedQuestionIndex + 1);
-                    }}
-                  >
-                    下移题目
-                  </Button>
-                  <label className="p-check">
-                    <input
-                      type="checkbox"
-                      checked={
-                        layout.questionLayouts?.[selectedQuestion.questionId]?.pageBreakBefore ??
-                        false
-                      }
-                      onChange={(e) =>
-                        edit(() =>
-                          setLayout({
-                            ...layout,
-                            questionLayouts: {
-                              ...layout.questionLayouts,
-                              [selectedQuestion.questionId]: {
-                                ...layout.questionLayouts?.[selectedQuestion.questionId],
-                                pageBreakBefore: e.target.checked,
-                              },
-                            },
-                          }),
-                        )
-                      }
-                    />
-                    从新页开始
-                  </label>
-                </div>
-                <p className="p-muted">纸面可横向滚动。点击「100% 编辑」放大文字后直接编辑。</p>
-              </div>
-            )}
-            <DocumentCanvas
-              layout={layout}
-              onTextBlocksChange={(textBlocks) => edit(() => setLayout({ ...layout, textBlocks }))}
-              header={
-                <>
-                  <PaperText
-                    title
-                    label={`${noun}名称`}
-                    value={name}
-                    onChange={(value) => edit(() => setName(value))}
-                  />
-                  <div className="p-document-subtitle">
-                    {subject} · {grade} · 共 {items.reduce((n, i) => n + i.score, 0)} 分
+                  </>
+                }
+                empty={
+                  <div className="p-empty-action">
+                    <h3>开始编写试卷</h3>
+                    <p>在右侧新建题目、添加文字，或从题库导入一道题目。</p>
                   </div>
-                  <PaperText
-                    label="卷面说明"
-                    value={instructions}
-                    onChange={(value) => edit(() => setInstructions(value))}
-                  />
-                </>
-              }
-              empty={
-                <div className="p-empty-action">
-                  <h3>开始编写试卷</h3>
-                  <p>在右侧新建题目、添加文字，或从题库导入一道题目。</p>
-                </div>
-              }
-              blocks={items.map((item, index) => ({
-                key: item.questionId,
-                pageBreakBefore: layout.questionLayouts?.[item.questionId]?.pageBreakBefore,
-                content: (
-                  <article
-                    className="p-paper-question"
-                    id={`paper-item-${index}`}
-                    key={item.questionId}
-                    onDragOver={(e) => e.preventDefault()}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      if (dragging !== undefined) move(dragging, index);
-                      setDragging(undefined);
-                    }}
-                  >
-                    <DocumentQuestionHeading
-                      index={index}
-                      section={item.section}
-                      score={item.score}
-                    />
-                    <div className="p-question-meta p-document-edit-tools">
-                      <strong
-                        draggable
-                        title={`拖动第 ${index + 1} 题排序`}
-                        onDragStart={() => setDragging(index)}
-                      >
-                        {index + 1}.
-                      </strong>
-                      <Input
-                        className="p-inline-input p-section-name"
-                        aria-label={`第 ${index + 1} 题栏目`}
-                        placeholder="栏目名称"
-                        value={item.section}
-                        onChange={(e) => patch(index, { section: e.target.value })}
+                }
+                blocks={items.map((item, index) => ({
+                  key: item.questionId,
+                  pageBreakBefore: layout.questionLayouts?.[item.questionId]?.pageBreakBefore,
+                  content: (
+                    <article
+                      className="p-paper-question"
+                      data-selected={selectedQuestionIndex === index}
+                      onFocus={() => setSelectedIndex(index)}
+                      onClick={() => setSelectedIndex(index)}
+                      id={`paper-item-${index}`}
+                      key={item.questionId}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        if (dragging !== undefined) move(dragging, index);
+                        setDragging(undefined);
+                      }}
+                    >
+                      <div className="p-question-meta p-document-edit-tools">
+                        <strong
+                          draggable
+                          title={`拖动第 ${index + 1} 题排序`}
+                          onDragStart={() => setDragging(index)}
+                        >
+                          {index + 1}.
+                        </strong>
+                        <Input
+                          className="p-inline-input p-section-name"
+                          aria-label={`第 ${index + 1} 题栏目`}
+                          placeholder="栏目名称"
+                          value={item.section}
+                          onChange={(e) => patch(index, { section: e.target.value })}
+                        />
+                        <Input
+                          className="p-score-input"
+                          aria-label={`第 ${index + 1} 题分值`}
+                          type="number"
+                          min={0}
+                          max={10000}
+                          step={0.5}
+                          required
+                          value={item.score}
+                          onChange={(e) => patch(index, { score: Number(e.target.value) })}
+                        />
+                        <span>分</span>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          aria-label={`上移第 ${index + 1} 题`}
+                          disabled={index === 0}
+                          onClick={() => move(index, index - 1)}
+                        >
+                          <ArrowUp />
+                        </Button>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          aria-label={`下移第 ${index + 1} 题`}
+                          disabled={index === items.length - 1}
+                          onClick={() => move(index, index + 1)}
+                        >
+                          <ArrowDown />
+                        </Button>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          aria-label={`移除第 ${index + 1} 题`}
+                          onClick={() => edit(() => setItems(items.filter((_, n) => n !== index)))}
+                        >
+                          <Trash2 />
+                        </Button>
+                      </div>
+                      <DocumentQuestionBody
+                        question={item.snapshot}
+                        index={index}
+                        labelPrefix={`第 ${index + 1} 题`}
+                        onChange={view === "edit" ? (value) => content(index, value) : undefined}
                       />
+                      {view === "answers" && (
+                        <div className="p-answers">
+                          <Field
+                            label={`第 ${index + 1} 题标准答案`}
+                            hint="多个答案按行填写；选择题填写选项字母。"
+                          >
+                            <Textarea
+                              value={item.snapshot.content.answers.join("\n")}
+                              onChange={(e) =>
+                                content(index, { answers: e.target.value.split("\n") })
+                              }
+                            />
+                          </Field>
+                          <Field label="解析">
+                            <Textarea
+                              value={item.snapshot.content.explanation}
+                              onChange={(e) => content(index, { explanation: e.target.value })}
+                            />
+                          </Field>
+                          <Field label="评分标准">
+                            <Textarea
+                              value={item.snapshot.content.rubric}
+                              onChange={(e) => content(index, { rubric: e.target.value })}
+                            />
+                          </Field>
+                          {item.snapshot.content.parts.map((part, n) => (
+                            <div key={part.id}>
+                              <h3>小问 {n + 1}</h3>
+                              <Field label="小问答案">
+                                <Textarea
+                                  value={part.answers.join("\n")}
+                                  onChange={(e) =>
+                                    content(index, {
+                                      parts: item.snapshot.content.parts.map((p, j) =>
+                                        j === n ? { ...p, answers: e.target.value.split("\n") } : p,
+                                      ),
+                                    })
+                                  }
+                                />
+                              </Field>
+                              <Field label="小问评分标准">
+                                <Textarea
+                                  value={part.rubric}
+                                  onChange={(e) =>
+                                    content(index, {
+                                      parts: item.snapshot.content.parts.map((p, j) =>
+                                        j === n ? { ...p, rubric: e.target.value } : p,
+                                      ),
+                                    })
+                                  }
+                                />
+                              </Field>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      <label className="p-check p-pagination-control">
+                        <input
+                          type="checkbox"
+                          checked={
+                            layout.questionLayouts?.[item.questionId]?.pageBreakBefore ?? false
+                          }
+                          onChange={(e) =>
+                            edit(() =>
+                              setLayout({
+                                ...layout,
+                                questionLayouts: {
+                                  ...layout.questionLayouts,
+                                  [item.questionId]: {
+                                    ...layout.questionLayouts?.[item.questionId],
+                                    pageBreakBefore: e.target.checked,
+                                  },
+                                },
+                              }),
+                            )
+                          }
+                        />
+                        从新页开始
+                      </label>
+                      {homework && view !== "answers" && (
+                        <div
+                          className="p-workbook-answer-space"
+                          aria-label={`第 ${index + 1} 题作答空间`}
+                        >
+                          作答：
+                        </div>
+                      )}
+                    </article>
+                  ),
+                }))}
+              />
+            </div>
+            <aside
+              className="p-paper-bank"
+              aria-label={view === "layout" ? "版面设置" : "题库选题"}
+            >
+              {selectedQuestion && (
+                <div className="p-mobile-document-tools">
+                  <h3>题目设置</h3>
+                  <div className="p-form-grid">
+                    <Field label="当前题目">
+                      <select
+                        value={selectedQuestionIndex}
+                        onChange={(e) => setSelectedIndex(Number(e.target.value))}
+                      >
+                        {items.map((i, n) => (
+                          <option key={i.questionId} value={n}>
+                            第 {n + 1} 题 · {i.section}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+                    <Field label="分值">
                       <Input
-                        className="p-score-input"
-                        aria-label={`第 ${index + 1} 题分值`}
                         type="number"
                         min={0}
-                        max={10000}
                         step={0.5}
-                        required
-                        value={item.score}
-                        onChange={(e) => patch(index, { score: Number(e.target.value) })}
+                        value={selectedQuestion.score}
+                        onChange={(e) =>
+                          patch(selectedQuestionIndex, { score: Number(e.target.value) })
+                        }
                       />
-                      <span>分</span>
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        aria-label={`上移第 ${index + 1} 题`}
-                        disabled={index === 0}
-                        onClick={() => move(index, index - 1)}
-                      >
-                        <ArrowUp />
-                      </Button>
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        aria-label={`下移第 ${index + 1} 题`}
-                        disabled={index === items.length - 1}
-                        onClick={() => move(index, index + 1)}
-                      >
-                        <ArrowDown />
-                      </Button>
-                      <Button
-                        type="button"
-                        size="icon"
-                        variant="ghost"
-                        aria-label={`移除第 ${index + 1} 题`}
-                        onClick={() => edit(() => setItems(items.filter((_, n) => n !== index)))}
-                      >
-                        <Trash2 />
-                      </Button>
-                    </div>
-                    <DocumentQuestionBody
-                      question={item.snapshot}
-                      labelPrefix={`第 ${index + 1} 题`}
-                      onChange={view === "edit" ? (value) => content(index, value) : undefined}
-                    />
-                    {view === "answers" && (
-                      <div className="p-answers">
-                        <Field
-                          label={`第 ${index + 1} 题标准答案`}
-                          hint="多个答案按行填写；选择题填写选项字母。"
-                        >
-                          <Textarea
-                            value={item.snapshot.content.answers.join("\n")}
-                            onChange={(e) =>
-                              content(index, { answers: e.target.value.split("\n") })
-                            }
-                          />
-                        </Field>
-                        <Field label="解析">
-                          <Textarea
-                            value={item.snapshot.content.explanation}
-                            onChange={(e) => content(index, { explanation: e.target.value })}
-                          />
-                        </Field>
-                        <Field label="评分标准">
-                          <Textarea
-                            value={item.snapshot.content.rubric}
-                            onChange={(e) => content(index, { rubric: e.target.value })}
-                          />
-                        </Field>
-                        {item.snapshot.content.parts.map((part, n) => (
-                          <div key={part.id}>
-                            <h3>小问 {n + 1}</h3>
-                            <Field label="小问答案">
-                              <Textarea
-                                value={part.answers.join("\n")}
-                                onChange={(e) =>
-                                  content(index, {
-                                    parts: item.snapshot.content.parts.map((p, j) =>
-                                      j === n ? { ...p, answers: e.target.value.split("\n") } : p,
-                                    ),
-                                  })
-                                }
-                              />
-                            </Field>
-                            <Field label="小问评分标准">
-                              <Textarea
-                                value={part.rubric}
-                                onChange={(e) =>
-                                  content(index, {
-                                    parts: item.snapshot.content.parts.map((p, j) =>
-                                      j === n ? { ...p, rubric: e.target.value } : p,
-                                    ),
-                                  })
-                                }
-                              />
-                            </Field>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <label className="p-check p-pagination-control">
+                    </Field>
+                    <Field label="栏目">
+                      <Input
+                        value={selectedQuestion.section}
+                        onChange={(e) => patch(selectedQuestionIndex, { section: e.target.value })}
+                      />
+                    </Field>
+                  </div>
+                  <div className="p-actions">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={selectedQuestionIndex === 0}
+                      onClick={() => {
+                        move(selectedQuestionIndex, selectedQuestionIndex - 1);
+                        setSelectedIndex(selectedQuestionIndex - 1);
+                      }}
+                    >
+                      上移题目
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={selectedQuestionIndex === items.length - 1}
+                      onClick={() => {
+                        move(selectedQuestionIndex, selectedQuestionIndex + 1);
+                        setSelectedIndex(selectedQuestionIndex + 1);
+                      }}
+                    >
+                      下移题目
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        edit(() => setItems(items.filter((_, n) => n !== selectedQuestionIndex)))
+                      }
+                    >
+                      <Trash2 />
+                      移除题目
+                    </Button>
+                    <label className="p-check">
                       <input
                         type="checkbox"
                         checked={
-                          layout.questionLayouts?.[item.questionId]?.pageBreakBefore ?? false
+                          layout.questionLayouts?.[selectedQuestion.questionId]?.pageBreakBefore ??
+                          false
                         }
                         onChange={(e) =>
                           edit(() =>
@@ -793,8 +827,8 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
                               ...layout,
                               questionLayouts: {
                                 ...layout.questionLayouts,
-                                [item.questionId]: {
-                                  ...layout.questionLayouts?.[item.questionId],
+                                [selectedQuestion.questionId]: {
+                                  ...layout.questionLayouts?.[selectedQuestion.questionId],
                                   pageBreakBefore: e.target.checked,
                                 },
                               },
@@ -804,115 +838,106 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
                       />
                       从新页开始
                     </label>
-                    {homework && view !== "answers" && (
-                      <div
-                        className="p-workbook-answer-space"
-                        aria-label={`第 ${index + 1} 题作答空间`}
+                  </div>
+                  <p className="p-muted">纸面可横向滚动。点击「100% 编辑」放大文字后直接编辑。</p>
+                </div>
+              )}
+              {view === "layout" ? (
+                <>
+                  <h2>版面设置</h2>
+                  <div className="p-paper-settings">
+                    <Field label="纸张大小">
+                      <select
+                        value={layout.paperSize}
+                        onChange={(e) =>
+                          edit(() =>
+                            setLayout({ ...layout, paperSize: e.target.value as "A4" | "A3" }),
+                          )
+                        }
                       >
-                        作答：
-                      </div>
-                    )}
-                  </article>
-                ),
-              }))}
-            />
-          </div>
-          <aside className="p-paper-bank" aria-label={view === "layout" ? "版面设置" : "题库选题"}>
-            {view === "layout" ? (
-              <>
-                <h2>版面设置</h2>
-                <div className="p-paper-settings">
-                  <Field label="纸张大小">
-                    <select
-                      value={layout.paperSize}
-                      onChange={(e) =>
-                        edit(() =>
-                          setLayout({ ...layout, paperSize: e.target.value as "A4" | "A3" }),
-                        )
-                      }
-                    >
-                      <option>A4</option>
-                      <option>A3</option>
-                    </select>
-                  </Field>
-                  <Field label="分栏">
-                    <select
-                      value={layout.columns}
-                      onChange={(e) =>
-                        edit(() => setLayout({ ...layout, columns: Number(e.target.value) }))
-                      }
-                    >
-                      <option value={1}>单栏</option>
-                      <option value={2}>双栏</option>
-                      <option value={3}>三栏</option>
-                      <option value={4}>四栏</option>
-                    </select>
-                  </Field>
-                  <p className="p-muted">保存后可在「导出与打印」中下载 PDF 或 Word 文档。</p>
-                </div>
-              </>
-            ) : (
-              <>
-                <h2>文档设置 · {subject}</h2>
-                <div className="p-paper-settings">
-                  <Field label="学科">
-                    <select
-                      value={subject}
-                      disabled={items.length > 0}
-                      onChange={(e) => edit(() => setSubject(e.target.value))}
-                    >
-                      {SUBJECTS.map((v) => (
-                        <option key={v}>{v}</option>
-                      ))}
-                    </select>
-                  </Field>
-                  <Field label="年级">
-                    <GradeSelect
-                      value={grade}
-                      onChange={(e) => edit(() => setGrade(e.target.value))}
-                    />
-                  </Field>
-                </div>
-                <DocumentInsertTools
-                  subject={subject}
-                  grade={grade}
-                  usedIds={items.map((i) => i.questionId)}
-                  onText={() =>
-                    edit(() =>
-                      setLayout({
-                        ...layout,
-                        textBlocks: [
-                          ...(layout.textBlocks ?? []),
+                        <option>A4</option>
+                        <option>A3</option>
+                      </select>
+                    </Field>
+                    <Field label="分栏">
+                      <select
+                        value={layout.columns}
+                        onChange={(e) =>
+                          edit(() => setLayout({ ...layout, columns: Number(e.target.value) }))
+                        }
+                      >
+                        <option value={1}>单栏</option>
+                        <option value={2}>双栏</option>
+                        <option value={3}>三栏</option>
+                        <option value={4}>四栏</option>
+                      </select>
+                    </Field>
+                    <p className="p-muted">保存后可在「导出与打印」中下载 PDF 或 Word 文档。</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h2>文档设置 · {subject}</h2>
+                  <div className="p-paper-settings">
+                    <Field label="学科">
+                      <select
+                        value={subject}
+                        disabled={items.length > 0}
+                        onChange={(e) => edit(() => setSubject(e.target.value))}
+                      >
+                        {SUBJECTS.map((v) => (
+                          <option key={v}>{v}</option>
+                        ))}
+                      </select>
+                    </Field>
+                    <Field label="年级">
+                      <GradeSelect
+                        value={grade}
+                        onChange={(e) => edit(() => setGrade(e.target.value))}
+                      />
+                    </Field>
+                  </div>
+                  <DocumentInsertTools
+                    subject={subject}
+                    grade={grade}
+                    usedIds={items.map((i) => i.questionId)}
+                    onText={() =>
+                      edit(() =>
+                        setLayout({
+                          ...layout,
+                          textBlocks: [
+                            ...(layout.textBlocks ?? []),
+                            {
+                              id: crypto.randomUUID(),
+                              text: "",
+                              beforeQuestionId: selectedQuestion?.questionId,
+                            },
+                          ],
+                        }),
+                      )
+                    }
+                    onAdd={(q) =>
+                      edit(() =>
+                        setItems([
+                          ...items,
                           {
-                            id: crypto.randomUUID(),
-                            text: "",
-                            beforeQuestionId: selectedQuestion?.questionId,
+                            questionId: q.id,
+                            score:
+                              q.type === "MIXED"
+                                ? q.content.parts.reduce((n, p) => n + p.score, 0)
+                                : 5,
+                            section: QUESTION_LABELS[q.type],
+                            snapshot: structuredClone(q),
                           },
-                        ],
-                      }),
-                    )
-                  }
-                  onAdd={(q) =>
-                    edit(() =>
-                      setItems([
-                        ...items,
-                        {
-                          questionId: q.id,
-                          score:
-                            q.type === "MIXED"
-                              ? q.content.parts.reduce((n, p) => n + p.score, 0)
-                              : 5,
-                          section: QUESTION_LABELS[q.type],
-                          snapshot: structuredClone(q),
-                        },
-                      ]),
-                    )
-                  }
-                />
-              </>
-            )}
-          </aside>
-        </div>
+                        ]),
+                      )
+                    }
+                  />
+                </>
+              )}
+            </aside>
+          </div>
+        </DocumentWorkbench>
       </form>
     </>
   );
@@ -927,33 +952,55 @@ export function PaperExportPage({ id }: { id: string }) {
     <>
       <PageHeader
         title={`导出${noun}`}
+        className="p-document-export-heading"
         description="使用本机字体打印或保存 PDF，也可下载可编辑的 Word 文档。"
         back={{ href: `${root}/${id}`, label: paper.name }}
-        actions={<DocumentExport paperId={id} title={paper.name} />}
       />
       <PaperNavigation paper={paper} active={`${root}/${id}/export`} />
-      <DocumentCanvas
-        layout={paper.layout}
-        header={
-          <>
-            <PaperText readOnly title label="试卷名称" value={paper.name} onChange={() => {}} />
-            <div className="p-document-subtitle">
-              {paper.subject} · {paper.grade} · 共 {paper.items.reduce((n, i) => n + i.score, 0)} 分
-            </div>
-            <PaperText readOnly label="卷面说明" value={paper.instructions} onChange={() => {}} />
-          </>
-        }
-        blocks={paper.items.map((item, index) => ({
-          key: item.questionId,
-          pageBreakBefore: paper.layout.questionLayouts?.[item.questionId]?.pageBreakBefore,
-          content: (
-            <article className="p-paper-question">
-              <DocumentQuestionHeading index={index} section={item.section} score={item.score} />
-              <DocumentQuestionBody question={item.snapshot} />
-            </article>
-          ),
-        }))}
-      />
+      <DocumentWorkbench
+        title={paper.name}
+        status="打印预览"
+        actions={<DocumentExport paperId={id} title={paper.name} />}
+        outline={false}
+        properties={false}
+      >
+        <div className="p-document-preview">
+          <div>
+            <DocumentCanvas
+              layout={paper.layout}
+              header={
+                <>
+                  <PaperText
+                    readOnly
+                    title
+                    label="试卷名称"
+                    value={paper.name}
+                    onChange={() => {}}
+                  />
+                  <div className="p-document-subtitle">
+                    {paper.subject} · {paper.grade}
+                  </div>
+                  <PaperText
+                    readOnly
+                    label="卷面说明"
+                    value={paper.instructions}
+                    onChange={() => {}}
+                  />
+                </>
+              }
+              blocks={paper.items.map((item, index) => ({
+                key: item.questionId,
+                pageBreakBefore: paper.layout.questionLayouts?.[item.questionId]?.pageBreakBefore,
+                content: (
+                  <article className="p-paper-question">
+                    <DocumentQuestionBody question={item.snapshot} index={index} />
+                  </article>
+                ),
+              }))}
+            />
+          </div>
+        </div>
+      </DocumentWorkbench>
     </>
   );
 }

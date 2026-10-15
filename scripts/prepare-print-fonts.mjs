@@ -11,3 +11,11 @@ for (const family of ["geist", "noto-sans-sc"]) {
   await writeFile(resolve(destination, "index.css"), await readFile(resolve(source, "index.css")));
   await cp(resolve(source, "LICENSE"), resolve(destination, "LICENSE"));
 }
+const katexSource = dirname(require.resolve("katex/package.json"));
+const katexDestination = resolve("public/print-fonts/katex");
+await mkdir(katexDestination, { recursive: true });
+await cp(resolve(katexSource, "dist/fonts"), resolve(katexDestination, "fonts"), {
+  recursive: true,
+});
+await cp(resolve(katexSource, "dist/katex.min.css"), resolve(katexDestination, "katex.min.css"));
+await cp(resolve(katexSource, "LICENSE"), resolve(katexDestination, "LICENSE"));

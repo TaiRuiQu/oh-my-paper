@@ -9,12 +9,14 @@ export function PageHeader({
   description,
   actions,
   back,
+  className = "",
 }: {
   title: string;
   titleEditor?: ReactNode;
   description: string;
   actions?: ReactNode;
   back?: { href: string; label: string };
+  className?: string;
 }) {
   return (
     <>
@@ -24,7 +26,7 @@ export function PageHeader({
           {back.label}
         </Link>
       )}
-      <div className="p-heading">
+      <div className={`p-heading ${className}`.trim()}>
         <div>
           {titleEditor ?? <h1>{title}</h1>}
           <p>{description}</p>

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Printer, FileText } from "lucide-react";
+import { Printer, FileText, CircleHelp, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { CardTemplate } from "@/contracts/platform";
 import { renderCardSvg } from "@/lib/card-svg";
@@ -78,22 +78,50 @@ export function DocumentExport({
     }
   }
   return (
-    <div>
-      <div className="p-actions">
+    <div className="p-document-export">
+      <div className="p-document-export-actions">
         {paperId && (
-          <Button variant="outline" disabled={!!busy} onClick={() => void download("docx")}>
-            <FileText />
-            {busy === "docx" ? "正在导出 Word…" : "导出 Word"}
+          <Button
+            variant="outline"
+            disabled={!!busy}
+            aria-busy={busy === "docx"}
+            aria-label={busy === "docx" ? "正在导出 Word" : undefined}
+            onClick={() => void download("docx")}
+          >
+            {busy === "docx" ? <LoaderCircle className="motion-safe:animate-spin" /> : <FileText />}
+            导出 Word
           </Button>
         )}
-        <Button disabled={!!busy} onClick={() => void print()}>
-          <Printer />
-          {busy === "print" ? "正在准备打印…" : "打印 / 保存 PDF"}
+        <Button
+          disabled={!!busy}
+          aria-busy={busy === "print"}
+          aria-label={busy === "print" ? "正在准备打印" : undefined}
+          onClick={() => void print()}
+        >
+          {busy === "print" ? <LoaderCircle className="motion-safe:animate-spin" /> : <Printer />}
+          打印 / 保存 PDF
         </Button>
+        <details
+          className="p-print-help"
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget))
+              event.currentTarget.open = false;
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              event.currentTarget.open = false;
+              event.currentTarget.querySelector("summary")?.focus();
+            }
+          }}
+        >
+          <summary aria-label="打印说明" title="打印说明">
+            <CircleHelp size={18} aria-hidden="true" />
+          </summary>
+          <div className="p-print-help-content">
+            使用本机字体；在打印窗口选择「另存为 PDF」，缩放设为 100%，关闭页眉页脚。
+          </div>
+        </details>
       </div>
-      <small className="p-print-hint">
-        使用本机字体；在打印窗口选择「另存为 PDF」，缩放设为 100%，关闭页眉页脚。
-      </small>
       {error && (
         <p role="alert" className="field-error">
           {error}

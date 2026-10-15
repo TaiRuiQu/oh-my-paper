@@ -1,4 +1,5 @@
 "use client";
+import { DocumentWorkbench } from "./document-workbench";
 import { DocumentExport } from "./document-export";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -125,12 +126,20 @@ export function CardOverviewPage({ id, exporting = false }: { id: string; export
     <>
       <PageHeader
         title={exporting ? "导出答题卡" : template.name}
+        className="p-document-export-heading"
         description={
           exporting
             ? "按实际尺寸打印，保留四角定位点和学号填涂区。请使用保存的同版式模板扫描。"
             : `${paper?.name ?? "考试试卷"} · ${template.layout.pageCount} 页 · ${template.layout.regions.length} 个题区`
         }
         back={{ href: "/exams/cards", label: "全部答题卡" }}
+      />
+      <CardNavigation id={id} active={`/exams/cards/${id}${exporting ? "/export" : ""}`} />
+      <DocumentWorkbench
+        title={template.name}
+        status="卡面预览"
+        outline={false}
+        properties={false}
         actions={
           <>
             <Button asChild variant="outline">
@@ -139,25 +148,31 @@ export function CardOverviewPage({ id, exporting = false }: { id: string; export
             <DocumentExport template={template} />
           </>
         }
-      />
-      <CardNavigation id={id} active={`/exams/cards/${id}${exporting ? "/export" : ""}`} />
-      <div className="p-toolbar">
-        <select
-          aria-label="预览答题卡页码"
-          value={page}
-          onChange={(e) => setPage(Number(e.target.value))}
-        >
-          {Array.from({ length: template.layout.pageCount }, (_, i) => (
-            <option value={i + 1} key={i}>
-              第 {i + 1} 页
-            </option>
-          ))}
-        </select>
-        <span className="p-muted">A4 · 实际打印版包含页面识别码</span>
-      </div>
-      <div className="p-card-preview">
-        <CardSheet template={template} paper={paper} page={page} />
-      </div>
+        ribbon={
+          <div className="p-document-ribbon">
+            <Field label="预览答题卡页码">
+              <select value={page} onChange={(e) => setPage(Number(e.target.value))}>
+                {Array.from({ length: template.layout.pageCount }, (_, i) => (
+                  <option value={i + 1} key={i}>
+                    第 {i + 1} 页
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <span className="p-muted">
+              {template.layout.paperSize ?? "A4"} · 实际打印版包含页面识别码
+            </span>
+          </div>
+        }
+      >
+        <div className="p-document-preview">
+          <div>
+            <div className="p-card-preview">
+              <CardSheet template={template} paper={paper} page={page} />
+            </div>
+          </div>
+        </div>
+      </DocumentWorkbench>
     </>
   );
 }
@@ -296,57 +311,39 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
         }}
       />
       {template && <CardNavigation id={template.id} active={`/exams/cards/${template.id}/edit`} />}
-      {locked && <p className="p-notice">此模板已用于扫描，修改后另存为新模板。</p>}
-      {error && (
-        <p className="p-notice error" role="alert">
-          {error}
-        </p>
-      )}
-      <div className="p-paper-tools">
-        <div className="p-actions">
-          <Badge variant="secondary">
-            {layout.pageCount} 页 · {layout.regions.length} 个题区
-          </Badge>
-          <span className={dirty ? "p-dirty" : "p-muted"}>
-            {dirty ? "有未保存的修改" : "卡面草稿"}
-          </span>
-        </div>
-        <div className="p-actions">
-          <Button
-            variant="outline"
-            onClick={() => {
-              if (window.confirm("恢复自动排布会覆盖当前题区位置，继续？")) {
-                reformat(layout);
-                setPage(1);
-              }
-            }}
-          >
-            <RotateCcw />
-            自动排布
-          </Button>
-          <Button disabled={pending || !name.trim()} onClick={() => void save()}>
-            <Save />
-            {pending ? "正在保存…" : locked ? "另存新模板" : "保存答题卡"}
-          </Button>
-        </div>
-      </div>
-      <div className="p-card-workbench">
-        <aside className="p-paper-outline">
-          <h2>题区与页面</h2>
-          {layout.regions.map((r, n) => (
-            <button
-              className={`p-card-outline-item${selection?.kind === "region" && selection.index === n ? " active" : ""}`}
-              key={r.itemId}
+      <DocumentWorkbench
+        title={name.trim() || "答题卡"}
+        status={
+          <>
+            <Badge variant="secondary">
+              {layout.pageCount} 页 · {layout.regions.length} 个题区
+            </Badge>
+            <span className={dirty ? "p-dirty" : "p-muted"}>
+              {dirty ? "有未保存的修改" : "卡面草稿"}
+            </span>
+          </>
+        }
+        actions={
+          <div className="p-actions">
+            <Button
+              variant="outline"
               onClick={() => {
-                setSelection({ kind: "region", index: n });
-                setPage(r.page);
+                if (window.confirm("恢复自动排布会覆盖当前题区位置，继续？")) {
+                  reformat(layout);
+                  setPage(1);
+                }
               }}
             >
-              第 {n + 1} 题 <span>第 {r.page} 页</span>
-            </button>
-          ))}
-        </aside>
-        <div>
+              <RotateCcw />
+              自动排布
+            </Button>
+            <Button disabled={pending || !name.trim()} onClick={() => void save()}>
+              <Save />
+              {pending ? "正在保存…" : locked ? "另存新模板" : "保存答题卡"}
+            </Button>
+          </div>
+        }
+        ribbon={
           <div className="p-document-ribbon">
             <Field label="纸张">
               <select
@@ -431,225 +428,263 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
               添加页面
             </Button>
           </div>
-          <p className="p-card-interaction-hint">
-            拖动题区位置，拖动右下角调整大小。精细调整可选择「100%
-            查看」，或在卡面属性中填写位置和大小。
-          </p>
-          <div
-            className={`p-card-preview${fitPaper ? "" : " is-full-size"}`}
-            style={{ "--card-width": `${layout.width}px` } as CSSProperties}
-          >
-            <CardSheet
-              template={current}
-              paper={paper}
-              page={page}
-              selection={selection}
-              select={setSelection}
-              onChange={change}
-            />
-          </div>
-        </div>
-        <aside className="p-paper-bank">
-          <h2>卡面属性</h2>
-          <div className="p-paper-settings">
-            <Button asChild variant="outline">
-              <Link href={`/exams/papers/${paper.id}/edit`}>在对应试卷中添加或编辑题目</Link>
-            </Button>
-            <p className="p-muted">保存试卷后可重新生成题区；已布置的试卷会另存新版。</p>
-            <Field label="答题卡名称">
-              <Input
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setDirty(true);
-                }}
-              />
-            </Field>
-            <Field label="对应试卷">
-              <select
-                value={paperId}
-                disabled={!!template}
-                onChange={(e) => {
-                  const p = state.papers.find((p) => p.id === e.target.value)!;
-                  setPaperId(p.id);
-                  setName(`${p.name}答题卡`);
-                  change(generateCardTemplate(p).layout);
-                  setPage(1);
-                  setSelection(undefined);
+        }
+        notice={
+          <>
+            {locked && <p className="p-notice">此模板已用于扫描，修改后另存为新模板。</p>}
+            {error && (
+              <p className="p-notice error" role="alert">
+                {error}
+              </p>
+            )}
+          </>
+        }
+      >
+        <div className="p-card-workbench">
+          <aside className="p-paper-outline">
+            <h2>题区与页面</h2>
+            {layout.regions.map((r, n) => (
+              <button
+                className={`p-card-outline-item${selection?.kind === "region" && selection.index === n ? " active" : ""}`}
+                key={r.itemId}
+                onClick={() => {
+                  setSelection({ kind: "region", index: n });
+                  setPage(r.page);
                 }}
               >
-                {state.papers.map((p) => (
-                  <option value={p.id} key={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field label="总页数">
-              <Input
-                type="number"
-                min={Math.max(...layout.regions.map((r) => r.page), 1)}
-                max={100}
-                value={layout.pageCount}
-                onChange={(e) => {
-                  const count = Number(e.target.value);
-                  change({ ...layout, pageCount: count });
-                  setPage(Math.min(page, count));
-                }}
+                第 {n + 1} 题 <span>第 {r.page} 页</span>
+              </button>
+            ))}
+          </aside>
+          <div>
+            <p className="p-card-interaction-hint">
+              拖动题区位置，拖动右下角调整大小。精细调整可选择「100%
+              查看」，或在卡面属性中填写位置和大小。
+            </p>
+            <div
+              className={`p-card-preview${fitPaper ? "" : " is-full-size"}`}
+              style={{ "--card-width": `${layout.width}px` } as CSSProperties}
+            >
+              <CardSheet
+                template={current}
+                paper={paper}
+                page={page}
+                selection={selection}
+                select={setSelection}
+                onChange={change}
               />
-            </Field>
+            </div>
           </div>
-          <h2>
-            {selection?.kind === "region"
-              ? `第 ${selection.index + 1} 题`
-              : selection?.kind === "marker"
-                ? `定位点 ${selection.index + 1}`
-                : selection?.kind === "number"
-                  ? "学号填涂区"
-                  : selection?.kind === "annotation"
-                    ? "附加文字"
-                    : "选择卡面元素"}
-          </h2>
-          {selected ? (
+          <aside className="p-paper-bank">
+            <h2>卡面属性</h2>
             <div className="p-paper-settings">
-              {(["x", "y"] as const).map((field) => (
-                <Field label={field === "x" ? "水平位置 (%)" : "垂直位置 (%)"} key={field}>
-                  <Input
-                    type="number"
-                    min={0}
-                    max={100}
-                    step={0.1}
-                    value={Math.round(selected[field] * 1000) / 10}
-                    onChange={(e) => patchSelected(field, Number(e.target.value) / 100)}
-                  />
-                </Field>
-              ))}
-              {selection?.kind === "annotation" && (
-                <>
-                  <Field label="文字内容">
-                    <Textarea
-                      value={layout.annotations?.[selection.index]?.text ?? ""}
-                      onChange={(e) =>
-                        change({
-                          ...layout,
-                          annotations: layout.annotations?.map((a, i) =>
-                            i === selection.index
-                              ? fitAnnotationText({ ...a, text: e.target.value }, layout)
-                              : a,
-                          ),
-                        })
-                      }
+              <Button asChild variant="outline">
+                <Link href={`/exams/papers/${paper.id}/edit`}>在对应试卷中添加或编辑题目</Link>
+              </Button>
+              <p className="p-muted">保存试卷后可重新生成题区；已布置的试卷会另存新版。</p>
+              <Field label="答题卡名称">
+                <Input
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setDirty(true);
+                  }}
+                />
+              </Field>
+              <Field label="对应试卷">
+                <select
+                  value={paperId}
+                  disabled={!!template}
+                  onChange={(e) => {
+                    const p = state.papers.find((p) => p.id === e.target.value)!;
+                    setPaperId(p.id);
+                    setName(`${p.name}答题卡`);
+                    change(generateCardTemplate(p).layout);
+                    setPage(1);
+                    setSelection(undefined);
+                  }}
+                >
+                  {state.papers.map((p) => (
+                    <option value={p.id} key={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="总页数">
+                <Input
+                  type="number"
+                  min={Math.max(...layout.regions.map((r) => r.page), 1)}
+                  max={100}
+                  value={layout.pageCount}
+                  onChange={(e) => {
+                    const count = Number(e.target.value);
+                    change({ ...layout, pageCount: count });
+                    setPage(Math.min(page, count));
+                  }}
+                />
+              </Field>
+            </div>
+            <h2>
+              {selection?.kind === "region"
+                ? `第 ${selection.index + 1} 题`
+                : selection?.kind === "marker"
+                  ? `定位点 ${selection.index + 1}`
+                  : selection?.kind === "number"
+                    ? "学号填涂区"
+                    : selection?.kind === "annotation"
+                      ? "附加文字"
+                      : "选择卡面元素"}
+            </h2>
+            {selected ? (
+              <div className="p-paper-settings">
+                {(["x", "y"] as const).map((field) => (
+                  <Field label={field === "x" ? "水平位置 (%)" : "垂直位置 (%)"} key={field}>
+                    <Input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={0.1}
+                      value={Math.round(selected[field] * 1000) / 10}
+                      onChange={(e) => patchSelected(field, Number(e.target.value) / 100)}
                     />
                   </Field>
-                  {(["width", "height"] as const).map((field) => (
-                    <Field key={field} label={field === "width" ? "文字宽度 (%)" : "文字高度 (%)"}>
-                      <Input
-                        type="number"
-                        min={1}
-                        max={100}
-                        step={0.1}
-                        value={(layout.annotations?.[selection.index]?.[field] ?? 0) * 100}
-                        onChange={(e) => patchSelected(field, Number(e.target.value) / 100)}
-                      />
-                    </Field>
-                  ))}
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      change({
-                        ...layout,
-                        annotations: layout.annotations?.filter((_, i) => i !== selection.index),
-                      });
-                      setSelection(undefined);
-                    }}
-                  >
-                    删除文字
-                  </Button>
-                </>
-              )}
-              {selection?.kind === "region" && (
-                <>
-                  {(["width", "height"] as const).map((field) => (
-                    <Field label={field === "width" ? "宽度 (%)" : "高度 (%)"} key={field}>
-                      <Input
-                        type="number"
-                        min={1}
-                        max={100}
-                        step={0.1}
-                        value={Math.round(layout.regions[selection.index][field] * 1000) / 10}
-                        onChange={(e) => patchSelected(field, Number(e.target.value) / 100)}
-                      />
-                    </Field>
-                  ))}
-                  <Field label="题区配图（可选）">
-                    <Input
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp"
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        try {
-                          const form = new FormData();
-                          form.set("file", file);
-                          const result = await apiRequest<{ url: string }>("/api/platform/assets", {
-                            method: "POST",
-                            body: form,
-                          });
+                ))}
+                {selection?.kind === "annotation" && (
+                  <>
+                    <Field label="文字内容">
+                      <Textarea
+                        value={layout.annotations?.[selection.index]?.text ?? ""}
+                        onChange={(e) =>
                           change({
                             ...layout,
-                            regions: layout.regions.map((r, n) =>
-                              n === selection.index ? { ...r, image: result.url } : r,
+                            annotations: layout.annotations?.map((a, i) =>
+                              i === selection.index
+                                ? fitAnnotationText({ ...a, text: e.target.value }, layout)
+                                : a,
                             ),
-                          });
-                        } catch (error) {
-                          setError(error instanceof Error ? error.message : "配图上传失败。");
+                          })
                         }
-                      }}
-                    />
-                  </Field>
-                  <Field label="所在页面">
-                    <select
-                      value={layout.regions[selection.index].page}
-                      onChange={(e) => {
-                        patchSelected("page", Number(e.target.value));
-                        setPage(Number(e.target.value));
-                      }}
-                    >
-                      {Array.from({ length: layout.pageCount }, (_, i) => (
-                        <option key={i} value={i + 1}>
-                          第 {i + 1} 页
-                        </option>
-                      ))}
-                    </select>
-                  </Field>
-                </>
-              )}
-              {selection?.kind === "number" && (
-                <>
-                  {(["cellWidth", "cellHeight"] as const).map((field) => (
-                    <Field
-                      key={field}
-                      label={field === "cellWidth" ? "学号列间距 (%)" : "数字行间距 (%)"}
-                    >
-                      <Input
-                        type="number"
-                        step={0.1}
-                        min={1}
-                        max={10}
-                        value={Math.round(layout.studentNumber[field] * 1000) / 10}
-                        onChange={(e) => patchSelected(field, Number(e.target.value) / 100)}
                       />
                     </Field>
-                  ))}
-                </>
-              )}
-              <p className="p-muted">位置必须位于纸张内，题区不能相互覆盖或遮挡学号区和定位点。</p>
-            </div>
-          ) : (
-            <Empty>点击题区、学号区或定位点，调整对应元素。</Empty>
-          )}
-        </aside>
-      </div>
+                    {(["width", "height"] as const).map((field) => (
+                      <Field
+                        key={field}
+                        label={field === "width" ? "文字宽度 (%)" : "文字高度 (%)"}
+                      >
+                        <Input
+                          type="number"
+                          min={1}
+                          max={100}
+                          step={0.1}
+                          value={(layout.annotations?.[selection.index]?.[field] ?? 0) * 100}
+                          onChange={(e) => patchSelected(field, Number(e.target.value) / 100)}
+                        />
+                      </Field>
+                    ))}
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        change({
+                          ...layout,
+                          annotations: layout.annotations?.filter((_, i) => i !== selection.index),
+                        });
+                        setSelection(undefined);
+                      }}
+                    >
+                      删除文字
+                    </Button>
+                  </>
+                )}
+                {selection?.kind === "region" && (
+                  <>
+                    {(["width", "height"] as const).map((field) => (
+                      <Field label={field === "width" ? "宽度 (%)" : "高度 (%)"} key={field}>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={100}
+                          step={0.1}
+                          value={Math.round(layout.regions[selection.index][field] * 1000) / 10}
+                          onChange={(e) => patchSelected(field, Number(e.target.value) / 100)}
+                        />
+                      </Field>
+                    ))}
+                    <Field label="题区配图（可选）">
+                      <Input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          try {
+                            const form = new FormData();
+                            form.set("file", file);
+                            const result = await apiRequest<{ url: string }>(
+                              "/api/platform/assets",
+                              {
+                                method: "POST",
+                                body: form,
+                              },
+                            );
+                            change({
+                              ...layout,
+                              regions: layout.regions.map((r, n) =>
+                                n === selection.index ? { ...r, image: result.url } : r,
+                              ),
+                            });
+                          } catch (error) {
+                            setError(error instanceof Error ? error.message : "配图上传失败。");
+                          }
+                        }}
+                      />
+                    </Field>
+                    <Field label="所在页面">
+                      <select
+                        value={layout.regions[selection.index].page}
+                        onChange={(e) => {
+                          patchSelected("page", Number(e.target.value));
+                          setPage(Number(e.target.value));
+                        }}
+                      >
+                        {Array.from({ length: layout.pageCount }, (_, i) => (
+                          <option key={i} value={i + 1}>
+                            第 {i + 1} 页
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+                  </>
+                )}
+                {selection?.kind === "number" && (
+                  <>
+                    {(["cellWidth", "cellHeight"] as const).map((field) => (
+                      <Field
+                        key={field}
+                        label={field === "cellWidth" ? "学号列间距 (%)" : "数字行间距 (%)"}
+                      >
+                        <Input
+                          type="number"
+                          step={0.1}
+                          min={1}
+                          max={10}
+                          value={Math.round(layout.studentNumber[field] * 1000) / 10}
+                          onChange={(e) => patchSelected(field, Number(e.target.value) / 100)}
+                        />
+                      </Field>
+                    ))}
+                  </>
+                )}
+                <p className="p-muted">
+                  位置必须位于纸张内，题区不能相互覆盖或遮挡学号区和定位点。
+                </p>
+              </div>
+            ) : (
+              <Empty>点击题区、学号区或定位点，调整对应元素。</Empty>
+            )}
+          </aside>
+        </div>
+      </DocumentWorkbench>
     </>
   );
 }

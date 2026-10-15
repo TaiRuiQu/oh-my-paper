@@ -71,6 +71,42 @@
         ],
         "createdAt": "2026-10-15T03:03:53.718Z",
         "reason": "Codex: Word export regression fixture preserves a teacher-selected local document font."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "simsun",
+        "files": [
+          "tests/platform-local-fonts.test.tsx"
+        ],
+        "createdAt": "2026-10-15T03:52:02.869Z",
+        "reason": "Codex: intentional document-font test fixtures verify teacher font selection, not interface typography"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "教师本机字体",
+        "files": [
+          "tests/platform-local-fonts.test.tsx"
+        ],
+        "createdAt": "2026-10-15T03:52:02.927Z",
+        "reason": "Codex: intentional document-font test fixtures verify teacher font selection, not interface typography"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "教师自定义字体",
+        "files": [
+          "tests/platform-local-fonts.test.tsx"
+        ],
+        "createdAt": "2026-10-15T03:52:03.018Z",
+        "reason": "Codex: intentional document-font test fixtures verify teacher font selection, not interface typography"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "simhei",
+        "files": [
+          "tests/platform-local-fonts.test.tsx"
+        ],
+        "createdAt": "2026-10-15T03:52:03.128Z",
+        "reason": "Codex: intentional document-font test fixtures verify teacher font selection, not interface typography"
       }
     ]
   }

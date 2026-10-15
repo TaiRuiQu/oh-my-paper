@@ -148,7 +148,12 @@ export function DocumentCanvas({
   useEffect(() => {
     const element = host.current;
     if (!element || !fitWidth) return;
-    const fit = () => setZoom(Math.min(1, Math.max(0.3, (element.clientWidth - 48) / width)));
+    const fit = () => {
+      const padding = getComputedStyle(element);
+      const available =
+        element.clientWidth - parseFloat(padding.paddingLeft) - parseFloat(padding.paddingRight);
+      setZoom(Math.min(1, Math.max(0.3, available / width)));
+    };
     const observer = new ResizeObserver(fit);
     observer.observe(element);
     fit();
