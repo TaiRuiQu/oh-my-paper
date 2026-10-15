@@ -19,21 +19,20 @@
 
 .choices {
   display: grid;
-  gap: 14px;
+  gap: 8px;
 }
 
-.heading {
-  display: flex;
+.choice {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 12px;
-  margin-bottom: 6px;
+  gap: 12px;
   font-size: 13px;
 }
 
 .label {
-  margin-right: auto;
   font-weight: 550;
+  white-space: nowrap;
 }
 
 .answer,
@@ -46,6 +45,8 @@
 
 .answer {
   cursor: pointer;
+  min-height: 40px;
+  white-space: nowrap;
 }
 
 .answer input {
@@ -70,7 +71,10 @@
 }
 
 .choice textarea {
-  min-height: 68px;
+  min-width: 0;
+  min-height: 40px;
+  height: 40px;
+  resize: vertical;
 }
 
 .add {
@@ -83,6 +87,10 @@
 }
 
 @media (max-width: 760px) {
+  .choice {
+    gap: 6px;
+  }
+
   .choice textarea {
     font-size: 16px;
   }

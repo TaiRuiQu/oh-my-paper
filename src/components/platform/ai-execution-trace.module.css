@@ -1,7 +1,7 @@
 .trace {
   min-width: 0;
   margin-bottom: 22px;
-  padding: 20px 22px 12px;
+  padding: 16px 20px 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--white);
@@ -49,7 +49,7 @@
 }
 
 .history {
-  margin-top: 16px;
+  margin-top: 12px;
   border-top: 1px solid var(--line);
 }
 
@@ -58,7 +58,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  min-height: 42px;
+  min-height: 36px;
   color: var(--muted);
   cursor: pointer;
   list-style: none;
@@ -86,7 +86,7 @@
 
 .activities {
   margin: 0;
-  padding: 0 0 8px;
+  padding: 0 0 4px;
   list-style: none;
 }
 
@@ -98,8 +98,8 @@
   display: flex;
   align-items: baseline;
   gap: 9px;
-  min-height: 34px;
-  padding: 6px 0;
+  min-height: 32px;
+  padding: 4px 0;
   color: var(--muted);
   cursor: pointer;
   list-style: none;
@@ -145,8 +145,7 @@
 }
 
 [data-state="error"] > .activity > summary .activityIcon,
-[data-state="error"] > .activity > summary .activityMeta,
-.failedCount {
+[data-state="error"] > .activity > summary .activityMeta {
   color: var(--danger);
 }
 
@@ -156,50 +155,29 @@
 
 .activityDetails {
   min-width: 0;
-  margin: 2px 0 8px 24px;
-  padding: 8px 0 12px;
+  margin: 0 0 6px 24px;
+  padding: 0 0 2px;
   color: var(--ink);
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .groupItems {
-  margin: 0 0 8px 24px;
+  margin: 0 0 4px 24px;
   padding: 0 0 0 14px;
   border-left: 1px solid var(--line);
   list-style: none;
 }
 
-.callCount {
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-
 .detailSection {
   min-width: 0;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .detailSection h3 {
-  margin: 12px 0 8px;
+  margin: 8px 0 6px;
   font-size: 13px;
   font-weight: 550;
-}
-
-.exitCode {
-  margin-bottom: 10px;
-  color: var(--muted);
-}
-
-.detailError {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin: 10px 0;
-  color: var(--danger);
-}
-
-.detailError > svg {
-  flex-shrink: 0;
 }
 
 .raw {
@@ -222,15 +200,9 @@
   border-radius: 4px;
 }
 
-.parameters {
-  padding: 4px 0 8px;
-  color: var(--ink);
-  font-size: 13px;
-}
-
 .activityDetails > p {
-  margin-bottom: 6px;
-  color: var(--muted);
+  margin: 0;
+  color: var(--ink);
   overflow-wrap: anywhere;
 }
 

@@ -5,128 +5,86 @@ import {
   Check,
   ChevronRight,
   Circle,
-  Code2,
   FileSearch,
   LoaderCircle,
   PencilLine,
   Search,
-  Terminal,
   TriangleAlert,
 } from "lucide-react";
 import type { AiJobDTO } from "@/contracts/platform-ai";
 import {
   aiJobCurrentStep,
   aiJobElapsed,
+  aiToolLabel,
   aiTraceActivities,
   aiTraceGroups,
-  formatAIDuration,
   type AITraceActivity,
   type AITraceGroup,
 } from "@/lib/ai-trace-display";
+import { aiActivityImages, aiTeacherActivity, aiTeacherFailure } from "@/lib/ai-teacher-display";
 import { formatDateTime } from "@/lib/date-time";
 import { AIJobStatus } from "./ai-job-list";
-import { AITraceText, AITraceValue } from "./ai-trace-content";
+import { AITraceImages } from "./ai-trace-content";
 import styles from "./ai-execution-trace.module.css";
 
-function ActivityIcon({ activity }: { activity: AITraceActivity }) {
-  const Icon =
-    activity.status === "error"
-      ? TriangleAlert
-      : activity.type === "complete" || activity.toolName === "finish"
-        ? Check
-        : activity.toolName === "shell"
-          ? Terminal
-          : activity.toolName === "python"
-            ? Code2
-            : activity.toolName?.startsWith("search_")
-              ? Search
-              : activity.toolName?.startsWith("read_") || activity.toolName === "list_items"
-                ? FileSearch
-                : activity.type === "tool"
-                  ? PencilLine
-                  : Circle;
-  return <Icon size={15} strokeWidth={1.6} aria-hidden="true" />;
-}
-
 function activityState(activity: AITraceActivity, jobStatus: AiJobDTO["status"]) {
+  if (activity.status === "error" && jobStatus === "COMPLETED") return "continued";
   if (activity.status !== "running") return activity.status;
   if (jobStatus === "RUNNING" || jobStatus === "QUEUED") return "running";
   return jobStatus === "FAILED" ? "interrupted" : "complete";
 }
 
-function ActivityDetails({ activity }: { activity: AITraceActivity }) {
-  const records = activity.events.map(({ value }) =>
-    value && typeof value === "object" ? (value as Record<string, unknown>) : { message: value },
-  );
-  const input = records.find((record) => record.input !== undefined)?.input;
+function ActivityIcon({
+  activity,
+  jobStatus,
+}: {
+  activity: AITraceActivity;
+  jobStatus: AiJobDTO["status"];
+}) {
+  const state = activityState(activity, jobStatus);
+  const Icon =
+    state === "error" || state === "interrupted"
+      ? TriangleAlert
+      : state === "continued" || activity.type === "complete" || activity.toolName === "finish"
+        ? Check
+        : activity.toolName?.startsWith("search_")
+          ? Search
+          : activity.toolName?.startsWith("read_") || activity.toolName === "list_items"
+            ? FileSearch
+            : activity.type === "tool"
+              ? PencilLine
+              : Circle;
+  return <Icon size={15} strokeWidth={1.6} aria-hidden="true" />;
+}
+
+function ActivityDetails({
+  activity,
+  jobStatus,
+}: {
+  activity: AITraceActivity;
+  jobStatus: AiJobDTO["status"];
+}) {
+  const images = aiActivityImages(activity);
   return (
     <div className={styles.activityDetails}>
-      {activity.toolName && (
-        <p>
-          工具：<code>{activity.toolName}</code>
-        </p>
-      )}
-      {input !== undefined && (
-        <section className={styles.detailSection} aria-label="调用参数">
-          <h3>调用参数</h3>
-          <AITraceValue value={input} />
+      <p>{aiTeacherActivity(activity, jobStatus)}</p>
+      {images.length > 0 && (
+        <section className={styles.detailSection} aria-label="相关图片">
+          <h3>相关图片</h3>
+          <AITraceImages urls={images} />
         </section>
       )}
-      {records.map((record, index) => (
-        <div key={index}>
-          {(typeof record.message === "string" || typeof record.summary === "string") && (
-            <AITraceText text={String(record.summary ?? record.message)} />
-          )}
-          {Boolean(record.error) && (
-            <div className={styles.detailError}>
-              <TriangleAlert size={15} aria-hidden="true" />
-              <AITraceValue value={record.error} />
-            </div>
-          )}
-          {record.type === "sandbox" && (
-            <section className={styles.detailSection} aria-label="运行结果">
-              <h3>运行结果</h3>
-              <p className={styles.exitCode}>
-                {record.exitCode === 0 ? "执行成功" : "执行未成功"} · 退出码{" "}
-                {String(record.exitCode ?? "未知")}
-              </p>
-              <AITraceValue
-                value={{
-                  ...(record.stdout ? { stdout: record.stdout } : {}),
-                  ...(record.stderr ? { stderr: record.stderr } : {}),
-                  ...(Array.isArray(record.images) && record.images.length
-                    ? { images: record.images }
-                    : {}),
-                }}
-              />
-            </section>
-          )}
-          {(record.output !== undefined || record.result !== undefined) && (
-            <section className={styles.detailSection} aria-label="工具结果">
-              <h3>工具结果</h3>
-              <AITraceValue value={record.output ?? record.result} />
-            </section>
-          )}
-          {Boolean(record.usage) && (
-            <section className={styles.detailSection} aria-label="本轮用量">
-              <h3>本轮用量</h3>
-              <AITraceValue value={record.usage} />
-            </section>
-          )}
-        </div>
-      ))}
-      <details className={styles.raw}>
-        <summary>原始记录 · {activity.events.length} 条</summary>
-        <pre tabIndex={0} aria-label={`${activity.label}的完整记录`}>
-          {JSON.stringify(
-            activity.events.map(({ index, value }) => ({ record: index + 1, event: value })),
-            null,
-            2,
-          )}
-        </pre>
-      </details>
     </div>
   );
+}
+
+function activityLabel(activity: AITraceActivity) {
+  if (activity.toolName) return aiToolLabel(activity.toolName);
+  return activity.type === "start"
+    ? "开始处理材料"
+    : activity.type === "complete"
+      ? "处理完成"
+      : "核对处理结果";
 }
 
 function ActivityRow({
@@ -138,38 +96,28 @@ function ActivityRow({
 }) {
   const [open, setOpen] = useState(false);
   const state = activityState(activity, jobStatus);
+  const status =
+    state === "error"
+      ? "遇到问题"
+      : state === "running"
+        ? "正在处理"
+        : state === "interrupted"
+          ? "已停止"
+          : state === "continued"
+            ? "已继续处理"
+            : "已完成";
   return (
     <li data-state={state}>
       <details className={styles.activity} onToggle={(event) => setOpen(event.currentTarget.open)}>
         <summary>
           <span className={styles.activityIcon}>
-            <ActivityIcon activity={activity} />
+            <ActivityIcon activity={activity} jobStatus={jobStatus} />
           </span>
-          <span className={styles.activityLabel}>
-            {activity.type === "tool"
-              ? activity.label
-              : activity.type === "start"
-                ? "开始处理任务"
-                : activity.type === "complete"
-                  ? "任务处理完成"
-                  : activity.type === "step"
-                    ? "分析材料，确定下一步"
-                    : "执行记录"}
-          </span>
-          <span className={styles.activityMeta}>
-            {state === "error"
-              ? "未成功"
-              : state === "running"
-                ? "进行中"
-                : state === "interrupted"
-                  ? "已中断"
-                  : activity.durationMs !== undefined
-                    ? formatAIDuration(activity.durationMs)
-                    : null}
-          </span>
+          <span className={styles.activityLabel}>{activityLabel(activity)}</span>
+          <span className={styles.activityMeta}>{status}</span>
           <ChevronRight size={13} className={styles.chevron} aria-hidden="true" />
         </summary>
-        {open && <ActivityDetails activity={activity} />}
+        {open && <ActivityDetails activity={activity} jobStatus={jobStatus} />}
       </details>
     </li>
   );
@@ -179,40 +127,32 @@ function GroupRow({ group, jobStatus }: { group: AITraceGroup; jobStatus: AiJobD
   const [open, setOpen] = useState(false);
   if (group.activities.length === 1)
     return <ActivityRow activity={group.activities[0]} jobStatus={jobStatus} />;
-  const failed = group.activities.filter((activity) => activity.status === "error").length;
-  const running = group.activities.filter(
-    (activity) => activityState(activity, jobStatus) === "running",
-  ).length;
-  const interrupted = group.activities.filter(
-    (activity) => activityState(activity, jobStatus) === "interrupted",
-  ).length;
+  const states = group.activities.map((activity) => activityState(activity, jobStatus));
+  const state = states.includes("running")
+    ? "正在处理"
+    : states.includes("interrupted") || (jobStatus === "FAILED" && states.includes("error"))
+      ? "已停止"
+      : states.includes("error")
+        ? "正在核对问题"
+        : "已完成";
   return (
     <li className={styles.group}>
       <details className={styles.activity} onToggle={(event) => setOpen(event.currentTarget.open)}>
         <summary>
           <span className={styles.activityIcon}>
-            <ActivityIcon activity={{ ...group.activities[0], status: "complete" }} />
+            <ActivityIcon
+              activity={{ ...group.activities[0], status: "complete" }}
+              jobStatus={jobStatus}
+            />
           </span>
-          <span className={styles.activityLabel}>
-            {group.label}
-            <span className={styles.callCount}> · {group.activities.length} 次</span>
-          </span>
-          <span className={styles.activityMeta}>
-            {running > 0 && <span>{running} 次进行中</span>}
-            {failed > 0 && <span className={styles.failedCount}>{failed} 次未成功</span>}
-            {interrupted > 0 && <span>{interrupted} 次已中断</span>}
-            {!running && !failed && !interrupted && "已完成"}
-          </span>
+          <span className={styles.activityLabel}>{group.label}</span>
+          <span className={styles.activityMeta}>{state}</span>
           <ChevronRight size={13} className={styles.chevron} aria-hidden="true" />
         </summary>
         {open && (
-          <ul className={styles.groupItems} aria-label={`${group.label}的各次调用`}>
-            {group.activities.map((activity, index) => (
-              <ActivityRow
-                key={activity.id}
-                activity={{ ...activity, label: `${index + 1}. ${activity.label}` }}
-                jobStatus={jobStatus}
-              />
+          <ul className={styles.groupItems} aria-label={`${group.label}的处理步骤`}>
+            {group.activities.map((activity) => (
+              <ActivityRow key={activity.id} activity={activity} jobStatus={jobStatus} />
             ))}
           </ul>
         )}
@@ -221,7 +161,13 @@ function GroupRow({ group, jobStatus }: { group: AITraceGroup; jobStatus: AiJobD
   );
 }
 
-export function AIExecutionTrace({ job }: { job: AiJobDTO }) {
+export function AIExecutionTrace({
+  job,
+  showDiagnostics = false,
+}: {
+  job: AiJobDTO;
+  showDiagnostics?: boolean;
+}) {
   const active = job.status === "QUEUED" || job.status === "RUNNING";
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
@@ -236,8 +182,6 @@ export function AIExecutionTrace({ job }: { job: AiJobDTO }) {
   const activities = useMemo(() => aiTraceActivities(job.events), [job.events]);
   const groups = useMemo(() => aiTraceGroups(activities), [activities]);
   const elapsed = aiJobElapsed(job, now);
-  const currentStep = aiJobCurrentStep(job, activities);
-
   return (
     <section className={styles.trace} aria-label="AI 执行过程">
       <div className={styles.heading}>
@@ -245,7 +189,7 @@ export function AIExecutionTrace({ job }: { job: AiJobDTO }) {
           {active && <LoaderCircle size={16} className={styles.spinner} aria-hidden="true" />}
           {job.status === "COMPLETED" && <Check size={16} aria-hidden="true" />}
           {job.status === "FAILED" && <TriangleAlert size={16} aria-hidden="true" />}
-          <span>{currentStep}</span>
+          <span>{aiJobCurrentStep(job, activities)}</span>
         </div>
         <div className={styles.status}>
           <AIJobStatus job={job} />
@@ -256,20 +200,16 @@ export function AIExecutionTrace({ job }: { job: AiJobDTO }) {
           )}
         </div>
       </div>
-      {job.error && (
+      {job.status === "FAILED" && (
         <p role="alert" className={styles.error}>
-          {job.error}
+          {aiTeacherFailure(job.error)}
         </p>
       )}
       <details className={styles.history} open>
         <summary className={styles.historySummary}>
           <ChevronRight size={14} aria-hidden="true" />
-          <h2>执行过程</h2>
-          <span>
-            {groups.length} 项活动 ·{" "}
-            {activities.filter((activity) => activity.type === "tool").length} 次工具调用 ·{" "}
-            {job.events.length} 条记录
-          </span>
+          <h2>处理过程</h2>
+          <span>可展开查看每一步的说明</span>
         </summary>
         {activities.length ? (
           <ol className={styles.activities} aria-label="AI 执行记录">
@@ -280,15 +220,15 @@ export function AIExecutionTrace({ job }: { job: AiJobDTO }) {
         ) : (
           <p className={styles.empty}>
             {job.status === "QUEUED"
-              ? "任务正在排队，开始后会自动显示执行过程。"
+              ? "任务正在排队，请稍候。"
               : job.status === "RUNNING"
-                ? "正在准备材料，执行记录会自动更新。"
-                : "此任务没有保留执行记录。"}
+                ? "正在准备材料，处理进度会自动更新。"
+                : "请查看下方的处理结果。"}
           </p>
         )}
       </details>
       <details className={styles.information}>
-        <summary>任务信息与参数</summary>
+        <summary>处理时间</summary>
         <dl className={styles.metadata}>
           <div>
             <dt>提交时间</dt>
@@ -303,14 +243,15 @@ export function AIExecutionTrace({ job }: { job: AiJobDTO }) {
             <dd>{job.finishedAt ? formatDateTime(job.finishedAt) : "尚未结束"}</dd>
           </div>
         </dl>
-        <div className={styles.parameters} aria-label="任务参数">
-          <AITraceValue value={job.input} />
-        </div>
-        <details className={styles.raw}>
-          <summary>原始参数</summary>
-          <pre tabIndex={0}>{JSON.stringify(job.input, null, 2)}</pre>
-        </details>
       </details>
+      {showDiagnostics && (
+        <details className={styles.raw}>
+          <summary>管理员排查信息</summary>
+          <pre tabIndex={0} aria-label="完整技术记录">
+            {JSON.stringify({ input: job.input, error: job.error, events: job.events }, null, 2)}
+          </pre>
+        </details>
+      )}
     </section>
   );
 }

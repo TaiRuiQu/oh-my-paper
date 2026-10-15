@@ -24,6 +24,10 @@ export const adminCommandSchema = z.discriminatedUnion("type", [
     role: z.enum(["ADMIN", "TEACHER", "STUDENT"]),
   }),
   z.object({
+    type: z.literal("provider.delete"),
+    id: z.string().min(1),
+  }),
+  z.object({
     type: z.literal("provider.save"),
     provider: z.object({
       id: z.string().optional(),
@@ -63,6 +67,18 @@ export async function executeAdmin(id: string, input: z.infer<typeof adminComman
   if (input.type === "embedding.save") return saveEmbeddingConfiguration(input.embedding);
   if (input.type === "embedding.reindex") return reindexQuestions();
   if (input.type === "user.create") return createManagedAccount(id, input.user);
+  if (input.type === "provider.delete") {
+    await getDb().$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(490221)`;
+      if ((await tx.user.findUnique({ where: { id }, select: { role: true } }))?.role !== "ADMIN")
+        throw new AccessError(403, "需要管理员权限。");
+      if (!(await tx.aiProvider.findUnique({ where: { id: input.id }, select: { id: true } })))
+        throw new AccessError(404, "模型供应商不存在。");
+      // AiModel cascades; model preferences become null and historical jobs are retained.
+      await tx.aiProvider.delete({ where: { id: input.id } });
+    });
+    return { id: input.id };
+  }
   if (input.type === "user.permissions") {
     await getDb().$transaction(async (tx) => {
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(490221)`;

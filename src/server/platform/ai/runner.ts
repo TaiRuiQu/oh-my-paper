@@ -6,6 +6,7 @@ import { createTaskFeatures } from "./features";
 import { loadAiModel } from "./model";
 import { RequestError } from "@/server/http/errors";
 import { statelessResponsesMessages } from "./responses";
+import { toolErrorDetails } from "./tools";
 export type AiTaskOptions = {
   userId: string;
   kind: AiKind;
@@ -75,10 +76,28 @@ export async function runAiTask(
         tools: features.tools,
         maxOutputTokens: configuration.maxOutputTokens,
         maxRetries: 2,
-        providerOptions:
-          configuration.identity.apiType === "openai_responses"
-            ? { openai: { store: false } }
-            : undefined,
+        providerOptions: ["openai_chat", "openai_responses"].includes(
+          configuration.identity.apiType,
+        )
+          ? {
+              openai: {
+                parallelToolCalls: true,
+                ...(configuration.identity.apiType === "openai_responses" ? { store: false } : {}),
+              },
+            }
+          : undefined,
+        repairToolCall: async ({ toolCall, error }) => {
+          // Let the same agent correct the call on its next turn; do not spend a separate model call.
+          await emit({
+            type: "tool",
+            name: toolCall.toolName,
+            status: "ended",
+            toolCallId: toolCall.toolCallId,
+            input: toolCall.input,
+            error: JSON.stringify(toolErrorDetails(error)),
+          });
+          return null;
+        },
         prepareStep:
           configuration.identity.apiType === "openai_chat"
             ? async ({ messages }) => ({ messages: chatToolImages(messages) })
@@ -107,9 +126,23 @@ export async function runAiTask(
             durationMs: e.toolExecutionMs,
             toolCallId: e.toolCall.toolCallId,
             ...(e.toolOutput.type === "tool-error"
-              ? { error: "工具执行失败，请根据后续记录核对处理结果。" }
+              ? { error: JSON.stringify(toolErrorDetails(e.toolOutput.error)) }
               : {}),
           });
+          if (e.toolOutput.type === "tool-result") {
+            const output = e.toolOutput.output as {
+              results?: { index: number; success: boolean; error?: unknown }[];
+            } | null;
+            const failures = output?.results?.filter((entry) => !entry.success);
+            if (failures?.length)
+              await emit({
+                type: "tool",
+                name: e.toolCall.toolName,
+                status: "ended",
+                toolCallId: e.toolCall.toolCallId,
+                error: JSON.stringify(failures),
+              });
+          }
           if (
             ["python", "shell"].includes(e.toolCall.toolName) &&
             e.toolOutput.type === "tool-result"

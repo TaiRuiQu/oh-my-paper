@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AiJobDTO } from "@/contracts/platform-ai";
+import { aiTeacherFailure } from "@/lib/ai-teacher-display";
 import { AI_JOB_NAMES, aiJobHref, aiJobResult, aiJobResultLink } from "@/lib/ai-job-display";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { PlatformAI } from "./ai";
@@ -20,7 +21,7 @@ export function AIJobsPage() {
     <>
       <PageHeader
         title="AI 任务记录"
-        description="集中查看自己提交的 AI 任务，进入任务页面跟进执行过程和结果。"
+        description="集中查看自己提交的 AI 任务，跟进处理进度并核对结果。"
         back={{ href: "/workspace", label: "返回首页" }}
       />
       <PlatformAI state={state} tab="overview" refresh={refresh} notify={notify} />
@@ -46,8 +47,8 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
         completed.current = true;
         await refresh();
       }
-    } catch (error) {
-      setFailure(error instanceof Error ? error.message : "任务状态加载失败，请刷新重试。");
+    } catch {
+      setFailure("暂时无法更新进度，请稍后刷新。");
     } finally {
       setRefreshing(false);
     }
@@ -70,7 +71,7 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
       notify("任务已重新排队，正在查看新任务。");
       router.push(aiJobHref(next.id));
     } catch (error) {
-      notify(error instanceof Error ? error.message : "重试失败，请稍后重试。", true);
+      notify(aiTeacherFailure(error instanceof Error ? error.message : error), true);
     } finally {
       setRetrying(false);
     }
@@ -79,11 +80,19 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
   const result = aiJobResult(job);
   const resultLink = aiJobResultLink(job);
   const recommendations = result?.recommendations ?? result?.result?.recommendations;
+  const skipped = result?.result?.skipped;
+  const skippedQuestionLabel = (id: string, index: number) => {
+    if (/[\u4e00-\u9fff]/.test(id)) return id;
+    const item = state.papers?.flatMap((paper) => paper.items).find((item) => item.id === id);
+    if (item) return `第 ${item.position + 1} 题`;
+    const question = state.questions.find((question) => question.id === id);
+    return question?.content.stem || `待核对题目 ${index + 1}`;
+  };
   return (
     <>
       <PageHeader
-        title={`${AI_JOB_NAMES[job.kind]} · 执行轨迹`}
-        description="离开页面后任务会继续执行。运行期间自动更新，点击活动可查看详情。"
+        title={`${AI_JOB_NAMES[job.kind]} · 处理进度`}
+        description="离开页面后仍会继续处理，完成后可在这里核对结果。"
         back={{ href: "/workspace/ai", label: "返回 AI 任务记录" }}
         actions={
           <>
@@ -108,11 +117,40 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
           {failure}
         </p>
       )}
-      <AIExecutionTrace job={job} />
+      <AIExecutionTrace job={job} showDiagnostics={state.actor?.role === "ADMIN"} />
       {result?.summary && (
         <Panel title="处理结果">
           <div className="p-panel-content">
             <AITraceText text={result.summary} />
+          </div>
+        </Panel>
+      )}
+      {!!skipped?.length && (
+        <Panel
+          title="需要您核对的题目"
+          description="以下题目看不清，已跳过。请查看原图后人工核对，其余题目的处理不受影响。"
+        >
+          <div className="p-table" role="region" aria-label="跳过的题目及原因" tabIndex={0}>
+            <table>
+              <thead>
+                <tr>
+                  <th>题目</th>
+                  <th>跳过原因</th>
+                  <th>原图</th>
+                </tr>
+              </thead>
+              <tbody>
+                {skipped.map((entry, index) => (
+                  <tr key={entry.id}>
+                    <td>
+                      <AITraceText text={skippedQuestionLabel(entry.id, index)} />
+                    </td>
+                    <td>{entry.reason}</td>
+                    <td>{entry.sourceUrl ? <a href={entry.sourceUrl}>查看原图</a> : "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </Panel>
       )}

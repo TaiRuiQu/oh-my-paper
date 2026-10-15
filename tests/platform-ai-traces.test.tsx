@@ -7,6 +7,7 @@ import type { PlatformState } from "@/contracts/platform";
 import { PlatformAI } from "@/components/platform/ai";
 import { AIJobDetailPage } from "@/components/platform/ai-job-pages";
 import { AIExecutionTrace } from "@/components/platform/ai-execution-trace";
+import { useDomain } from "@/components/platform/domain-provider";
 import { apiRequest } from "@/lib/http-client";
 import { aiTraceActivities, aiTraceGroups } from "@/lib/ai-trace-display";
 import { aiTraceFixtures } from "./fixtures/ai-traces";
@@ -26,7 +27,7 @@ vi.mock("@/components/platform/questions", () => ({
   QuestionBody: () => null,
 }));
 vi.mock("@/components/platform/domain-provider", () => ({
-  useDomain: () => ({ state: { questions: [] }, refresh, notify }),
+  useDomain: vi.fn(() => ({ state: { questions: [] }, refresh, notify })),
 }));
 
 const job: AiJobDTO = {
@@ -97,10 +98,11 @@ it("updates a task's standalone timeline and preserves its complete execution re
   vi.mocked(apiRequest).mockResolvedValue({
     ...job,
     status: "COMPLETED",
+    result: { summary: "全部题目已保存" },
     events: [...job.events, { type: "complete", summary: "全部题目已保存" }],
   });
   await act(async () => root.render(<AIJobDetailPage initialJob={job} />));
-  expect(container.textContent).toContain("private-event-details");
+  expect(container.textContent).not.toContain("private-event-details");
   await act(async () => vi.advanceTimersByTimeAsync(3000));
   expect(vi.mocked(apiRequest)).toHaveBeenCalledWith("/api/platform/ai/job");
   expect(traceRows()).toHaveLength(2);
@@ -120,8 +122,8 @@ it("opens the newly created retry task and retains the failed task's trace", asy
   await act(async () => retry.click());
   expect(vi.mocked(apiRequest).mock.calls[0][0]).toBe("/api/platform/ai/job/retry");
   expect(push).toHaveBeenCalledWith("/workspace/ai/new-job");
-  expect(container.textContent).toContain("请求中断");
-  expect(container.textContent).toContain("private-event-details");
+  expect(container.textContent).toContain("AI 服务连接暂时不稳定");
+  expect(container.textContent).not.toContain("private-event-details");
 });
 
 it.each(aiTraceFixtures)(
@@ -131,15 +133,10 @@ it.each(aiTraceFixtures)(
     expect(container.querySelector('section[aria-label="AI 执行过程"]')).toBeTruthy();
     expect(traceRows()).toHaveLength(aiTraceGroups(aiTraceActivities(fixture.events)).length);
     expect(container.querySelectorAll("ol details[open]")).toHaveLength(0);
-    expect(container.querySelector('[aria-label="任务参数"]')?.closest("details")?.open).toBe(
-      false,
-    );
+    expect(container.querySelector('[aria-label="任务参数"]')).toBeNull();
     await expandTrace();
-    const records = [...container.querySelectorAll('ol pre[aria-label$="的完整记录"]')]
-      .flatMap((pre) => JSON.parse(pre.textContent ?? "[]") as { record: number; event: unknown }[])
-      .sort((a, b) => a.record - b.record)
-      .map(({ event }) => event);
-    expect(records).toEqual(fixture.events);
+    expect(container.querySelector("pre")).toBeNull();
+    expect(container.textContent).not.toMatch(/调用参数|退出码|输入 Token|工具调用|原始记录/);
   },
 );
 
@@ -174,7 +171,7 @@ it("preserves the last known process on a polling failure and clears the error a
     .mockResolvedValueOnce({ ...initial, status: "COMPLETED", finishedAt: "2026-10-15T02:00:41Z" });
   await act(async () => root.render(<AIJobDetailPage initialJob={initial} />));
   await act(async () => vi.advanceTimersByTimeAsync(3000));
-  expect(container.querySelector('[role="alert"]')?.textContent).toContain("网络中断");
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain("暂时无法更新进度");
   expect(container.querySelector('[role="status"]')?.textContent).toBe("核对扫描页题目数量");
   expect(traceRows()).toHaveLength(2);
   const refreshButton = [...container.querySelectorAll("button")].find(
@@ -197,34 +194,118 @@ it("renders the result as a readable list with formulas even when the complete e
   expect(result.querySelectorAll(".katex").length).toBeGreaterThan(3);
   expect(result.textContent).not.toContain("\\n");
   expect(traceRows()).toHaveLength(4);
-  expect(container.textContent).toContain("连续工具调用 · 8 次");
-  expect(container.textContent).toContain("1 次未成功");
+  expect(container.textContent).toContain("处理材料与整理结果");
+  expect(container.textContent).not.toContain("未成功");
   expect(container.querySelector('pre[aria-label="命令"]')).toBeNull();
 });
 
-it("visualizes tool parameters, failures, output and images while retaining the original events", async () => {
+it("shows teaching explanations and useful images without exposing code, errors or internal output", async () => {
   const fixture = aiTraceFixtures.find((item) => item.id === "trace-import-rich")!;
   await act(async () => root.render(<AIExecutionTrace job={fixture} />));
   await expandTrace();
-  expect(container.querySelector('pre[aria-label="命令"]')?.textContent).toBe("python verify.py");
-  expect(container.querySelector('pre[aria-label="错误输出"]')?.textContent).toContain(
-    "No such file",
+  expect(container.querySelector("pre")).toBeNull();
+  expect(container.textContent).not.toMatch(
+    /python verify|No such file|PIL|退出码|stdout|输入 Token|crop.png|工具：|原始记录/,
   );
-  expect(container.querySelector('pre[aria-label="Python 代码"]')?.textContent).toContain(
-    "\nprint(",
-  );
-  expect(container.querySelector('pre[aria-label="标准输出"]')?.textContent).toContain(
-    "已核对全部 11 道题",
-  );
+  expect(container.textContent).toContain("AI 已继续处理，请以最终保存的结果为准");
+  expect(container.textContent).toContain("已完成这一步的材料检查和计算");
   expect(
     container.querySelector(
       'a[href="/api/platform/assets/00000000-0000-0000-0000-000000000001"] img',
     ),
   ).toBeTruthy();
-  expect(container.querySelector('[aria-label="本轮用量"]')?.textContent).toContain(
-    "输入 Token1200",
+});
+
+it.each(aiTraceFixtures)(
+  "preserves complete diagnostics separately for an administrator: $id",
+  async (fixture) => {
+    await act(async () => root.render(<AIExecutionTrace job={fixture} showDiagnostics />));
+    const raw = container.querySelector('pre[aria-label="完整技术记录"]')!;
+    expect(raw.closest("details")?.open).toBe(false);
+    expect(JSON.parse(raw.textContent!).events).toEqual(fixture.events);
+    expect(JSON.parse(raw.textContent!).input).toEqual(fixture.input);
+  },
+);
+
+it("explains a partial batch error without showing identifiers, validation paths or error codes", async () => {
+  const partial = {
+    ...job,
+    status: "COMPLETED" as const,
+    events: [
+      {
+        type: "tool",
+        name: "propose_enrichment",
+        status: "started",
+        toolCallId: "batch",
+        input: { items: [{ questionId: "private-q1" }, { questionId: "private-q2" }] },
+      },
+      {
+        type: "tool",
+        name: "propose_enrichment",
+        status: "ended",
+        toolCallId: "batch",
+        error: JSON.stringify([
+          {
+            index: 1,
+            success: false,
+            error: {
+              code: "REQUEST_422",
+              message: "每道题和每个子题必须有完整标准答案",
+              status: 422,
+            },
+          },
+        ]),
+      },
+    ],
+  };
+  await act(async () => root.render(<AIExecutionTrace job={partial} />));
+  await expandTrace();
+  expect(container.textContent).toContain("部分题目的答案或解析还不完整");
+  expect(container.textContent).toContain("已继续处理");
+  expect(container.textContent).not.toMatch(/REQUEST_422|private-q|questionId|success|index|422/);
+  expect(container.querySelector('[role="alert"]')).toBeNull();
+});
+
+it("gives teachers a useful next action when the task really fails, without showing a traceback", async () => {
+  const failed = {
+    ...job,
+    status: "FAILED" as const,
+    error: "APICallError: HTTP 503 Service Unavailable (错误编号：private-error-id)",
+    events: [
+      {
+        type: "tool",
+        name: "unknown_internal_tool",
+        status: "ended",
+        error: "Traceback private details",
+      },
+    ],
+  };
+  await act(async () => root.render(<AIExecutionTrace job={failed} />));
+  await expandTrace();
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain("请稍后重试");
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain("联系管理员");
+  expect(container.textContent).not.toMatch(
+    /APICallError|HTTP|503|private-error-id|Traceback|unknown_internal_tool/,
   );
-  expect(container.textContent).toContain("执行未成功 · 退出码 1");
+});
+
+it("does not describe a failed task as still checking problems", async () => {
+  await act(async () =>
+    root.render(
+      <AIExecutionTrace
+        job={{
+          ...job,
+          status: "FAILED",
+          events: [
+            { type: "tool", name: "python", status: "ended", error: "Traceback" },
+            { type: "tool", name: "read_question", status: "ended", error: "InvalidToolInput" },
+          ],
+        }}
+      />,
+    ),
+  );
+  expect(traceRows()[0].textContent).toContain("已停止");
+  expect(traceRows()[0].textContent).not.toMatch(/正在|已完成/);
 });
 
 it("shows running and interrupted calls inside a group without calling them completed", async () => {
@@ -236,8 +317,80 @@ it("shows running and interrupted calls inside a group without calling them comp
     ],
   };
   await act(async () => root.render(<AIExecutionTrace job={fixture} />));
-  expect(traceRows()[0].textContent).toContain("2 次进行中");
+  expect(traceRows()[0].textContent).toContain("正在处理");
   await act(async () => root.render(<AIExecutionTrace job={{ ...fixture, status: "FAILED" }} />));
-  expect(traceRows()[0].textContent).toContain("2 次已中断");
+  expect(traceRows()[0].textContent).toContain("已停止");
   expect(traceRows()[0].textContent).not.toContain("已完成");
+});
+
+it("shows persisted unreadable questions and their reasons after a task completes normally", async () => {
+  await act(async () =>
+    root.render(
+      <AIJobDetailPage
+        initialJob={{
+          ...job,
+          status: "COMPLETED",
+          kind: "IMPORT",
+          result: {
+            summary: "已处理可辨认题目，跳过1题",
+            result: {
+              skipped: [
+                {
+                  id: "第2页第3题",
+                  sourceUrl: "/api/platform/assets/page2",
+                  reason: "题干模糊，无法辨认",
+                },
+              ],
+            },
+          },
+        }}
+      />,
+    ),
+  );
+  const region = container.querySelector('[aria-label="跳过的题目及原因"]');
+  expect(region?.textContent).toContain("第2页第3题");
+  expect(region?.textContent).toContain("题干模糊，无法辨认");
+  expect(region?.querySelector("a")?.getAttribute("href")).toBe("/api/platform/assets/page2");
+  expect(container.textContent).not.toContain("重试任务");
+});
+
+it("shows the real question number for a skipped answer and keeps internal IDs out of the teacher's view", async () => {
+  vi.mocked(useDomain).mockReturnValueOnce({
+    state: { questions: [], papers: [{ items: [{ id: "private-item-id", position: 4 }] }] },
+    refresh,
+    notify,
+  } as unknown as ReturnType<typeof useDomain>);
+  await act(async () =>
+    root.render(
+      <AIJobDetailPage
+        initialJob={{
+          ...job,
+          status: "COMPLETED",
+          kind: "GRADE",
+          result: {
+            summary: "已处理可辨认题目",
+            result: { skipped: [{ id: "private-item-id", reason: "作答看不清" }] },
+          },
+        }}
+      />,
+    ),
+  );
+  const skipped = container.querySelector('[aria-label="跳过的题目及原因"]')!;
+  expect(skipped.textContent).toContain("第 5 题");
+  expect(container.textContent).not.toContain("private-item-id");
+  expect(container.querySelector('[aria-label="完整技术记录"]')).toBeNull();
+});
+
+it("only offers the optional technical record to an administrator on the task page", async () => {
+  vi.mocked(useDomain).mockReturnValueOnce({
+    state: { actor: { role: "ADMIN" }, questions: [] },
+    refresh,
+    notify,
+  } as unknown as ReturnType<typeof useDomain>);
+  await act(async () =>
+    root.render(<AIJobDetailPage initialJob={{ ...job, status: "COMPLETED" }} />),
+  );
+  const raw = container.querySelector('pre[aria-label="完整技术记录"]')!;
+  expect(raw.closest("details")?.open).toBe(false);
+  expect(JSON.parse(raw.textContent!).events).toEqual(job.events);
 });

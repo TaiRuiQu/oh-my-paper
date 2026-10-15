@@ -13,8 +13,8 @@ export type AITraceActivity = {
 
 const TOOL_LABELS: Record<string, string> = {
   inspect_image: "查看图片",
-  python: "运行 Python",
-  shell: "运行命令",
+  python: "核对材料与计算",
+  shell: "核对材料与计算",
   record_source_inventory: "核对扫描页题目数量",
   propose_question: "整理识别题目",
   read_question: "读取题目",
@@ -28,6 +28,7 @@ const TOOL_LABELS: Record<string, string> = {
   list_items: "查看待批改题目",
   read_answer: "查看学生作答",
   propose_grade: "记录评分与反馈",
+  skip_questions: "跳过无法辨认的题目",
   read_learning: "查看学情与错题",
   search_candidates: "搜索巩固练习",
   read_candidate: "查看候选练习",
@@ -45,7 +46,7 @@ function text(value: unknown): string | undefined {
 }
 
 export function aiToolLabel(name: string) {
-  return TOOL_LABELS[name] ?? name;
+  return TOOL_LABELS[name] ?? "处理题目";
 }
 
 /** Decode escaped prose line breaks without changing TeX commands or code examples. */
@@ -70,7 +71,7 @@ export function aiTraceGroups(activities: AITraceActivity[]): AITraceGroup[] {
     if (canGroup(activity) && previous && canGroup(previous.activities[0])) {
       previous.activities.push(activity);
       const names = new Set(previous.activities.map((item) => item.toolName));
-      previous.label = names.size === 1 ? aiToolLabel(activity.toolName!) : "连续工具调用";
+      previous.label = names.size === 1 ? aiToolLabel(activity.toolName!) : "处理材料与整理结果";
     } else {
       groups.push({ id: activity.id, label: activity.label, activities: [activity] });
     }

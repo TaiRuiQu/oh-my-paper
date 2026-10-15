@@ -10,10 +10,10 @@ export const AI_JOB_NAMES: Record<AiKind, string> = {
 };
 
 export const AI_JOB_STATUSES: Record<AiJobDTO["status"], string> = {
-  QUEUED: "等待执行",
+  QUEUED: "等待处理",
   RUNNING: "正在处理",
   COMPLETED: "已完成",
-  FAILED: "执行失败",
+  FAILED: "未完成",
 };
 
 export const aiJobHref = (id: string) => `/workspace/ai/${encodeURIComponent(id)}`;
@@ -27,6 +27,7 @@ export function aiJobResult(job: AiJobDTO) {
           paperId?: string;
           paperKind?: "EXAM" | "HOMEWORK";
           recommendations?: unknown[];
+          skipped?: { id: string; sourceUrl?: string; reason: string }[];
         };
         recommendations?: unknown[];
       })

@@ -16,7 +16,7 @@ describe("compact AI execution logs", () => {
     const groups = aiTraceGroups(activities);
     expect(groups.map((group) => group.label)).toEqual([
       "开始处理任务",
-      "连续工具调用",
+      "处理材料与整理结果",
       "核对任务结果",
       expect.any(String),
     ]);

@@ -36,29 +36,6 @@
   text-align: start;
 }
 
-.fields {
-  display: grid;
-  gap: 10px;
-  margin: 0;
-}
-
-.fields > div {
-  display: grid;
-  grid-template-columns: minmax(80px, 120px) minmax(0, 1fr);
-  gap: 8px 16px;
-}
-
-.fields dt,
-.empty {
-  color: var(--muted);
-}
-
-.fields dd {
-  min-width: 0;
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
 .items {
   display: grid;
   gap: 8px;
@@ -86,11 +63,4 @@
   max-height: 240px;
   object-fit: contain;
   object-position: left;
-}
-
-@media (max-width: 760px) {
-  .fields > div {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 3px;
-  }
 }

@@ -212,7 +212,15 @@ async function call(
 ) {
   const t = features.tools[name];
   if (!t?.execute) throw new Error(`Missing tool ${name}`);
-  return t.execute(input, { toolCallId: "call", messages: [], context: undefined });
+  const output = await t.execute(input, { toolCallId: "call", messages: [], context: undefined });
+  if (output && typeof output === "object" && "results" in output) {
+    const entry = (
+      output as { results: { success: boolean; output?: unknown; error?: { message: string } }[] }
+    ).results[0];
+    if (!entry.success) throw new Error(entry.error!.message);
+    return entry.output;
+  }
+  return output;
 }
 beforeEach(async () => {
   vi.clearAllMocks();
@@ -328,15 +336,21 @@ describe("AI autonomous tools and constraints", () => {
       expect.objectContaining({ url: "/api/platform/assets/source", image: expect.any(String) }),
     ]);
     const draft = questionInputSchema.parse({ ...question, id: undefined });
-    await call(f, "propose_question", { sourceKey: "p1-q1", score: 7, question: draft });
+    await call(f, "propose_question", {
+      items: [{ sourceKey: "p1-q1", score: 7, question: draft }],
+    });
     await call(f, "record_source_inventory", {
       sources: [{ url: "/api/platform/assets/source", totalQuestions: 2 }],
     });
     await expect(call(f, "finish", { summary: "完成" })).rejects.toThrow(/完整覆盖/);
     await call(f, "propose_question", {
-      sourceKey: "p1-q2",
-      score: 3,
-      question: { ...draft, content: { ...draft.content, stem: "2+2=___", answers: ["4"] } },
+      items: [
+        {
+          sourceKey: "p1-q2",
+          score: 3,
+          question: { ...draft, content: { ...draft.content, stem: "2+2=___", answers: ["4"] } },
+        },
+      ],
     });
     await call(f, "finish", { summary: "已识别两题" });
     const output = await f.commit();
@@ -365,24 +379,32 @@ describe("AI autonomous tools and constraints", () => {
       input: { questionIds: ["q"] },
       jobId: "job",
     });
-    await call(f, "read_question", { questionId: "q" });
+    await call(f, "read_question", { items: [{ questionId: "q" }] });
     await expect(
       call(f, "propose_enrichment", {
-        questionId: "q",
-        knowledgeTags: ["代数"],
-        answers: ["2、4"],
-        explanation: "两空",
-        rubric: "每空给分",
-        parts: [],
+        items: [
+          {
+            questionId: "q",
+            knowledgeTags: ["代数"],
+            answers: ["2、4"],
+            explanation: "两空",
+            rubric: "每空给分",
+            parts: [],
+          },
+        ],
       }),
     ).rejects.toThrow(/答案数量/);
     await call(f, "propose_enrichment", {
-      questionId: "q",
-      knowledgeTags: ["代数"],
-      answers: ["2", "4"],
-      explanation: "两空分别对应答案",
-      rubric: "每空给分",
-      parts: [],
+      items: [
+        {
+          questionId: "q",
+          knowledgeTags: ["代数"],
+          answers: ["2", "4"],
+          explanation: "两空分别对应答案",
+          rubric: "每空给分",
+          parts: [],
+        },
+      ],
     });
   });
   it("revalidates recommendation permissions at commit after a teacher's shared class access is revoked", async () => {
@@ -402,7 +424,7 @@ describe("AI autonomous tools and constraints", () => {
       jobId: "job",
     });
     await call(f, "read_learning", { offset: 0, limit: 10 });
-    await call(f, "read_candidate", { questionId: "candidate" });
+    await call(f, "read_candidate", { items: [{ questionId: "candidate" }] });
     await call(f, "propose_recommendations", {
       recommendations: [{ questionId: "candidate", reason: "练习代数" }],
     });
@@ -435,11 +457,15 @@ describe("AI autonomous tools and constraints", () => {
     await viewImage(f, "/api/platform/assets/source");
     await expect(
       call(f, "propose_question", {
-        sourceKey: "q1",
-        question: {
-          ...question,
-          content: { ...question.content, images: ["/api/platform/assets/source"] },
-        },
+        items: [
+          {
+            sourceKey: "q1",
+            question: {
+              ...question,
+              content: { ...question.content, images: ["/api/platform/assets/source"] },
+            },
+          },
+        ],
       }),
     ).rejects.toThrow(/裁切/);
     sandboxImages.set(
@@ -461,8 +487,12 @@ describe("AI autonomous tools and constraints", () => {
     const manifest = JSON.parse(await readFile(join(directory, "inputs", "context.json"), "utf8"));
     expect(manifest.assets).toContainEqual(expect.objectContaining({ url: crop.url }));
     await call(f, "propose_question", {
-      sourceKey: "q1",
-      question: { ...question, content: { ...question.content, images: [crop.url] } },
+      items: [
+        {
+          sourceKey: "q1",
+          question: { ...question, content: { ...question.content, images: [crop.url] } },
+        },
+      ],
     });
     expect(mocked.executeCommand).not.toHaveBeenCalled();
   });
@@ -497,9 +527,13 @@ describe("AI autonomous tools and constraints", () => {
     })) as { previews: { url: string }[] };
     expect(output.previews.map((preview) => preview.url)).toEqual([source2]);
     await expect(
-      call(features, "propose_question", { sourceKey: "p1:q1", sourceUrl: source1, question }),
+      call(features, "propose_question", {
+        items: [{ sourceKey: "p1:q1", sourceUrl: source1, question }],
+      }),
     ).rejects.toThrow(/已查看/);
-    await call(features, "propose_question", { sourceKey: "p2:q1", sourceUrl: source2, question });
+    await call(features, "propose_question", {
+      items: [{ sourceKey: "p2:q1", sourceUrl: source2, question }],
+    });
     await expect(
       call(features, "record_source_inventory", {
         sources: [
@@ -527,25 +561,33 @@ describe("AI autonomous tools and constraints", () => {
       input: { questionIds: ["q"] },
       jobId: "job",
     });
-    await call(f, "read_question", { questionId: "q" });
+    await call(f, "read_question", { items: [{ questionId: "q" }] });
     await expect(
       call(f, "propose_enrichment", {
-        questionId: "q",
-        knowledgeTags: [],
-        answers: [],
-        explanation: "",
-        rubric: "",
-        parts: [],
+        items: [
+          {
+            questionId: "q",
+            knowledgeTags: [],
+            answers: [],
+            explanation: "",
+            rubric: "",
+            parts: [],
+          },
+        ],
       }),
     ).rejects.toThrow(/知识点/);
     await expect(
       call(f, "propose_enrichment", {
-        questionId: "q",
-        knowledgeTags: ["代数"],
-        answers: [],
-        explanation: "解析",
-        rubric: "",
-        parts: [],
+        items: [
+          {
+            questionId: "q",
+            knowledgeTags: ["代数"],
+            answers: [],
+            explanation: "解析",
+            rubric: "",
+            parts: [],
+          },
+        ],
       }),
     ).rejects.toThrow(/标准答案/);
   });
@@ -589,28 +631,36 @@ describe("AI autonomous tools and constraints", () => {
       input: { submissionId: "submission" },
       jobId: "job",
     });
-    await call(f, "read_answer", { itemId: "item" });
+    await call(f, "read_answer", { items: [{ itemId: "item" }] });
     await expect(
-      call(f, "propose_grade", { itemId: "item", score: 8, feedback: "部分正确" }),
+      call(f, "propose_grade", { items: [{ itemId: "item", score: 8, feedback: "部分正确" }] }),
     ).rejects.toThrow(/逐小问/);
     await expect(
       call(f, "propose_grade", {
-        itemId: "item",
-        score: 8,
-        feedback: "部分正确",
-        parts: [
-          { partId: "1", score: 5, feedback: "正确" },
-          { partId: "2", score: 3, feedback: "部分" },
+        items: [
+          {
+            itemId: "item",
+            score: 8,
+            feedback: "部分正确",
+            parts: [
+              { partId: "1", score: 5, feedback: "正确" },
+              { partId: "2", score: 3, feedback: "部分" },
+            ],
+          },
         ],
       }),
     ).rejects.toThrow(/权重/);
     await call(f, "propose_grade", {
-      itemId: "item",
-      score: 8,
-      feedback: "部分正确",
-      parts: [
-        { partId: "1", score: 4, feedback: "正确" },
-        { partId: "2", score: 4, feedback: "证明缺少一步" },
+      items: [
+        {
+          itemId: "item",
+          score: 8,
+          feedback: "部分正确",
+          parts: [
+            { partId: "1", score: 4, feedback: "正确" },
+            { partId: "2", score: 4, feedback: "证明缺少一步" },
+          ],
+        },
       ],
     });
     await call(f, "finish", { summary: "混合题完成" });
@@ -657,9 +707,9 @@ describe("AI autonomous tools and constraints", () => {
     expect(await call(f, "search_candidates", { offset: 0, limit: 50 })).toEqual([
       expect.objectContaining({ id: "candidate" }),
     ]);
-    await expect(call(f, "read_candidate", { questionId: "wrong-subject" })).rejects.toThrow(
-      /候选/,
-    );
+    await expect(
+      call(f, "read_candidate", { items: [{ questionId: "wrong-subject" }] }),
+    ).rejects.toThrow(/候选/);
   });
 
   it("imports multiple independently identified questions only after seeing every source image", async () => {
@@ -684,14 +734,21 @@ describe("AI autonomous tools and constraints", () => {
       jobId: "job",
     });
     expect(f.tools).not.toHaveProperty("propose_paper");
-    await expect(call(f, "propose_question", { sourceKey: "page1:q1", question })).rejects.toThrow(
-      /查看/,
-    );
+    await expect(
+      call(f, "propose_question", { items: [{ sourceKey: "page1:q1", question }] }),
+    ).rejects.toThrow(/查看/);
     await viewImage(f, "/api/platform/assets/source");
-    await call(f, "propose_question", { sourceKey: "page1:q1", question });
+    await call(f, "propose_question", { items: [{ sourceKey: "page1:q1", question }] });
     await call(f, "propose_question", {
-      sourceKey: "page1:q2",
-      question: { ...question, content: { ...question.content, stem: "2+2=___", answers: ["4"] } },
+      items: [
+        {
+          sourceKey: "page1:q2",
+          question: {
+            ...question,
+            content: { ...question.content, stem: "2+2=___", answers: ["4"] },
+          },
+        },
+      ],
     });
     await expect(call(f, "finish", { summary: "过早完成" })).rejects.toThrow(/题数/);
     await call(f, "record_source_inventory", {
@@ -793,7 +850,7 @@ describe("AI autonomous tools and constraints", () => {
     expect(f.tools).not.toHaveProperty("propose_grade");
     await expect(call(f, "finish", { summary: "done" })).rejects.toThrow(/有效候选/);
     await expect(call(f, "propose_paper", { questionIds: ["q"] })).rejects.toThrow(/读取/);
-    await call(f, "read_question", { questionId: "q" });
+    await call(f, "read_question", { items: [{ questionId: "q" }] });
     await call(f, "propose_paper", { questionIds: ["q"] });
     await call(f, "finish", { summary: "已组卷" });
     expect(mocked.executeCommand).not.toHaveBeenCalled();
@@ -820,14 +877,18 @@ describe("AI autonomous tools and constraints", () => {
       input: { questionIds: ["q"] },
       jobId: "job",
     });
-    await call(f, "read_question", { questionId: "q" });
+    await call(f, "read_question", { items: [{ questionId: "q" }] });
     await call(f, "propose_enrichment", {
-      questionId: "q",
-      knowledgeTags: ["整数加法"],
-      answers: ["2"],
-      explanation: "1+1=2",
-      rubric: "答案正确10分",
-      parts: [],
+      items: [
+        {
+          questionId: "q",
+          knowledgeTags: ["整数加法"],
+          answers: ["2"],
+          explanation: "1+1=2",
+          rubric: "答案正确10分",
+          parts: [],
+        },
+      ],
     });
     await call(f, "finish", { summary: "已补答案" });
     await f.commit();
@@ -853,12 +914,12 @@ describe("AI autonomous tools and constraints", () => {
       jobId: "job",
     });
     expect(f.tools).not.toHaveProperty("propose_question");
-    await call(f, "read_answer", { itemId: "item" });
+    await call(f, "read_answer", { items: [{ itemId: "item" }] });
     await expect(
-      call(f, "propose_grade", { itemId: "item", score: 11, feedback: "wrong" }),
+      call(f, "propose_grade", { items: [{ itemId: "item", score: 11, feedback: "wrong" }] }),
     ).rejects.toThrow(/满分/);
     await expect(
-      call(f, "propose_grade", { itemId: "item", score: 10, feedback: "correct" }),
+      call(f, "propose_grade", { items: [{ itemId: "item", score: 10, feedback: "correct" }] }),
     ).rejects.toThrow(/截图/);
     s.submissions[0].answers[0].images = [];
     mocked.loadState.mockResolvedValue(s);
@@ -868,8 +929,10 @@ describe("AI autonomous tools and constraints", () => {
       input: { submissionId: "submission" },
       jobId: "job",
     });
-    await call(next, "read_answer", { itemId: "item" });
-    await call(next, "propose_grade", { itemId: "item", score: 10, feedback: "依据标准答案正确" });
+    await call(next, "read_answer", { items: [{ itemId: "item" }] });
+    await call(next, "propose_grade", {
+      items: [{ itemId: "item", score: 10, feedback: "依据标准答案正确" }],
+    });
     await call(next, "finish", { summary: "首评完成" });
     await next.commit();
     expect(mocked.executeCommand.mock.calls[0][1].review.round).toBe("FIRST");
@@ -899,7 +962,7 @@ describe("AI autonomous tools and constraints", () => {
       input: { submissionId: "submission" },
       jobId: "job",
     });
-    await call(features, "read_answer", { itemId: "item" });
+    await call(features, "read_answer", { items: [{ itemId: "item" }] });
     await viewImage(features, handwriting);
     const original = (await call(features, "python", {
       code: "print('inspect original answer page')",
@@ -908,13 +971,19 @@ describe("AI autonomous tools and constraints", () => {
     })) as { previews: { url: string }[] };
     expect(original.previews.map((preview) => preview.url)).toEqual([page]);
     await expect(
-      call(features, "propose_grade", { itemId: "item", score: 8, feedback: "作答已查看" }),
+      call(features, "propose_grade", {
+        items: [{ itemId: "item", score: 8, feedback: "作答已查看" }],
+      }),
     ).rejects.toThrow(/先查看全部/);
     await viewImage(features, diagram);
     await call(features, "propose_grade", {
-      itemId: "item",
-      score: 8,
-      feedback: "结合题干图像和作答给分",
+      items: [
+        {
+          itemId: "item",
+          score: 8,
+          feedback: "结合题干图像和作答给分",
+        },
+      ],
     });
     await call(features, "finish", { summary: "图像证据完整" });
     expect(mocked.accessibleAsset).toHaveBeenCalledWith("teacher", "answer-page");
@@ -1020,7 +1089,7 @@ describe("AI autonomous tools and constraints", () => {
         recommendations: [{ questionId: "q", reason: "same" }],
       }),
     ).rejects.toThrow(/真实候选/);
-    await call(f, "read_candidate", { questionId: "candidate" });
+    await call(f, "read_candidate", { items: [{ questionId: "candidate" }] });
     await call(f, "propose_recommendations", {
       recommendations: [{ questionId: "candidate", reason: "练习代数加法" }],
     });
@@ -1055,7 +1124,7 @@ describe("AI autonomous tools and constraints", () => {
       input: assemble(),
       jobId: "job",
     });
-    await call(next, "read_question", { questionId: "q" });
+    await call(next, "read_question", { items: [{ questionId: "q" }] });
     await call(next, "propose_paper", { questionIds: ["q"] });
     await call(next, "finish", { summary: "done" });
     mocked.jobFind.mockResolvedValue({
@@ -1072,7 +1141,7 @@ describe("SDK 7 autonomous agent loop", () => {
   it("uses tool calls to read, propose and finish across separate model steps before committing", async () => {
     const sequence = [
       { name: "python", args: { code: "print(1 + 1)", assets: [], images: [] } },
-      { name: "read_question", args: { questionId: "q" } },
+      { name: "read_question", args: { items: [{ questionId: "q" }] } },
       { name: "propose_paper", args: { questionIds: ["q"] } },
       { name: "finish", args: { summary: "自主组卷完成" } },
     ];
@@ -1133,4 +1202,260 @@ describe("SDK 7 autonomous agent loop", () => {
     expect(JSON.stringify(events)).not.toContain("apiKey");
     expect(mocked.executeCommand).toHaveBeenCalledTimes(1);
   });
+});
+
+describe("batched question processing and unreadable evidence", () => {
+  async function batch(
+    f: Awaited<ReturnType<typeof createFeatures>>,
+    name: string,
+    items: unknown[],
+  ) {
+    return (await f.tools[name].execute!(
+      { items },
+      { toolCallId: "batch", messages: [], context: undefined },
+    )) as {
+      results: {
+        index: number;
+        success: boolean;
+        output?: unknown;
+        error?: { message: string; code?: string };
+      }[];
+    };
+  }
+  it("reads and enriches multiple questions while retaining successful reports after another item fails", async () => {
+    const s = state();
+    s.questions.push({ ...question, id: "q2" });
+    mocked.loadState.mockResolvedValue(s);
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "ENRICH",
+      status: "RUNNING",
+    });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "ENRICH",
+      input: { questionIds: ["q", "q2"] },
+      jobId: "job",
+    });
+    const read = await batch(f, "read_question", [
+      { questionId: "q" },
+      { questionId: "q2" },
+      { questionId: "unrelated" },
+    ]);
+    expect(read.results.map((r) => r.success)).toEqual([true, true, false]);
+    expect(read.results[2].error).toMatchObject({
+      message: "题目不属于本次任务。",
+      code: "ACCESS_403",
+    });
+    const report = {
+      knowledgeTags: ["代数"],
+      answers: ["2"],
+      explanation: "加法",
+      rubric: "答案正确得分",
+      parts: [],
+    };
+    const reports = await batch(f, "propose_enrichment", [
+      { ...report, questionId: "q" },
+      { ...report, questionId: "q2", answers: [] },
+    ]);
+    expect(reports.results.map((r) => r.success)).toEqual([true, false]);
+    expect(reports.results[1].error?.message).toContain("完整标准答案");
+    await batch(f, "skip_questions", [{ id: "q2", reason: "题图模糊，无法确认条件" }]);
+    await call(f, "finish", { summary: "完成1题，跳过模糊题1题" });
+    const output = await f.commit();
+    expect(mocked.executeCommand).toHaveBeenCalledOnce();
+    expect(output.result).toMatchObject({
+      skipped: [{ id: "q2", reason: "题图模糊，无法确认条件" }],
+    });
+  });
+  it("grades multiple answers and leaves skipped handwriting ungraded", async () => {
+    const s = state();
+    s.papers[0].items.push({ ...s.papers[0].items[0], id: "item2", position: 1 });
+    s.submissions[0].answers.push({ itemId: "item2", text: "无法辨认", images: [] });
+    mocked.loadState.mockResolvedValue(s);
+    mocked.submissionFind.mockResolvedValue(s.submissions[0]);
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "GRADE",
+      status: "RUNNING",
+    });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "GRADE",
+      input: { submissionId: "submission" },
+      jobId: "job",
+    });
+    expect(
+      (await batch(f, "read_answer", [{ itemId: "item" }, { itemId: "item2" }])).results.every(
+        (r) => r.success,
+      ),
+    ).toBe(true);
+    const reports = await batch(f, "propose_grade", [
+      { itemId: "item", score: 10, feedback: "答案正确" },
+      { itemId: "item2", score: 99, feedback: "不应保存" },
+    ]);
+    expect(reports.results[1].error?.message).toContain("超过题目满分");
+    await batch(f, "skip_questions", [{ id: "item2", reason: "手写答案无法辨认，请人工评阅" }]);
+    await call(f, "finish", { summary: "已评1题，1题待人工评阅" });
+    const output = await f.commit();
+    expect(mocked.executeCommand).toHaveBeenCalledOnce();
+    expect(mocked.executeCommand.mock.calls[0][1].review.itemId).toBe("item");
+    expect(output.result).toMatchObject({ skipped: [{ id: "item2" }] });
+  });
+  it("imports multiple reports, counts skips against inventory and can finish an entirely unreadable paper", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 120, height: 160, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    mocked.readOwnedAsset.mockResolvedValue({ buffer });
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "IMPORT",
+      status: "RUNNING",
+    });
+    const page = "/api/platform/assets/source";
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: { assetUrls: [page], kind: "EXAM" },
+      jobId: "job",
+    });
+    await viewImage(f, page);
+    await call(f, "record_source_inventory", { sources: [{ url: page, totalQuestions: 3 }] });
+    const draft = questionInputSchema.parse({ ...question, id: undefined });
+    const reports = await batch(f, "propose_question", [
+      { sourceKey: "p1:q1", question: draft },
+      { sourceKey: "p1:q2", question: draft },
+    ]);
+    expect(reports.results.every((r) => r.success)).toBe(true);
+    await batch(f, "skip_questions", [{ id: "p1:q3", sourceUrl: page, reason: "题目被遮挡" }]);
+    await call(f, "finish", { summary: "识别2题，跳过遮挡题1题" });
+    const output = await f.commit();
+    expect(mocked.executeCommand.mock.calls[0][1].paper.items).toHaveLength(2);
+    expect(output.result).toMatchObject({ skipped: [{ id: "p1:q3", sourceUrl: page }] });
+
+    mocked.executeCommand.mockClear();
+    const empty = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: { assetUrls: [page], kind: "EXAM" },
+      jobId: "job",
+    });
+    await viewImage(empty, page);
+    await call(empty, "record_source_inventory", { sources: [{ url: page, totalQuestions: 2 }] });
+    await batch(empty, "skip_questions", [
+      { id: "p1:q1", sourceUrl: page, reason: "看不清题干" },
+      { id: "p1:q2", sourceUrl: page, reason: "图像模糊" },
+    ]);
+    await call(empty, "finish", { summary: "全部2题无法辨认，已跳过" });
+    const skippedOutput = await empty.commit();
+    expect(mocked.executeCommand).not.toHaveBeenCalled();
+    expect(skippedOutput.result).toMatchObject({ skipped: [{ id: "p1:q1" }, { id: "p1:q2" }] });
+    expect(skippedOutput.result).not.toHaveProperty("paperId");
+    expect(mocked.jobUpdate).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ status: "COMPLETED", error: null }),
+      }),
+    );
+  });
+  it("replaces a draft with a skip, and replaces that skip when a corrected report succeeds", async () => {
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "ENRICH",
+      input: { questionIds: ["q"] },
+      jobId: "job",
+    });
+    await batch(f, "read_question", [{ questionId: "q" }]);
+    const report = {
+      questionId: "q",
+      knowledgeTags: ["代数"],
+      answers: ["2"],
+      explanation: "加法",
+      rubric: "正确得分",
+      parts: [],
+    };
+    await batch(f, "propose_enrichment", [report]);
+    await batch(f, "skip_questions", [{ id: "q", reason: "图像不清" }]);
+    expect(f.getResult().skipped).toHaveLength(1);
+    await batch(f, "propose_enrichment", [report]);
+    expect(f.getResult().skipped).toHaveLength(0);
+    await call(f, "finish", { summary: "完成" });
+  });
+});
+
+it("returns execution, unknown-tool, JSON and schema errors to the same agent, then accepts concurrent tool calls", async () => {
+  const sequence = [
+    [
+      { name: "finish", input: JSON.stringify({ summary: "过早完成" }) },
+      { name: "not_a_tool", input: "{}" },
+      { name: "read_question", input: "{broken-json" },
+      { name: "read_question", input: JSON.stringify({ items: [{ questionId: 123 }] }) },
+    ],
+    [
+      { name: "read_question", input: JSON.stringify({ items: [{ questionId: "q" }] }) },
+      { name: "search_questions", input: JSON.stringify({ query: "1+1" }) },
+    ],
+    [{ name: "propose_paper", input: JSON.stringify({ questionIds: ["q"] }) }],
+    [{ name: "finish", input: JSON.stringify({ summary: "修正后完成" }) }],
+  ];
+  let index = 0;
+  const model = new MockLanguageModelV4({
+    doGenerate: async () => {
+      const step = sequence[index++];
+      return {
+        content: step.map((c, n) => ({
+          type: "tool-call" as const,
+          toolCallId: `call-${index}-${n}`,
+          toolName: c.name,
+          input: c.input,
+        })),
+        finishReason: { unified: "tool-calls" as const, raw: undefined },
+        usage: {
+          inputTokens: { total: 10, noCache: 10, cacheRead: undefined, cacheWrite: undefined },
+          outputTokens: { total: 20, text: 20, reasoning: undefined },
+        },
+        warnings: [],
+      };
+    },
+  });
+  mocked.loadAiModel.mockResolvedValue({
+    model,
+    identity: { providerId: "provider", apiType: "openai_responses" },
+    maxOutputTokens: 16000,
+    timeoutMs: 30000,
+    maxConcurrency: 3,
+  });
+  const events: unknown[] = [];
+  const output = await runAiTask({
+    userId: "teacher",
+    kind: "ASSEMBLE",
+    input: assemble(),
+    jobId: "job",
+    onEvent: async (event) => {
+      events.push(event);
+    },
+  });
+  expect(output.summary).toBe("修正后完成");
+  expect(model.doGenerateCalls).toHaveLength(4);
+  const feedback = JSON.stringify(model.doGenerateCalls[1].prompt);
+  expect(feedback).toContain("尚未提供有效候选结果");
+  expect(feedback).toContain("REQUEST_422");
+  expect(feedback).toContain("not_a_tool");
+  expect(feedback).toContain("Available tools");
+  expect(feedback).toContain("JSON parsing failed");
+  expect(feedback).toContain("questionId");
+  expect(feedback).toContain("expected string");
+  expect(model.doGenerateCalls[0].providerOptions).toMatchObject({
+    openai: { store: false, parallelToolCalls: true },
+  });
+  expect(JSON.stringify(events)).toContain("尚未提供有效候选结果");
+  expect(events).toContainEqual(
+    expect.objectContaining({ type: "step", toolNames: ["read_question", "search_questions"] }),
+  );
 });

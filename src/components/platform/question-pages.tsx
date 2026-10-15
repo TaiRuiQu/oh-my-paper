@@ -110,7 +110,11 @@ export function QuestionListPage() {
             </Button>
           </div>
         )}
-        {loading && <p role="status">正在查询题库…</p>}
+        {loading && (
+          <p className="p-empty" role="status">
+            正在查询题库…
+          </p>
+        )}
         {questions.length ? (
           questions.map((q) => (
             <article className="p-question" key={q.id}>

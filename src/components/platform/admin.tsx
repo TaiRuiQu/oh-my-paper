@@ -40,7 +40,7 @@ export function Admin({
       .then((r) => setProviders(r.providers))
       .catch((e) => notify(e.message, true));
   }, [notify]);
-  async function save(body: unknown, creating = false) {
+  async function save(body: unknown, creating = false, successMessage = "配置已保存。") {
     setBusy(true);
     try {
       const result = await apiRequest<{ credentials?: AccountCredentials }>("/api/platform/admin", {
@@ -54,11 +54,11 @@ export function Admin({
       await refresh();
       const r = await apiRequest<{ providers: Provider[] }>("/api/platform/admin");
       setProviders(r.providers);
-      notify("配置已保存。");
+      notify(successMessage);
       setEditing(undefined);
       setPermissionUserId(undefined);
     } catch (e) {
-      notify(e instanceof Error ? e.message : "保存失败", true);
+      notify(e instanceof Error ? e.message : "操作失败，请重试。", true);
     } finally {
       setBusy(false);
     }
@@ -269,7 +269,7 @@ export function Admin({
           title="AI 模型提供商"
           description="配置统一的模型接入，凭据保存在服务器，前端不显示已保存的密钥。"
           actions={
-            <button className="button" onClick={() => setEditing(null)}>
+            <button className="button" disabled={busy} onClick={() => setEditing(null)}>
               添加提供商
             </button>
           }
@@ -345,6 +345,7 @@ export function Admin({
                 <button
                   type="button"
                   className="button secondary"
+                  disabled={busy}
                   onClick={() => setEditing(undefined)}
                 >
                   取消
@@ -373,9 +374,34 @@ export function Admin({
                       <td>{p.apiType}</td>
                       <td>{p.models.map((m) => m.name || m.id).join("、")}</td>
                       <td>
-                        <button className="button secondary" onClick={() => setEditing(p)}>
-                          编辑
-                        </button>
+                        <div className="p-actions">
+                          <button
+                            className="button secondary"
+                            disabled={busy}
+                            onClick={() => setEditing(p)}
+                          >
+                            编辑
+                          </button>
+                          <button
+                            className="button danger"
+                            disabled={busy}
+                            aria-label={`删除 AI 供应商 ${p.name}`}
+                            onClick={() => {
+                              if (
+                                window.confirm(
+                                  `确定删除「${p.name}」及其 ${p.models.length} 个模型？删除后无法恢复，尚未开始的任务将无法使用这些模型。`,
+                                )
+                              )
+                                void save(
+                                  { type: "provider.delete", id: p.id },
+                                  false,
+                                  "AI 供应商已删除。",
+                                );
+                            }}
+                          >
+                            删除
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

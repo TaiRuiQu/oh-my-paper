@@ -55,7 +55,21 @@ async function main() {
     ) => {
       const tool = f.tools[name];
       if (!tool?.execute) throw new Error(`Tool missing: ${name}`);
-      return tool.execute(input, { toolCallId: randomUUID(), messages: [], context: undefined });
+      const output = await tool.execute(input, {
+        toolCallId: randomUUID(),
+        messages: [],
+        context: undefined,
+      });
+      if (output && typeof output === "object" && "results" in output) {
+        const entry = (
+          output as {
+            results: { success: boolean; output?: unknown; error?: { message: string } }[];
+          }
+        ).results[0];
+        if (!entry.success) throw new Error(entry.error!.message);
+        return entry.output;
+      }
+      return output;
     };
     const image = async (
       features: Awaited<ReturnType<typeof createTaskFeatures>>,
@@ -130,15 +144,19 @@ async function main() {
     const crop = await image(importer, source.url, "diagram.png", [0.1, 0.2, 0.3, 0.25]);
     assert.ok(crop.url);
     await call(importer, "propose_question", {
-      sourceKey: "page1:q1",
-      question: {
-        type: "BLANK",
-        subject: "数学",
-        grade: "高一",
-        difficulty: 0.5,
-        knowledgeTags: ["函数"],
-        content: { ...content, images: [crop.url] },
-      },
+      items: [
+        {
+          sourceKey: "page1:q1",
+          question: {
+            type: "BLANK",
+            subject: "数学",
+            grade: "高一",
+            difficulty: 0.5,
+            knowledgeTags: ["函数"],
+            content: { ...content, images: [crop.url] },
+          },
+        },
+      ],
     });
     await call(importer, "finish", { summary: "导入完成" });
     assert.equal(await db.question.count(), 0);
@@ -168,15 +186,19 @@ async function main() {
         input: enrichInput,
         jobId: enrichJob.id,
       });
-    await call(enricher, "read_question", { questionId: imported.id });
+    await call(enricher, "read_question", { items: [{ questionId: imported.id }] });
     await image(enricher, crop.url, "illustration.png");
     await call(enricher, "propose_enrichment", {
-      questionId: imported.id,
-      knowledgeTags: ["函数图像"],
-      answers: ["2", "4"],
-      explanation: "两个空分别对应图像读数。",
-      rubric: "每空5分",
-      parts: [],
+      items: [
+        {
+          questionId: imported.id,
+          knowledgeTags: ["函数图像"],
+          answers: ["2", "4"],
+          explanation: "两个空分别对应图像读数。",
+          rubric: "每空5分",
+          parts: [],
+        },
+      ],
     });
     await call(enricher, "finish", { summary: "enriched" });
     await command({
@@ -307,14 +329,18 @@ async function main() {
         input: gradeInput,
         jobId: gradeJob.id,
       });
-    await call(grader, "read_answer", { itemId: paper.items[0].id });
+    await call(grader, "read_answer", { items: [{ itemId: paper.items[0].id }] });
     await call(grader, "propose_grade", {
-      itemId: paper.items[0].id,
-      score: 5,
-      feedback: "第二小问解释错误",
-      parts: [
-        { partId: "1", score: 4, feedback: "两个空正确" },
-        { partId: "2", score: 1, feedback: "解释错误" },
+      items: [
+        {
+          itemId: paper.items[0].id,
+          score: 5,
+          feedback: "第二小问解释错误",
+          parts: [
+            { partId: "1", score: 4, feedback: "两个空正确" },
+            { partId: "2", score: 1, feedback: "解释错误" },
+          ],
+        },
       ],
     });
     await call(grader, "finish", { summary: "AI首评完成" });
@@ -421,15 +447,19 @@ async function main() {
     const doomedCrop = await image(bad, source.url, "diagram.png", [0, 0, 0.2, 0.2]);
     assert.ok(doomedCrop.url);
     await call(bad, "propose_question", {
-      sourceKey: "q",
-      question: {
-        type: "BLANK",
-        subject: "数学",
-        grade: "高一",
-        difficulty: 0.5,
-        knowledgeTags: ["函数"],
-        content: { ...content, images: [doomedCrop.url] },
-      },
+      items: [
+        {
+          sourceKey: "q",
+          question: {
+            type: "BLANK",
+            subject: "数学",
+            grade: "高一",
+            difficulty: 0.5,
+            knowledgeTags: ["函数"],
+            content: { ...content, images: [doomedCrop.url] },
+          },
+        },
+      ],
     });
     await call(bad, "finish", { summary: "will fail" });
     // Permission changes while an agent runs must invalidate its commit, including already written crop assets.
@@ -445,6 +475,76 @@ async function main() {
     );
     console.log(
       "✓ Failed commit rolls back business rows, cropped asset rows and job completion, and removes written crop files",
+    );
+    const skippedJob = await makeJob("IMPORT", importInput);
+    const unreadable = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: importInput,
+      jobId: skippedJob.id,
+    });
+    await image(unreadable, source.url, "unreadable.png");
+    await call(unreadable, "record_source_inventory", {
+      sources: [{ url: source.url, totalQuestions: 2 }],
+    });
+    await unreadable.tools.skip_questions.execute!(
+      {
+        items: [
+          { id: "page:q1", sourceUrl: source.url, reason: "题目模糊" },
+          { id: "page:q2", sourceUrl: source.url, reason: "题目被遮挡" },
+        ],
+      },
+      { toolCallId: randomUUID(), messages: [], context: undefined },
+    );
+    await call(unreadable, "finish", { summary: "全部2题无法辨认，已跳过" });
+    await unreadable.commit();
+    const persistedSkip = await db.aiJob.findUniqueOrThrow({ where: { id: skippedJob.id } });
+    assert.equal(persistedSkip.status, "COMPLETED");
+    assert.equal(
+      (persistedSkip.result as { result: { skipped: unknown[] } }).result.skipped.length,
+      2,
+    );
+    assert.equal(await db.question.count(), beforeQuestions);
+    console.log(
+      "✓ An entirely unreadable import completes normally and persists every skip reason without saving questions",
+    );
+
+    const { executeAdmin } = await import("../src/server/platform/admin");
+    await db.user.create({
+      data: { id: "admin", name: "管理员", email: "admin@domain.test", role: "ADMIN" },
+    });
+    const provider = await db.aiProvider.create({
+      data: {
+        name: "待删除服务",
+        apiType: "openai_chat",
+        baseURL: "https://example.test/v1",
+        encryptedApiKey: "unused",
+        models: { create: { name: "test-model", reasoningEfforts: ["default"] } },
+      },
+      include: { models: true },
+    });
+    const modelId = provider.models[0].id;
+    await db.aiSetting.create({ data: { id: "test-preference", modelId } });
+    const historical = await db.aiJob.create({
+      data: { userId: "teacher", kind: "ENRICH", modelId, status: "COMPLETED", input: {} },
+    });
+    await assert.rejects(
+      executeAdmin("teacher", { type: "provider.delete", id: provider.id }),
+      /管理员权限/,
+    );
+    await executeAdmin("admin", { type: "provider.delete", id: provider.id });
+    assert.equal(await db.aiProvider.findUnique({ where: { id: provider.id } }), null);
+    assert.equal(await db.aiModel.findUnique({ where: { id: modelId } }), null);
+    assert.equal(
+      (await db.aiSetting.findUniqueOrThrow({ where: { id: "test-preference" } })).modelId,
+      null,
+    );
+    assert.equal(
+      (await db.aiJob.findUniqueOrThrow({ where: { id: historical.id } })).status,
+      "COMPLETED",
+    );
+    console.log(
+      "✓ Only administrators can delete a provider; associated models cascade, preferences reset and job history remains",
     );
     console.log("AI domain atomicity acceptance passed without external model calls.");
   } finally {

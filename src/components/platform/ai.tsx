@@ -74,7 +74,7 @@ export function PlatformAI({
         ...jsonBody({ kind, modelId: modelId || models[0]?.id, input }),
       });
       await poll();
-      notify(`${names[kind]}已提交，关闭页面后仍会继续执行。`);
+      notify(`${names[kind]}已提交，关闭页面后仍会继续处理。`);
       router.push(aiJobHref(result.id));
       return result;
     } catch (e) {
@@ -106,7 +106,7 @@ export function PlatformAI({
               ? `图片识别${importKind === "HOMEWORK" ? "作业" : "试卷"}`
               : names[mode]
           }
-          description="AI 自主查看材料并调用工具完成任务。生成内容保留可编辑，阅卷结果进入既定的复核流程。"
+          description="AI 会根据您提交的材料进行处理，完成后请核对结果。题目可继续编辑，评分仍需按评阅要求复核。"
         >
           <div className="p-form">
             <Field label="使用模型">

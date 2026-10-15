@@ -4,7 +4,7 @@
 
 ## 工具清单
 
-所有 Agent 共同拥有 `python`、`shell`、`finish` 与 `report_failure`。其余工具负责读取受权业务对象或提交经过验证的业务结果：
+所有 Agent 共同拥有 `python`、`shell`、`skip_questions`、`finish` 与 `report_failure`。其余工具负责读取受权业务对象或提交经过验证的业务结果：
 
 | Agent                     | 业务工具                                                                          |
 | ------------------------- | --------------------------------------------------------------------------------- |
@@ -16,6 +16,28 @@
 | 巩固练习 `RECOMMEND`      | `read_learning`、`search_candidates`、`read_candidate`、`propose_recommendations` |
 
 `generate_layout` 提供现有答题卡引擎的可编辑初稿，模型也可自行计算布局后提交。业务提交工具保留账号权限、真实题目 ID、题型完整性、评分上限、多人评阅和事务校验；沙箱无法直接连接数据库或绕过这些规则。
+
+## 批量、并行与错误反馈
+
+`read_question`、`read_paper_question`、`read_answer`、`read_candidate`、`propose_question`、`propose_enrichment`、`propose_grade` 和 `skip_questions` 统一使用 `items` 数组，一次处理 1–500 个条目。例如：
+
+```json
+{ "items": [{ "questionId": "q1" }, { "questionId": "q2" }] }
+```
+
+结果为 `{"results":[{"index":0,"success":true,"output":{}},{"index":1,"success":false,"error":{"name":"RequestError","message":"具体错误说明","code":"REQUEST_409","status":409}}]}`。每个结果的 `index` 对应输入位置；条目并行执行，单条业务错误不会丢失其他成功结果，模型只需重试失败项。逐页题数、整卷选题、推荐列表等已有批量工具继续使用各自的 `sources`、`questionIds`、`recommendations` 数组。
+
+同一模型响应可调用多个互不依赖的工具，SDK 并行执行，OpenAI Chat/Responses 显式启用 `parallelToolCalls`。读取后报告、查看图片后引用图片等依赖操作必须等待前置结果；`finish` 和 `report_failure` 独占一轮。Python/shell 共享持久文件系统，同一任务的沙箱执行仍按顺序进行，模型可在一个脚本中批量处理。
+
+工具异常保留具体消息、错误码、状态、校验字段路径及嵌套原因，同时支持 SDK 文本和 JSON 错误编码。未知工具、无效 JSON 和参数 schema 校验错误会反馈给同一个 Agent 修正，并写入执行轨迹，不另开模型调用进行修复。
+
+教师页面只展示教学用语的进度、处理说明和需要核对的图片，不展示工具名、调用参数、代码、退出码、用量或原始结果。中途错误会转成简明原因，并区分“仍在核对”“已继续处理”和“本次已停止”；任务未完成时给出重试、补充清晰图片或联系管理员的建议。完整错误与参数继续保留给模型及诊断记录；管理员可在默认收起的“管理员排查信息”中查看。
+
+## 看不清题目的处理
+
+模型遇到无法辨认的题目或学生作答时，用 `skip_questions` 记录原因并继续处理其他题目，不因此调用 `report_failure`。输入条目为 `{id, reason, sourceUrl?}`：IMPORT 的 `id` 是稳定 `sourceKey`，GRADE/TEMPLATE 为 `itemId`，其余任务为 `questionId`；IMPORT 同时指定已查看页面的 `sourceUrl`。
+
+跳过项不写入题目或评分，替换同题暂存草稿；后续成功报告可替换跳过项。IMPORT 的成功题目数加跳过数必须匹配逐页清单，ENRICH/GRADE 必须覆盖全部成功项或跳过项。全部题目跳过也能正常 `finish`，结果持久化为 `result.skipped`，任务详情展示题目、原因和可用原图。因无法辨认而未能生成组卷、答题卡或推荐结果时，模型在完成摘要明确说明，不生成不合要求的替代结果。
 
 旧版 v0.1.15 已有通用 Python 与 shell 沙箱。此次复用其隔离机制，并移除 v2 的 `inspect_image`、`crop_material`，图像查看、旋转、裁切、增强、统计和数学运算由模型编写代码完成。
 
@@ -47,6 +69,6 @@ image.crop((100, 100, 600, 500)).save('/workspace/output/preview.png')
 
 Bubblewrap 为每个任务建立独立用户、PID、挂载和网络命名空间，UID/GID 为 65534，移除 capabilities，清空继承环境。系统目录和任务输入只读，可写工作区是 100 MiB tmpfs。每次调用使用新进程，限制 60 秒墙钟时间、30 秒 CPU、512 MiB 地址空间、64 个进程/文件描述符、单文件 36 MiB、无 core dump；stdout/stderr 各返回最多 32,000 字符，最多返回三张 8 MiB 图像。
 
-可信父进程在清理所有子孙进程后读取输出图片，拒绝符号链接、特殊文件和越界路径。工具调用串行使用任务工作区，超时清理调用进程；沙箱异常退出可重建并明确告知工作区重置。任务退出时在 `finally` 中销毁沙箱和宿主临时目录，不存在未隔离的回退执行路径。
+可信父进程在清理所有子孙进程后读取输出图片，拒绝符号链接、特殊文件和越界路径。沙箱工具调用串行使用任务工作区，超时清理调用进程；沙箱异常退出可重建并明确告知工作区重置。任务退出时在 `finally` 中销毁沙箱和宿主临时目录，不存在未隔离的回退执行路径。
 
 Python/shell 调用代码、命令、退出码与文本输出写入本人专属 `/workspace/ai/[id]` 执行轨迹。运行诊断及部署步骤见 [部署指南](deployment.zh-CN.md)。`pnpm test:sandbox` 在真实 Bubblewrap 中验证隔离、依赖、文件共享、图像输出、资源限制与清理；`pnpm test:ai-domain` 验证这些工具与业务提交的衔接。
