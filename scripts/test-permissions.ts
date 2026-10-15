@@ -620,14 +620,25 @@ async function main() {
       jobId: gradeJob.id,
     });
     try {
-      const call = (name: string, input: unknown) =>
-        grader.tools[name].execute!(input, {
+      const call = async (name: string, input: unknown) => {
+        const output = await grader.tools[name].execute!(input, {
           toolCallId: randomUUID(),
           messages: [],
           context: undefined,
         });
-      await call("read_answer", { itemId: mathItemId });
-      await call("propose_grade", { itemId: mathItemId, score: 8, feedback: "跨班AI首评候选" });
+        if (output && typeof output === "object" && "results" in output) {
+          const results = (output as { results: { success: boolean }[] }).results;
+          assert(
+            results.length > 0 && results.every((entry) => entry.success),
+            JSON.stringify(output),
+          );
+        }
+        return output;
+      };
+      await call("read_answer", { items: [{ itemId: mathItemId }] });
+      await call("propose_grade", {
+        items: [{ itemId: mathItemId, score: 8, feedback: "跨班AI首评候选" }],
+      });
       await call("finish", { summary: "已完成本学科候选评分" });
       await grant("grade-peer", []);
       await assert.rejects(grader.commit(), /无权访问/);
