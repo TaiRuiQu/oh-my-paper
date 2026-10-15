@@ -33,8 +33,11 @@ export async function executeAssessmentsCommand(
         classrooms.some((c) => papers.some((p) => !canReadSubject(a, c, p.subject)))
       )
         throw missing();
-      if (data.reviewScope === "GRADE" && new Set(classrooms.map((c) => c.grade)).size !== 1)
-        throw new RequestError(400, "年级联考的参与班级必须属于同一年级。");
+      if (
+        data.reviewScope === "GRADE" &&
+        new Set(classrooms.map((c) => JSON.stringify([c.stage, c.cohort]))).size !== 1
+      )
+        throw new RequestError(400, "年级联考的参与班级必须属于同一学段、同一届别。");
       const paperRows = (
         await db.paper.findMany({
           where: {

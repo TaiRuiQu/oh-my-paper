@@ -51,7 +51,10 @@ async function main() {
     const actor = { id: teacherId };
     const command = (input: unknown) => executeCommand(actor, input);
     const classroomId = (
-      await command({ type: "classroom.save", classroom: { name: "扫描验收班", grade: "高一" } })
+      await command({
+        type: "classroom.save",
+        classroom: { name: "扫描验收班", stage: "高中", cohort: "2027届" },
+      })
     ).id;
     await db.teachingAssignment.create({
       data: { userId: actor.id, role: "SUBJECT_TEACHER", classroomId, subject: "数学" },

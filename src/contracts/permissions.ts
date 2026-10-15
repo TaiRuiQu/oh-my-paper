@@ -1,10 +1,20 @@
 import { z } from "zod";
-import { SUBJECTS, type Assessment, type Classroom, type PlatformState } from "./platform";
+import {
+  SCHOOL_STAGES,
+  SUBJECTS,
+  type Assessment,
+  type Classroom,
+  type PlatformState,
+} from "./platform";
 
 const classroomId = z.string().min(1).max(100);
 export const teachingAssignmentSchema = z.discriminatedUnion("role", [
   z.strictObject({ role: z.literal("SCHOOL_ADMIN") }),
-  z.strictObject({ role: z.literal("GRADE_DIRECTOR"), grade: z.string().trim().min(1).max(80) }),
+  z.strictObject({
+    role: z.literal("GRADE_DIRECTOR"),
+    stage: z.enum(SCHOOL_STAGES),
+    cohort: z.string().trim().min(1).max(80),
+  }),
   z.strictObject({ role: z.literal("HOMEROOM"), classroomId }),
   z.strictObject({ role: z.literal("SUBJECT_TEACHER"), classroomId, subject: z.enum(SUBJECTS) }),
 ]);
@@ -31,7 +41,8 @@ export const TEACHING_ROLES = {
 export function assignmentKey(assignment: TeachingAssignment) {
   return JSON.stringify([
     assignment.role,
-    "grade" in assignment ? assignment.grade : "",
+    "stage" in assignment ? assignment.stage : "",
+    "cohort" in assignment ? assignment.cohort : "",
     "classroomId" in assignment ? assignment.classroomId : "",
     "subject" in assignment ? assignment.subject : "",
   ]);
@@ -39,7 +50,7 @@ export function assignmentKey(assignment: TeachingAssignment) {
 
 export function canReadSubject(
   actor: PlatformState["actor"],
-  classroom: Pick<Classroom, "id" | "grade">,
+  classroom: Pick<Classroom, "id" | "stage" | "cohort">,
   subject?: string,
 ) {
   if (actor.role === "ADMIN") return true;
@@ -49,7 +60,7 @@ export function canReadSubject(
       case "SCHOOL_ADMIN":
         return true;
       case "GRADE_DIRECTOR":
-        return assignment.grade === classroom.grade;
+        return assignment.stage === classroom.stage && assignment.cohort === classroom.cohort;
       case "HOMEROOM":
         return assignment.classroomId === classroom.id;
       case "SUBJECT_TEACHER":
@@ -65,9 +76,9 @@ export function canReadSubject(
 export function canReviewSubject(
   actor: PlatformState["actor"],
   assessment: Pick<Assessment, "reviewScope" | "classroomIds">,
-  classroom: Pick<Classroom, "id" | "grade">,
+  classroom: Pick<Classroom, "id" | "stage" | "cohort">,
   subject: string,
-  teachingClassrooms: Pick<Classroom, "id" | "grade">[],
+  teachingClassrooms: Pick<Classroom, "id" | "stage" | "cohort">[],
 ) {
   if (!assessment.classroomIds.includes(classroom.id)) return false;
   if (actor.role === "ADMIN") return true;
@@ -78,7 +89,10 @@ export function canReviewSubject(
       assignment.subject === subject &&
       (assessment.reviewScope === "GRADE"
         ? teachingClassrooms.some(
-            (c) => c.id === assignment.classroomId && c.grade === classroom.grade,
+            (c) =>
+              c.id === assignment.classroomId &&
+              c.stage === classroom.stage &&
+              c.cohort === classroom.cohort,
           )
         : assessment.reviewScope === "CLASSROOM" && assignment.classroomId === classroom.id),
   );

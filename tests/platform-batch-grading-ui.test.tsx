@@ -31,7 +31,7 @@ const student = {
 };
 const state = {
   actor: { id: "admin", role: "ADMIN", name: "教师" },
-  classrooms: [{ id: "class", name: "一班", grade: "高一", students: [student] }],
+  classrooms: [{ id: "class", name: "一班", stage: "高中", cohort: "2027届", students: [student] }],
   assessments: [
     {
       id: "assignment",

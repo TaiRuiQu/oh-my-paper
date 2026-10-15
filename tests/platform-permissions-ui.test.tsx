@@ -4,12 +4,47 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { TeachingPermissions } from "@/components/platform/teaching-permissions";
 import type { Classroom } from "@/contracts/platform";
+import { cohortKey } from "@/lib/student-cohort";
 
 let container: HTMLDivElement, root: Root;
 const classrooms: Classroom[] = [
-  { id: "a", name: "一班", grade: "高一", ownerId: "admin", students: [] },
-  { id: "b", name: "二班", grade: "高二", ownerId: "admin", students: [] },
+  { id: "a", name: "一班", stage: "高中", cohort: "2027届", ownerId: "admin", students: [] },
+  { id: "b", name: "二班", stage: "高中", cohort: "2028届", ownerId: "admin", students: [] },
 ];
+
+it("selects director scopes by stage and cohort when graduation years match", async () => {
+  const save = vi.fn();
+  const sameYearClasses = ["小学", "初中", "高中"].map((stage) => ({
+    ...classrooms[0],
+    id: stage,
+    stage,
+  }));
+  await act(async () =>
+    root.render(
+      createElement(TeachingPermissions, {
+        name: "张老师",
+        assignments: [{ role: "GRADE_DIRECTOR", stage: "高中", cohort: "2027届" }],
+        classrooms: sameYearClasses,
+        busy: false,
+        onSave: save,
+        onCancel: vi.fn(),
+      }),
+    ),
+  );
+  const scope = container.querySelectorAll("select")[1];
+  expect([...scope.options].map((option) => option.textContent)).toEqual([
+    "选择届别",
+    "小学 · 2027届",
+    "初中 · 2027届",
+    "高中 · 2027届",
+  ]);
+  await act(async () => {
+    scope.value = cohortKey({ stage: "初中", cohort: "2027届" });
+    scope.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  await click("保存教学权限");
+  expect(save).toHaveBeenCalledWith([{ role: "GRADE_DIRECTOR", stage: "初中", cohort: "2027届" }]);
+});
 beforeEach(() => {
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   container = document.createElement("div");

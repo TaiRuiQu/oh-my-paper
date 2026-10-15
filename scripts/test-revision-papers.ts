@@ -53,7 +53,7 @@ async function main() {
     const command = (input: PlatformCommand) => executeCommand({ id: "owner" }, input);
     const classroom = await command({
       type: "classroom.save",
-      classroom: { name: "复习测试班", grade: "高一" },
+      classroom: { name: "复习测试班", stage: "高中", cohort: "2027届" },
     });
     for (const userId of ["owner", "math"])
       await db.teachingAssignment.create({

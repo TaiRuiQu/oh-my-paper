@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { studentNumberSchema } from "@/contracts/auth";
-import { RECORD_NAME_MAX_LENGTH } from "@/contracts/platform";
+import { SCHOOL_STAGES, RECORD_NAME_MAX_LENGTH } from "@/contracts/platform";
 const id = z.string().trim().min(1).max(128);
 const text = z.string().trim().max(100000);
 const recordName = z
@@ -310,7 +310,8 @@ export const commandSchema = z.discriminatedUnion("type", [
     classroom: z.strictObject({
       id: id.optional(),
       name: text.min(1).max(200),
-      grade: text.max(40),
+      stage: z.enum(SCHOOL_STAGES),
+      cohort: text.min(1).max(40),
     }),
   }),
   z.strictObject({

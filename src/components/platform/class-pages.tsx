@@ -1,8 +1,9 @@
 "use client";
+import { SCHOOL_STAGES } from "@/contracts/platform";
+import { cohortLabel } from "@/lib/student-cohort";
 import { AccountImport } from "./account-import";
 import type { AccountCredentials } from "@/contracts/auth";
 import { AccountCredentialsPanel } from "./account-credentials";
-import { GradeSelect } from "./grade-select";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -31,7 +32,7 @@ function ClassNavigation({ id, active }: { id: string; active: string }) {
 export function ClassListPage() {
   const { state } = useDomain();
   const [query, setQuery] = useState("");
-  const classes = state.classrooms.filter((c) => `${c.name} ${c.grade}`.includes(query));
+  const classes = state.classrooms.filter((c) => `${c.name} ${cohortLabel(c)}`.includes(query));
   return (
     <>
       <PageHeader
@@ -50,7 +51,7 @@ export function ClassListPage() {
         <div className="p-toolbar">
           <Input
             aria-label="搜索班级"
-            placeholder="班级名称或年级"
+            placeholder="班级名称、学段或届别"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -63,7 +64,7 @@ export function ClassListPage() {
                   <strong>{c.name}</strong>
                 </Link>
                 <small>
-                  {c.grade} · {c.students.length} 位学生
+                  {cohortLabel(c)} · {c.students.length} 位学生
                 </small>
               </div>
               <Button asChild variant="outline" size="sm">
@@ -91,7 +92,7 @@ export function ClassEditPage({ id }: { id?: string }) {
     <>
       <PageHeader
         title={c ? "班级设置" : "新建班级"}
-        description="设置班级名称和年级。任课身份由管理员在「账号与权限」中配置。"
+        description="设置班级名称、学段和学生届别。任课身份由管理员在「账号与权限」中配置。"
         back={{
           href: c ? `/workspace/classes/${id}` : "/workspace/classes",
           label: c?.name ?? "全部班级",
@@ -108,7 +109,8 @@ export function ClassEditPage({ id }: { id?: string }) {
               classroom: {
                 id,
                 name: stringField(d, "name"),
-                grade: stringField(d, "grade"),
+                stage: stringField(d, "stage"),
+                cohort: stringField(d, "cohort"),
               },
             });
             if (r.id) router.push(`/workspace/classes/${r.id}`);
@@ -116,10 +118,27 @@ export function ClassEditPage({ id }: { id?: string }) {
         >
           <div className="p-form-grid">
             <Field label="班级名称">
-              <Input required name="name" defaultValue={c?.name} placeholder="例如：高一（1）班" />
+              <Input required name="name" defaultValue={c?.name} placeholder="例如：1班" />
             </Field>
-            <Field label="年级">
-              <GradeSelect required name="grade" defaultValue={c?.grade ?? "高中一年级"} />
+            <Field label="学段">
+              <select required name="stage" defaultValue={c?.stage ?? ""}>
+                <option value="">选择学段</option>
+                {SCHOOL_STAGES.map((stage) => (
+                  <option key={stage}>{stage}</option>
+                ))}
+              </select>
+            </Field>
+            <Field
+              label="学生届别"
+              hint="按所选学段的毕业年份填写“届”或按入学年份填写“级”，同一批学生保持一致。"
+            >
+              <Input
+                required
+                name="cohort"
+                maxLength={40}
+                defaultValue={c?.cohort}
+                placeholder="例如：2027届或2024级"
+              />
             </Field>
           </div>
           <div className="p-actions">
@@ -143,7 +162,7 @@ export function ClassDetailPage({ id, students = false }: { id: string; students
     <>
       <PageHeader
         title={students ? `${c.name} · 学生名单` : c.name}
-        description={`${c.grade} · ${c.students.length} 位学生 · 学号用于身份匹配，绑定账号后学生可以查看本人报告。`}
+        description={`${cohortLabel(c)} · ${c.students.length} 位学生 · 学号用于身份匹配，绑定账号后学生可以查看本人报告。`}
         back={{ href: "/workspace/classes", label: "全部班级" }}
         actions={
           <Button asChild>

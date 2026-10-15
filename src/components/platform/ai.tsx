@@ -431,7 +431,7 @@ function AIAssembly({
             ))}
           </select>
         </Field>
-        <Field label="年级">
+        <Field label="适用年级">
           <GradeSelect required name="grade" defaultValue="高中一年级" />
         </Field>
         <Field label="目标难度（0–1）">

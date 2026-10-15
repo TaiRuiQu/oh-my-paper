@@ -11,7 +11,7 @@
 - question.save 支持 SINGLE/MULTIPLE/BLANK/SUBJECTIVE/MIXED，混合题 parts 各自记录题型、答案、标签、分值。answers 数组分别表达正确选项或各空答案。
 - paper.save items 按数组顺序排列，引用 questionId，包含 score、section 和可选 content／question；question 允许卷内独立创建，无需题库记录。可视化编辑只修改当前卷内快照，不改动题库原题。layout 保存 A4/A3、横纵方向、1–4 栏、字体（默认 NSimSun）、自由文字块、页边距、字号、行距和逐题分页／空白作答区域高度（mm），画布与打印使用同一份版面数据。
 - classroom.save 后 student.save 可用 studentNumber、name 创建学生；userId 或 email 可绑定已注册 STUDENT 账号，不接受任意角色账号。
-- assessment.save 的 reviewScope 为 CLASSROOM（默认）或 GRADE。CLASSROOM 为每个班级的任课老师只阅本班对应学科；GRADE 仅用于同一年级的考试，该年级任课老师可阅参与班级对应学科，任教班级无需参试。作业必须使用 CLASSROOM，跨年级不能配置为 GRADE。papers 为 paperId、subject、questionRules（按 PaperItem.id 的 doubleReview/arbitrationEnabled/maxDifference）、gradingMode/arbitrationThreshold、conversion（enabled,bands）。bands 为从高分到低分的累计百分比区间，例如 upperPercent=15,min=86,max=100。
+- assessment.save 的 reviewScope 为 CLASSROOM（默认）或 GRADE。CLASSROOM 为每个班级的任课老师只阅本班对应学科；GRADE 仅用于同一学段、同一届别的考试，该届别任课老师可阅参与班级对应学科，任教班级无需参试。作业必须使用 CLASSROOM，跨届别不能配置为 GRADE。papers 为 paperId、subject、questionRules（按 PaperItem.id 的 doubleReview/arbitrationEnabled/maxDifference）、gradingMode/arbitrationThreshold、conversion（enabled,bands）。bands 为从高分到低分的累计百分比区间，例如 upperPercent=15,min=86,max=100。
 - template.save 使用规范化坐标 CardLayout；regions 引用 PaperItem.id。system presets 只读，选用后按当前题目生成或另存。
 - submission.save answers 引用 PaperItem.id，包含 text、images 及可选 box/sourcePage，sourceFiles 保存服务器受控资产 URL。人工没有模板的作业使用 WORKBOOK。
 - review.save FIRST/SECOND/ARBITRATION；FIRST/SECOND 可独立先后提交，必须不同教师。逐题启用仲裁且分差严格超过阈值时等待第三教师 ARBITRATION，最终为仲裁与较近原评分的均分，等距以原两评均分为基准。双评 AI 建议须教师确认。ReviewEvent 不可变追加记录每次提交与修订。
@@ -26,7 +26,7 @@ Teacher loadState 返回自己的备课资源，以及教学身份授权范围�
 | 教学身份                   | 教学数据范围                                                         |
 | -------------------------- | -------------------------------------------------------------------- |
 | 学校总管理 `SCHOOL_ADMIN`  | 全校所有班级与学科的考试、作业及成绩；不包含账号、模型等系统配置权限 |
-| 年级主任 `GRADE_DIRECTOR`  | 按班级当前年级匹配的全部班级与学科                                   |
+| 年级主任 `GRADE_DIRECTOR`  | 按班级学段、届别匹配的全部班级与学科                                 |
 | 班主任 `HOMEROOM`          | 指定班级的全部学科                                                   |
 | 任课老师 `SUBJECT_TEACHER` | 指定班级的指定学科，可分配多个班级与学科                             |
 
@@ -34,7 +34,7 @@ Teacher loadState 返回自己的备课资源，以及教学身份授权范围�
 
 授权同时用于考试/作业、参试名单、答卷、评阅及历史、成绩、知识点、错题和推荐；同一场考试内按每个班级与学科分别过滤。科目排名与赋分在服务器以完整参试名单计算，再投影到授权范围。仅有部分学科权限时，`totalRestricted` 为 true，全科总分、联合排名、班级排名和全科平均分不返回，界面显示「仅授权学科」。页面与筛选报表再次汇总时继续使用相同授权规则。
 
-参与阅卷的教师根据当前 SUBJECT_TEACHER 身份和 reviewScope 自动确定，无需单独选择双评或仲裁教师；首评、第二评和仲裁共用同一范围，保留不同教师独立评分的约束。系统管理员可阅全校；学校总管理、年级主任和班主任的成绩查看身份不会自动授予任教学科。扫描录入需要对应班级与学科的数据授权，且为班级创建者或本班该学科任课老师；年级跨班阅卷不授予替换答卷的权限。发布和撤回成绩均要求覆盖整场考试的全部班级与学科。
+参与阅卷的教师根据当前 SUBJECT_TEACHER 身份和 reviewScope 自动确定，无需单独选择双评或仲裁教师；首评、第二评和仲裁共用同一范围，保留不同教师独立评分的约束。系统管理员可阅全校；学校总管理、年级主任和班主任的成绩查看身份不会自动授予任教学科。扫描录入需要对应班级与学科的数据授权，且为班级创建者或本班该学科任课老师；同届别跨班阅卷不授予替换答卷的权限。发布和撤回成绩均要求覆盖整场考试的全部班级与学科。
 
 阅卷页面与 AI GRADE 使用独立阅卷数据范围。`GET /api/platform/exams/state?scope=reviewing`（作业为 homework）返回可阅答卷、题目与逐题评分，不返回学情、推荐、全科总分或排名。常规 state 与成绩报表仍使用原教学数据授权，跨班阅卷不扩大报表权限。阅卷配图按当前阅卷范围校验，撤销任课身份后读取和评分均立即失效；AI 提交时再次校验。
 
@@ -108,3 +108,11 @@ AI 执行轨迹的 Python / shell 输出图片在工具返回前写入共享 `st
 教师调用 `GET /api/platform/barcodes?classroomId=…&copies=…`，按其可访问班级生成独立 A4 标签纸 SVG 页面。每页 40 枚标签，包含姓名、班级、六位考号与 Code 128 条码；不足六位补零，每人 1–20 份，一次最多 4000 枚。制作页的「粘贴条形码 → 打印条码标签」提供预览和打印 / 保存 PDF。
 
 扫描在四点透视矫正后，只读取保存的贴码区，支持 Code 128、Code 39、ITF 的六位数字考号。条码缺失或多个不同考号时返回待人工确认，不猜测学生身份。Python 运行环境通过 `tools/card-scan/requirements.txt` 安装 ZXing；Docker 与 CI 共用该依赖文件。
+
+学生届别使用 `Classroom.cohort`（如 `2027届`、`2024级`），年级主任的 `GRADE_DIRECTOR` 身份使用 `stage` 和 `cohort` 匹配班级，联考 `reviewScope=GRADE` 同样按学段和届别分组。题目、试卷和 AI 的 `grade` 始终表示固定的适用年级（如 `高中一年级`），不根据日期或届别换算；巩固题按原错题的适用年级检索。
+
+旧数据一次性按“当前高三为 2027届”的固定基准迁移：高三 / 高中三年级 → `2027届`，高二 / 高中二年级 → `2028届`，高一 / 高中一年级 → `2029届`。班级与年级主任权限在同一事务内换算，合并换算后重复的主任权限；已有届别、入学级和题目、试卷的适用年级保持原值。该迁移不依赖执行日期，也不会在以后自动升届。
+
+小学和初中分别按本学段的毕业年份计算，采用六年制小学、三年制初中。初三 / 初二 / 初一对应初中学段的 `2027届` / `2028届` / `2029届`；小学六年级至一年级对应小学学段的 `2027届` 至 `2032届`。支持完整年级名称、简称和七至九年级标签。不同学段独立保存，确保同一毕业年份的不同学段不会合并班级管理和主任权限。四年制初中标签不套用三年制换算。已有届别与入学级保持原值。
+
+学段以独立的 `Classroom.stage`（`小学` / `初中` / `高中`）保存，年级主任身份也必须指定 `stage`。`cohort` 只保存 `2027届` 等届别，不再拼接学段；界面组合显示为「初中 · 2027届」。阶段迁移将此前的小学、初中前缀拆开，未加前缀的历史高中届别补为高中。管理权限、联考班级和跨班阅卷必须同时匹配学段与届别，不能仅比较毕业年份。

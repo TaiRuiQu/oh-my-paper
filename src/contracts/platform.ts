@@ -41,6 +41,7 @@ export type BankQuestion = {
   ownerId: string;
   type: QuestionType;
   subject: string;
+  /** Fixed curriculum level, e.g. 高中一年级; independent of student cohorts. */
   grade: string;
   difficulty: number;
   knowledgeTags: string[];
@@ -94,6 +95,7 @@ export type Paper = {
   name: string;
   kind: "EXAM" | "HOMEWORK";
   subject: string;
+  /** Fixed curriculum level, e.g. 高中一年级; independent of student cohorts. */
   grade: string;
   instructions: string;
   layout: DocumentLayout;
@@ -108,11 +110,16 @@ export type Student = {
   studentNumber: string;
   name: string;
 };
+export const SCHOOL_STAGES = ["小学", "初中", "高中"] as const;
+export type SchoolStage = (typeof SCHOOL_STAGES)[number];
+
 export type Classroom = {
   id: string;
   ownerId: string;
   name: string;
-  grade: string;
+  stage: string;
+  /** Student cohort, e.g. 2027届 or 2024级; independent of a question’s grade. */
+  cohort: string;
   students: Student[];
 };
 export type GradeBand = { upperPercent: number; min: number; max: number };
@@ -341,7 +348,7 @@ export type PlatformCommand =
   | { type: "paper.rename"; id: string; name: string }
   | {
       type: "classroom.save";
-      classroom: { id?: string; name: string; grade: string };
+      classroom: { id?: string; name: string; stage: string; cohort: string };
     }
   | {
       type: "student.save";

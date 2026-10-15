@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   canReadSubject,
+  canReviewSubject,
   teachingPermissionsCommandSchema,
   type TeachingAssignment,
 } from "@/contracts/permissions";
@@ -8,7 +9,7 @@ import { applyOfficialResults } from "@/server/platform/analytics";
 import { scopePageState } from "@/server/platform/page-state";
 import type { Analytics, PlatformState, StudentResult } from "@/contracts/platform";
 
-const classroom = { id: "class-a", grade: "高一" };
+const classroom = { id: "class-a", stage: "高中", cohort: "2027届" };
 const teacher = (teachingAssignments: TeachingAssignment[] = []): PlatformState["actor"] => ({
   id: "teacher",
   name: "教师",
@@ -35,18 +36,85 @@ describe("teaching data authorization", () => {
       { role: "SUBJECT_TEACHER", classroomId: "class-b", subject: "数学" },
     ]);
     expect(canReadSubject(actor, classroom, "化学")).toBe(true);
-    expect(canReadSubject(actor, { id: "class-b", grade: "高一" }, "数学")).toBe(true);
-    expect(canReadSubject(actor, { id: "class-b", grade: "高一" }, "化学")).toBe(false);
-    expect(canReadSubject(actor, { id: "class-c", grade: "高一" }, "数学")).toBe(false);
+    expect(canReadSubject(actor, { id: "class-b", stage: "高中", cohort: "2027届" }, "数学")).toBe(
+      true,
+    );
+    expect(canReadSubject(actor, { id: "class-b", stage: "高中", cohort: "2027届" }, "化学")).toBe(
+      false,
+    );
+    expect(canReadSubject(actor, { id: "class-c", stage: "高中", cohort: "2027届" }, "数学")).toBe(
+      false,
+    );
   });
-  it("limits directors by classroom grade and permits school-wide teaching visibility", () => {
+  it("limits directors by classroom cohort and permits school-wide teaching visibility", () => {
     expect(
-      canReadSubject(teacher([{ role: "GRADE_DIRECTOR", grade: "高一" }]), classroom, "数学"),
+      canReadSubject(
+        teacher([{ role: "GRADE_DIRECTOR", stage: "高中", cohort: "2027届" }]),
+        classroom,
+        "数学",
+      ),
     ).toBe(true);
     expect(
-      canReadSubject(teacher([{ role: "GRADE_DIRECTOR", grade: "高二" }]), classroom, "数学"),
+      canReadSubject(
+        teacher([{ role: "GRADE_DIRECTOR", stage: "高中", cohort: "2028届" }]),
+        classroom,
+        "数学",
+      ),
     ).toBe(false);
     expect(canReadSubject(teacher([{ role: "SCHOOL_ADMIN" }]), classroom, "数学")).toBe(true);
+  });
+  it("groups joint-exam markers by student cohort independently of curriculum grades", () => {
+    const actor = teacher([
+      { role: "SUBJECT_TEACHER", classroomId: "teaching-class", subject: "数学" },
+    ]);
+    const exam = { reviewScope: "GRADE", classroomIds: [classroom.id] } as const;
+    const assessment = { ...exam, classroomIds: [...exam.classroomIds] };
+    expect(
+      canReviewSubject(actor, assessment, classroom, "数学", [
+        { id: "teaching-class", stage: "高中", cohort: "2027届" },
+      ]),
+    ).toBe(true);
+    expect(
+      canReviewSubject(actor, assessment, classroom, "数学", [
+        { id: "teaching-class", stage: "高中", cohort: "2028届" },
+      ]),
+    ).toBe(false);
+    expect(
+      canReviewSubject(actor, assessment, classroom, "化学", [
+        { id: "teaching-class", stage: "高中", cohort: "2027届" },
+      ]),
+    ).toBe(false);
+  });
+  it("isolates directors and joint-exam markers in different school stages with the same year", () => {
+    const director = teacher([{ role: "GRADE_DIRECTOR", stage: "高中", cohort: "2027届" }]);
+    const marker = teacher([{ role: "SUBJECT_TEACHER", classroomId: "marker", subject: "数学" }]);
+    for (const stage of ["小学", "初中"]) {
+      expect(canReadSubject(director, { ...classroom, stage }, "数学")).toBe(false);
+      expect(
+        canReviewSubject(
+          marker,
+          { reviewScope: "GRADE", classroomIds: [classroom.id] },
+          classroom,
+          "数学",
+          [{ id: "marker", stage, cohort: "2027届" }],
+        ),
+      ).toBe(false);
+    }
+    const parse = (assignments: unknown) =>
+      teachingPermissionsCommandSchema.safeParse({
+        type: "user.permissions",
+        id: "teacher",
+        assignments,
+      }).success;
+    expect(
+      parse([
+        { role: "GRADE_DIRECTOR", stage: "高中", cohort: "2027届" },
+        { role: "GRADE_DIRECTOR", stage: "初中", cohort: "2027届" },
+        { role: "GRADE_DIRECTOR", stage: "小学", cohort: "2027届" },
+      ]),
+    ).toBe(true);
+    expect(parse([{ role: "GRADE_DIRECTOR", cohort: "2027届" }])).toBe(false);
+    expect(parse([{ role: "GRADE_DIRECTOR", stage: "大学", cohort: "2027届" }])).toBe(false);
   });
   it("rejects malformed and duplicate scopes, and accepts explicit revocation", () => {
     const parse = (assignments: unknown) =>

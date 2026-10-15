@@ -54,7 +54,7 @@ async function main() {
     await assert.rejects(
       executeCommand(
         { id: ids.student, role: "ADMIN" },
-        { type: "classroom.save", classroom: { name: "越权", grade: "高一" } },
+        { type: "classroom.save", classroom: { name: "越权", stage: "高中", cohort: "2027届" } },
       ),
       /教师权限/,
     );
@@ -62,7 +62,7 @@ async function main() {
     const classId = (
       await cmd({
         type: "classroom.save",
-        classroom: { name: "高一一班", grade: "高一" },
+        classroom: { name: "高一一班", stage: "高中", cohort: "2027届" },
       })
     ).id;
     await db.teachingAssignment.createMany({
@@ -644,7 +644,10 @@ async function main() {
       "✓ Homework uses the same domain with a distinct presentation kind; ownership checks reject arbitrary image paths and foreign assets; administrator has teacher visibility",
     );
     const otherClass = (
-      await cmd({ type: "classroom.save", classroom: { name: "二班", grade: "高一" } })
+      await cmd({
+        type: "classroom.save",
+        classroom: { name: "二班", stage: "高中", cohort: "2027届" },
+      })
     ).id;
     const otherStudent = (
       await cmd({
@@ -716,7 +719,10 @@ async function main() {
       "✓ Shared reviewers cannot read or grade another class, and class-scoped arrangements follow the class roster",
     );
     const unboundClass = (
-      await cmd({ type: "classroom.save", classroom: { name: "补绑定验收班", grade: "高一" } })
+      await cmd({
+        type: "classroom.save",
+        classroom: { name: "补绑定验收班", stage: "高中", cohort: "2027届" },
+      })
     ).id;
     await db.teachingAssignment.create({
       data: {

@@ -254,7 +254,10 @@ async function main() {
     ).id;
     await run("TEMPLATE", { paperId });
     const classroomId = (
-      await command({ type: "classroom.save", classroom: { name: "AI验收班", grade: "高一" } })
+      await command({
+        type: "classroom.save",
+        classroom: { name: "AI验收班", stage: "高中", cohort: "2027届" },
+      })
     ).id;
     await db.teachingAssignment.create({
       data: { userId: "teacher", role: "SUBJECT_TEACHER", classroomId, subject: "数学" },

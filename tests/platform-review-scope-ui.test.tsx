@@ -2,6 +2,7 @@
 import { act, createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { cohortKey } from "@/lib/student-cohort";
 import { AssessmentEditor } from "@/components/platform/assessments";
 import type { PlatformState } from "@/contracts/platform";
 
@@ -25,9 +26,18 @@ const state: PlatformState = {
     },
   ],
   classrooms: [
-    { id: "a", name: "一班", grade: "高一", ownerId: "admin", students: [] },
-    { id: "b", name: "二班", grade: "高一", ownerId: "admin", students: [] },
-    { id: "c", name: "一班", grade: "高二", ownerId: "admin", students: [] },
+    { id: "a", name: "一班", stage: "高中", cohort: "2027届", ownerId: "admin", students: [] },
+    { id: "b", name: "二班", stage: "高中", cohort: "2027届", ownerId: "admin", students: [] },
+    { id: "c", name: "一班", stage: "高中", cohort: "2028届", ownerId: "admin", students: [] },
+    { id: "junior", name: "一班", stage: "初中", cohort: "2027届", ownerId: "admin", students: [] },
+    {
+      id: "primary",
+      name: "一班",
+      stage: "小学",
+      cohort: "2027届",
+      ownerId: "admin",
+      students: [],
+    },
   ],
   assessments: [],
   submissions: [],
@@ -58,7 +68,7 @@ async function change(label: string, value: string) {
     element.dispatchEvent(new Event("change", { bubbles: true }));
   });
 }
-it("selects one grade's classes for a joint exam and persists the chosen marking scope", async () => {
+it("selects one cohort's classes for a joint exam and persists the chosen marking scope", async () => {
   const mutate = vi.fn().mockResolvedValue({ id: "exam" });
   await act(async () =>
     root.render(
@@ -83,9 +93,9 @@ it("selects one grade's classes for a joint exam and persists the chosen marking
     ["a", true],
     ["b", true],
   ]);
-  expect(container.textContent).toContain("同年级任课老师按任教学科统一阅卷");
+  expect(container.textContent).toContain("同学段、同届别任课老师按任教学科统一阅卷");
   expect(container.textContent).toContain("无需单独指定教师");
-  await change("联考年级", "高二");
+  await change("联考届别", cohortKey({ stage: "高中", cohort: "2028届" }));
   expect(container.querySelector<HTMLInputElement>('input[name="classroomIds"]')?.value).toBe("c");
   await act(async () =>
     container
@@ -94,7 +104,11 @@ it("selects one grade's classes for a joint exam and persists the chosen marking
   );
   expect(mutate).toHaveBeenCalledWith(
     expect.objectContaining({
-      assessment: expect.objectContaining({ reviewScope: "GRADE", classroomIds: ["c"] }),
+      assessment: expect.objectContaining({
+        reviewScope: "GRADE",
+        classroomIds: ["c"],
+        papers: [expect.objectContaining({ paperId: "math" })],
+      }),
     }),
   );
 });

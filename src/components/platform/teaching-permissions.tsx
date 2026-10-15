@@ -1,14 +1,15 @@
 "use client";
+import { cohortKey, cohortLabel } from "@/lib/student-cohort";
 import { useEffect, useRef, useState } from "react";
-import { SUBJECTS, type Classroom } from "@/contracts/platform";
+import { SUBJECTS, type Classroom, type SchoolStage } from "@/contracts/platform";
 import { assignmentKey, TEACHING_ROLES, type TeachingAssignment } from "@/contracts/permissions";
 import { Field } from "./primitives";
 
 export function assignmentLabel(row: TeachingAssignment, classrooms: Classroom[]) {
   if (row.role === "SCHOOL_ADMIN") return "学校总管理 · 全校";
-  if (row.role === "GRADE_DIRECTOR") return `年级主任 · ${row.grade}`;
+  if (row.role === "GRADE_DIRECTOR") return `年级主任 · ${cohortLabel(row)}`;
   const classroom = classrooms.find((c) => c.id === row.classroomId);
-  const name = classroom ? `${classroom.grade} ${classroom.name}` : "班级已删除";
+  const name = classroom ? `${cohortLabel(classroom)} ${classroom.name}` : "班级已删除";
   return `${TEACHING_ROLES[row.role]} · ${name}${row.role === "SUBJECT_TEACHER" ? ` · ${row.subject}` : " · 全科"}`;
 }
 
@@ -33,7 +34,11 @@ export function TeachingPermissions({
   useEffect(() => {
     form.current?.querySelector("select")?.focus();
   }, []);
-  const grades = [...new Set(classrooms.map((c) => c.grade))];
+  const cohorts = [
+    ...new Map(
+      classrooms.map((c) => [cohortKey(c), { stage: c.stage as SchoolStage, cohort: c.cohort }]),
+    ).values(),
+  ];
   function replace(index: number, row: TeachingAssignment) {
     setRows((previous) => previous.map((value, i) => (i === index ? row : value)));
   }
@@ -64,7 +69,11 @@ export function TeachingPermissions({
                     role === "SCHOOL_ADMIN"
                       ? { role }
                       : role === "GRADE_DIRECTOR"
-                        ? { role, grade: grades[0] ?? "" }
+                        ? {
+                            role,
+                            stage: cohorts[0]?.stage ?? "高中",
+                            cohort: cohorts[0]?.cohort ?? "",
+                          }
                         : role === "HOMEROOM"
                           ? { role, classroomId: classrooms[0]?.id ?? "" }
                           : { role, classroomId: classrooms[0]?.id ?? "", subject: "语文" },
@@ -79,17 +88,28 @@ export function TeachingPermissions({
               </select>
             </Field>
             {row.role === "SCHOOL_ADMIN" ? (
-              <p className="p-muted">全校所有年级、班级与学科</p>
+              <p className="p-muted">全校所有届别、班级与学科</p>
             ) : row.role === "GRADE_DIRECTOR" ? (
-              <Field label={`身份 ${index + 1} 的年级`}>
+              <Field label={`身份 ${index + 1} 的届别`}>
                 <select
                   required
-                  value={row.grade}
-                  onChange={(e) => replace(index, { ...row, grade: e.target.value })}
+                  value={cohortKey(row)}
+                  onChange={(e) => {
+                    const scope = cohorts.find((c) => cohortKey(c) === e.target.value);
+                    if (scope) replace(index, { ...row, ...scope });
+                  }}
                 >
-                  <option value="">选择年级</option>
-                  {[...new Set([...grades, row.grade].filter(Boolean))].map((grade) => (
-                    <option key={grade}>{grade}</option>
+                  <option value="">选择届别</option>
+                  {[
+                    ...new Map(
+                      [...cohorts, { stage: row.stage, cohort: row.cohort }]
+                        .filter((c) => c.cohort)
+                        .map((c) => [cohortKey(c), c]),
+                    ).values(),
+                  ].map((scope) => (
+                    <option key={cohortKey(scope)} value={cohortKey(scope)}>
+                      {cohortLabel(scope)}
+                    </option>
                   ))}
                 </select>
               </Field>
@@ -104,7 +124,7 @@ export function TeachingPermissions({
                     <option value="">选择班级</option>
                     {classrooms.map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.grade} · {c.name}
+                        {cohortLabel(c)} · {c.name}
                       </option>
                     ))}
                   </select>

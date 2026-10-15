@@ -1,4 +1,5 @@
 "use client";
+import { cohortLabel } from "@/lib/student-cohort";
 import { useState } from "react";
 import type { PlatformState } from "@/contracts/platform";
 import { MAX_AI_BATCH_PAGES } from "@/contracts/platform-ai";
@@ -135,7 +136,7 @@ export function BatchGradingForm({
             <option value="">选择班级</option>
             {classrooms.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.grade} · {c.name}
+                {cohortLabel(c)} · {c.name}
               </option>
             ))}
           </select>

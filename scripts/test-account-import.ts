@@ -30,7 +30,7 @@ async function main() {
         data: { id: role.toLowerCase(), role, name: role, email: `${role}@test.invalid` },
       });
     const classroom = await db.classroom.create({
-      data: { ownerId: "teacher", name: "导入班级", grade: "高中一年级" },
+      data: { ownerId: "teacher", name: "导入班级", stage: "高中", cohort: "2027届" },
     });
     const { commitAccountImport } = await import("../src/server/auth/account-import");
     const { parseAccountFile } = await import("../src/server/auth/account-import-file");

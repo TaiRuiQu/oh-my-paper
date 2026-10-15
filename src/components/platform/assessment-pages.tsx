@@ -221,7 +221,7 @@ export function AssessmentOverviewPage({ id }: { id: string }) {
       <PageHeader
         title={a.name}
         titleEditor={<RecordNameEditor record={a} kind="assessment" noun={noun} heading />}
-        description={`${homework ? "日常作业" : "考试"} · ${a.reviewScope === "GRADE" ? "年级联考 · 同年级按任教学科阅卷" : "班级阅卷 · 本班任课老师按学科阅卷"} · ${a.papers.map((p) => p.subject).join("、")} · ${a.classroomIds.length} 个班级`}
+        description={`${homework ? "日常作业" : "考试"} · ${a.reviewScope === "GRADE" ? "年级联考 · 同届别按任教学科阅卷" : "班级阅卷 · 本班任课老师按学科阅卷"} · ${a.papers.map((p) => p.subject).join("、")} · ${a.classroomIds.length} 个班级`}
         back={{ href: root, label: homework ? "布置记录" : "全部考试" }}
         actions={
           <Button asChild variant="outline">

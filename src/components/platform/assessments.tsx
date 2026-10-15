@@ -1,4 +1,5 @@
 "use client";
+import { cohortKey, cohortLabel } from "@/lib/student-cohort";
 import { reviewRule } from "@/lib/document-layout";
 import { useState } from "react";
 import type { Assessment, AssessmentPaper, PlatformState } from "@/contracts/platform";
@@ -33,9 +34,12 @@ export function AssessmentEditor({
     assessment?.reviewScope ?? "CLASSROOM",
   );
   const [classroomIds, setClassroomIds] = useState(assessment?.classroomIds ?? []);
-  const grades = [...new Set(state.classrooms.map((c) => c.grade))];
-  const [grade, setGrade] = useState(
-    state.classrooms.find((c) => classroomIds.includes(c.id))?.grade ?? grades[0] ?? "",
+  const cohorts = [...new Map(state.classrooms.map((c) => [cohortKey(c), c])).values()];
+  const [cohort, setCohort] = useState(
+    cohortKey(
+      state.classrooms.find((c) => classroomIds.includes(c.id)) ??
+        cohorts[0] ?? { stage: "", cohort: "" },
+    ),
   );
   const [papers, setPapers] = useState<AssessmentPaper[]>(
     assessment?.papers ??
@@ -108,7 +112,7 @@ export function AssessmentEditor({
                 setReviewScope(scope);
                 if (scope === "GRADE")
                   setClassroomIds(
-                    state.classrooms.filter((c) => c.grade === grade).map((c) => c.id),
+                    state.classrooms.filter((c) => cohortKey(c) === cohort).map((c) => c.id),
                   );
               }}
             >
@@ -117,20 +121,24 @@ export function AssessmentEditor({
             </select>
           </Field>
           {reviewScope === "GRADE" && (
-            <Field label="联考年级">
+            <Field label="联考届别">
               <select
                 required
-                value={grade}
+                value={cohort}
                 onChange={(e) => {
-                  setGrade(e.target.value);
+                  setCohort(e.target.value);
                   setClassroomIds(
-                    state.classrooms.filter((c) => c.grade === e.target.value).map((c) => c.id),
+                    state.classrooms
+                      .filter((c) => cohortKey(c) === e.target.value)
+                      .map((c) => c.id),
                   );
                 }}
               >
-                <option value="">选择年级</option>
-                {grades.map((value) => (
-                  <option key={value}>{value}</option>
+                <option value="">选择届别</option>
+                {cohorts.map((value) => (
+                  <option key={cohortKey(value)} value={cohortKey(value)}>
+                    {cohortLabel(value)}
+                  </option>
                 ))}
               </select>
             </Field>
@@ -138,7 +146,7 @@ export function AssessmentEditor({
         </div>
         <p className="p-muted">
           {reviewScope === "GRADE"
-            ? "同年级任课老师按任教学科统一阅卷，可评阅参与班级的对应学科答卷。"
+            ? "同学段、同届别任课老师按任教学科统一阅卷，可评阅参与班级的对应学科答卷。"
             : "各班任课老师仅评阅本班对应学科的答卷。"}
           所有参与阅卷的老师均可参与首评、双评和仲裁，无需单独指定教师；同一道题的各轮评分须由不同教师完成。
         </p>
@@ -146,7 +154,7 @@ export function AssessmentEditor({
           <h3>参与班级</h3>
           <div className="p-actions">
             {state.classrooms
-              .filter((c) => reviewScope !== "GRADE" || c.grade === grade)
+              .filter((c) => reviewScope !== "GRADE" || cohortKey(c) === cohort)
               .map((c) => (
                 <label className="p-check" key={c.id}>
                   <input
@@ -160,7 +168,7 @@ export function AssessmentEditor({
                       )
                     }
                   />
-                  {c.grade} · {c.name}
+                  {cohortLabel(c)} · {c.name}
                 </label>
               ))}
           </div>

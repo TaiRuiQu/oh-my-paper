@@ -10,6 +10,82 @@ import type { PlatformCommand } from "../src/contracts/platform";
 import type { TeachingAssignment } from "../src/contracts/permissions";
 
 loadEnvironment();
+
+async function verifyLegacyCohortMigration(
+  sql: Client,
+  migration: string,
+  labels: string[][] = [
+    ["高三", "2027届"],
+    ["高中三年级", "2027届"],
+    ["高二", "2028届"],
+    ["高中二年级", "2028届"],
+    ["高一", "2029届"],
+    ["高中一年级", "2029届"],
+    [" 高一 ", "2029届"],
+    ["2027届", "2027届"],
+    ["2029届", "2029届"],
+    ["2024级", "2024级"],
+  ],
+  studentCohort = "2029届",
+) {
+  await sql.query(
+    `INSERT INTO users (id, name, email, role, "updatedAt") VALUES ('cohort-owner', '迁移验收', 'cohort@test.invalid', 'TEACHER', NOW())`,
+  );
+  for (const [index, [label]] of labels.entries()) {
+    await sql.query(
+      `INSERT INTO classrooms (id, "ownerId", name, cohort) VALUES ($1, 'cohort-owner', '迁移验收班', $2)`,
+      [`cohort-${index}`, label],
+    );
+    await sql.query(
+      `INSERT INTO teaching_assignments (id, "userId", role, cohort) VALUES ($1, 'cohort-owner', 'GRADE_DIRECTOR', $2)`,
+      [`cohort-director-${index}`, label],
+    );
+  }
+  await sql.query(
+    `INSERT INTO classroom_students (id, "classroomId", name, "studentNumber") VALUES ('cohort-student', 'cohort-4', '迁移学生', '123456')`,
+  );
+  await sql.query(
+    `INSERT INTO teaching_assignments (id, "userId", role, "classroomId") VALUES ('cohort-homeroom', 'cohort-owner', 'HOMEROOM', 'cohort-4')`,
+  );
+  const assertMigrated = async () => {
+    for (const [index, [, cohort]] of labels.entries())
+      assert.equal(
+        (await sql.query("SELECT cohort FROM classrooms WHERE id=$1", [`cohort-${index}`])).rows[0]
+          .cohort,
+        cohort,
+      );
+    assert.deepEqual(
+      (
+        await sql.query(
+          `SELECT cohort FROM teaching_assignments WHERE "userId"='cohort-owner' AND role='GRADE_DIRECTOR' ORDER BY cohort`,
+        )
+      ).rows.map((row: { cohort: string }) => row.cohort),
+      [...new Set(labels.map(([, cohort]) => cohort))].sort(),
+    );
+    assert.equal(
+      (await sql.query(`SELECT cohort FROM teaching_assignments WHERE id='cohort-homeroom'`))
+        .rows[0].cohort,
+      "",
+    );
+    assert.equal(
+      (
+        await sql.query(
+          `SELECT c.cohort FROM classroom_students s JOIN classrooms c ON c.id=s."classroomId" WHERE s.id='cohort-student'`,
+        )
+      ).rows[0].cohort,
+      studentCohort,
+    );
+  };
+  await sql.query(migration);
+  await assertMigrated();
+  await sql.query(migration);
+  await assertMigrated();
+  await sql.query(`DELETE FROM users WHERE id='cohort-owner'`);
+  console.log(
+    "✓ Fixed 2027 graduation reference migrates class and director aliases, merges duplicate grants, preserves existing cohorts and roster links, and is safe to rerun",
+  );
+}
+
 async function main() {
   const schema = `permissions_${randomUUID().replaceAll("-", "")}`;
   const connectionString = process.env.DATABASE_URL!;
@@ -36,7 +112,106 @@ async function main() {
           `INSERT INTO classrooms (id, "ownerId", name, grade, "reviewerIds") VALUES ('legacy', 'legacy-owner', '旧班级', '旧年级', ARRAY['legacy-reviewer', 'legacy-owner'])`,
         );
       }
-      await sql.query(await readFile(join("prisma/migrations", folder, "migration.sql"), "utf8"));
+      const migration = await readFile(join("prisma/migrations", folder, "migration.sql"), "utf8");
+      if (folder === "20261021000000_backfill_student_cohorts")
+        await verifyLegacyCohortMigration(sql, migration);
+      else if (folder === "20261022000000_backfill_primary_junior_cohorts")
+        await verifyLegacyCohortMigration(
+          sql,
+          migration,
+          [
+            ["小学六年级", "小学2027届"],
+            ["小学五年级", "小学2028届"],
+            ["小学四年级", "小学2029届"],
+            ["小学三年级", "小学2030届"],
+            ["小学二年级", "小学2031届"],
+            ["小学一年级", "小学2032届"],
+            ["六年级", "小学2027届"],
+            ["五年级", "小学2028届"],
+            ["四年级", "小学2029届"],
+            ["三年级", "小学2030届"],
+            ["二年级", "小学2031届"],
+            ["一年级", "小学2032届"],
+            ["小六", "小学2027届"],
+            ["小五", "小学2028届"],
+            ["小四", "小学2029届"],
+            ["小三", "小学2030届"],
+            ["小二", "小学2031届"],
+            ["小一", "小学2032届"],
+            ["初三", "初中2027届"],
+            ["初二", "初中2028届"],
+            ["初一", "初中2029届"],
+            ["初中三年级", "初中2027届"],
+            ["初中二年级", "初中2028届"],
+            ["初中一年级", "初中2029届"],
+            ["九年级", "初中2027届"],
+            ["八年级", "初中2028届"],
+            ["七年级", "初中2029届"],
+            [" 小学六年级 ", "小学2027届"],
+            [" 初三 ", "初中2027届"],
+            ["小学2027届", "小学2027届"],
+            ["初中2027届", "初中2027届"],
+            ["2027届", "2027届"],
+            ["2029届", "2029届"],
+            ["2024级", "2024级"],
+            ["初中四年级", "初中四年级"],
+          ],
+          "小学2031届",
+        );
+      else if (folder === "20261023000000_student_cohort_stages") {
+        await sql.query(
+          `INSERT INTO users (id, name, email, role, "updatedAt") VALUES ('stage-owner', '学段迁移验收', 'stage@test.invalid', 'TEACHER', NOW())`,
+        );
+        const cases = [
+          ["小学2027届", "小学", "2027届"],
+          ["初中2027届", "初中", "2027届"],
+          ["2027届", "高中", "2027届"],
+          ["高中2027届", "高中", "2027届"],
+          ["小学2032届", "小学", "2032届"],
+          ["初中2024级", "初中", "2024级"],
+          ["2024级", "高中", "2024级"],
+        ];
+        for (const [index, [label]] of cases.entries()) {
+          await sql.query(
+            `INSERT INTO classrooms (id, "ownerId", name, cohort) VALUES ($1, 'stage-owner', '学段班', $2)`,
+            [`stage-class-${index}`, label],
+          );
+          await sql.query(
+            `INSERT INTO teaching_assignments (id, "userId", role, cohort) VALUES ($1, 'stage-owner', 'GRADE_DIRECTOR', $2)`,
+            [`stage-director-${index}`, label],
+          );
+        }
+        await sql.query(migration);
+        for (const [index, [, stage, cohort]] of cases.entries())
+          assert.deepEqual(
+            (
+              await sql.query("SELECT stage, cohort FROM classrooms WHERE id=$1", [
+                `stage-class-${index}`,
+              ])
+            ).rows[0],
+            { stage, cohort },
+          );
+        assert.equal(
+          (
+            await sql.query(
+              `SELECT COUNT(*)::int AS count FROM teaching_assignments WHERE "userId"='stage-owner'`,
+            )
+          ).rows[0].count,
+          cases.length - 1,
+        );
+        assert.equal(
+          (
+            await sql.query(
+              `SELECT COUNT(*)::int AS count FROM teaching_assignments WHERE "userId"='stage-owner' AND cohort='2027届'`,
+            )
+          ).rows[0].count,
+          3,
+        );
+        await sql.query(`DELETE FROM users WHERE id='stage-owner'`);
+        console.log(
+          "✓ Stage migration splits primary/junior labels, marks senior cohorts and preserves separate same-year scopes",
+        );
+      } else await sql.query(migration);
     }
     assert.equal(
       await db.teachingAssignment.count({ where: { classroomId: "legacy", role: "HOMEROOM" } }),
@@ -80,10 +255,10 @@ async function main() {
     }
     const classes: string[] = [],
       students: string[] = [];
-    for (const [index, grade] of ["高一", "高一", "高二"].entries()) {
+    for (const [index, cohort] of ["2027届", "2027届", "2028届"].entries()) {
       const { id } = await command({
         type: "classroom.save",
-        classroom: { name: `${index + 1}班`, grade },
+        classroom: { name: `${index + 1}班`, stage: "高中", cohort },
       });
       classes.push(id);
       const student = await db.classroomStudent.create({
@@ -97,7 +272,7 @@ async function main() {
       students.push(student.id);
     }
     await grant("school", [{ role: "SCHOOL_ADMIN" }]);
-    await grant("director", [{ role: "GRADE_DIRECTOR", grade: "高一" }]);
+    await grant("director", [{ role: "GRADE_DIRECTOR", stage: "高中", cohort: "2027届" }]);
     await grant("head", [{ role: "HOMEROOM", classroomId: classes[0] }]);
     await grant("subject", [{ role: "SUBJECT_TEACHER", classroomId: classes[1], subject: "数学" }]);
     await grant("combined", [
@@ -111,8 +286,8 @@ async function main() {
       /班级不存在/,
     );
     await assert.rejects(
-      grant("director", [{ role: "GRADE_DIRECTOR", grade: "不存在的年级" }]),
-      /年级不存在/,
+      grant("director", [{ role: "GRADE_DIRECTOR", stage: "高中", cohort: "不存在的届别" }]),
+      /届别不存在/,
     );
     assert.equal(
       (await loadState({ id: "director" })).actor.teachingAssignments?.[0].role,
@@ -333,14 +508,14 @@ async function main() {
         { id: "subject" },
         {
           type: "classroom.save",
-          classroom: { id: classes[1], name: "2班", grade: "高二" },
+          classroom: { id: classes[1], name: "2班", stage: "高中", cohort: "2028届" },
         },
       ),
       /只能由管理员/,
     );
     assert.equal(
-      (await db.classroom.findUniqueOrThrow({ where: { id: classes[1] } })).grade,
-      "高一",
+      (await db.classroom.findUniqueOrThrow({ where: { id: classes[1] } })).cohort,
+      "2027届",
     );
     assert.equal((await loadState({ id: "subject" })).submissions.length, 1);
     assert.equal((await loadState({ id: "outside" })).assessments.length, 0);
@@ -388,6 +563,43 @@ async function main() {
     assert.equal(student.users.length, 0);
     assert.equal(student.reviews.length, 0);
     console.log("✓ Students retain access only to their own published results");
+    for (const stage of ["小学", "初中"] as const) {
+      const otherStage = await command({
+        type: "classroom.save",
+        classroom: { name: "同年毕业验收班", stage, cohort: "2027届" },
+      });
+      assert(
+        !(await loadState({ id: "director" })).classrooms.some((c) => c.id === otherStage.id),
+        "Senior director cannot read a different stage with the same cohort year",
+      );
+      await assert.rejects(
+        command({
+          type: "assessment.save",
+          assessment: {
+            name: "跨学段错误配置",
+            kind: "EXAM",
+            reviewScope: "GRADE",
+            classroomIds: [classes[0], otherStage.id],
+            papers: configs,
+          },
+        }),
+        /同一学段、同一届别/,
+      );
+      await grant("outside", [{ role: "GRADE_DIRECTOR", stage, cohort: "2027届" }]);
+      assert.deepEqual(
+        (await loadState({ id: "outside" })).classrooms.map((c) => c.id),
+        [otherStage.id],
+      );
+      await grant("outside", []);
+      await db.classroom.delete({ where: { id: otherStage.id } });
+      await assert.rejects(
+        grant("outside", [{ role: "GRADE_DIRECTOR", stage, cohort: "2027届" }]),
+        /届别不存在/,
+      );
+    }
+    console.log(
+      "✓ Same-year primary, junior and senior scopes stay isolated in director grants and joint exams",
+    );
     const gradeExam = await command({
       type: "assessment.save",
       assessment: {
@@ -409,7 +621,7 @@ async function main() {
           papers: configs,
         },
       }),
-      /同一年级/,
+      /同一学段、同一届别/,
     );
     await assert.rejects(
       command({
@@ -541,7 +753,7 @@ async function main() {
     await assert.rejects(loadState({ id: "student" }, db, { reviewing: true }), /教师权限/);
     const extraClass = await command({
       type: "classroom.save",
-      classroom: { name: "未参试三班", grade: "高一" },
+      classroom: { name: "未参试三班", stage: "高中", cohort: "2027届" },
     });
     await db.user.create({
       data: {
@@ -556,7 +768,7 @@ async function main() {
     ]);
     await command({
       type: "classroom.save",
-      classroom: { id: extraClass.id, name: "未参试三班", grade: "高二" },
+      classroom: { id: extraClass.id, name: "未参试三班", stage: "高中", cohort: "2028届" },
     });
     assert(
       !(await loadState({ id: "grade-peer" }, db, { reviewing: true })).assessments.some(
@@ -565,7 +777,7 @@ async function main() {
     );
     await command({
       type: "classroom.save",
-      classroom: { id: extraClass.id, name: "未参试三班", grade: "高一" },
+      classroom: { id: extraClass.id, name: "未参试三班", stage: "高中", cohort: "2027届" },
     });
     await grant("outside", [{ role: "SUBJECT_TEACHER", classroomId: classes[2], subject: "数学" }]);
     assert(

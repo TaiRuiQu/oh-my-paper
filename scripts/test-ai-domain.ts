@@ -274,7 +274,7 @@ async function main() {
     const classroomId = (
       await command({
         type: "classroom.save",
-        classroom: { name: "班级", grade: "高一" },
+        classroom: { name: "班级", stage: "高中", cohort: "2027届" },
       })
     ).id;
     await db.teachingAssignment.createMany({

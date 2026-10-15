@@ -73,7 +73,7 @@ export function HomeworkListPage({ exporting = false }: { exporting?: boolean })
         <div className="p-toolbar">
           <Input
             aria-label="搜索作业"
-            placeholder="搜索作业名称、学科或年级"
+            placeholder="搜索作业名称、学科或适用年级"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -84,7 +84,7 @@ export function HomeworkListPage({ exporting = false }: { exporting?: boolean })
               <thead>
                 <tr>
                   <th>作业</th>
-                  <th>学科 / 年级</th>
+                  <th>学科 / 适用年级</th>
                   <th>题目 / 分值</th>
                   <th>布置班次</th>
                   <th>操作</th>
@@ -482,7 +482,7 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                       ))}
                     </select>
                   </Field>
-                  <Field label="年级">
+                  <Field label="适用年级">
                     <GradeSelect
                       value={grade}
                       onChange={(e) => change(() => setGrade(e.target.value))}

@@ -162,7 +162,7 @@ export function QuestionEditor({
               ))}
             </select>
           </Field>
-          <Field label="年级">
+          <Field label="适用年级">
             <GradeSelect
               name="grade"
               required

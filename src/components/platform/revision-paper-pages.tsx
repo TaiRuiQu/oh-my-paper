@@ -236,7 +236,7 @@ export function RevisionPaperBuilder({
             <p className="p-muted">
               {mode === "REPLAY"
                 ? "保留原题、配图、完整小问和原分值；相同版本且分值相同的重复题目合并为一题。"
-                : "根据所选错题的失分知识点，由 AI 从同学科、同年级题库选取未作答的新题。题库不足时请减少题数或补充题库。"}
+                : "根据所选错题的失分知识点，由 AI 从同学科、同适用年级题库选取未作答的新题。题库不足时请减少题数或补充题库。"}
             </p>
             {mode === "CONSOLIDATE" && (
               <div className="p-form-grid">

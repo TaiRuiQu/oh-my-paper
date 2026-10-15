@@ -127,7 +127,8 @@ function state(): PlatformState {
         id: "class",
         ownerId: "teacher",
         name: "班级",
-        grade: "高一",
+        stage: "高中",
+        cohort: "2027届",
         students: [
           {
             id: "student",

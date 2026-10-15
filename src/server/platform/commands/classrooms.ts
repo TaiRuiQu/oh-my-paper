@@ -18,12 +18,12 @@ export async function executeClassroomsCommand(
         const previous = owner(a, await db.classroom.findUnique({ where: { id } }));
         if (
           a.role !== "ADMIN" &&
-          previous.grade !== data.grade &&
+          (previous.stage !== data.stage || previous.cohort !== data.cohort) &&
           (await db.teachingAssignment.count({
             where: { classroomId: id, role: "SUBJECT_TEACHER" },
           }))
         )
-          throw new AccessError(403, "已配置任课教师的班级年级只能由管理员调整。");
+          throw new AccessError(403, "已配置任课教师的班级学段或届别只能由管理员调整。");
       }
       const c = id
         ? await db.classroom.update({ where: { id }, data })

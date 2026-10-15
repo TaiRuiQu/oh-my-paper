@@ -109,18 +109,16 @@ export async function executeAdmin(id: string, input: z.infer<typeof adminComman
       ];
       if ((await tx.classroom.count({ where: { id: { in: classIds } } })) !== classIds.length)
         throw new RequestError(400, "班级不存在，请刷新后重新配置。");
-      const grades = [
-        ...new Set(
-          input.assignments.flatMap((row) => (row.role === "GRADE_DIRECTOR" ? [row.grade] : [])),
-        ),
-      ];
-      const existingGrades = await tx.classroom.findMany({
-        where: { grade: { in: grades } },
-        select: { grade: true },
-        distinct: ["grade"],
-      });
-      if (existingGrades.length !== grades.length)
-        throw new RequestError(400, "年级不存在，请先创建该年级的班级。");
+      const cohorts = input.assignments.filter((row) => row.role === "GRADE_DIRECTOR");
+      for (const scope of cohorts) {
+        if (
+          !(await tx.classroom.findFirst({
+            where: { stage: scope.stage, cohort: scope.cohort },
+            select: { id: true },
+          }))
+        )
+          throw new RequestError(400, "届别不存在，请先创建该学段、该届别的班级。");
+      }
       await tx.teachingAssignment.deleteMany({ where: { userId: input.id } });
       if (input.assignments.length)
         await tx.teachingAssignment.createMany({

@@ -354,7 +354,7 @@ function CardWorkbench({ template }: { template?: CardTemplate }) {
                   ))}
                 </select>
               </Field>
-              <Field label="年级">
+              <Field label="适用年级">
                 <Input name="grade" maxLength={40} placeholder="例如：四年级" />
               </Field>
             </div>

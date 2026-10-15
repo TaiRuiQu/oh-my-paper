@@ -79,7 +79,7 @@ export function PaperListPage({ exporting = false }: { exporting?: boolean }) {
         <div className="p-toolbar p-toolbar-wrap">
           <Input
             aria-label={`搜索${noun}`}
-            placeholder={`搜索${noun}名称或年级`}
+            placeholder={`搜索${noun}名称或适用年级`}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -109,7 +109,7 @@ export function PaperListPage({ exporting = false }: { exporting?: boolean }) {
               <thead>
                 <tr>
                   <th>名称</th>
-                  <th>学科 / 年级</th>
+                  <th>学科 / 适用年级</th>
                   <th>题数 / 总分</th>
                   <th>状态</th>
                   <th>操作</th>
@@ -579,7 +579,7 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
                           ))}
                         </select>
                       </Field>
-                      <Field label="年级">
+                      <Field label="适用年级">
                         <GradeSelect
                           value={grade}
                           onChange={(e) => edit(() => setGrade(e.target.value))}

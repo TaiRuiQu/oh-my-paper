@@ -28,13 +28,14 @@ export async function getActor(userId: string, db: Db = getDb()): Promise<Platfo
 }
 export function toTeachingAssignment(row: {
   role: string;
-  grade: string;
+  stage: string;
+  cohort: string;
   classroomId: string | null;
   subject: string;
 }) {
   return teachingAssignmentSchema.parse({
     role: row.role,
-    ...(row.role === "GRADE_DIRECTOR" ? { grade: row.grade } : {}),
+    ...(row.role === "GRADE_DIRECTOR" ? { stage: row.stage, cohort: row.cohort } : {}),
     ...(["HOMEROOM", "SUBJECT_TEACHER"].includes(row.role) ? { classroomId: row.classroomId } : {}),
     ...(row.role === "SUBJECT_TEACHER" ? { subject: row.subject } : {}),
   });
@@ -47,7 +48,7 @@ export function visibleClassrooms(a: PlatformState["actor"]): Prisma.ClassroomWh
   return {
     OR: assignments.map((row) =>
       row.role === "GRADE_DIRECTOR"
-        ? { grade: row.grade }
+        ? { stage: row.stage, cohort: row.cohort }
         : "classroomId" in row
           ? { id: row.classroomId }
           : { id: { in: [] } },
@@ -114,7 +115,7 @@ export async function assertCanReview(
         ),
       },
     },
-    select: { id: true, grade: true },
+    select: { id: true, stage: true, cohort: true },
   });
   if (
     !classroom ||

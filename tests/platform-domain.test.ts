@@ -85,7 +85,8 @@ const classroom: Classroom = {
   id: "class",
   ownerId: "teacher",
   name: "一班",
-  grade: "高一",
+  stage: "高中",
+  cohort: "2027届",
 
   students: [
     {
@@ -390,6 +391,23 @@ describe("platform command contracts", () => {
       },
     };
     expect(commandSchema.safeParse({ type: "question.save", question: mixed }).success).toBe(true);
+  });
+  it("requires student cohorts on classes while retaining fixed grades on questions", () => {
+    for (const cohort of ["2027届", "2024级"]) {
+      expect(
+        commandSchema.safeParse({
+          type: "classroom.save",
+          classroom: { name: "1班", stage: "高中", cohort },
+        }).success,
+      ).toBe(true);
+    }
+    for (const classroom of [
+      { name: "1班", grade: "高一" },
+      { name: "1班", stage: "高中", cohort: "  " },
+    ]) {
+      expect(commandSchema.safeParse({ type: "classroom.save", classroom }).success).toBe(false);
+    }
+    expect(commandSchema.safeParse({ type: "question.save", question: q }).success).toBe(true);
   });
   it("rejects invalid choices, duplicate question order and overlapping grade bands", () => {
     expect(

@@ -178,7 +178,8 @@ model Classroom {
   ownerId String
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   name String
-  grade String
+  stage String
+  cohort String
   students ClassroomStudent[]
   teachingAssignments TeachingAssignment[]
   @@index([ownerId])
@@ -189,7 +190,8 @@ model TeachingAssignment {
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   role String
-  grade String @default("")
+  stage String @default("")
+  cohort String @default("")
   classroomId String?
   classroom Classroom? @relation(fields: [classroomId], references: [id], onDelete: Cascade)
   subject String @default("")

@@ -165,7 +165,7 @@ export function HomeOverviewPage() {
               </Link>
               <Link href="/workspace/classes">
                 <div>
-                  管理班级<small>维护年级与学生名单</small>
+                  管理班级<small>维护届别与学生名单</small>
                 </div>
                 <ArrowRight size={16} />
               </Link>

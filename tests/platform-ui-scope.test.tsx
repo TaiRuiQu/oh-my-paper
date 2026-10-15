@@ -98,7 +98,8 @@ const state = {
     {
       id: "class",
       name: "班级",
-      grade: "高一",
+      stage: "高中",
+      cohort: "2027届",
       ownerId: "teacher",
 
       students: [

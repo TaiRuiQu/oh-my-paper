@@ -106,7 +106,10 @@ async function main() {
     const denied = await request(student, "/api/platform", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "classroom.save", classroom: { name: "越权", grade: "高一" } }),
+      body: JSON.stringify({
+        type: "classroom.save",
+        classroom: { name: "越权", stage: "高中", cohort: "2027届" },
+      }),
     });
     assert.equal(denied.status, 403);
     const csrf = await request(teacher, "/api/platform", {
@@ -114,7 +117,7 @@ async function main() {
       headers: { "Content-Type": "application/json", Origin: "https://outside.invalid" },
       body: JSON.stringify({
         type: "classroom.save",
-        classroom: { name: "伪请求", grade: "高一" },
+        classroom: { name: "伪请求", stage: "高中", cohort: "2027届" },
       }),
     });
     assert.equal(csrf.status, 403);
@@ -234,7 +237,7 @@ async function main() {
     const classroomId = (
       await command(teacher, {
         type: "classroom.save",
-        classroom: { name: "HTTP 验收班", grade: "高一" },
+        classroom: { name: "HTTP 验收班", stage: "高中", cohort: "2027届" },
       })
     ).id;
     const grant = await request(admin, "/api/platform/admin", {
