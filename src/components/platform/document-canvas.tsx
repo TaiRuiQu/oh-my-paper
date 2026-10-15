@@ -9,7 +9,14 @@ import {
   type ReactNode,
   type ReactElement,
 } from "react";
-import { pageDimensions, documentFont, orderedDocumentBlocks } from "@/lib/document-layout";
+import {
+  documentFont,
+  orderedDocumentBlocks,
+  DOCUMENT_DEFAULTS,
+  DOCUMENT_COLUMN_GAP_MM,
+  DOCUMENT_FOOTER_MM,
+  DOCUMENT_PX_PER_MM,
+} from "@/lib/document-layout";
 import { renderPrintRichText } from "@/lib/document-text";
 import type { DocumentLayout } from "@/contracts/platform";
 import { Button } from "@/components/ui/button";
@@ -123,12 +130,19 @@ export function DocumentCanvas({
     ),
   }));
   const host = useRef<HTMLDivElement>(null);
+  const printedPages = useRef<HTMLDivElement>(null);
   const measure = useRef<HTMLFieldSetElement>(null);
   const [zoom, setZoom] = useState(0.75);
   const [fitWidth, setFitWidth] = useState(true);
-  const [pages, setPages] = useState<number[][]>([blocks.map((_, n) => n)]);
-  const { width, height } = pageDimensions(layout.paperSize, layout.orientation);
-  const margin = (layout.marginMm ?? 18) * 3.78;
+  const [pages, setPages] = useState<number[][][]>([[blocks.map((_, n) => n)]]);
+  const physical = layout.paperSize === "A3" ? [297, 420] : [210, 297];
+  const [pageWidthMm, pageHeightMm] =
+    layout.orientation === "landscape" ? physical.toReversed() : physical;
+  const width = pageWidthMm * DOCUMENT_PX_PER_MM;
+  const height = pageHeightMm * DOCUMENT_PX_PER_MM;
+  const margin = (layout.marginMm ?? DOCUMENT_DEFAULTS.marginMm) * DOCUMENT_PX_PER_MM;
+  const columnGap = DOCUMENT_COLUMN_GAP_MM * DOCUMENT_PX_PER_MM;
+  const footerHeight = DOCUMENT_FOOTER_MM * DOCUMENT_PX_PER_MM;
   const columns = layout.columns;
   const signature = blocks.map((b) => `${b.key}:${b.pageBreakBefore}`).join("|");
   useEffect(() => {
@@ -154,17 +168,28 @@ export function DocumentCanvas({
       const headerHeight =
         element.querySelector<HTMLElement>("[data-measure-header]")?.getBoundingClientRect()
           .height ?? 0;
-      const next: number[][] = [[]];
-      let used = headerHeight * columns;
-      let capacity = (height - 2 * margin - 32) * columns;
+      const next: number[][][] = [Array.from({ length: columns }, () => [])];
+      let column = 0;
+      let used = 0;
+      let capacity = height - 2 * margin - footerHeight - headerHeight;
       blocks.forEach((block, n) => {
         const blockHeight = heights.get(n) ?? 100;
-        if (next.at(-1)!.length && (block.pageBreakBefore || used + blockHeight > capacity)) {
-          next.push([]);
+        const hasPageContent = next.at(-1)!.some((entries) => entries.length);
+        if (hasPageContent && block.pageBreakBefore) {
+          next.push(Array.from({ length: columns }, () => []));
+          column = 0;
           used = 0;
-          capacity = (height - 2 * margin - 32) * columns;
+          capacity = height - 2 * margin - footerHeight;
+        } else if (used > 0 && used + blockHeight > capacity) {
+          column++;
+          used = 0;
+          if (column === columns) {
+            next.push(Array.from({ length: columns }, () => []));
+            column = 0;
+            capacity = height - 2 * margin - footerHeight;
+          }
         }
-        next.at(-1)!.push(n);
+        next.at(-1)![column].push(n);
         used += blockHeight;
       });
       setPages((old) => (JSON.stringify(old) === JSON.stringify(next) ? old : next));
@@ -177,21 +202,29 @@ export function DocumentCanvas({
       .querySelectorAll("[data-measure-block], [data-measure-header]")
       .forEach((block) => observer.observe(block));
     paginate();
+    void document.fonts.ready.then(paginate);
+    document.fonts.addEventListener("loadingdone", paginate);
+    const currentPages = printedPages.current;
+    currentPages?.addEventListener("omp:prepare-print", paginate);
     return () => {
       observer.disconnect();
       clearTimeout(timer);
+      document.fonts.removeEventListener("loadingdone", paginate);
+      currentPages?.removeEventListener("omp:prepare-print", paginate);
     };
     // React nodes update in place; ResizeObserver recalculates their actual measured heights.
-  }, [signature, width, height, margin, columns, blocks]);
+  }, [signature, width, height, margin, columns, blocks, footerHeight]);
   const style = {
     "--document-width": `${width}px`,
     "--document-height": `${height}px`,
     "--document-margin": `${margin}px`,
     "--document-font-family": documentFont(layout.fontFamily),
-    "--document-font": `${(layout.fontSizePt ?? 11) * 1.333}px`,
-    "--document-line": layout.lineHeight ?? 1.8,
+    "--document-font": `${(layout.fontSizePt ?? DOCUMENT_DEFAULTS.fontSizePt) * (96 / 72)}px`,
+    "--document-line": layout.lineHeight ?? DOCUMENT_DEFAULTS.lineHeight,
     "--document-columns": columns,
-    "--document-measure-width": `${(width - 2 * margin - (columns - 1) * 24) / columns}px`,
+    "--document-column-gap": `${columnGap}px`,
+    "--document-footer": `${footerHeight}px`,
+    "--document-measure-width": `${(width - 2 * margin - (columns - 1) * columnGap) / columns}px`,
     zoom,
   } as CSSProperties;
   return (
@@ -263,22 +296,38 @@ export function DocumentCanvas({
           </Button>
         </div>
       </div>
-      <div className="p-document-scroll" ref={host}>
-        <div className="p-document-pages" style={style}>
-          {pages.map((indices, page) => (
+      <div
+        className="p-document-scroll"
+        ref={host}
+        role="region"
+        aria-label="文档预览"
+        tabIndex={0}
+      >
+        <div
+          ref={printedPages}
+          className="p-document-pages"
+          style={style}
+          data-paper-size={layout.paperSize}
+          data-orientation={layout.orientation ?? "portrait"}
+        >
+          {pages.map((pageColumns, page) => (
             <div className="p-document-page" key={page}>
               {page === 0 && <div data-document-header>{header}</div>}
               <div className="p-document-columns">
-                {indices.map(
-                  (index) =>
-                    blocks[index] && (
-                      <div key={blocks[index].key} data-document-block={index}>
-                        {blocks[index].content}
-                      </div>
-                    ),
-                )}
+                {pageColumns.map((indices, column) => (
+                  <div className="p-document-column" key={column}>
+                    {!blocks.length && page === 0 && column === 0 && empty}
+                    {indices.map(
+                      (index) =>
+                        blocks[index] && (
+                          <div key={blocks[index].key} data-document-block={index}>
+                            {blocks[index].content}
+                          </div>
+                        ),
+                    )}
+                  </div>
+                ))}
               </div>
-              {!blocks.length && page === 0 && empty}
               <footer>
                 {page + 1} / {pages.length}
               </footer>

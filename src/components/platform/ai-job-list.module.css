@@ -1,0 +1,59 @@
+.job {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.job:last-child {
+  border-bottom: 0;
+}
+
+.description {
+  min-width: 0;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.progress {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.time {
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 13px;
+}
+
+.links a {
+  padding: 4px 0;
+}
+
+@media (max-width: 760px) {
+  .job {
+    padding: 14px 17px;
+  }
+
+  .links a {
+    padding: 8px 0;
+  }
+}

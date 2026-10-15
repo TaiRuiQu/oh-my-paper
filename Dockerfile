@@ -18,10 +18,10 @@ RUN DATABASE_URL=postgresql://build:build@localhost:5432/build pnpm run build
 
 FROM node:24.19.0-bookworm-slim AS web
 WORKDIR /app
-RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv ca-certificates fonts-noto-cjk poppler-utils chromium && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends python3 python3-venv ca-certificates fonts-noto-cjk poppler-utils && rm -rf /var/lib/apt/lists/*
 COPY tools/card-scan/requirements.txt /tmp/card-scan-requirements.txt
 RUN python3 -m venv /opt/card-scan && /opt/card-scan/bin/pip install --no-cache-dir -r /tmp/card-scan-requirements.txt && rm /tmp/card-scan-requirements.txt
-ENV NODE_ENV=production HOSTNAME=0.0.0.0 PORT=3000 CARD_SCAN_PYTHON=/opt/card-scan/bin/python STORAGE_ROOT=/data/storage TEMP_ROOT=/data/tmp CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
+ENV NODE_ENV=production HOSTNAME=0.0.0.0 PORT=3000 CARD_SCAN_PYTHON=/opt/card-scan/bin/python STORAGE_ROOT=/data/storage TEMP_ROOT=/data/tmp
 COPY --from=build --chown=node:node /app/.next/standalone ./
 COPY --from=build --chown=node:node /app/.next/static ./.next/static
 COPY --from=build --chown=node:node /app/public ./public

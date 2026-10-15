@@ -1,3 +1,5 @@
+import type { TeachingAssignment } from "./permissions";
+
 export const SUBJECTS = [
   "语文",
   "数学",
@@ -9,6 +11,7 @@ export const SUBJECTS = [
   "历史",
   "地理",
 ] as const;
+export const RECORD_NAME_MAX_LENGTH = 200;
 export type Role = "ADMIN" | "TEACHER" | "STUDENT";
 export type Actor = { id: string; role?: string; name?: string; email?: string };
 export type PlatformActor = Actor;
@@ -68,7 +71,8 @@ export const DOCUMENT_FONTS = [
   "Arial",
   "Times New Roman",
 ] as const;
-export type DocumentFont = (typeof DOCUMENT_FONTS)[number];
+/** A single installed font family; teachers may select fonts on their own computer. */
+export type DocumentFont = string;
 export type DocumentLayout = {
   orientation?: "portrait" | "landscape";
   fontFamily?: DocumentFont;
@@ -109,7 +113,6 @@ export type Classroom = {
   ownerId: string;
   name: string;
   grade: string;
-  reviewerIds: string[];
   students: Student[];
 };
 export type GradeBand = { upperPercent: number; min: number; max: number };
@@ -132,6 +135,7 @@ export type Assessment = {
   ownerId: string;
   name: string;
   kind: "EXAM" | "HOMEWORK";
+  reviewScope: "CLASSROOM" | "GRADE";
   classroomIds: string[];
   studentIds?: string[];
   papers: AssessmentPaper[];
@@ -223,6 +227,7 @@ export type SubjectResult = {
   grades: FinalGrade[];
 };
 export type StudentResult = {
+  totalRestricted?: boolean;
   assessmentId: string;
   studentId: string;
   studentName: string;
@@ -273,7 +278,8 @@ export type Analytics = {
   }[];
 };
 export type PlatformState = {
-  actor: { id: string; name: string; role: Role };
+  reviewing?: boolean;
+  actor: { id: string; name: string; role: Role; teachingAssignments?: TeachingAssignment[] };
   questions: BankQuestion[];
   questionCount?: number;
   papers: Paper[];
@@ -284,7 +290,14 @@ export type PlatformState = {
   reviews: Review[];
   reviewHistory?: Review[];
   analytics: Analytics;
-  users: { id: string; name: string; email: string; username?: string | null; role: Role }[];
+  users: {
+    id: string;
+    name: string;
+    email: string;
+    username?: string | null;
+    role: Role;
+    teachingAssignments?: TeachingAssignment[];
+  }[];
 };
 export type PlatformCommand =
   | {
@@ -313,9 +326,10 @@ export type PlatformCommand =
         };
     }
   | { type: "paper.delete"; id: string }
+  | { type: "paper.rename"; id: string; name: string }
   | {
       type: "classroom.save";
-      classroom: { id?: string; name: string; grade: string; reviewerIds?: string[] };
+      classroom: { id?: string; name: string; grade: string };
     }
   | {
       type: "student.save";
@@ -334,11 +348,13 @@ export type PlatformCommand =
         id?: string;
         name: string;
         kind: "EXAM" | "HOMEWORK";
+        reviewScope?: Assessment["reviewScope"];
         classroomIds: string[];
         papers: AssessmentPaper[];
       };
     }
   | { type: "assessment.publish"; id: string; published: boolean }
+  | { type: "assessment.rename"; id: string; name: string }
   | {
       type: "template.save";
       template: { id?: string; paperId: string; name: string; subject: string; layout: CardLayout };

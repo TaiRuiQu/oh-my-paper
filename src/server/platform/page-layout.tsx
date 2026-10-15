@@ -9,9 +9,11 @@ import { DomainProvider } from "@/components/platform/domain-provider";
 export async function ServerDomain({
   area,
   children,
+  reviewing = false,
 }: {
   area: PlatformArea;
   children: ReactNode;
+  reviewing?: boolean;
 }) {
   const session = await requirePageSession();
   const actor = await getActor(session.user.id);
@@ -20,7 +22,7 @@ export async function ServerDomain({
   if (actor.role !== "ADMIN" && area === "admin") redirect("/workspace");
   if (actor.role !== "STUDENT" && area === "learning") redirect("/workspace");
   return (
-    <DomainProvider area={area} initialState={await loadPageState(actor, area)}>
+    <DomainProvider area={area} initialState={await loadPageState(actor, area, reviewing)}>
       {children}
     </DomainProvider>
   );

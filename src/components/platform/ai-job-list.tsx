@@ -4,7 +4,9 @@ import Link from "next/link";
 import type { AiJobDTO, AiKind } from "@/contracts/platform-ai";
 import { AI_JOB_NAMES, AI_JOB_STATUSES, aiJobHref, aiJobResultLink } from "@/lib/ai-job-display";
 import { formatDateTime } from "@/lib/date-time";
+import { aiJobCurrentStep } from "@/lib/ai-trace-display";
 import { Empty, Panel } from "./primitives";
+import styles from "./ai-job-list.module.css";
 
 export function AIJobStatus({ job }: { job: AiJobDTO }) {
   return (
@@ -68,23 +70,22 @@ export function AIJobList({
         relevant.slice(0, compact ? 3 : 100).map((job) => {
           const resultLink = aiJobResultLink(job);
           return (
-            <article key={job.id} className="p-question">
-              <div className="p-question-head">
-                <Link className="link-button" href={aiJobHref(job.id)}>
-                  {AI_JOB_NAMES[job.kind]}
-                </Link>
-                <AIJobStatus job={job} />
-              </div>
-              <p className="p-muted">提交于 {formatDateTime(job.createdAt)}</p>
-              <div className="p-actions">
-                <Link className="button secondary" href={aiJobHref(job.id)}>
-                  查看执行轨迹
-                </Link>
-                {resultLink && (
-                  <Link className="button secondary" href={resultLink.href}>
-                    {resultLink.label}
+            <article key={job.id} className={styles.job}>
+              <div className={styles.description}>
+                <div className={styles.heading}>
+                  <Link className="link-button" href={aiJobHref(job.id)}>
+                    {AI_JOB_NAMES[job.kind]}
                   </Link>
-                )}
+                  <AIJobStatus job={job} />
+                </div>
+                <p className={styles.progress}>{aiJobCurrentStep(job)}</p>
+                <time className={styles.time} dateTime={job.createdAt}>
+                  {formatDateTime(job.createdAt)}
+                </time>
+              </div>
+              <div className={styles.links}>
+                <Link href={aiJobHref(job.id)}>查看过程</Link>
+                {resultLink && <Link href={resultLink.href}>{resultLink.label}</Link>}
               </div>
             </article>
           );

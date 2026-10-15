@@ -29,6 +29,48 @@
         ],
         "createdAt": "2026-10-14T14:45:48.737Z",
         "reason": "Agent reviewed: this fixture tests the existing user-selectable document font from DOCUMENT_FONTS, not application typography."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "nsimsun",
+        "files": [
+          "scripts/test-platform.ts"
+        ],
+        "createdAt": "2026-10-15T02:15:37.547Z",
+        "reason": "Codex: pre-existing document-export test fixture uses NSimSun; the platform surface brief explicitly specifies Word document font NSimSun, not an application typography change."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "nsimsun",
+        "createdAt": "2026-10-15T02:58:04.262Z",
+        "reason": "User explicitly requested 新宋体 for printable teaching documents; application UI font is unchanged."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "霞鹜文楷 screen",
+        "files": [
+          "tests/platform-document-layout.test.ts"
+        ],
+        "createdAt": "2026-10-15T03:03:53.669Z",
+        "reason": "Codex: regression fixture verifies user-selected local document font family, not application typography."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "foo",
+        "files": [
+          "tests/platform-document-layout.test.ts"
+        ],
+        "createdAt": "2026-10-15T03:03:53.695Z",
+        "reason": "Codex: deliberately invalid font input fixture verifies CSS injection rejection."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "霞鹜文楷",
+        "files": [
+          "tests/platform-document-export.test.ts"
+        ],
+        "createdAt": "2026-10-15T03:03:53.718Z",
+        "reason": "Codex: Word export regression fixture preserves a teacher-selected local document font."
       }
     ]
   }

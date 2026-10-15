@@ -1167,8 +1167,7 @@ td .button {
   background: white;
 }
 .p-paper-question {
-  padding: 20px 0;
-  border-top: 1px solid var(--line);
+  padding: 8px 0;
   scroll-margin-top: 20px;
 }
 .p-paper-question textarea {
@@ -1358,10 +1357,13 @@ td .button {
   position: relative;
   width: var(--document-width);
   min-height: var(--document-height);
+  display: flex;
+  flex-direction: column;
   padding: var(--document-margin);
-  padding-bottom: calc(var(--document-margin) + 28px);
+  padding-bottom: calc(var(--document-margin) + var(--document-footer));
   background: white;
-  color: #202b3d;
+  color: #111;
+  font-family: var(--document-font-family);
   font-size: var(--document-font);
   line-height: var(--document-line);
   box-shadow: 0 4px 16px rgb(32 43 61 / 9%);
@@ -1376,17 +1378,31 @@ td .button {
   color: var(--muted);
 }
 .p-document-columns {
-  column-count: var(--document-columns);
-  column-gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(var(--document-columns), minmax(0, 1fr));
+  gap: var(--document-column-gap);
+  flex: 1;
 }
-.p-document-columns > div {
+.p-document-column {
+  position: relative;
+  min-width: 0;
+}
+.p-document-column + .p-document-column::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--document-column-gap) / -2);
+  top: 0;
+  bottom: 0;
+  border-left: 0.5pt solid #666;
+}
+.p-document-column > div {
   break-inside: avoid;
 }
 .p-document-text {
   white-space: pre-wrap;
   min-height: 1.5em;
   border: 1px solid transparent;
-  padding: 3px 4px;
+  padding: 1px 0;
   cursor: text;
   overflow-wrap: anywhere;
 }
@@ -1403,10 +1419,10 @@ td .button {
 }
 .p-document-title {
   font-size: 24px;
-  font-weight: 650;
+  font-weight: 700;
   line-height: 1.4;
   text-align: center;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
 }
 .p-document-subtitle {
   text-align: center;
@@ -1454,12 +1470,12 @@ td .button {
   align-items: start;
 }
 .p-workbook-exercise {
-  padding: 16px 0;
+  padding: 6px 0;
   break-inside: avoid;
 }
 .p-workbook-lines > div {
-  height: 28px;
-  border-bottom: 1px solid #dfe5ee;
+  height: 7mm;
+  border-bottom: 0.5pt solid #777;
 }
 .p-workbook-lines small {
   font-size: 11px;
@@ -1724,10 +1740,10 @@ td .button {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  min-height: 24px;
-  margin-bottom: 8px;
-  font-size: 12px;
-  line-height: 24px;
+  min-height: 0;
+  margin-bottom: 2px;
+  font-size: inherit;
+  line-height: inherit;
 }
 .p-document-option {
   display: flex;
@@ -1901,7 +1917,7 @@ td .button {
 .p-main-workbench .p-document-scroll {
   padding: 28px;
 }
-.p-main-workbench .p-document-page,
+.p-document-page,
 .p-document-measure {
   font-family: var(--document-font-family, "NSimSun", "SimSun", serif);
 }
@@ -2118,4 +2134,35 @@ td .button {
   background: var(--accent-soft);
   color: var(--accent);
   font: 11px var(--font-sans);
+}
+/* Teaching identities reuse the existing form and table controls. */
+.p-permission-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+}
+.p-permission-row {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.p-permission-row > label {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+.p-permission-summary {
+  margin: 0;
+  padding-inline-start: 16px;
+}
+
+.p-print-hint {
+  display: block;
+  max-width: 48ch;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
 }

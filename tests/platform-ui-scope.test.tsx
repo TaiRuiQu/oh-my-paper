@@ -100,7 +100,7 @@ const state = {
       name: "班级",
       grade: "高一",
       ownerId: "teacher",
-      reviewerIds: [],
+
       students: [
         {
           id: "student",
@@ -117,6 +117,7 @@ const state = {
       id: "exam1",
       name: "考试一",
       kind: "EXAM",
+      reviewScope: "CLASSROOM",
       classroomIds: ["class"],
       papers: [{ paperId: "paper", subject: "数学" }],
     },
@@ -124,6 +125,7 @@ const state = {
       id: "exam2",
       name: "考试二",
       kind: "EXAM",
+      reviewScope: "CLASSROOM",
       classroomIds: ["class"],
       papers: [{ paperId: "paper", subject: "数学" }],
     },

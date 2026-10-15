@@ -2,7 +2,7 @@ import "server-only";
 import type { Prisma as PrismaTypes } from "@/generated/prisma/client";
 import type { PlatformState } from "../types";
 import type { Command, CommandContext } from "./types";
-import { canAssess, canUseStudent, json, missing } from "../access";
+import { assertCanReview, json, missing } from "../access";
 import { reviewRule, exceedsReviewDifference } from "@/lib/document-layout";
 import { finalGrades } from "../analytics";
 import type { Assessment, BankQuestion, Paper, Review, ScanSubmission } from "../types";
@@ -20,13 +20,18 @@ export async function executeReviewsCommand(
         throw new RequestError(400, "AI只允许第一评，第二评与仲裁必须人工完成。");
       const s = await db.scanSubmission.findUnique({ where: { id: r.submissionId } });
       if (!s) throw missing();
-      const exam = await canAssess(db, a, s.assessmentId);
+      const exam = await db.assessment.findUnique({
+        where: { id: s.assessmentId },
+        include: { papers: true },
+      });
+      if (!exam || !exam.studentIds.includes(s.studentId)) throw missing();
       const student = await db.classroomStudent.findUniqueOrThrow({
         where: { id: s.studentId },
       });
-      await canUseStudent(db, a, student.classroomId);
+      const config = exam.papers.find((p) => p.paperId === s.paperId);
+      if (!config) throw missing();
+      await assertCanReview(db, a, exam, student.classroomId, config.subject);
       if (exam.published) throw new RequestError(409, "已发布成绩的考试不能重新评阅。");
-      const config = exam.papers.find((p) => p.paperId === s.paperId)!;
       const paper = await db.paper.findUniqueOrThrow({
         where: { id: s.paperId },
         include: { items: true },

@@ -4,22 +4,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AiJobDTO } from "@/contracts/platform-ai";
-import {
-  AI_JOB_NAMES,
-  aiEventDescription,
-  aiJobHref,
-  aiJobResult,
-  aiJobResultLink,
-} from "@/lib/ai-job-display";
-import { formatDateTime } from "@/lib/date-time";
+import { AI_JOB_NAMES, aiJobHref, aiJobResult, aiJobResultLink } from "@/lib/ai-job-display";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { PlatformAI } from "./ai";
-import { AIJobStatus } from "./ai-job-list";
+import { AIExecutionTrace } from "./ai-execution-trace";
 import { useDomain } from "./domain-provider";
 import { PageHeader } from "./page-header";
-import { Empty, Panel } from "./primitives";
+import { Panel } from "./primitives";
 import { QuestionBody } from "./questions";
-import styles from "./ai-job-pages.module.css";
 
 export function AIJobsPage() {
   const { state, refresh, notify } = useDomain();
@@ -90,7 +82,7 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
     <>
       <PageHeader
         title={`${AI_JOB_NAMES[job.kind]} · 执行轨迹`}
-        description="查看此任务的处理过程与结果。离开页面后任务会继续执行，运行期间每三秒更新状态。"
+        description="离开页面后任务会继续执行。运行期间自动更新，点击活动可查看详情。"
         back={{ href: "/workspace/ai", label: "返回 AI 任务记录" }}
         actions={
           <>
@@ -115,58 +107,15 @@ export function AIJobDetailPage({ initialJob }: { initialJob: AiJobDTO }) {
           {failure}
         </p>
       )}
-      <Panel title="任务状态" actions={<AIJobStatus job={job} />}>
-        <div className="p-panel-content">
-          <dl className={styles.meta}>
-            <div>
-              <dt>提交时间</dt>
-              <dd>{formatDateTime(job.createdAt)}</dd>
-            </div>
-            <div>
-              <dt>开始时间</dt>
-              <dd>{job.startedAt ? formatDateTime(job.startedAt) : "尚未开始"}</dd>
-            </div>
-            <div>
-              <dt>结束时间</dt>
-              <dd>{job.finishedAt ? formatDateTime(job.finishedAt) : "尚未结束"}</dd>
-            </div>
-          </dl>
-          {job.status === "QUEUED" && (
-            <p className="p-muted" role="status">
-              任务正在排队，开始后会在下方显示执行记录。
-            </p>
-          )}
-          {job.error && (
-            <p role="alert" className="field-error">
-              {job.error}
-            </p>
-          )}
-          {result?.summary && <p>{result.summary}</p>}
-          <details className={styles.data}>
-            <summary>查看任务参数</summary>
-            <pre>{JSON.stringify(job.input, null, 2)}</pre>
-          </details>
-        </div>
-      </Panel>
-      <Panel title="执行过程" description={`按执行顺序保留 ${job.events.length} 条记录。`}>
-        {job.events.length ? (
-          <ol className={styles.timeline} aria-label="AI 执行记录">
-            {job.events.map((event, index) => (
-              <li key={index}>
-                <p>{aiEventDescription(event)}</p>
-                <details className={styles.data}>
-                  <summary>查看此步详情</summary>
-                  <pre>{JSON.stringify(event, null, 2)}</pre>
-                </details>
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <Empty>
-            {active ? "等待 AI 开始处理，执行记录会自动更新。" : "此任务没有保留执行记录。"}
-          </Empty>
-        )}
-      </Panel>
+      <AIExecutionTrace job={job} />
+      {result?.summary &&
+        !job.events.some(
+          (event) =>
+            event &&
+            typeof event === "object" &&
+            (event as { type?: string; summary?: string }).type === "complete" &&
+            (event as { summary?: string }).summary === result.summary,
+        ) && <p className="p-notice">{result.summary}</p>}
       {job.kind === "RECOMMEND" && recommendations?.length ? (
         <Panel title="推荐练习">
           {recommendations.map((recommendation, index) => {

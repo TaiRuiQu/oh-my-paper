@@ -3,7 +3,8 @@ import { getDb } from "@/server/db/client";
 import { AccessError } from "@/server/http/errors";
 import type { Actor, Analytics, Review } from "@/contracts/platform";
 import { loadState } from "./service";
-import { buildAnalytics, mergeKnowledgeStats } from "./analytics";
+import { applyOfficialResults, buildAnalytics, mergeKnowledgeStats } from "./analytics";
+import { canReadSubject } from "@/contracts/permissions";
 
 export async function loadScopedAnalytics(
   actor: Actor,
@@ -80,30 +81,19 @@ export async function loadScopedAnalytics(
     assessments,
     submissions,
     reviews,
+    canReadSubject: (id, subject) => {
+      const classroom = classrooms.find((c) => c.id === id);
+      return (
+        !!classroom &&
+        (state.actor.role === "STUDENT" || canReadSubject(state.actor, classroom, subject))
+      );
+    },
   });
   // Preserve official conversion and joint ranks calculated across the full assessment roster.
-  analytics.results = state.analytics.results.filter(
-    (result) => assessmentIds.has(result.assessmentId) && studentIds.has(result.studentId),
-  );
+  applyOfficialResults(analytics, state.analytics.results);
   analytics.knowledge = mergeKnowledgeStats(
     analytics.students.flatMap((report) => report.knowledge),
   );
-  analytics.classrooms =
-    state.actor.role === "STUDENT"
-      ? []
-      : analytics.classrooms.map((classroom) => {
-          const results = analytics.results.filter(
-            (result) => result.classroomId === classroom.id && result.total !== null,
-          );
-          return {
-            ...classroom,
-            average: results.length
-              ? Math.round(
-                  (results.reduce((sum, result) => sum + result.total!, 0) / results.length) * 100,
-                ) / 100
-              : null,
-            participantCount: new Set(results.map((result) => result.studentId)).size,
-          };
-        });
+  if (state.actor.role === "STUDENT") analytics.classrooms = [];
   return analytics;
 }

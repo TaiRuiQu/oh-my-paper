@@ -1,0 +1,52 @@
+.name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  min-width: 0;
+}
+
+.name h1,
+.label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.trigger {
+  flex: none;
+  color: var(--muted);
+}
+
+.editor {
+  display: grid;
+  gap: 8px;
+  width: min(380px, 100%);
+  min-width: 220px;
+  padding-block: 4px;
+  font-size: 13px;
+}
+
+.headingEditor {
+  width: min(560px, 100%);
+  min-width: 0;
+}
+
+.editor label {
+  font-weight: 500;
+}
+
+.editor small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.error {
+  color: var(--danger);
+}

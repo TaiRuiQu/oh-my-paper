@@ -81,15 +81,6 @@ await check("PDF 页面处理（Poppler）", () => {
   const renderer = run("pdftoppm", ["-v"]);
   return `${info.split("\n")[0]} / ${renderer.split("\n")[0]}`;
 });
-await check("PDF 导出（Chromium）", () =>
-  run(process.execPath, [
-    "--conditions=react-server",
-    "--import",
-    "tsx",
-    "-e",
-    `(async()=>{const {chromiumPath}=await import('./src/server/platform/pdf-export.ts');const {execFileSync}=await import('node:child_process');console.log(execFileSync(await chromiumPath(),['--version'],{encoding:'utf8'}).trim());})().catch(error=>{console.error(error.message);process.exitCode=1;});`,
-  ]),
-);
 await check("Sharp 图像处理", async () => {
   const { default: sharp } = await import("sharp");
   const png = await sharp({ create: { width: 2, height: 2, channels: 3, background: "#fff" } })

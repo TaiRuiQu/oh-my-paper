@@ -48,6 +48,12 @@ curl -fsS https://你的域名/api/health
 
 页面版本标记同时显示源提交的前六位，例如 `v2.0.0 · abc123`，悬停可查看完整提交。发布镜像在构建时由 CI 注入对应 Git SHA，服务器无需安装 Git；切换或回滚镜像时，标记随镜像更新。本地 Next.js 构建自动读取当前提交；从源码构建 Docker 镜像时，在 `.env` 中将 `APP_COMMIT_SHA` 设置为 `git rev-parse HEAD` 的完整输出，或传入同名 Docker build argument。
 
+## 文档导出
+
+作业、试卷和答题卡的 PDF 在用户本机浏览器生成：进入导出页，点击「打印 / 保存 PDF」，在打印窗口选择「另存为 PDF」。打印使用预览中的版面和本机已安装字体；需要新宋体时，在用户电脑安装该字体后刷新预览。服务器与 Docker 镜像不再安装 Chromium，也不打包新宋体。
+
+Word 与答题卡 SVG 仍由服务端生成并经过现有资源权限检查。Word 的最终分页由打开文档的软件与本机字体决定。Poppler 保留在 Web 与 AI Worker 镜像中，用于读取上传的 PDF 扫描件，和 PDF 导出无关。
+
 ## 题库向量搜索
 
 当前 Compose 包含 `qdrant/qdrant:v1.19.2`，仅通过内部网络向应用提供 HTTP 服务，不发布 6333/6334 端口。应用使用 `QDRANT_URL=http://qdrant:6333`；本地运行可配置其他 Qdrant 服务。`QDRANT_COLLECTION_PREFIX` 可隔离同一 Qdrant 上的不同部署，必须使用字母、数字、下划线或连字符。

@@ -53,6 +53,9 @@ async function main() {
     const classroomId = (
       await command({ type: "classroom.save", classroom: { name: "扫描验收班", grade: "高一" } })
     ).id;
+    await db.teachingAssignment.create({
+      data: { userId: actor.id, role: "SUBJECT_TEACHER", classroomId, subject: "数学" },
+    });
     const students = [];
     for (const [index, studentNumber] of ["012345", "654321"].entries()) {
       const studentId = (
@@ -135,6 +138,7 @@ async function main() {
         assessment: {
           name: "扫描验收考试",
           kind: "EXAM",
+          reviewScope: "CLASSROOM",
           classroomIds: [classroomId],
           papers: [
             {
@@ -279,6 +283,7 @@ async function main() {
         assessment: {
           name: "非规范页面验收",
           kind: "EXAM",
+          reviewScope: "CLASSROOM",
           classroomIds: [classroomId],
           papers: [
             {

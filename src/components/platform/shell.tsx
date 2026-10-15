@@ -15,6 +15,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import type { PlatformState } from "@/contracts/platform";
+import { TEACHING_ROLES } from "@/contracts/permissions";
 import { AREA_LABELS, areaForPath, navigationFor } from "@/contracts/navigation";
 import { SignOutButton } from "@/components/sign-out-button";
 import { Button } from "@/components/ui/button";
@@ -160,7 +161,11 @@ export function PlatformShell({
           <div className="p-account">
             <span>{actor.name}</span>
             <span className="p-role">
-              {{ ADMIN: "管理员", TEACHER: "教师", STUDENT: "学生" }[actor.role]}
+              {actor.role === "TEACHER" && actor.teachingAssignments?.length
+                ? [
+                    ...new Set(actor.teachingAssignments.map((row) => TEACHING_ROLES[row.role])),
+                  ].join("、")
+                : { ADMIN: "管理员", TEACHER: "教师", STUDENT: "学生" }[actor.role]}
             </span>
             <SignOutButton />
           </div>

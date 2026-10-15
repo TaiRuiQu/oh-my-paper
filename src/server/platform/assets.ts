@@ -109,6 +109,20 @@ export async function accessibleAsset(userId: string, id: string) {
       report.recommendations.some((question) => question.content.images.includes(url)),
     );
   if (!accessible) {
+    if (state.actor.role === "TEACHER") {
+      const reviewState = await loadState({ id: userId }, undefined, { reviewing: true });
+      accessible =
+        reviewState.submissions.some(
+          (s) =>
+            s.sourceFiles.includes(url) ||
+            s.answers.some((a) => a.images.includes(url) || a.sourcePage === url),
+        ) ||
+        reviewState.papers.some((p) =>
+          p.items.some((item) => item.snapshot.content.images.includes(url)),
+        );
+    }
+  }
+  if (!accessible) {
     const reportIds = new Set(
       state.analytics.students
         .filter((report) => report.wrongQuestions.length)

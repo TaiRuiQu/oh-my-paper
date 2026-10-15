@@ -11,6 +11,7 @@ import { useDomain } from "./domain-provider";
 import { Panel } from "./primitives";
 import { MissingRecord, PageHeader, PageTabs } from "./page-header";
 import { AssessmentEditor } from "./assessments";
+import { RecordNameEditor } from "./record-name-editor";
 
 function useAssessmentPaths() {
   const { area } = useDomain();
@@ -73,6 +74,7 @@ export function AssessmentListPage() {
                   <th>名称</th>
                   <th>参与班级</th>
                   <th>学科</th>
+                  <th>阅卷范围</th>
                   <th>{homework ? "批改" : "阅卷"}进度</th>
                   <th>状态</th>
                   <th>操作</th>
@@ -84,9 +86,12 @@ export function AssessmentListPage() {
                   return (
                     <tr key={a.id}>
                       <td>
-                        <Link href={`${root}/${a.id}`}>
-                          <strong>{a.name}</strong>
-                        </Link>
+                        <RecordNameEditor
+                          record={a}
+                          kind="assessment"
+                          noun={noun}
+                          href={`${root}/${a.id}`}
+                        />
                         <small>{new Date(a.createdAt).toLocaleDateString("zh-CN")}</small>
                       </td>
                       <td>
@@ -95,6 +100,7 @@ export function AssessmentListPage() {
                           .join("、")}
                       </td>
                       <td>{a.papers.map((p) => p.subject).join("、")}</td>
+                      <td>{a.reviewScope === "GRADE" ? "年级联考" : "班级阅卷"}</td>
                       <td>
                         {subs.filter((s) => s.status === "GRADED").length} / {subs.length} 份
                       </td>
@@ -203,7 +209,7 @@ export function AssessmentNavigation({ id, active }: { id: string; active: strin
 
 export function AssessmentOverviewPage({ id }: { id: string }) {
   const { state } = useDomain();
-  const { root, homework } = useAssessmentPaths();
+  const { root, homework, noun } = useAssessmentPaths();
   const a = state.assessments.find((a) => a.id === id);
   if (!a) return <MissingRecord back={root} />;
   const subs = state.submissions.filter((s) => s.assessmentId === id);
@@ -215,7 +221,8 @@ export function AssessmentOverviewPage({ id }: { id: string }) {
     <>
       <PageHeader
         title={a.name}
-        description={`${homework ? "日常作业" : "考试"} · ${a.papers.map((p) => p.subject).join("、")} · ${a.classroomIds.length} 个班级`}
+        titleEditor={<RecordNameEditor record={a} kind="assessment" noun={noun} heading />}
+        description={`${homework ? "日常作业" : "考试"} · ${a.reviewScope === "GRADE" ? "年级联考 · 同年级按任教学科阅卷" : "班级阅卷 · 本班任课老师按学科阅卷"} · ${a.papers.map((p) => p.subject).join("、")} · ${a.classroomIds.length} 个班级`}
         back={{ href: root, label: homework ? "布置记录" : "全部考试" }}
         actions={
           <Button asChild variant="outline">

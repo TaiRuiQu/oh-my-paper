@@ -126,7 +126,6 @@ function state(): PlatformState {
         ownerId: "teacher",
         name: "班级",
         grade: "高一",
-        reviewerIds: [],
         students: [
           {
             id: "student",
@@ -144,6 +143,7 @@ function state(): PlatformState {
         ownerId: "teacher",
         name: "测验",
         kind: "EXAM",
+        reviewScope: "CLASSROOM",
         classroomIds: ["class"],
         studentIds: ["student"],
         papers: [
@@ -346,7 +346,7 @@ describe("AI autonomous tools and constraints", () => {
       paper: {
         kind: "HOMEWORK",
         name: "图片作业",
-        layout: { paperSize: "A4", columns: 1 },
+        layout: { paperSize: "A4", columns: 2 },
         items: [
           { score: 7, question: { content: { answers: ["2"] } } },
           { score: 3, question: { content: { answers: ["4"] } } },

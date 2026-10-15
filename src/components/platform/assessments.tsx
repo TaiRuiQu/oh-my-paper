@@ -28,6 +28,15 @@ export function AssessmentEditor({
   pending: boolean;
   close: () => void;
 }) {
+  const [kind, setKind] = useState<Assessment["kind"]>(fixedKind ?? assessment?.kind ?? "EXAM");
+  const [reviewScope, setReviewScope] = useState<Assessment["reviewScope"]>(
+    assessment?.reviewScope ?? "CLASSROOM",
+  );
+  const [classroomIds, setClassroomIds] = useState(assessment?.classroomIds ?? []);
+  const grades = [...new Set(state.classrooms.map((c) => c.grade))];
+  const [grade, setGrade] = useState(
+    state.classrooms.find((c) => classroomIds.includes(c.id))?.grade ?? grades[0] ?? "",
+  );
   const [papers, setPapers] = useState<AssessmentPaper[]>(
     assessment?.papers ??
       (initialPaperId && state.papers.some((p) => p.id === initialPaperId)
@@ -62,8 +71,9 @@ export function AssessmentEditor({
             assessment: {
               id: assessment?.id,
               name: stringField(d, "name"),
-              kind: fixedKind ?? (stringField(d, "kind") as Assessment["kind"]),
-              classroomIds: d.getAll("classroomIds").map(String),
+              kind,
+              reviewScope,
+              classroomIds,
               papers,
             },
           });
@@ -77,27 +87,82 @@ export function AssessmentEditor({
           </Field>
           {!fixedKind && (
             <Field label="用途">
-              <select name="kind" defaultValue={assessment?.kind ?? "EXAM"}>
+              <select
+                name="kind"
+                value={kind}
+                onChange={(e) => {
+                  setKind(e.target.value as Assessment["kind"]);
+                  if (e.target.value === "HOMEWORK") setReviewScope("CLASSROOM");
+                }}
+              >
                 <option value="EXAM">考试</option>
                 <option value="HOMEWORK">作业</option>
               </select>
             </Field>
           )}
+          <Field label="阅卷范围">
+            <select
+              value={reviewScope}
+              onChange={(e) => {
+                const scope = e.target.value as Assessment["reviewScope"];
+                setReviewScope(scope);
+                if (scope === "GRADE")
+                  setClassroomIds(
+                    state.classrooms.filter((c) => c.grade === grade).map((c) => c.id),
+                  );
+              }}
+            >
+              <option value="CLASSROOM">班级阅卷</option>
+              {kind === "EXAM" && <option value="GRADE">年级联考</option>}
+            </select>
+          </Field>
+          {reviewScope === "GRADE" && (
+            <Field label="联考年级">
+              <select
+                required
+                value={grade}
+                onChange={(e) => {
+                  setGrade(e.target.value);
+                  setClassroomIds(
+                    state.classrooms.filter((c) => c.grade === e.target.value).map((c) => c.id),
+                  );
+                }}
+              >
+                <option value="">选择年级</option>
+                {grades.map((value) => (
+                  <option key={value}>{value}</option>
+                ))}
+              </select>
+            </Field>
+          )}
         </div>
+        <p className="p-muted">
+          {reviewScope === "GRADE"
+            ? "同年级任课老师按任教学科统一阅卷，可评阅参与班级的对应学科答卷。"
+            : "各班任课老师仅评阅本班对应学科的答卷。"}
+          所有参与阅卷的老师均可参与首评、双评和仲裁，无需单独指定教师；同一道题的各轮评分须由不同教师完成。
+        </p>
         <div>
           <h3>参与班级</h3>
           <div className="p-actions">
-            {state.classrooms.map((c) => (
-              <label className="p-check" key={c.id}>
-                <input
-                  type="checkbox"
-                  name="classroomIds"
-                  value={c.id}
-                  defaultChecked={assessment?.classroomIds.includes(c.id)}
-                />
-                {c.name}
-              </label>
-            ))}
+            {state.classrooms
+              .filter((c) => reviewScope !== "GRADE" || c.grade === grade)
+              .map((c) => (
+                <label className="p-check" key={c.id}>
+                  <input
+                    type="checkbox"
+                    name="classroomIds"
+                    value={c.id}
+                    checked={classroomIds.includes(c.id)}
+                    onChange={(e) =>
+                      setClassroomIds((ids) =>
+                        e.target.checked ? [...ids, c.id] : ids.filter((id) => id !== c.id),
+                      )
+                    }
+                  />
+                  {c.grade} · {c.name}
+                </label>
+              ))}
           </div>
           {!state.classrooms.length && <p className="p-muted">请先在「班级与学生」中创建班级。</p>}
         </div>
@@ -279,7 +344,7 @@ export function AssessmentEditor({
           </section>
         ))}
         <div className="p-actions">
-          <Submit pending={pending} disabled={!papers.length || !state.classrooms.length}>
+          <Submit pending={pending} disabled={!papers.length || !classroomIds.length}>
             保存安排
           </Submit>
           <button type="button" className="button secondary" onClick={close}>

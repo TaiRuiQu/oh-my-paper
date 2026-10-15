@@ -1,9 +1,10 @@
 import "server-only";
-import { AccessError } from "@/server/http/errors";
+import { AccessError, RequestError } from "@/server/http/errors";
 import type { Actor, PlatformState } from "@/contracts/platform";
 import type { PlatformArea } from "@/contracts/navigation";
 import { loadState } from "./queries";
-import { buildAnalytics } from "./analytics";
+import { applyOfficialResults, buildAnalytics } from "./analytics";
+import { canReadSubject } from "@/contracts/permissions";
 
 export function scopePageState(state: PlatformState, area: PlatformArea): PlatformState {
   if (area === "admin" && state.actor.role !== "ADMIN")
@@ -25,13 +26,39 @@ export function scopePageState(state: PlatformState, area: PlatformArea): Platfo
     submissions,
     reviews,
     templates: area === "exams" ? state.templates : [],
+    reviewHistory: state.reviewHistory?.filter((r) => submissionIds.has(r.submissionId)),
   };
-  return { ...scoped, analytics: buildAnalytics(scoped) };
+  if (state.reviewing)
+    return {
+      ...scoped,
+      analytics: {
+        ...state.analytics,
+        results: state.analytics.results.filter((r) => ids.has(r.assessmentId)),
+      },
+    };
+  const analytics = buildAnalytics({
+    ...scoped,
+    canReadSubject: (id, subject) => {
+      const classroom = state.classrooms.find((c) => c.id === id);
+      return (
+        !!classroom &&
+        (state.actor.role === "STUDENT" || canReadSubject(state.actor, classroom, subject))
+      );
+    },
+  });
+  applyOfficialResults(analytics, state.analytics.results);
+  if (state.actor.role === "STUDENT") analytics.classrooms = [];
+  return { ...scoped, analytics };
 }
 
-export async function loadPageState(actor: Actor, area: PlatformArea) {
+export async function loadPageState(actor: Actor, area: PlatformArea, reviewing = false) {
+  if (reviewing && area !== "exams" && area !== "homework")
+    throw new RequestError(400, "阅卷范围仅用于考试和作业。");
   return scopePageState(
-    await loadState(actor, undefined, { questionLimit: area === "learning" ? undefined : 0 }),
+    await loadState(actor, undefined, {
+      questionLimit: area === "learning" ? undefined : 0,
+      reviewing,
+    }),
     area,
   );
 }

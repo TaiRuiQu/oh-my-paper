@@ -6,6 +6,7 @@ import type { PlatformState, Role } from "@/contracts/platform";
 import { apiRequest, jsonBody } from "@/lib/http-client";
 import { Empty, Field, Panel, readForm, stringField, splitList } from "./primitives";
 import { EmbeddingSettings } from "./embedding-settings";
+import { assignmentLabel, TeachingPermissions } from "./teaching-permissions";
 type Provider = {
   id: string;
   name: string;
@@ -26,6 +27,10 @@ export function Admin({
   notify: (message: string, error?: boolean) => void;
 }) {
   const [newRole, setNewRole] = useState<Role>();
+  const [permissionUserId, setPermissionUserId] = useState<string>();
+  const permissionUser = state.users.find(
+    (user) => user.id === permissionUserId && user.role === "TEACHER",
+  );
   const [credentials, setCredentials] = useState<AccountCredentials>();
   const [providers, setProviders] = useState<Provider[]>([]),
     [editing, setEditing] = useState<Provider | null | undefined>(),
@@ -51,6 +56,7 @@ export function Admin({
       setProviders(r.providers);
       notify("配置已保存。");
       setEditing(undefined);
+      setPermissionUserId(undefined);
     } catch (e) {
       notify(e instanceof Error ? e.message : "保存失败", true);
     } finally {
@@ -62,7 +68,7 @@ export function Admin({
       {(!section || section === "users") && (
         <Panel
           title="账号与角色"
-          description="管理员添加账号，教师也可添加学生。教师使用账号登录，学生使用学号登录。"
+          description="管理员创建账号，并为教师配置可兼任的教学身份和数据范围。教师使用账号登录，学生使用学号登录。"
           actions={
             <div className="p-actions">
               <button
@@ -188,6 +194,8 @@ export function Admin({
                   <th>姓名</th>
                   <th>账号 / 学号</th>
                   <th>角色</th>
+                  <th>教学身份与范围</th>
+                  <th>权限配置</th>
                 </tr>
               </thead>
               <tbody>
@@ -209,11 +217,51 @@ export function Admin({
                         <option value="STUDENT">学生</option>
                       </select>
                     </td>
+                    <td>
+                      {u.role === "ADMIN" ? (
+                        "全校教学数据与系统配置"
+                      ) : u.role === "STUDENT" ? (
+                        "本人学习数据"
+                      ) : u.teachingAssignments?.length ? (
+                        <ul className="p-permission-summary">
+                          {u.teachingAssignments.map((row, index) => (
+                            <li key={index}>{assignmentLabel(row, state.classrooms)}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        "尚未分配教学身份"
+                      )}
+                    </td>
+                    <td>
+                      {u.role === "TEACHER" && (
+                        <button
+                          className="button secondary"
+                          disabled={busy}
+                          aria-label={`配置 ${u.name} 的教学权限`}
+                          onClick={() => setPermissionUserId(u.id)}
+                        >
+                          配置教学权限
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          {permissionUser && (
+            <TeachingPermissions
+              key={permissionUser.id}
+              name={permissionUser.name}
+              assignments={permissionUser.teachingAssignments ?? []}
+              classrooms={state.classrooms}
+              busy={busy}
+              onCancel={() => setPermissionUserId(undefined)}
+              onSave={(assignments) =>
+                void save({ type: "user.permissions", id: permissionUser.id, assignments })
+              }
+            />
+          )}
         </Panel>
       )}
       {(!section || section === "models") && (

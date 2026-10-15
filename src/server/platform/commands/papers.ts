@@ -11,6 +11,11 @@ export async function executePapersCommand(
   command: Command,
 ) {
   switch (command.type) {
+    case "paper.rename": {
+      owner(a, await db.paper.findUnique({ where: { id: command.id } }));
+      await db.paper.update({ where: { id: command.id }, data: { name: command.name } });
+      return { id: command.id };
+    }
     case "paper.save": {
       const { id, items, ...data } = command.paper;
       if (id) {

@@ -2,22 +2,41 @@
 
 `loadState(actor: { id: string }) -> Promise<PlatformState>`；`executeCommand(actor, command) -> Promise<{id: string}>`。actor 只以账号 id 识别，数据库当前 role 为权限权威。接口层取得登录用户并传入；不能接受客户端 ownerId/reviewerId。
 
-共享类型位于 `src/contracts/platform.ts`，`types.ts` 仅提供服务端导出入口。写命令均为 `{type, question|paper|classroom|student|assessment|template|submission|review}`；删除和发布命令用 `{type,id}`。创建省略 id，修改带 id。执行后前端按当前页面模块重新读取 state。
+共享类型位于 `src/contracts/platform.ts`，`types.ts` 仅提供服务端导出入口。内容写命令为 `{type, question|paper|classroom|student|assessment|template|submission|review}`；删除和发布命令用 `{type,id}`。创建省略 id，修改带 id。执行后前端按当前页面模块重新读取 state。
+
+`paper.rename` 和 `assessment.rename` 使用 `{type,id,name}`，仅接受创建者或系统管理员修改名称（去除首尾空白，1–200 字）。题本名称用于列表与打印标题；安排名称用于本次作业或考试与成绩报告，两者独立。已布置、已有答卷及已发布的记录均可重命名，不重建题目、模板、参试名单或评分。
 
 - question.save 支持 SINGLE/MULTIPLE/BLANK/SUBJECTIVE/MIXED，混合题 parts 各自记录题型、答案、标签、分值。answers 数组分别表达正确选项或各空答案。
 - paper.save items 按数组顺序排列，引用 questionId，包含 score、section 和可选 content／question；question 允许卷内独立创建，无需题库记录。可视化编辑只修改当前卷内快照，不改动题库原题。layout 保存 A4/A3、横纵方向、1–4 栏、字体（默认 NSimSun）、自由文字块、页边距、字号、行距和逐题分页／作答行数，画布与打印使用同一份版面数据。
 - classroom.save 后 student.save 可用 studentNumber、name 创建学生；userId 或 email 可绑定已注册 STUDENT 账号，不接受任意角色账号。
-- assessment.save papers 为 paperId、subject、questionRules（按 PaperItem.id 的 doubleReview/arbitrationEnabled/maxDifference）、兼容原有 gradingMode/arbitrationThreshold、conversion（enabled,bands）。bands 为从高分到低分的累计百分比区间，例如 upperPercent=15,min=86,max=100。
+- assessment.save 的 reviewScope 为 CLASSROOM（默认）或 GRADE。CLASSROOM 为每个班级的任课老师只阅本班对应学科；GRADE 仅用于同一年级的考试，该年级任课老师可阅参与班级对应学科，任教班级无需参试。作业必须使用 CLASSROOM，跨年级不能配置为 GRADE。papers 为 paperId、subject、questionRules（按 PaperItem.id 的 doubleReview/arbitrationEnabled/maxDifference）、gradingMode/arbitrationThreshold、conversion（enabled,bands）。bands 为从高分到低分的累计百分比区间，例如 upperPercent=15,min=86,max=100。
 - template.save 使用规范化坐标 CardLayout；regions 引用 PaperItem.id。system presets 只读，选用后按当前题目生成或另存。
 - submission.save answers 引用 PaperItem.id，包含 text、images 及可选 box/sourcePage，sourceFiles 保存服务器受控资产 URL。人工没有模板的作业使用 WORKBOOK。
 - review.save FIRST/SECOND/ARBITRATION；FIRST/SECOND 可独立先后提交，必须不同教师。逐题启用仲裁且分差严格超过阈值时等待第三教师 ARBITRATION，最终为仲裁与较近原评分的均分，等距以原两评均分为基准。双评 AI 建议须教师确认。ReviewEvent 不可变追加记录每次提交与修订。
 - assessment.publish 仅在全部参试学生各科完成评阅后允许发布。学生只能看已发布的本人成绩、错题、分析。
 
-Teacher loadState 返回自己的题库、班级、考试及其评阅，管理员返回全站；学生没有 users、reviews 和他人数据。analytics 包含多科/班级排名、原始分/赋分、知识点及错题。
+Teacher loadState 返回自己的备课资源，以及教学身份授权范围内的班级、考试与评阅，管理员返回全站；学生没有 users、reviews 和他人数据。analytics 包含多科/班级排名、原始分/赋分、知识点及错题。
 
 考试 `studentIds` 由服务根据布置时班级学生生成，前端不能指定。班级后续加入的学生不进入已有考试，也不能读取已有考试的已发布试卷；名单内学生不能删除。需要修改参试名单时，在尚未上传答卷的场次重新保存安排。
 
-班级 owner/admin 可以编辑班级与学生，`reviewerIds` 仅授予该班级的读取、扫描与评阅权限。跨班联考排名在服务端按完整名单计算，再按当前教师的授权班级或当前学生身份过滤；共享教师不能读取或评阅同一场次内未共享班级的答卷。学生 state 中的班级成员、参试 ID、成绩和错题都仅含本人。
+班级 owner/admin 可以编辑班级与学生。教师的教学数据权限由 `teaching_assignments` 独立保存，由系统管理员在「系统管理 → 账号与权限 → 配置教学权限」维护；`user.permissions` 原子替换全部教学身份，空数组表示撤销全部教学数据授权。每次请求读取数据库中的当前账号角色与教学身份，不接受客户端传入权限。
+
+| 教学身份                   | 教学数据范围                                                         |
+| -------------------------- | -------------------------------------------------------------------- |
+| 学校总管理 `SCHOOL_ADMIN`  | 全校所有班级与学科的考试、作业及成绩；不包含账号、模型等系统配置权限 |
+| 年级主任 `GRADE_DIRECTOR`  | 按班级当前年级匹配的全部班级与学科                                   |
+| 班主任 `HOMEROOM`          | 指定班级的全部学科                                                   |
+| 任课老师 `SUBJECT_TEACHER` | 指定班级的指定学科，可分配多个班级与学科                             |
+
+同一教师可兼任多个身份，权限取并集。未配置身份的教师无法读取班级教学任务与成绩，仍可管理自己的备课资源和创建班级；教师新建班级时自动获得该班班主任身份。系统管理员保留全系统权限，学生仍只能查看本人已发布结果。角色变更会清除已有教学身份，避免账号重新升为教师时恢复陈旧权限。
+
+授权同时用于考试/作业、参试名单、答卷、评阅及历史、成绩、知识点、错题和推荐；同一场考试内按每个班级与学科分别过滤。科目排名与赋分在服务器以完整参试名单计算，再投影到授权范围。仅有部分学科权限时，`totalRestricted` 为 true，全科总分、联合排名、班级排名和全科平均分不返回，界面显示「仅授权学科」。页面与筛选报表再次汇总时继续使用相同授权规则。
+
+参与阅卷的教师根据当前 SUBJECT_TEACHER 身份和 reviewScope 自动确定，无需单独选择双评或仲裁教师；首评、第二评和仲裁共用同一范围，保留不同教师独立评分的约束。系统管理员可阅全校；学校总管理、年级主任和班主任的成绩查看身份不会自动授予任教学科。扫描录入需要对应班级与学科的数据授权，且为班级创建者或本班该学科任课老师；年级跨班阅卷不授予替换答卷的权限。发布和撤回成绩均要求覆盖整场考试的全部班级与学科。班级已删除 reviewerIds 字段和共同评阅教师配置。
+
+阅卷页面与 AI GRADE 使用独立阅卷数据范围。`GET /api/platform/exams/state?scope=reviewing`（作业为 homework）返回可阅答卷、题目与逐题评分，不返回学情、推荐、全科总分或排名。常规 state 与成绩报表仍使用原教学数据授权，跨班阅卷不扩大报表权限。阅卷配图按当前阅卷范围校验，撤销任课身份后读取和评分均立即失效；AI 提交时再次校验。
+
+`pnpm test:permissions` 在隔离的 PostgreSQL schema 中验证四类身份、多班多科与学生隔离、年级与班级阅卷、跨学科与跨年级拒绝、非参试班教师加入年级阅卷、独立双评仲裁、撤权和报表隔离；无需真实模型，CI 必须执行。`pnpm test:integration` 继续覆盖完整教学与双评流程。
 
 `sourceFiles`、作答 `images`/`sourcePage`、题目 `content.images` 和模板区域图片均须引用 `/api/platform/assets/{id}`；命令验证资产所属账号或管理员权限。文件系统路径与外部 URL 不能通过业务命令注入。答题卡模板写入还验证 A4/A3 横纵版式、1–4 栏、四定位点、六位学号、题区不重叠并完整覆盖卷内题目。
 
@@ -38,7 +57,7 @@ AI 执行采用独立 `scripts/ai-worker.ts` 和 PostgreSQL `AiJob` 队列，不
 
 完整执行过程仅在 `/workspace/ai/[id]` 展示，`/workspace/ai` 为本人任务目录；`GET /api/platform/ai/[id]` 按当前用户与任务 ID 双重查询，任务列表同样只返回本人任务。业务页面保留任务状态与链接。公开模型列表仅包含 `id/name`，不返回供应商名称。六类任务都提供受 Bubblewrap 隔离的 `python/shell`，代码与输出随工具事件写入轨迹；沙箱无法访问数据库、服务器环境或网络。全部工具清单与生命周期参见 `docs/agent-tools.zh-CN.md`。
 
-`/api/platform/print` 默认返回附件 PDF，试卷／作业可用 `format=docx` 下载可编辑 Word；答题卡保留 `format=svg&page=1`。PDF 用 Chromium 按已保存版式渲染，禁止外部网络访问，配图经现有资产权限读取，字体从本地 `public/print-fonts` 加载。Word 保留纸张、方向、分栏、边距、字体、字号、行距、分页、材料图像和练习作答线，公式转换为 Office Math。Docker Web 镜像安装 Chromium；本地可安装系统 Chromium 或设置 `CHROMIUM_EXECUTABLE_PATH`，`pnpm run doctor` 检查运行环境。Word 的最终分页由打开文档的软件与已安装字体决定。
+PDF 在客户端通过浏览器打印保存，使用预览中的版面与本机字体。`/api/platform/print` 仅接受显式 `format=docx`（试卷／作业的可编辑 Word）或 `format=svg&page=1`（答题卡）。请求 `format=pdf` 或省略格式返回 400，不再保留服务端 PDF 渲染器或 Chromium 依赖。配图继续经现有资产权限读取，`export-assets.ts` 提供 Word 使用的资源加载类型。Word 保留纸张、方向、分栏分隔线、边距、字体、字号、行距、分页、材料图像和手动设置的练习作答线，公式转换为 Office Math；最终分页由打开文档的软件与已安装字体决定。Poppler 仍用于上传 PDF 的页面读取。
 
 - ENRICH 仅可读取和修改指定题的考点、答案、解析及评分标准；保留题干、选项、配图和混合子题编号，已有逐空答案保留空数。配图须先查看。
 - ASSEMBLE 从真实题库选择并读取题目，验证学科、年级、准确题型数量、平均难度与知识点分布。百分比通过最大余数法分配整数题数，多标签题使用容量匹配且每题只贡献一次。无法满足时明确失败，不编造题目。

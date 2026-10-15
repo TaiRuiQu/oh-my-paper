@@ -1,5 +1,7 @@
 "use client";
 import { DocumentExport } from "./document-export";
+import { DOCUMENT_DEFAULTS, documentAnswerLines } from "@/lib/document-layout";
+import { WorkbookAnswerLines } from "./workbook-answer-lines";
 import { GradeSelect, normalizeGrade } from "./grade-select";
 import { DocumentFormatControls, DocumentInsertTools } from "./document-controls";
 import Link from "next/link";
@@ -16,6 +18,7 @@ import { DocumentQuestionBody, DocumentQuestionHeading } from "./document-questi
 import { DocumentCanvas, PaperText } from "./document-canvas";
 import { Field, Panel, Empty } from "./primitives";
 import { MissingRecord, PageHeader, PageTabs } from "./page-header";
+import { RecordNameEditor } from "./record-name-editor";
 import { QUESTION_LABELS } from "./questions";
 
 export function HomeworkNavigation({ id, active }: { id: string; active: string }) {
@@ -88,9 +91,12 @@ export function HomeworkListPage({ exporting = false }: { exporting?: boolean })
                 {papers.map((p) => (
                   <tr key={p.id}>
                     <td>
-                      <Link href={`/homework/${p.id}`}>
-                        <strong>{p.name}</strong>
-                      </Link>
+                      <RecordNameEditor
+                        record={p}
+                        kind="paper"
+                        noun="作业"
+                        href={`/homework/${p.id}`}
+                      />
                       <small>{new Date(p.updatedAt).toLocaleDateString("zh-CN")} 更新</small>
                     </td>
                     <td>
@@ -143,6 +149,7 @@ export function HomeworkOverviewPage({ id }: { id: string }) {
     <>
       <PageHeader
         title={paper.name}
+        titleEditor={<RecordNameEditor record={paper} kind="paper" noun="作业" heading />}
         description={`${paper.subject} · ${paper.grade} · 日常练习册工作台`}
         back={{ href: "/homework", label: "全部作业" }}
         actions={
@@ -244,14 +251,7 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
   const [dirty, setDirty] = useState(false);
   useUnsavedChanges(dirty);
   const [layout, setLayout] = useState<DocumentLayout>(
-    paper?.layout ?? {
-      paperSize: "A4",
-      columns: 1,
-      marginMm: 18,
-      fontSizePt: 11,
-      lineHeight: 1.8,
-      questionLayouts: {},
-    },
+    paper?.layout ?? { ...DOCUMENT_DEFAULTS, questionLayouts: {} },
   );
   const [exercises, setExercises] = useState<Exercise[]>(
     paper?.items.map((i) => ({
@@ -400,7 +400,7 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                   type="number"
                   min={8}
                   max={40}
-                  value={layout.marginMm ?? 18}
+                  value={layout.marginMm ?? DOCUMENT_DEFAULTS.marginMm}
                   onChange={(e) =>
                     change(() => setLayout({ ...layout, marginMm: Number(e.target.value) }))
                   }
@@ -411,7 +411,7 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                   type="number"
                   min={9}
                   max={24}
-                  value={layout.fontSizePt ?? 11}
+                  value={layout.fontSizePt ?? DOCUMENT_DEFAULTS.fontSizePt}
                   onChange={(e) =>
                     change(() => setLayout({ ...layout, fontSizePt: Number(e.target.value) }))
                   }
@@ -422,8 +422,8 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                   type="number"
                   min={1}
                   max={3}
-                  step={0.1}
-                  value={layout.lineHeight ?? 1.8}
+                  step={0.05}
+                  value={layout.lineHeight ?? DOCUMENT_DEFAULTS.lineHeight}
                   onChange={(e) =>
                     change(() => setLayout({ ...layout, lineHeight: Number(e.target.value) }))
                   }
@@ -457,15 +457,12 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                       }
                     />
                   </Field>
-                  <Field label="作答行数">
+                  <Field label="作答横线（0 为无）">
                     <Input
                       type="number"
                       min={0}
                       max={30}
-                      value={
-                        layout.questionLayouts?.[selectedExercise.question.id]?.answerLines ??
-                        (["SINGLE", "MULTIPLE"].includes(selectedExercise.question.type) ? 1 : 4)
-                      }
+                      value={documentAnswerLines(layout, selectedExercise.question.id)}
                       onChange={(e) =>
                         change(() =>
                           setLayout({
@@ -557,17 +554,13 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
               empty={
                 <div className="p-empty-action">
                   <h3>选择练习题开始排版</h3>
-                  <p>每道题都可以设置独立的作答行数与分页。</p>
+                  <p>默认不添加作答横线，可按题目需要增加横线、留白或分页。</p>
                 </div>
               }
               blocks={exercises.map((exercise, index) => {
                 const key = exercise.question.id;
                 const settings = layout.questionLayouts?.[key];
-                const lines =
-                  settings?.answerLines ??
-                  (exercise.question.type === "SINGLE" || exercise.question.type === "MULTIPLE"
-                    ? 1
-                    : 4);
+                const lines = documentAnswerLines(layout, key);
                 return {
                   key,
                   pageBreakBefore: settings?.pageBreakBefore,
@@ -685,17 +678,9 @@ function WorkbookWorkbench({ paper, answers }: { paper?: Paper; answers: boolean
                         </div>
                       ) : (
                         <>
-                          <div
-                            className="p-workbook-lines"
-                            aria-label={`练习 ${index + 1} 作答空间`}
-                          >
-                            <small>作答：</small>
-                            {Array.from({ length: lines }, (_, n) => (
-                              <div key={n} />
-                            ))}
-                          </div>
+                          <WorkbookAnswerLines lines={lines} label={`练习 ${index + 1} 作答空间`} />
                           <div className="p-workbook-controls">
-                            <Field label="作答行数">
+                            <Field label="作答横线（0 为无）">
                               <Input
                                 type="number"
                                 min={0}
@@ -810,9 +795,9 @@ export function HomeworkExportPage({ id }: { id: string }) {
     <>
       <PageHeader
         title="导出练习册"
-        description="按练习册排版设置导出 PDF 或 Word，保留题目与作答区域。"
+        description="使用本机字体打印或保存 PDF，或下载保留题目与作答区域的 Word 文档。"
         back={{ href: `/homework/${id}`, label: paper.name }}
-        actions={<DocumentExport paperId={id} />}
+        actions={<DocumentExport paperId={id} title={paper.name} />}
       />
       <HomeworkNavigation id={id} active={`/homework/${id}/export`} />
       <DocumentCanvas
@@ -835,19 +820,7 @@ export function HomeworkExportPage({ id }: { id: string }) {
             >
               <DocumentQuestionHeading index={n} section={i.section} score={i.score} />
               <DocumentQuestionBody question={i.snapshot} />
-              <div className="p-workbook-lines">
-                <small>作答：</small>
-                {Array.from(
-                  {
-                    length:
-                      paper.layout.questionLayouts?.[i.questionId]?.answerLines ??
-                      (["SINGLE", "MULTIPLE"].includes(i.snapshot.type) ? 1 : 4),
-                  },
-                  (_, index) => (
-                    <div key={index} />
-                  ),
-                )}
-              </div>
+              <WorkbookAnswerLines lines={documentAnswerLines(paper.layout, i.questionId)} />
             </article>
           ),
         }))}

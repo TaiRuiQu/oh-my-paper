@@ -2,7 +2,8 @@ import "server-only";
 import type { Prisma as PrismaTypes } from "@/generated/prisma/client";
 import type { PlatformState } from "../types";
 import type { Command } from "./types";
-import { json, missing, owner } from "../access";
+import { json, missing, owner, visibleClassrooms } from "../access";
+import { canReadSubject } from "@/contracts/permissions";
 import { loadState } from "../queries";
 import { RequestError } from "@/server/http/errors";
 export async function executeAssessmentsCommand(
@@ -11,6 +12,11 @@ export async function executeAssessmentsCommand(
   command: Command,
 ) {
   switch (command.type) {
+    case "assessment.rename": {
+      owner(a, await db.assessment.findUnique({ where: { id: command.id } }));
+      await db.assessment.update({ where: { id: command.id }, data: { name: command.name } });
+      return { id: command.id };
+    }
     case "assessment.save": {
       const { id, papers, ...data } = command.assessment;
       if (id) {
@@ -18,15 +24,16 @@ export async function executeAssessmentsCommand(
         if (await db.scanSubmission.count({ where: { assessmentId: id } }))
           throw new RequestError(409, "已有答卷的考试不能调整班级或科目。");
       }
+      const classrooms = await db.classroom.findMany({
+        where: { AND: [{ id: { in: data.classroomIds } }, visibleClassrooms(a)] },
+      });
       if (
-        (await db.classroom.count({
-          where: {
-            id: { in: data.classroomIds },
-            ...(a.role === "ADMIN" ? {} : { ownerId: a.id }),
-          },
-        })) !== data.classroomIds.length
+        classrooms.length !== data.classroomIds.length ||
+        classrooms.some((c) => papers.some((p) => !canReadSubject(a, c, p.subject)))
       )
         throw missing();
+      if (data.reviewScope === "GRADE" && new Set(classrooms.map((c) => c.grade)).size !== 1)
+        throw new RequestError(400, "年级联考的参与班级必须属于同一年级。");
       const paperRows = await db.paper.findMany({
         include: { items: true },
         where: {
@@ -78,11 +85,25 @@ export async function executeAssessmentsCommand(
       return { id: exam.id };
     }
     case "assessment.publish": {
-      const exam = await db.assessment.findUnique({ where: { id: command.id } });
+      const exam = await db.assessment.findUnique({
+        where: { id: command.id },
+        include: { papers: true },
+      });
       owner(a, exam);
+      const state = await loadState(a, db);
+      const target = state.assessments.find((e) => e.id === command.id);
+      if (
+        !target ||
+        target.classroomIds.length !== exam!.classroomIds.length ||
+        target.papers.length !== exam!.papers.length ||
+        state.classrooms.some(
+          (c) =>
+            target.classroomIds.includes(c.id) &&
+            target.papers.some((p) => !canReadSubject(a, c, p.subject)),
+        )
+      )
+        throw missing();
       if (command.published) {
-        const state = await loadState(a, db);
-        const target = state.assessments.find((e) => e.id === command.id)!;
         const rosters = state.classrooms
           .filter((c) => target.classroomIds.includes(c.id))
           .flatMap((c) => c.students)

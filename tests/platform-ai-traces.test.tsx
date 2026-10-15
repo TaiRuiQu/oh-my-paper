@@ -6,7 +6,10 @@ import type { AiJobDTO } from "@/contracts/platform-ai";
 import type { PlatformState } from "@/contracts/platform";
 import { PlatformAI } from "@/components/platform/ai";
 import { AIJobDetailPage } from "@/components/platform/ai-job-pages";
+import { AIExecutionTrace } from "@/components/platform/ai-execution-trace";
 import { apiRequest } from "@/lib/http-client";
+import { aiTraceActivities } from "@/lib/ai-trace-display";
+import { aiTraceFixtures } from "./fixtures/ai-traces";
 
 const { push, refresh, notify } = vi.hoisted(() => ({
   push: vi.fn(),
@@ -46,6 +49,7 @@ const job: AiJobDTO = {
 let container: HTMLDivElement, root: Root;
 beforeEach(() => {
   vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-10-15T02:00:35Z"));
   vi.clearAllMocks();
   Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
   container = document.createElement("div");
@@ -104,4 +108,67 @@ it("opens the newly created retry task and retains the failed task's trace", asy
   expect(push).toHaveBeenCalledWith("/workspace/ai/new-job");
   expect(container.textContent).toContain("请求中断");
   expect(container.textContent).toContain("private-event-details");
+});
+
+it.each(aiTraceFixtures)(
+  "uses the same compact, collapsed-detail activity log for $kind",
+  async (fixture) => {
+    await act(async () => root.render(<AIExecutionTrace job={fixture} />));
+    expect(container.querySelector('section[aria-label="AI 执行过程"]')).toBeTruthy();
+    expect(container.querySelectorAll("ol > li")).toHaveLength(
+      aiTraceActivities(fixture.events).length,
+    );
+    expect(container.querySelectorAll("ol details[open]")).toHaveLength(0);
+    expect(container.querySelector('pre[aria-label="任务参数"]')?.closest("details")?.open).toBe(
+      false,
+    );
+    const records = [...container.querySelectorAll("ol pre")]
+      .flatMap((pre) => JSON.parse(pre.textContent ?? "[]") as { record: number; event: unknown }[])
+      .sort((a, b) => a.record - b.record)
+      .map(({ event }) => event);
+    expect(records).toEqual(fixture.events);
+  },
+);
+
+it("updates the actual current step after a tool finishes and keeps every detail collapsed", async () => {
+  const initial = aiTraceFixtures[0];
+  vi.mocked(apiRequest).mockResolvedValue({
+    ...initial,
+    events: [
+      ...initial.events,
+      {
+        type: "tool",
+        name: "record_source_inventory",
+        toolCallId: "inventory",
+        status: "ended",
+        durationMs: 600,
+      },
+    ],
+  });
+  await act(async () => root.render(<AIJobDetailPage initialJob={initial} />));
+  await act(async () => vi.advanceTimersByTimeAsync(0));
+  expect(container.querySelector('[role="status"]')?.textContent).toBe("核对扫描页题目数量");
+  expect(container.textContent).toContain("用时 30 秒");
+  await act(async () => vi.advanceTimersByTimeAsync(3000));
+  expect(container.querySelector('[role="status"]')?.textContent).toBe("分析处理结果，确定下一步");
+  expect(container.querySelectorAll("ol details[open]")).toHaveLength(0);
+});
+
+it("preserves the last known process on a polling failure and clears the error after recovery", async () => {
+  const initial = aiTraceFixtures[0];
+  vi.mocked(apiRequest)
+    .mockRejectedValueOnce(new Error("网络中断，请刷新重试。"))
+    .mockResolvedValueOnce({ ...initial, status: "COMPLETED", finishedAt: "2026-10-15T02:00:41Z" });
+  await act(async () => root.render(<AIJobDetailPage initialJob={initial} />));
+  await act(async () => vi.advanceTimersByTimeAsync(3000));
+  expect(container.querySelector('[role="alert"]')?.textContent).toContain("网络中断");
+  expect(container.querySelector('[role="status"]')?.textContent).toBe("核对扫描页题目数量");
+  expect(container.querySelectorAll("ol > li")).toHaveLength(3);
+  const refreshButton = [...container.querySelectorAll("button")].find(
+    (button) => button.textContent === "刷新状态",
+  )!;
+  await act(async () => refreshButton.click());
+  expect(container.querySelector('[role="alert"]')).toBeNull();
+  expect(container.querySelector('[role="status"]')?.textContent).toBe("处理完成");
+  expect(container.querySelectorAll('ol > li[data-state="running"]')).toHaveLength(0);
 });

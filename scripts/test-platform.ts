@@ -62,16 +62,20 @@ async function main() {
     const classId = (
       await cmd({
         type: "classroom.save",
-        classroom: { name: "高一一班", grade: "高一", reviewerIds: [ids.second, ids.arbiter] },
+        classroom: { name: "高一一班", grade: "高一" },
       })
     ).id;
-    await assert.rejects(
-      cmd({
-        type: "classroom.save",
-        classroom: { name: "坏班", grade: "高一", reviewerIds: [ids.student] },
-      }),
-      /评阅教师/,
-    );
+    // The marking pool follows subject teaching assignments, without a separate reviewer list.
+    await db.teachingAssignment.createMany({
+      data: [ids.teacher, ids.second, ids.arbiter].flatMap((userId) =>
+        ["化学", "生物", "数学"].map((subject) => ({
+          userId,
+          role: "SUBJECT_TEACHER",
+          subject,
+          classroomId: classId,
+        })),
+      ),
+    });
     const student1 = (
       await cmd({
         type: "student.save",
@@ -298,6 +302,7 @@ async function main() {
         assessment: {
           name: "生化联考",
           kind: "EXAM",
+          reviewScope: "CLASSROOM",
           classroomIds: [classId],
           papers: [
             {
@@ -591,6 +596,7 @@ async function main() {
         assessment: {
           name: "晚间作业",
           kind: "HOMEWORK",
+          reviewScope: "CLASSROOM",
           classroomIds: [classId],
           papers: [
             {
@@ -659,6 +665,7 @@ async function main() {
         assessment: {
           name: "跨班考试",
           kind: "EXAM",
+          reviewScope: "CLASSROOM",
           classroomIds: [classId, otherClass],
           papers: [
             {
@@ -728,6 +735,14 @@ async function main() {
     const unboundClass = (
       await cmd({ type: "classroom.save", classroom: { name: "补绑定验收班", grade: "高一" } })
     ).id;
+    await db.teachingAssignment.create({
+      data: {
+        userId: ids.teacher,
+        role: "SUBJECT_TEACHER",
+        classroomId: unboundClass,
+        subject: "生物",
+      },
+    });
     const unboundStudent = (
       await cmd({
         type: "student.save",
@@ -745,6 +760,7 @@ async function main() {
         assessment: {
           name: "补绑定历史考试",
           kind: "EXAM",
+          reviewScope: "CLASSROOM",
           classroomIds: [unboundClass],
           papers: [
             {
@@ -917,6 +933,7 @@ async function main() {
         assessment: {
           name: "逐题规则验证",
           kind: "EXAM",
+          reviewScope: "CLASSROOM",
           classroomIds: [classId],
           papers: [
             {

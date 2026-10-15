@@ -4,6 +4,23 @@ import type {
   QuestionReviewRule,
   AssessmentPaper,
 } from "@/contracts/platform";
+export const DOCUMENT_DEFAULTS = {
+  paperSize: "A4",
+  orientation: "portrait",
+  columns: 2,
+  marginMm: 12,
+  fontSizePt: 11,
+  lineHeight: 1.65,
+  fontFamily: "NSimSun",
+} as const satisfies DocumentLayout;
+export const DOCUMENT_COLUMN_GAP_MM = 6;
+export const DOCUMENT_FOOTER_MM = 8;
+export const DOCUMENT_PX_PER_MM = 96 / 25.4;
+
+/** Separate answer rules are opt-in; blanks already printed in the stem remain intact. */
+export function documentAnswerLines(layout: DocumentLayout, questionId: string) {
+  return layout.questionLayouts?.[questionId]?.answerLines ?? 0;
+}
 export function pageDimensions(
   size: "A4" | "A3" = "A4",
   orientation: "portrait" | "landscape" = "portrait",
@@ -14,7 +31,7 @@ export function pageDimensions(
     : { width: short, height: long };
 }
 export function documentFont(font: DocumentFont = "NSimSun") {
-  return `"${font}", "新宋体", "SimSun", "Noto Serif SC", "Noto Serif CJK SC", "Noto Sans SC Variable", serif`;
+  return `${JSON.stringify(font)}, "新宋体", "SimSun", "Noto Serif SC", "Noto Serif CJK SC", "Noto Sans SC Variable", serif`;
 }
 export function reviewRule(
   config: Pick<AssessmentPaper, "gradingMode" | "arbitrationThreshold" | "questionRules">,

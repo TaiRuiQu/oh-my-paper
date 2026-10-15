@@ -35,7 +35,7 @@ export function ClassListPage() {
     <>
       <PageHeader
         title="班级与学生"
-        description="维护教学班级、学生身份与共同评阅教师，为每次考试和作业建立参与名单。"
+        description="维护教学班级与学生身份，为每次考试和作业建立参与名单。"
         actions={
           <Button asChild>
             <Link href="/workspace/classes/new">
@@ -62,7 +62,7 @@ export function ClassListPage() {
                   <strong>{c.name}</strong>
                 </Link>
                 <small>
-                  {c.grade} · {c.students.length} 位学生 · {c.reviewerIds.length} 位共同评阅教师
+                  {c.grade} · {c.students.length} 位学生
                 </small>
               </div>
               <Button asChild variant="outline" size="sm">
@@ -90,7 +90,7 @@ export function ClassEditPage({ id }: { id?: string }) {
     <>
       <PageHeader
         title={c ? "班级设置" : "新建班级"}
-        description="设置班级名称、年级和评阅协作权限。"
+        description="设置班级名称和年级。任课身份由管理员在「账号与权限」中配置。"
         back={{
           href: c ? `/workspace/classes/${id}` : "/workspace/classes",
           label: c?.name ?? "全部班级",
@@ -108,7 +108,6 @@ export function ClassEditPage({ id }: { id?: string }) {
                 id,
                 name: stringField(d, "name"),
                 grade: stringField(d, "grade"),
-                reviewerIds: d.getAll("reviewerIds").map(String),
               },
             });
             if (r.id) router.push(`/workspace/classes/${r.id}`);
@@ -121,25 +120,6 @@ export function ClassEditPage({ id }: { id?: string }) {
             <Field label="年级">
               <GradeSelect required name="grade" defaultValue={c?.grade ?? "高中一年级"} />
             </Field>
-          </div>
-          <div>
-            <h3>共同评阅教师</h3>
-            <p className="p-muted">授权教师可参与本班考试的独立双评与仲裁。</p>
-            <div className="p-actions">
-              {state.users
-                .filter((u) => u.role !== "STUDENT")
-                .map((u) => (
-                  <label className="p-check" key={u.id}>
-                    <input
-                      type="checkbox"
-                      name="reviewerIds"
-                      value={u.id}
-                      defaultChecked={c?.reviewerIds.includes(u.id)}
-                    />
-                    {u.name}（{u.username ?? u.email}）
-                  </label>
-                ))}
-            </div>
           </div>
           <div className="p-actions">
             <Button disabled={pending}>{pending ? "正在保存…" : "保存班级"}</Button>

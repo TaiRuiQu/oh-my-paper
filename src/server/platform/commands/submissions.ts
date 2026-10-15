@@ -26,7 +26,7 @@ export async function executeSubmissionsCommand(
         !exam.studentIds.includes(student.id)
       )
         throw new RequestError(400, "学生不在参试班级。");
-      await canUseStudent(db, a, student.classroomId);
+      await canUseStudent(db, a, student.classroomId, config.subject);
       const paper = await db.paper.findUniqueOrThrow({
         where: { id: data.paperId },
         include: { items: true },

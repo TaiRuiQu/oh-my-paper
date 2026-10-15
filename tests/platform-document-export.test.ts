@@ -3,8 +3,6 @@ import JSZip from "jszip";
 import sharp from "sharp";
 import type { Paper } from "@/contracts/platform";
 import { renderPaperWord } from "@/server/platform/word-export";
-import { renderPaperHtml } from "@/server/platform/print";
-import { renderPdf } from "@/server/platform/pdf-export";
 
 const paper: Paper = {
   id: "paper",
@@ -77,6 +75,8 @@ describe("downloadable teaching documents", () => {
     expect(xml).toContain('w:orient="landscape"');
     expect(xml).toContain('w:w="23811"');
     expect(xml).toContain('w:num="2"');
+    expect(xml).toContain('w:sep="true"');
+    expect(xml).toContain('w:space="340"');
     expect(xml).toContain('w:top="1134"');
     expect(styles).toContain('w:sz w:val="28"');
     expect(xml).toContain('w:line="480"');
@@ -91,8 +91,23 @@ describe("downloadable teaching documents", () => {
       ),
     ).toBe(true);
     expect(xml).not.toContain("参考答案不应出现在学生文档");
+    expect(styles).toContain('w:eastAsia="SimSun"');
     const exam = await JSZip.loadAsync(await renderPaperWord({ ...paper, kind: "EXAM" }, image));
     expect(await exam.file("word/document.xml")!.async("string")).not.toContain("作答：");
+  });
+  it("does not invent answer lines and preserves a teacher's local font in editable Word", async () => {
+    const copy = {
+      ...paper,
+      layout: { paperSize: "A4" as const, columns: 2, fontFamily: "霞鹜文楷" },
+    };
+    const zip = await JSZip.loadAsync(await renderPaperWord(copy, image));
+    const xml = await zip.file("word/document.xml")!.async("string");
+    const styles = await zip.file("word/styles.xml")!.async("string");
+    expect(xml).not.toContain("<w:pBdr>");
+    expect(xml).not.toContain("作答：");
+    expect(xml).toContain('w:top="680"');
+    expect(xml).toContain('w:bottom="1134"');
+    expect(styles).toContain('w:eastAsia="霞鹜文楷"');
   });
   it("fails instead of silently dropping inaccessible private images", async () => {
     await expect(
@@ -101,13 +116,4 @@ describe("downloadable teaching documents", () => {
       }),
     ).rejects.toThrow("无权访问图片");
   });
-  it.runIf(process.env.TEST_PDF_EXPORT === "1")(
-    "renders real PDF bytes through Chromium using saved layout and private images",
-    async () => {
-      const bytes = await renderPdf(renderPaperHtml(paper), image);
-      expect(bytes.subarray(0, 5).toString()).toBe("%PDF-");
-      expect(bytes.length).toBeGreaterThan(1000);
-    },
-    60000,
-  );
 });

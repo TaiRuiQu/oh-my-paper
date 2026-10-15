@@ -1,5 +1,6 @@
 "use client";
 import { DocumentExport } from "./document-export";
+import { DOCUMENT_DEFAULTS } from "@/lib/document-layout";
 import { GradeSelect, normalizeGrade } from "./grade-select";
 import { DocumentFormatControls, DocumentInsertTools } from "./document-controls";
 import Link from "next/link";
@@ -24,6 +25,7 @@ import { useUnsavedChanges } from "./use-unsaved-changes";
 import { DocumentQuestionBody, DocumentQuestionHeading } from "./document-question";
 import { DocumentCanvas, PaperText } from "./document-canvas";
 import { MissingRecord, PageHeader, PageTabs } from "./page-header";
+import { RecordNameEditor } from "./record-name-editor";
 
 function usePaperPaths() {
   return { homework: false, root: "/exams/papers", noun: "试卷" };
@@ -115,9 +117,12 @@ export function PaperListPage({ exporting = false }: { exporting?: boolean }) {
                 {papers.map((p) => (
                   <tr key={p.id}>
                     <td>
-                      <Link href={`${root}/${p.id}`}>
-                        <strong>{p.name}</strong>
-                      </Link>
+                      <RecordNameEditor
+                        record={p}
+                        kind="paper"
+                        noun={noun}
+                        href={`${root}/${p.id}`}
+                      />
                       <small>{new Date(p.updatedAt).toLocaleDateString("zh-CN")} 更新</small>
                     </td>
                     <td>
@@ -188,6 +193,7 @@ export function PaperOverviewPage({ id }: { id: string }) {
     <>
       <PageHeader
         title={paper.name}
+        titleEditor={<RecordNameEditor record={paper} kind="paper" noun={noun} heading />}
         description={`${paper.subject} · ${paper.grade} · ${homework ? "题目与作答写在同一份练习册中" : "考试试卷工作台"}`}
         back={{ href: root, label: `全部${noun}` }}
         actions={
@@ -334,9 +340,7 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
   const [subject, setSubject] = useState(paper?.subject ?? "数学");
   const [grade, setGrade] = useState(normalizeGrade(paper?.grade));
   const [instructions, setInstructions] = useState(paper?.instructions ?? "");
-  const [layout, setLayout] = useState<DocumentLayout>(
-    paper?.layout ?? { paperSize: "A4" as "A4" | "A3", columns: 1 },
-  );
+  const [layout, setLayout] = useState<DocumentLayout>(paper?.layout ?? { ...DOCUMENT_DEFAULTS });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const selectedQuestionIndex = Math.max(0, Math.min(selectedIndex, items.length - 1));
   const selectedQuestion = items[selectedQuestionIndex];
@@ -497,7 +501,7 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
                   type="number"
                   min={8}
                   max={40}
-                  value={layout.marginMm ?? 18}
+                  value={layout.marginMm ?? DOCUMENT_DEFAULTS.marginMm}
                   onChange={(e) =>
                     edit(() => setLayout({ ...layout, marginMm: Number(e.target.value) }))
                   }
@@ -508,7 +512,7 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
                   type="number"
                   min={9}
                   max={24}
-                  value={layout.fontSizePt ?? 11}
+                  value={layout.fontSizePt ?? DOCUMENT_DEFAULTS.fontSizePt}
                   onChange={(e) =>
                     edit(() => setLayout({ ...layout, fontSizePt: Number(e.target.value) }))
                   }
@@ -519,8 +523,8 @@ function PaperWorkbench({ paper, view }: { paper?: Paper; view: "edit" | "answer
                   type="number"
                   min={1}
                   max={3}
-                  step={0.1}
-                  value={layout.lineHeight ?? 1.8}
+                  step={0.05}
+                  value={layout.lineHeight ?? DOCUMENT_DEFAULTS.lineHeight}
                   onChange={(e) =>
                     edit(() => setLayout({ ...layout, lineHeight: Number(e.target.value) }))
                   }
@@ -923,9 +927,9 @@ export function PaperExportPage({ id }: { id: string }) {
     <>
       <PageHeader
         title={`导出${noun}`}
-        description="按已保存的排版设置直接导出 PDF，或下载可编辑的 Word 文档。"
+        description="使用本机字体打印或保存 PDF，也可下载可编辑的 Word 文档。"
         back={{ href: `${root}/${id}`, label: paper.name }}
-        actions={<DocumentExport paperId={id} />}
+        actions={<DocumentExport paperId={id} title={paper.name} />}
       />
       <PaperNavigation paper={paper} active={`${root}/${id}/export`} />
       <DocumentCanvas

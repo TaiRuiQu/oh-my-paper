@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 
 export function PageHeader({
   title,
+  titleEditor,
   description,
   actions,
   back,
 }: {
   title: string;
+  titleEditor?: ReactNode;
   description: string;
   actions?: ReactNode;
   back?: { href: string; label: string };
@@ -24,7 +26,7 @@ export function PageHeader({
       )}
       <div className="p-heading">
         <div>
-          <h1>{title}</h1>
+          {titleEditor ?? <h1>{title}</h1>}
           <p>{description}</p>
         </div>
         {actions && <div className="p-actions">{actions}</div>}

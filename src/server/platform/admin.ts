@@ -2,6 +2,7 @@ import "server-only";
 import { managedAccountSchema } from "@/contracts/auth";
 import { createManagedAccount } from "@/server/auth/accounts";
 import { z } from "zod";
+import { teachingPermissionsCommandSchema } from "@/contracts/permissions";
 import { getDb } from "@/server/db/client";
 import { AccessError, RequestError } from "@/server/http/errors";
 import { encryptApiKey } from "@/server/ai/credentials";
@@ -13,6 +14,7 @@ import {
 } from "./search/configuration";
 
 export const adminCommandSchema = z.discriminatedUnion("type", [
+  teachingPermissionsCommandSchema,
   z.object({ type: z.literal("embedding.save"), embedding: embeddingConfigurationSchema }),
   z.object({ type: z.literal("embedding.reindex") }),
   z.strictObject({ type: z.literal("user.create"), user: managedAccountSchema }),
@@ -61,10 +63,49 @@ export async function executeAdmin(id: string, input: z.infer<typeof adminComman
   if (input.type === "embedding.save") return saveEmbeddingConfiguration(input.embedding);
   if (input.type === "embedding.reindex") return reindexQuestions();
   if (input.type === "user.create") return createManagedAccount(id, input.user);
+  if (input.type === "user.permissions") {
+    await getDb().$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(490221)`;
+      await tx.$queryRaw`SELECT pg_advisory_xact_lock(7240132026::bigint)::text`;
+      if ((await tx.user.findUnique({ where: { id }, select: { role: true } }))?.role !== "ADMIN")
+        throw new AccessError(403, "需要管理员权限。");
+      if (
+        (await tx.user.findUnique({ where: { id: input.id }, select: { role: true } }))?.role !==
+        "TEACHER"
+      )
+        throw new RequestError(400, "只能为教师账号配置教学身份。");
+      const classIds = [
+        ...new Set(
+          input.assignments.flatMap((row) => ("classroomId" in row ? [row.classroomId] : [])),
+        ),
+      ];
+      if ((await tx.classroom.count({ where: { id: { in: classIds } } })) !== classIds.length)
+        throw new RequestError(400, "班级不存在，请刷新后重新配置。");
+      const grades = [
+        ...new Set(
+          input.assignments.flatMap((row) => (row.role === "GRADE_DIRECTOR" ? [row.grade] : [])),
+        ),
+      ];
+      const existingGrades = await tx.classroom.findMany({
+        where: { grade: { in: grades } },
+        select: { grade: true },
+        distinct: ["grade"],
+      });
+      if (existingGrades.length !== grades.length)
+        throw new RequestError(400, "年级不存在，请先创建该年级的班级。");
+      await tx.teachingAssignment.deleteMany({ where: { userId: input.id } });
+      if (input.assignments.length)
+        await tx.teachingAssignment.createMany({
+          data: input.assignments.map((row) => ({ ...row, userId: input.id })),
+        });
+    });
+    return { id: input.id };
+  }
   if (input.type === "user.role") {
     await getDb().$transaction(async (tx) => {
       // Serialize role changes so two administrators cannot demote each other concurrently.
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(490221)`;
+      await tx.$queryRaw`SELECT pg_advisory_xact_lock(7240132026::bigint)::text`;
       const actor = await tx.user.findUnique({ where: { id } });
       if (actor?.role !== "ADMIN") throw new AccessError(403, "需要管理员权限。");
       const user = await tx.user.findUnique({ where: { id: input.id } });
@@ -76,6 +117,8 @@ export async function executeAdmin(id: string, input: z.infer<typeof adminComman
       )
         throw new RequestError(409, "至少保留一名管理员。");
       await tx.user.update({ where: { id: input.id }, data: { role: input.role } });
+      if (user.role !== input.role)
+        await tx.teachingAssignment.deleteMany({ where: { userId: input.id } });
     });
     return { id: input.id };
   }

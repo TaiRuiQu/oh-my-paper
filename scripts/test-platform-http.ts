@@ -237,6 +237,19 @@ async function main() {
         classroom: { name: "HTTP 验收班", grade: "高一" },
       })
     ).id;
+    const grant = await request(admin, "/api/platform/admin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "user.permissions",
+        id: teacher.id,
+        assignments: [
+          { role: "HOMEROOM", classroomId },
+          { role: "SUBJECT_TEACHER", classroomId, subject: "数学" },
+        ],
+      }),
+    });
+    assert.equal(grant.status, 200);
     const studentId = (
       await command(teacher, {
         type: "student.save",
@@ -290,6 +303,7 @@ async function main() {
         assessment: {
           name: "HTTP 验收考试",
           kind: "EXAM",
+          reviewScope: "CLASSROOM",
           classroomIds: [classroomId],
           papers: [
             {
@@ -310,38 +324,41 @@ async function main() {
     });
     assert.equal(templateResponse.status, 200, await templateResponse.clone().text());
     const templateId = ((await templateResponse.json()) as { id: string }).id;
-    const card = await request(teacher, `/api/platform/print?templateId=${templateId}`);
-    assert.equal(card.status, 200);
-    assert.equal(card.headers.get("content-type"), "application/pdf");
-    assert(
-      Buffer.from(await card.arrayBuffer())
-        .subarray(0, 5)
-        .toString() === "%PDF-",
-    );
     const cardSvg = await request(
       teacher,
       `/api/platform/print?templateId=${templateId}&format=svg`,
     );
     assert.equal(cardSvg.status, 200);
     assert((await cardSvg.text()).includes("六位学号"));
-    const printed = await request(teacher, `/api/platform/print?paperId=${paperId}`);
-    assert.equal(printed.status, 200);
-    assert.equal(printed.headers.get("content-type"), "application/pdf");
-    assert(printed.headers.get("content-disposition")?.startsWith("attachment;"));
-    assert(
-      Buffer.from(await printed.arrayBuffer())
-        .subarray(0, 5)
-        .toString() === "%PDF-",
-    );
+    for (const document of [`paperId=${paperId}`, `templateId=${templateId}`]) {
+      const pdf = await request(teacher, `/api/platform/print?${document}&format=pdf`);
+      assert.equal(pdf.status, 400);
+      assert((await pdf.json()).error.includes("本机浏览器保存为 PDF"));
+      assert.equal((await request(teacher, `/api/platform/print?${document}`)).status, 400);
+    }
     const word = await request(teacher, `/api/platform/print?paperId=${paperId}&format=docx`);
     assert.equal(word.status, 200);
+    assert.equal(
+      word.headers.get("content-type"),
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    );
+    assert(word.headers.get("content-disposition")?.startsWith("attachment;"));
     const zip = await JSZip.loadAsync(await word.arrayBuffer());
     assert((await zip.file("word/document.xml")!.async("string")).includes("x + 2 = 3"));
-    assert.equal((await request(peer, `/api/platform/print?paperId=${paperId}`)).status, 404);
-    assert.equal((await request(null, `/api/platform/print?paperId=${paperId}`)).status, 401);
+    assert.equal(
+      (await request(peer, `/api/platform/print?paperId=${paperId}&format=docx`)).status,
+      404,
+    );
+    assert.equal(
+      (await request(null, `/api/platform/print?paperId=${paperId}&format=docx`)).status,
+      401,
+    );
     assert.equal(
       (await request(teacher, `/api/platform/print?templateId=${templateId}&format=docx`)).status,
       400,
+    );
+    console.log(
+      "✓ Word and answer-card SVG retain authenticated downloads; PDF requires the client browser and server PDF requests fail explicitly",
     );
     const paper = (await state(teacher)).papers.find((paper) => paper.id === paperId)!;
     for (const [id, score] of [
@@ -431,6 +448,7 @@ async function main() {
         assessment: {
           name: "另一次考试",
           kind: "EXAM",
+          reviewScope: "CLASSROOM",
           classroomIds: [classroomId],
           papers: [
             {

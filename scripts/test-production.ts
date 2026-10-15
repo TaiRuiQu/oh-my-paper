@@ -99,7 +99,7 @@ async function main() {
       "HTTP workflow must pass against independent standalone server",
     );
     console.log(
-      "✓ Production HTTP workflow, role/session/CSRF, private diagrams, exam-scoped analytics and official peer ranks pass",
+      "✓ Production HTTP workflow, authenticated Word/SVG exports, server PDF rejection, role/session/CSRF, private diagrams, exam-scoped analytics and official peer ranks pass",
     );
     await writeFile(
       "v2-docs/evidence/production.json",
@@ -112,8 +112,12 @@ async function main() {
             "AI Worker独立打包启动",
             "独立打包的Python和shell通过真实Bubblewrap隔离验收",
             "真实HTTP注册角色、业务闭环、私有配图与学情筛选验证通过",
+            "Word与答题卡SVG鉴权下载通过，PDF接口明确要求使用客户端浏览器",
           ],
-          limits: ["使用本机Node/Python/PostgreSQL，未替代Docker或实体扫描仪验收"],
+          limits: [
+            "使用本机Node/Python/PostgreSQL，未替代Docker或实体扫描仪验收",
+            "客户端保存PDF及本机字体需在浏览器中独立验收",
+          ],
         },
         null,
         2,

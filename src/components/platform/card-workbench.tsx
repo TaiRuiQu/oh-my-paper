@@ -136,7 +136,7 @@ export function CardOverviewPage({ id, exporting = false }: { id: string; export
             <Button asChild variant="outline">
               <Link href={`/exams/cards/${id}/edit`}>编辑卡面</Link>
             </Button>
-            <DocumentExport templateId={id} />
+            <DocumentExport template={template} />
           </>
         }
       />

@@ -27,6 +27,8 @@ export async function executeCommand(
     throw new RequestError(400, parsed.error.issues.map((i) => i.message).join(" "));
   const command = parsed.data;
   const execute = async (db: Prisma.TransactionClient) => {
+    // Permission changes use the same lock; read the current grants after acquiring it.
+    await db.$queryRaw`SELECT pg_advisory_xact_lock(7240132026::bigint)::text`;
     const a = await getActor(actor.id, db);
     teacher(a);
     if (context.source === "AI") {
@@ -36,7 +38,6 @@ export async function executeCommand(
         throw new AccessError(403, "AI任务不属于当前账号或已结束。");
     }
     // Serialize domain writes globally: cross-account double reviews and publishing share one snapshot.
-    await db.$queryRaw`SELECT pg_advisory_xact_lock(7240132026::bigint)::text`;
     const handlers = [
       executeQuestionsCommand,
       executePapersCommand,

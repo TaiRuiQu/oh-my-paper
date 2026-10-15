@@ -27,6 +27,7 @@ model User {
   templates CardTemplate[]
   submissions ScanSubmission[]
   reviews Review[]
+  teachingAssignments TeachingAssignment[]
   @@map("users")
 }
 
@@ -191,10 +192,23 @@ model Classroom {
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   name String
   grade String
-  reviewerIds String[] @default([])
   students ClassroomStudent[]
+  teachingAssignments TeachingAssignment[]
   @@index([ownerId])
   @@map("classrooms")
+}
+model TeachingAssignment {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role String
+  grade String @default("")
+  classroomId String?
+  classroom Classroom? @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+  subject String @default("")
+  @@index([userId])
+  @@index([classroomId])
+  @@map("teaching_assignments")
 }
 model ClassroomStudent {
   id String @id @default(uuid())
@@ -216,6 +230,7 @@ model Assessment {
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   name String
   kind String
+  reviewScope String @default("CLASSROOM")
   classroomIds String[]
   studentIds String[] @default([])
   papers AssessmentPaper[]

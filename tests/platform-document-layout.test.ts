@@ -3,6 +3,7 @@ import { commandSchema } from "@/server/platform/schemas";
 import { renderPaperHtml } from "@/server/platform/print";
 import { scopePageState } from "@/server/platform/page-state";
 import type { Paper, PlatformState } from "@/contracts/platform";
+import { DOCUMENT_DEFAULTS, documentAnswerLines, documentFont } from "@/lib/document-layout";
 
 const question = {
   id: "q",
@@ -46,6 +47,40 @@ const paper: Paper = {
 };
 
 describe("persisted document layout and module boundaries", () => {
+  it("defaults to compact divided columns and leaves answers inside the question content", () => {
+    const layout = { ...DOCUMENT_DEFAULTS };
+    expect(layout).toMatchObject({ columns: 2, marginMm: 12, fontSizePt: 11, lineHeight: 1.65 });
+    expect(documentAnswerLines(layout, "q")).toBe(0);
+    const html = renderPaperHtml({ ...paper, layout });
+    expect(html).toContain("margin:12mm 12mm 20mm");
+    expect(html).toContain("column-count:2;column-gap:6mm;column-rule:0.5pt solid #666");
+    expect(html).not.toContain('class="p-workbook-lines"');
+    expect(html).not.toContain("作答：");
+  });
+  it("accepts a named local font and safely quotes the family in printable CSS", () => {
+    const layout = { ...DOCUMENT_DEFAULTS, fontFamily: "霞鹜文楷 Screen" };
+    expect(
+      commandSchema.safeParse({
+        type: "paper.save",
+        paper: {
+          ...paper,
+          layout,
+          items: [{ questionId: "q", score: 5, section: "", content: question.content }],
+        },
+      }).success,
+    ).toBe(true);
+    expect(documentFont(layout.fontFamily).startsWith('"霞鹜文楷 Screen",')).toBe(true);
+    expect(
+      commandSchema.safeParse({
+        type: "paper.save",
+        paper: {
+          ...paper,
+          layout: { ...layout, fontFamily: 'foo"; color:red' },
+          items: [{ questionId: "q", score: 5, section: "", content: question.content }],
+        },
+      }).success,
+    ).toBe(false);
+  });
   it("prints the saved typography, page breaks and workbook answer space with safe mathematics", () => {
     const html = renderPaperHtml(paper);
     expect(html).toContain("margin:20mm 20mm");

@@ -1,8 +1,10 @@
 import "server-only";
 import { getDb } from "@/server/db/client";
-import { getActor, type Db } from "./access";
+import { AccessError } from "@/server/http/errors";
+import { getActor, toTeachingAssignment, visibleClassrooms, type Db } from "./access";
+import { canReadSubject, canReviewSubject } from "@/contracts/permissions";
 import { defaultCardPresets } from "./cards";
-import { buildAnalytics, mergeKnowledgeStats } from "./analytics";
+import { applyOfficialResults, buildAnalytics } from "./analytics";
 import type {
   Actor,
   Assessment,
@@ -17,16 +19,12 @@ import type {
 export async function loadState(
   actor: Actor,
   db: Db = getDb(),
-  options: { questionLimit?: number } = {},
+  options: { questionLimit?: number; reviewing?: boolean } = {},
 ): Promise<PlatformState> {
   const a = await getActor(actor.id, db);
+  if (options.reviewing && a.role === "STUDENT") throw new AccessError(403, "需要教师权限。");
   const classes = await db.classroom.findMany({
-    where:
-      a.role === "ADMIN"
-        ? {}
-        : a.role === "STUDENT"
-          ? { students: { some: { userId: a.id } } }
-          : { OR: [{ ownerId: a.id }, { reviewerIds: { has: a.id } }] },
+    where: options.reviewing ? {} : visibleClassrooms(a),
     include: { students: true },
     orderBy: { name: "asc" },
   });
@@ -36,15 +34,15 @@ export async function loadState(
   );
   const assessmentRows = await db.assessment.findMany({
     where:
-      a.role === "ADMIN"
+      a.role === "ADMIN" || options.reviewing
         ? {}
         : a.role === "STUDENT"
           ? { published: true, studentIds: { hasSome: ownStudentIds } }
-          : { OR: [{ ownerId: a.id }, { classroomIds: { hasSome: allowedClassIds } }] },
+          : { classroomIds: { hasSome: allowedClassIds } },
     include: { papers: true },
     orderBy: { createdAt: "desc" },
   });
-  const assessments = assessmentRows.map((row) => ({
+  const fullAssessments = assessmentRows.map((row) => ({
     ...row,
     createdAt: row.createdAt.toISOString(),
     papers: row.papers.map((p) => ({
@@ -56,12 +54,28 @@ export async function loadState(
       questionRules: p.questionRules,
     })),
   })) as Assessment[];
+  const readsSubject = (classroomId: string, subject: string, assessment?: Assessment) => {
+    const classroom = classes.find((c) => c.id === classroomId);
+    if (options.reviewing)
+      return (
+        !!classroom && !!assessment && canReviewSubject(a, assessment, classroom, subject, classes)
+      );
+    return !!classroom && (a.role === "STUDENT" || canReadSubject(a, classroom, subject));
+  };
+  const assessments = fullAssessments
+    .map((row) => ({
+      ...row,
+      papers: row.papers.filter((p) =>
+        classes.some((c) => row.classroomIds.includes(c.id) && readsSubject(c.id, p.subject, row)),
+      ),
+    }))
+    .filter((row) => row.papers.length);
   const paperIds = assessments.flatMap((a) => a.papers.map((p) => p.paperId));
   const paperRows = await db.paper.findMany({
     where:
       a.role === "ADMIN"
         ? {}
-        : a.role === "STUDENT"
+        : a.role === "STUDENT" || options.reviewing
           ? { id: { in: paperIds } }
           : { OR: [{ ownerId: a.id }, { id: { in: paperIds } }] },
     include: { items: { orderBy: { position: "asc" } } },
@@ -73,7 +87,7 @@ export async function loadState(
     updatedAt: p.updatedAt.toISOString(),
   })) as unknown as Paper[];
   const questionRows = await db.question.findMany({
-    take: options.questionLimit,
+    take: options.reviewing ? 0 : options.questionLimit,
     where:
       a.role === "ADMIN"
         ? {}
@@ -87,17 +101,46 @@ export async function loadState(
     createdAt: q.createdAt.toISOString(),
     updatedAt: q.updatedAt.toISOString(),
   })) as unknown as BankQuestion[];
-  const classroomDTO = classes.map((c) => ({
-    ...c,
-    students: a.role === "STUDENT" ? c.students.filter((s) => s.userId === a.id) : c.students,
-  })) as Classroom[];
+  const classroomDTO = classes
+    .filter(
+      (c) =>
+        !options.reviewing ||
+        assessments.some(
+          (exam) =>
+            exam.classroomIds.includes(c.id) &&
+            exam.papers.some((p) => readsSubject(c.id, p.subject, exam)),
+        ),
+    )
+    .map((c) => ({
+      ...c,
+      students:
+        a.role === "STUDENT"
+          ? c.students.filter((s) => s.userId === a.id)
+          : options.reviewing
+            ? c.students.filter((s) =>
+                assessments.some(
+                  (exam) =>
+                    exam.studentIds?.includes(s.id) &&
+                    exam.papers.some((p) => readsSubject(c.id, p.subject, exam)),
+                ),
+              )
+            : c.students,
+    })) as Classroom[];
   const studentIds = classroomDTO.flatMap((c) => c.students.map((s) => s.id));
-  const submissionRows = await db.scanSubmission.findMany({
+  const candidateSubmissions = await db.scanSubmission.findMany({
     where: {
       assessmentId: { in: assessments.map((a) => a.id) },
       ...(a.role !== "ADMIN" ? { studentId: { in: studentIds } } : {}),
     },
     orderBy: { createdAt: "desc" },
+  });
+  const submissionRows = candidateSubmissions.filter((row) => {
+    const classroom = classes.find((c) =>
+      c.students.some((student) => student.id === row.studentId),
+    );
+    const exam = assessments.find((exam) => exam.id === row.assessmentId);
+    const paper = exam?.papers.find((paper) => paper.paperId === row.paperId);
+    return !!classroom && !!paper && readsSubject(classroom.id, paper.subject, exam);
   });
   const submissions = submissionRows.map((s) => ({
     ...s,
@@ -138,20 +181,41 @@ export async function loadState(
     a.role === "STUDENT"
       ? []
       : await db.user.findMany({
-          where: { role: { in: ["ADMIN", "TEACHER", "STUDENT"] } },
-          select: { id: true, name: true, email: true, username: true, role: true },
+          where: options.reviewing
+            ? { role: { in: ["ADMIN", "TEACHER"] } }
+            : a.role === "ADMIN"
+              ? { role: { in: ["ADMIN", "TEACHER", "STUDENT"] } }
+              : {
+                  OR: [
+                    { role: { in: ["ADMIN", "TEACHER"] } },
+                    {
+                      studentRecords: {
+                        some: { classroomId: { in: classroomDTO.map((c) => c.id) } },
+                      },
+                    },
+                  ],
+                },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            username: true,
+            role: true,
+            ...(a.role === "ADMIN" ? { teachingAssignments: true } : {}),
+          },
           orderBy: { name: "asc" },
         });
   // Compute ranks over complete class rosters before filtering individual student visibility.
   let analytics = buildAnalytics({
     questions,
     papers,
-    classrooms: classes as Classroom[],
+    classrooms: classroomDTO,
     assessments,
     submissions,
     reviews,
+    canReadSubject: readsSubject,
   });
-  if (a.role !== "ADMIN") {
+  if (a.role !== "ADMIN" && !options.reviewing) {
     // Load peer scores solely inside the server to calculate authentic ranks, without exposing peers.
     const allSubs = await db.scanSubmission.findMany({
       where: { assessmentId: { in: assessments.map((x) => x.id) } },
@@ -163,26 +227,36 @@ export async function loadState(
       where: { id: { in: [...new Set(assessments.flatMap((x) => x.classroomIds))] } },
       include: { students: true },
     });
-    analytics = buildAnalytics({
+    const official = buildAnalytics({
       questions,
       papers,
       classrooms: allClasses as Classroom[],
-      assessments,
+      assessments: fullAssessments,
       submissions: allSubs.map((s) => ({
         ...s,
         createdAt: s.createdAt.toISOString(),
       })) as unknown as ScanSubmission[],
       reviews: allReviews.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() })) as Review[],
     });
-    analytics.results = analytics.results.filter((r) => studentIds.includes(r.studentId));
-    analytics.students = analytics.students.filter((r) => studentIds.includes(r.studentId));
-    analytics.classrooms =
-      a.role === "STUDENT"
-        ? []
-        : analytics.classrooms.filter((c) => allowedClassIds.includes(c.id));
-    analytics.knowledge = mergeKnowledgeStats(analytics.students.flatMap((s) => s.knowledge));
+    analytics = applyOfficialResults(analytics, official.results);
+    if (a.role === "STUDENT") analytics.classrooms = [];
+  }
+  if (options.reviewing) {
+    // A marking assignment exposes answer-level progress, not cross-class learning reports.
+    analytics.results = analytics.results.map((row) => ({
+      ...row,
+      total: null,
+      rank: null,
+      classRank: null,
+      totalRestricted: true,
+      subjects: row.subjects.map((s) => ({ ...s, rank: null })),
+    }));
+    analytics.students = [];
+    analytics.knowledge = [];
+    analytics.classrooms = [];
   }
   return {
+    ...(options.reviewing ? { reviewing: true } : {}),
     actor: a,
     questions: a.role === "STUDENT" ? [] : questions,
     questionCount:
@@ -191,14 +265,23 @@ export async function loadState(
         : await db.question.count({ where: a.role === "ADMIN" ? {} : { ownerId: a.id } }),
     papers,
     classrooms: classroomDTO,
-    assessments:
-      a.role === "STUDENT"
-        ? assessments.map((exam) => ({
-            ...exam,
-            studentIds: exam.studentIds?.filter((id) => ownStudentIds.includes(id)),
-            classroomIds: exam.classroomIds.filter((id) => allowedClassIds.includes(id)),
-          }))
-        : assessments,
+    assessments: assessments.map((exam) => {
+      const classroomIds = exam.classroomIds.filter(
+        (id) =>
+          allowedClassIds.includes(id) &&
+          exam.papers.some((p) => readsSubject(id, p.subject, exam)),
+      );
+      const enrolled = new Set(
+        classroomDTO
+          .filter((c) => classroomIds.includes(c.id))
+          .flatMap((c) => c.students.map((s) => s.id)),
+      );
+      return {
+        ...exam,
+        classroomIds,
+        studentIds: exam.studentIds?.filter((id) => enrolled.has(id)),
+      };
+    }),
     templates,
     submissions,
     reviews: a.role === "STUDENT" ? [] : reviews,
@@ -207,6 +290,11 @@ export async function loadState(
       createdAt: r.createdAt.toISOString(),
     })) as Review[],
     analytics,
-    users: users as PlatformState["users"],
+    users: users.map((user) => ({
+      ...user,
+      ...(a.role === "ADMIN" && "teachingAssignments" in user
+        ? { teachingAssignments: user.teachingAssignments.map(toTeachingAssignment) }
+        : {}),
+    })) as PlatformState["users"],
   };
 }

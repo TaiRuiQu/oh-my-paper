@@ -8,9 +8,16 @@ export async function GET(request: Request, { params }: { params: Promise<{ area
     const session = await requireSession(request.headers);
     const { area } = await params;
     if (!Object.hasOwn(AREA_LABELS, area)) throw new AccessError(404, "功能模块不存在。");
-    return Response.json(await loadPageState({ id: session.user.id }, area as PlatformArea), {
-      headers: { "Cache-Control": "private, no-store" },
-    });
+    return Response.json(
+      await loadPageState(
+        { id: session.user.id },
+        area as PlatformArea,
+        new URL(request.url).searchParams.get("scope") === "reviewing",
+      ),
+      {
+        headers: { "Cache-Control": "private, no-store" },
+      },
+    );
   } catch (error) {
     return errorResponse(error, request);
   }

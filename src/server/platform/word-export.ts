@@ -21,8 +21,14 @@ import {
   type ParagraphChild,
 } from "docx";
 import type { Paper } from "@/contracts/platform";
-import { orderedDocumentBlocks } from "@/lib/document-layout";
-import type { ExportAssetLoader } from "./pdf-export";
+import {
+  orderedDocumentBlocks,
+  DOCUMENT_DEFAULTS,
+  DOCUMENT_COLUMN_GAP_MM,
+  DOCUMENT_FOOTER_MM,
+  documentAnswerLines,
+} from "@/lib/document-layout";
+import type { ExportAssetLoader } from "./export-assets";
 
 class Equation extends WordMath {
   private readonly xml: ImportedXmlComponent;
@@ -71,13 +77,13 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
   const layout = paper.layout;
   const twips = (mm: number) => Math.round((mm * 1440) / 25.4);
   const [short, long] = layout.paperSize === "A3" ? [297, 420] : [210, 297];
-  const margin = layout.marginMm ?? 18;
+  const margin = layout.marginMm ?? DOCUMENT_DEFAULTS.marginMm;
   const paragraph = (text: string, options: IParagraphOptions = {}) =>
     new Paragraph({
       children: richRuns(text),
       spacing: {
         after: 60,
-        line: Math.round((layout.lineHeight ?? 1.8) * 240),
+        line: Math.round((layout.lineHeight ?? DOCUMENT_DEFAULTS.lineHeight) * 240),
         lineRule: LineRuleType.AUTO,
       },
       ...options,
@@ -102,7 +108,7 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
   const maxWidth =
     ((((layout.orientation === "landscape" ? long : short) -
       margin * 2 -
-      (layout.columns - 1) * 6.35) /
+      (layout.columns - 1) * DOCUMENT_COLUMN_GAP_MM) /
       layout.columns) *
       96) /
     25.4;
@@ -170,15 +176,13 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
         children.push(paragraph(`${option.label}. ${option.text}`, { indent: { left: 270 } }));
     }
     if (paper.kind === "HOMEWORK") {
-      children.push(paragraph("作答：", { keepNext: true }));
-      const lines =
-        settings?.answerLines ?? (["SINGLE", "MULTIPLE"].includes(item.snapshot.type) ? 1 : 4);
+      const lines = documentAnswerLines(layout, item.questionId);
       for (let line = 0; line < lines; line++)
         children.push(
           new Paragraph({
             text: "",
-            spacing: { line: 420, lineRule: LineRuleType.EXACT, after: 0 },
-            border: { bottom: { style: BorderStyle.SINGLE, size: 2, color: "DFE5EE" } },
+            spacing: { line: twips(7), lineRule: LineRuleType.EXACT, after: 0 },
+            border: { bottom: { style: BorderStyle.SINGLE, size: 2, color: "777777" } },
           }),
         );
       children.push(
@@ -197,7 +201,7 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
       top: twips(margin),
       left: twips(margin),
       right: twips(margin),
-      bottom: twips(margin + 32 / 3.78),
+      bottom: twips(margin + DOCUMENT_FOOTER_MM),
     },
   };
   return Packer.toBuffer(
@@ -209,11 +213,11 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
           document: {
             run: {
               font: {
-                ascii: layout.fontFamily ?? "NSimSun",
-                eastAsia: layout.fontFamily ?? "NSimSun",
-                hAnsi: layout.fontFamily ?? "NSimSun",
+                ascii: layout.fontFamily ?? DOCUMENT_DEFAULTS.fontFamily,
+                eastAsia: layout.fontFamily ?? DOCUMENT_DEFAULTS.fontFamily,
+                hAnsi: layout.fontFamily ?? DOCUMENT_DEFAULTS.fontFamily,
               },
-              size: (layout.fontSizePt ?? 11) * 2,
+              size: (layout.fontSizePt ?? DOCUMENT_DEFAULTS.fontSizePt) * 2,
             },
           },
         },
@@ -224,7 +228,12 @@ export async function renderPaperWord(paper: Paper, loadAsset: ExportAssetLoader
           properties: {
             page,
             type: SectionType.CONTINUOUS,
-            column: { count: layout.columns, space: 360, equalWidth: true },
+            column: {
+              count: layout.columns,
+              space: twips(DOCUMENT_COLUMN_GAP_MM),
+              equalWidth: true,
+              separate: layout.columns > 1,
+            },
           },
           children: children.length ? children : [paragraph("")],
         },

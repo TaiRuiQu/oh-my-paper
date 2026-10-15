@@ -131,9 +131,17 @@ async function main() {
     const classroomId = (
       await command({
         type: "classroom.save",
-        classroom: { name: "实测班", grade: "高一", reviewerIds: ["second"] },
+        classroom: { name: "实测班", grade: "高一" },
       })
     ).id;
+    await db.teachingAssignment.createMany({
+      data: ["teacher", "second"].map((userId) => ({
+        userId,
+        role: "SUBJECT_TEACHER",
+        classroomId,
+        subject: "数学",
+      })),
+    });
     const studentId = (
       await command({
         type: "student.save",
@@ -146,6 +154,7 @@ async function main() {
         assessment: {
           name: "混合双评",
           kind: "EXAM",
+          reviewScope: "CLASSROOM",
           classroomIds: [classroomId],
           papers: [
             {

@@ -1,6 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { DOCUMENT_FONTS, type BankQuestion, type DocumentLayout } from "@/contracts/platform";
+import { DOCUMENT_DEFAULTS } from "@/lib/document-layout";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -19,6 +21,25 @@ export function DocumentFormatControls({
   layout: DocumentLayout;
   onChange: (value: DocumentLayout) => void;
 }) {
+  const fontListId = useId();
+  const [localFonts, setLocalFonts] = useState<string[]>([]);
+  const [fontMessage, setFontMessage] = useState("");
+  async function loadLocalFonts() {
+    const browser = window as Window & { queryLocalFonts?: () => Promise<{ family: string }[]> };
+    if (!browser.queryLocalFonts) {
+      setFontMessage("当前浏览器不支持读取字体列表，可直接输入已安装的字体名称。");
+      return;
+    }
+    try {
+      const fonts = await browser.queryLocalFonts();
+      setLocalFonts(
+        [...new Set(fonts.map((font) => font.family))].sort((a, b) => a.localeCompare(b)),
+      );
+      setFontMessage("");
+    } catch {
+      setFontMessage("未读取本机字体，可直接输入已安装的字体名称。");
+    }
+  }
   const names: Record<string, string> = {
     NSimSun: "新宋体",
     SimSun: "宋体",
@@ -39,20 +60,32 @@ export function DocumentFormatControls({
           <option value="landscape">横向</option>
         </select>
       </Field>
-      <Field label="字体">
-        <select
-          value={layout.fontFamily ?? "NSimSun"}
-          onChange={(e) =>
-            onChange({ ...layout, fontFamily: e.target.value as DocumentLayout["fontFamily"] })
-          }
-        >
-          {DOCUMENT_FONTS.map((font) => (
+      <div className="p-field">
+        <label htmlFor={`${fontListId}-input`}>字体</label>
+        <Input
+          id={`${fontListId}-input`}
+          list={fontListId}
+          value={layout.fontFamily ?? DOCUMENT_DEFAULTS.fontFamily}
+          placeholder="输入本机字体名称"
+          aria-describedby={fontMessage ? `${fontListId}-message` : undefined}
+          onChange={(e) => onChange({ ...layout, fontFamily: e.target.value || undefined })}
+        />
+        <datalist id={fontListId}>
+          {[...new Set([...DOCUMENT_FONTS, ...localFonts])].map((font) => (
             <option key={font} value={font}>
               {names[font] ?? font}
             </option>
           ))}
-        </select>
-      </Field>
+        </datalist>
+        <Button type="button" size="sm" variant="ghost" onClick={() => void loadLocalFonts()}>
+          选择本机字体
+        </Button>
+        {fontMessage && (
+          <small id={`${fontListId}-message`} role="status">
+            {fontMessage}
+          </small>
+        )}
+      </div>
     </>
   );
 }

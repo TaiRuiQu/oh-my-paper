@@ -90,6 +90,10 @@ jobs:
         run: pnpm run test:ai-jobs
       - name: Non-AI domain acceptance
         run: pnpm run test:integration
+      - name: Teaching permissions acceptance
+        run: pnpm run test:permissions
+      - name: Record naming acceptance
+        run: pnpm run test:record-names
       - name: Question semantic search with real vector database
         run: pnpm run test:semantic-search
       - name: Image scanning acceptance

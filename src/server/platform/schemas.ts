@@ -1,8 +1,19 @@
 import { z } from "zod";
 import { studentNumberSchema } from "@/contracts/auth";
-import { DOCUMENT_FONTS } from "@/contracts/platform";
+import { RECORD_NAME_MAX_LENGTH } from "@/contracts/platform";
 const id = z.string().trim().min(1).max(128);
 const text = z.string().trim().max(100000);
+const recordName = z
+  .string()
+  .trim()
+  .min(1, "请输入名称。")
+  .max(RECORD_NAME_MAX_LENGTH, `名称不能超过 ${RECORD_NAME_MAX_LENGTH} 字。`);
+const documentFontFamily = z
+  .string()
+  .trim()
+  .min(1)
+  .max(100)
+  .regex(/^[\p{L}\p{N} ._()-]+$/u, "请输入单个本机字体名称。");
 const subject = z.string().trim().min(1).max(40);
 const tags = z
   .array(z.string().trim().min(1).max(120))
@@ -77,7 +88,7 @@ export const questionInputSchema = z
 export const paperInputSchema = z
   .object({
     id: id.optional(),
-    name: text.min(1).max(200),
+    name: recordName,
     kind: z.enum(["EXAM", "HOMEWORK"]),
     subject,
     grade: text.max(40),
@@ -86,7 +97,7 @@ export const paperInputSchema = z
       paperSize: z.enum(["A4", "A3"]),
       columns: z.number().int().min(1).max(4),
       orientation: z.enum(["portrait", "landscape"]).optional(),
-      fontFamily: z.enum(DOCUMENT_FONTS).optional(),
+      fontFamily: documentFontFamily.optional(),
       textBlocks: z
         .array(
           z.strictObject({
@@ -162,7 +173,7 @@ export const cardLayoutSchema = z
     paperSize: z.enum(["A4", "A3"]).optional(),
     orientation: z.enum(["portrait", "landscape"]).optional(),
     columns: z.number().int().min(1).max(4).optional(),
-    fontFamily: z.enum(DOCUMENT_FONTS).optional(),
+    fontFamily: documentFontFamily.optional(),
     width: z.number().positive().max(10000),
     height: z.number().positive().max(10000),
     pageCount: z.number().int().min(1).max(100),
@@ -218,8 +229,9 @@ export const conversionSchema = z
 export const assessmentInputSchema = z
   .object({
     id: id.optional(),
-    name: text.min(1).max(200),
+    name: recordName,
     kind: z.enum(["EXAM", "HOMEWORK"]),
+    reviewScope: z.enum(["CLASSROOM", "GRADE"]).default("CLASSROOM"),
     classroomIds: z.array(id).min(1).max(100),
     papers: z
       .array(
@@ -245,6 +257,8 @@ export const assessmentInputSchema = z
       .max(20),
   })
   .superRefine((a, c) => {
+    if (a.kind === "HOMEWORK" && a.reviewScope !== "CLASSROOM")
+      c.addIssue({ code: "custom", message: "作业使用班级阅卷范围。" });
     if (
       new Set(a.classroomIds).size !== a.classroomIds.length ||
       new Set(a.papers.map((p) => p.paperId)).size !== a.papers.length ||
@@ -283,13 +297,13 @@ export const commandSchema = z.discriminatedUnion("type", [
   z.strictObject({ type: z.literal("question.delete"), id }),
   z.strictObject({ type: z.literal("paper.save"), paper: paperInputSchema }),
   z.strictObject({ type: z.literal("paper.delete"), id }),
+  z.strictObject({ type: z.literal("paper.rename"), id, name: recordName }),
   z.strictObject({
     type: z.literal("classroom.save"),
     classroom: z.strictObject({
       id: id.optional(),
       name: text.min(1).max(200),
       grade: text.max(40),
-      reviewerIds: z.array(id).max(50).optional(),
     }),
   }),
   z.strictObject({
@@ -305,6 +319,7 @@ export const commandSchema = z.discriminatedUnion("type", [
   z.strictObject({ type: z.literal("student.delete"), id }),
   z.strictObject({ type: z.literal("assessment.save"), assessment: assessmentInputSchema }),
   z.strictObject({ type: z.literal("assessment.publish"), id, published: z.boolean() }),
+  z.strictObject({ type: z.literal("assessment.rename"), id, name: recordName }),
   z.strictObject({ type: z.literal("template.save"), template: templateInputSchema }),
   z.strictObject({ type: z.literal("template.delete"), id }),
   z.strictObject({ type: z.literal("submission.save"), submission: submissionInputSchema }),

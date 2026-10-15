@@ -98,7 +98,7 @@ export function Analytics({
         description={
           studentMode
             ? "查看已发布成绩、错题与薄弱知识点，选择相近题目巩固练习。"
-            : "联合排名包含考试所有科目；未完成阅卷的学生保留待评分状态。"
+            : "成绩按授权班级与学科展示；仅有部分学科权限时不展示全科总分与排名。"
         }
       >
         <div className="p-toolbar">
@@ -194,7 +194,9 @@ export function Analytics({
                           </div>
                         ))}
                       </td>
-                      <td className="p-score">{r.total ?? "待评分"}</td>
+                      <td className="p-score">
+                        {r.totalRestricted ? "仅授权学科" : (r.total ?? "待评分")}
+                      </td>
                       <td>{r.rank ?? "—"}</td>
                       <td>{r.classRank ?? "—"}</td>
                     </tr>

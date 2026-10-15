@@ -1,9 +1,8 @@
 import { requireSession } from "@/server/auth/session";
 import { errorResponse, AccessError, RequestError } from "@/server/http/errors";
 import { loadState } from "@/server/platform/service";
-import { renderCardHtml, renderCardSvg, renderPaperHtml } from "@/server/platform/print";
+import { renderCardSvg } from "@/server/platform/print";
 import { accessibleAsset, assetId } from "@/server/platform/assets";
-import { renderPdf } from "@/server/platform/pdf-export";
 import { renderPaperWord } from "@/server/platform/word-export";
 
 export const runtime = "nodejs";
@@ -12,10 +11,16 @@ export const maxDuration = 120;
 export async function GET(request: Request) {
   try {
     const session = await requireSession(request.headers);
-    const state = await loadState({ id: session.user.id });
     const params = new URL(request.url).searchParams;
-    const format = params.get("format") ?? "pdf";
-    if (!["pdf", "docx", "svg"].includes(format)) throw new RequestError(400, "不支持的导出格式。");
+    const format = params.get("format");
+    if (format === "pdf")
+      throw new RequestError(
+        400,
+        "请在导出页面点击「打印 / 保存 PDF」，通过本机浏览器保存为 PDF。",
+      );
+    if (format !== "docx" && format !== "svg")
+      throw new RequestError(400, "请选择 Word（format=docx）或答题卡 SVG（format=svg）格式。");
+    const state = await loadState({ id: session.user.id });
     if (!!params.get("paperId") === !!params.get("templateId"))
       throw new RequestError(400, "请选择一份试卷、作业或答题卡。");
     const template = state.templates.find((template) => template.id === params.get("templateId"));
@@ -35,14 +40,7 @@ export async function GET(request: Request) {
         throw new RequestError(400, "答题卡页码无效。");
       body = renderCardSvg(template!, page);
     } else {
-      body = new Uint8Array(
-        format === "docx"
-          ? await renderPaperWord(paper!, loadAsset)
-          : await renderPdf(
-              template ? renderCardHtml(template) : renderPaperHtml(paper!),
-              loadAsset,
-            ),
-      ).buffer;
+      body = new Uint8Array(await renderPaperWord(paper!, loadAsset)).buffer;
     }
     const name = `${(template?.name ?? paper!.name).replace(/[\u0000-\u001f\u007f/\\]/g, "_")}.${format}`;
     return new Response(body, {
@@ -50,9 +48,7 @@ export async function GET(request: Request) {
         "Content-Type":
           format === "svg"
             ? "image/svg+xml; charset=utf-8"
-            : format === "docx"
-              ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-              : "application/pdf",
+            : "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "Content-Disposition": `attachment; filename="document.${format}"; filename*=UTF-8''${encodeURIComponent(name)}`,
         "Cache-Control": "private, no-store",
         "X-Content-Type-Options": "nosniff",

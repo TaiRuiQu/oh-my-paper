@@ -5,7 +5,7 @@ import type { Prisma as PrismaTypes } from "@/generated/prisma/client";
 import type { PlatformState } from "../types";
 import type { Command } from "./types";
 import { owner, missing } from "../access";
-import { RequestError } from "@/server/http/errors";
+import { AccessError, RequestError } from "@/server/http/errors";
 export async function executeClassroomsCommand(
   db: PrismaTypes.TransactionClient,
   a: PlatformState["actor"],
@@ -13,18 +13,25 @@ export async function executeClassroomsCommand(
 ) {
   switch (command.type) {
     case "classroom.save": {
-      const { id, reviewerIds = [], ...data } = command.classroom;
-      if (id) owner(a, await db.classroom.findUnique({ where: { id } }));
-      if (
-        new Set(reviewerIds).size !== reviewerIds.length ||
-        (await db.user.count({
-          where: { id: { in: reviewerIds }, role: { in: ["ADMIN", "TEACHER"] } },
-        })) !== reviewerIds.length
-      )
-        throw new RequestError(400, "评阅教师账号无效。");
+      const { id, ...data } = command.classroom;
+      if (id) {
+        const previous = owner(a, await db.classroom.findUnique({ where: { id } }));
+        if (
+          a.role !== "ADMIN" &&
+          previous.grade !== data.grade &&
+          (await db.teachingAssignment.count({
+            where: { classroomId: id, role: "SUBJECT_TEACHER" },
+          }))
+        )
+          throw new AccessError(403, "已配置任课教师的班级年级只能由管理员调整。");
+      }
       const c = id
-        ? await db.classroom.update({ where: { id }, data: { ...data, reviewerIds } })
-        : await db.classroom.create({ data: { ...data, reviewerIds, ownerId: a.id } });
+        ? await db.classroom.update({ where: { id }, data })
+        : await db.classroom.create({ data: { ...data, ownerId: a.id } });
+      if (!id && a.role === "TEACHER")
+        await db.teachingAssignment.create({
+          data: { userId: a.id, role: "HOMEROOM", classroomId: c.id },
+        });
       return { id: c.id };
     }
     case "student.save": {

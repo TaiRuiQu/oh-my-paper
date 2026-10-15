@@ -53,8 +53,12 @@ export function DomainProvider({
   const [notice, setNotice] = useState<{ text: string; error?: boolean }>();
   const notify = useCallback((text: string, error?: boolean) => setNotice({ text, error }), []);
   const refresh = useCallback(async () => {
-    setState(await apiRequest<PlatformState>(`/api/platform/${area}/state`));
-  }, [area]);
+    setState(
+      await apiRequest<PlatformState>(
+        `/api/platform/${area}/state${initialState.reviewing ? "?scope=reviewing" : ""}`,
+      ),
+    );
+  }, [area, initialState.reviewing]);
   const mutate = useCallback(
     async (command: PlatformCommand) => {
       setPending(true);

@@ -3,6 +3,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { getDb } from "@/server/db/client";
 import { AccessError, RequestError } from "@/server/http/errors";
 import { getActor, loadState } from "./service";
+import { assertCanReview } from "./access";
 import { aiRequestSchema } from "@/contracts/platform-ai";
 import { runAiTask } from "./ai/runner";
 
@@ -43,7 +44,7 @@ export async function enqueueAiJob(userId: string, raw: unknown) {
   const actor = await getActor(userId);
   if (actor.role === "STUDENT" && kind !== "RECOMMEND")
     throw new AccessError(403, "需要教师权限。");
-  const state = await loadState(actor);
+  const state = await loadState(actor, undefined, { reviewing: kind === "GRADE" });
   const ids = input as Record<string, unknown>;
   if (kind === "IMPORT") {
     const urls = ids.assetUrls as string[];
@@ -75,6 +76,13 @@ export async function enqueueAiJob(userId: string, raw: unknown) {
   if (kind === "GRADE") {
     const submission = state.submissions.find((submission) => submission.id === ids.submissionId);
     if (!submission) throw new AccessError(404, "答卷不存在。");
+    const classroom = state.classrooms.find((row) =>
+      row.students.some((student) => student.id === submission.studentId),
+    );
+    const assessment = state.assessments.find((a) => a.id === submission.assessmentId);
+    const config = assessment?.papers.find((paper) => paper.paperId === submission.paperId);
+    if (!classroom || !config || !assessment) throw new AccessError(404, "答卷不存在。");
+    await assertCanReview(getDb(), state.actor, assessment, classroom.id, config.subject);
     if (
       state.assessments.find((assessment) => assessment.id === submission.assessmentId)?.published
     )

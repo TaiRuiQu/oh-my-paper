@@ -208,6 +208,7 @@ export function buildAnalytics(input: {
   assessments: Assessment[];
   submissions: ScanSubmission[];
   reviews: Review[];
+  canReadSubject?: (classroomId: string, subject: string, assessment?: Assessment) => boolean;
 }): Analytics {
   const results: StudentResult[] = [];
   for (const a of input.assessments) {
@@ -216,36 +217,42 @@ export function buildAnalytics(input: {
       for (const student of c.students.filter(
         (s) => !a.studentIds || a.studentIds.includes(s.id),
       )) {
-        const subjects: SubjectResult[] = a.papers.map((config) => {
-          const paper = input.papers.find((p) => p.id === config.paperId);
-          if (!paper)
+        const subjects: SubjectResult[] = a.papers
+          .filter(
+            (config) => !input.canReadSubject || input.canReadSubject(c.id, config.subject, a),
+          )
+          .map((config) => {
+            const paper = input.papers.find((p) => p.id === config.paperId);
+            if (!paper)
+              return {
+                paperId: config.paperId,
+                subject: config.subject,
+                rawScore: null,
+                score: null,
+                maxScore: 0,
+                rank: null,
+                grades: [],
+              };
+            const submission = input.submissions.find(
+              (s) =>
+                s.assessmentId === a.id && s.paperId === paper.id && s.studentId === student.id,
+            );
+            const grades = finalGrades(paper, config, submission, input.reviews);
+            const rawScore =
+              grades.length && grades.every((g) => g.status === "FINAL")
+                ? Math.round(grades.reduce((n, g) => n + g.score!, 0) * 100) / 100
+                : null;
             return {
-              paperId: config.paperId,
+              paperId: paper.id,
               subject: config.subject,
-              rawScore: null,
-              score: null,
-              maxScore: 0,
+              rawScore,
+              score: rawScore,
+              maxScore: paper.items.reduce((n, i) => n + i.score, 0),
               rank: null,
-              grades: [],
+              grades,
             };
-          const submission = input.submissions.find(
-            (s) => s.assessmentId === a.id && s.paperId === paper.id && s.studentId === student.id,
-          );
-          const grades = finalGrades(paper, config, submission, input.reviews);
-          const rawScore =
-            grades.length && grades.every((g) => g.status === "FINAL")
-              ? Math.round(grades.reduce((n, g) => n + g.score!, 0) * 100) / 100
-              : null;
-          return {
-            paperId: paper.id,
-            subject: config.subject,
-            rawScore,
-            score: rawScore,
-            maxScore: paper.items.reduce((n, i) => n + i.score, 0),
-            rank: null,
-            grades,
-          };
-        });
+          });
+        if (!subjects.length) continue;
         rows.push({
           assessmentId: a.id,
           studentId: student.id,
@@ -260,10 +267,12 @@ export function buildAnalytics(input: {
         });
       }
     for (const config of a.papers) {
-      const pairs = rows.map((row) => ({
-        row,
-        subject: row.subjects.find((s) => s.paperId === config.paperId)!,
-      }));
+      const pairs = rows
+        .filter((row) => row.subjects.some((s) => s.paperId === config.paperId))
+        .map((row) => ({
+          row,
+          subject: row.subjects.find((s) => s.paperId === config.paperId)!,
+        }));
       setRanks(
         pairs,
         (r) => r.subject.rawScore,
@@ -406,6 +415,7 @@ export function buildAnalytics(input: {
       const recommendations = input.questions
         .filter(
           (q) =>
+            (!input.canReadSubject || input.canReadSubject(c.id, q.subject)) &&
             !attempted.has(q.id) &&
             [...q.knowledgeTags, ...q.content.parts.flatMap((p) => p.knowledgeTags)].some((t) =>
               weak.has(t),
@@ -441,4 +451,43 @@ export function buildAnalytics(input: {
       };
     }),
   };
+}
+
+/** Preserve official subject conversion/ranks, while withholding totals for partial subject access. */
+export function applyOfficialResults(analytics: Analytics, official: Analytics["results"]) {
+  analytics.results = analytics.results.map((row) => {
+    const original = official.find(
+      (r) => r.assessmentId === row.assessmentId && r.studentId === row.studentId,
+    );
+    if (!original) return row;
+    const subjects = original.subjects.filter((s) =>
+      row.subjects.some((visible) => visible.paperId === s.paperId),
+    );
+    const complete = subjects.length === original.subjects.length && !original.totalRestricted;
+    return {
+      ...row,
+      subjects,
+      totalRestricted: !complete,
+      total: complete ? original.total : null,
+      rank: complete ? original.rank : null,
+      classRank: complete ? original.classRank : null,
+    };
+  });
+  analytics.classrooms = analytics.classrooms.map((classroom) => {
+    const rows = analytics.results.filter(
+      (row) => row.classroomId === classroom.id && row.total !== null,
+    );
+    return {
+      ...classroom,
+      average: rows.length
+        ? Math.round((rows.reduce((sum, row) => sum + row.total!, 0) / rows.length) * 100) / 100
+        : null,
+      participantCount: new Set(
+        analytics.results
+          .filter((row) => row.classroomId === classroom.id)
+          .map((row) => row.studentId),
+      ).size,
+    };
+  });
+  return analytics;
 }

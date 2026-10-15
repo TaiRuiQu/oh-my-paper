@@ -86,7 +86,7 @@ const classroom: Classroom = {
   ownerId: "teacher",
   name: "一班",
   grade: "高一",
-  reviewerIds: [],
+
   students: [
     {
       id: "student",
@@ -103,6 +103,7 @@ const assessment: Assessment = {
   ownerId: "teacher",
   name: "联考",
   kind: "EXAM",
+  reviewScope: "CLASSROOM",
   classroomIds: ["class"],
   papers: [config],
   published: false,

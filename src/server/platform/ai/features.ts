@@ -1,3 +1,4 @@
+import { DOCUMENT_DEFAULTS } from "@/lib/document-layout";
 import "server-only";
 import { tool, type ToolSet } from "ai";
 import { z } from "zod";
@@ -126,7 +127,7 @@ export async function createTaskFeatures(options: {
 }) {
   const { userId, kind } = options;
   const input = aiInputSchemas[kind].parse(options.input);
-  const state = await loadState({ id: userId });
+  const state = await loadState({ id: userId }, undefined, { reviewing: kind === "GRADE" });
   if (state.actor.role === "STUDENT" && kind !== "RECOMMEND")
     throw new AccessError(403, "学生只可请求本人错题推荐。");
   let complete = false,
@@ -373,7 +374,7 @@ export async function createTaskFeatures(options: {
             subject: req.subject,
             grade: req.grade,
             instructions: "",
-            layout: { paperSize: "A4", columns: 1 },
+            layout: { ...DOCUMENT_DEFAULTS },
             items: selected.map((q) => {
               const count = req.counts.find((c) => c.type === q.type)!;
               return { questionId: q.id, score: count.score, section: count.section ?? q.type };
@@ -1012,7 +1013,7 @@ export async function createTaskFeatures(options: {
                       subject: req.subject || first.subject,
                       grade: req.grade || first.grade,
                       instructions: "",
-                      layout: { paperSize: "A4", columns: 1 },
+                      layout: { ...DOCUMENT_DEFAULTS },
                       items: imported.map(({ question, key }) => ({
                         questionId: randomUUID(),
                         question,
