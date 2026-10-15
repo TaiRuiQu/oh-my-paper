@@ -13,6 +13,7 @@ import {
   ChevronDown,
   Menu,
   ChevronRight,
+  Origami,
 } from "lucide-react";
 import type { PlatformState } from "@/contracts/platform";
 import { TEACHING_ROLES } from "@/contracts/permissions";
@@ -78,6 +79,10 @@ export function PlatformShell({
         </span>
       </Link>
       <nav className="p-nav p-group-nav" aria-label="主导航">
+        <Link href="/xiaozhi" className="p-xiaozhi-entry" onClick={() => setMobile(false)}>
+          <Origami size={18} aria-hidden="true" />
+          小纸<span>AI 助手</span>
+        </Link>
         {groups.map((group) => {
           const Icon = icons[group.area];
           const expanded =

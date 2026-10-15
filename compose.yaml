@@ -65,7 +65,9 @@ services:
       context: .
       target: ai-worker
     env_file: .env
-    environment: *app-env
+    environment:
+      <<: *app-env
+      XIAOZHI_WEBSITE_URL: http://web:3000
     # Bubblewrap isolates each model execution inside its own user/PID/network namespace.
     security_opt:
       - no-new-privileges:true

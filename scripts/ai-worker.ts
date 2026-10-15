@@ -9,6 +9,7 @@ async function main() {
   const { disconnectDatabase } = await import("../src/server/db/client");
   const { logEvent, logError } = await import("../src/server/logger");
   const { runQuestionIndexOnce } = await import("../src/server/platform/search/indexer");
+  const { runXiaozhiWorker } = await import("../src/server/xiaozhi/worker");
   const workerId = randomUUID();
   let stopping = false;
   process.on("SIGINT", () => {
@@ -30,6 +31,7 @@ async function main() {
     }
   };
   const indexingTask = indexing();
+  const xiaozhiTask = runXiaozhiWorker(workerId, () => stopping);
   try {
     while (!stopping) {
       try {
@@ -44,6 +46,7 @@ async function main() {
   } finally {
     stopping = true;
     await indexingTask;
+    await xiaozhiTask;
     await disconnectDatabase();
   }
 }

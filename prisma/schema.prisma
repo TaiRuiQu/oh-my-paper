@@ -28,7 +28,56 @@ model User {
   submissions ScanSubmission[]
   reviews Review[]
   teachingAssignments TeachingAssignment[]
+  xiaozhiConversations XiaozhiConversation[]
+  xiaozhiSkills XiaozhiSkill[]
   @@map("users")
+}
+
+model XiaozhiConversation {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title String @default("新对话")
+  view Json @default("{}")
+  modelId String?
+  skillIds String[] @default([])
+  status String @default("IDLE")
+  workerId String?
+  heartbeatAt DateTime?
+  cancelRequested Boolean @default(false)
+  encryptedCookie String?
+  inputs XiaozhiInput[]
+  error String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId, updatedAt])
+  @@index([status, heartbeatAt])
+  @@map("xiaozhi_conversations")
+}
+
+model XiaozhiInput {
+  id String @id
+  conversationId String
+  conversation XiaozhiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  message Json
+  mode String @default("followUp")
+  status String @default("QUEUED")
+  createdAt DateTime @default(now())
+  @@index([conversationId, createdAt])
+  @@map("xiaozhi_inputs")
+}
+
+model XiaozhiSkill {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name String
+  description String
+  instructions String @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])
+  @@map("xiaozhi_skills")
 }
 
 model Session {

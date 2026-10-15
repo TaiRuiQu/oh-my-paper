@@ -42,6 +42,7 @@ for (const file of trace.fileList) {
 // Python programs are loaded by Bubblewrap rather than through JavaScript imports.
 await cp(resolve("tools/sandbox"), resolve(destination, "tools/sandbox"), { recursive: true });
 await cp(resolve("tools/card-scan"), resolve(destination, "tools/card-scan"), { recursive: true });
+await cp(resolve("skills/xiaozhi"), resolve(destination, "skills/xiaozhi"), { recursive: true });
 await writeFile(
   resolve(destination, "package.json"),
   JSON.stringify({ private: true, type: "module" }) + "\n",

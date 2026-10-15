@@ -893,3 +893,20 @@ td {
   height: auto;
   max-height: 52mm;
 }
+.p-xiaozhi-entry {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 12px;
+  margin-bottom: 12px;
+  border-radius: 7px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  text-decoration: none;
+  font-weight: 500;
+}
+.p-xiaozhi-entry span {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 400;
+}

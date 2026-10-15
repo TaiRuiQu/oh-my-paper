@@ -2,7 +2,7 @@ node_modules/
 /public/print-fonts/
 .tools/
 .local/
-.venv/
+.venv
 .next/
 build/
 coverage/

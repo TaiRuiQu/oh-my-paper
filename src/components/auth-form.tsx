@@ -34,7 +34,7 @@ export function AuthForm() {
         setError(authErrors[result.error.code ?? ""] ?? "登录失败，请稍后重试。");
         return;
       }
-      router.replace("/workspace");
+      router.replace("/xiaozhi");
       router.refresh();
     } catch (error) {
       setError(reportClientError("auth.submit", error));

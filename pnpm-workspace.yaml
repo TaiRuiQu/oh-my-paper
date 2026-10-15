@@ -1,8 +1,10 @@
 storeDir: .local/pnpm-store
 saveExact: true
 allowBuilds:
+  "@google/genai": false
   "@prisma/engines": true
   esbuild: true
   prisma: true
+  protobufjs: true
   sharp: true
   unrs-resolver: true

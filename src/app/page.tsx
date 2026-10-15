@@ -4,5 +4,5 @@ import { getSession } from "@/server/auth/session";
 
 export default async function HomePage() {
   const session = await getSession(await headers());
-  redirect(session ? "/workspace" : "/login");
+  redirect(session ? "/xiaozhi" : "/login");
 }

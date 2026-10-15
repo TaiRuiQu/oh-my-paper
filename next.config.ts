@@ -18,6 +18,10 @@ function buildCommit() {
 }
 
 const config: NextConfig = {
+  outputFileTracingIncludes: {
+    "/api/xiaozhi/**/*": ["./skills/xiaozhi/**/*"],
+    "/xiaozhi": ["./skills/xiaozhi/**/*"],
+  },
   output: "standalone",
   poweredByHeader: false,
   env: { NEXT_PUBLIC_APP_COMMIT: buildCommit() },

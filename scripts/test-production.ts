@@ -111,6 +111,19 @@ async function main() {
     console.log(
       "✓ Production HTTP workflow, authenticated Word/SVG exports, server PDF rejection, role/session/CSRF, private diagrams, exam-scoped analytics and official peer ranks pass",
     );
+    const xiaozhiHttp = start(
+      process.execPath,
+      ["--conditions=react-server", "--import", "tsx", "scripts/test-xiaozhi-http.ts"],
+      root,
+    );
+    assert.equal(
+      await finished(xiaozhiHttp),
+      0,
+      "Xiaozhi HTTP and skill isolation must pass against the standalone server",
+    );
+    console.log(
+      "✓ Production Xiaozhi chat, skills, attachments and event streams preserve account isolation",
+    );
     await mkdir("tmp", { recursive: true });
     await writeFile(
       "tmp/production-evidence.json",
