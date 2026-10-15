@@ -45,7 +45,7 @@ test("manifest lookup failure aborts the deletion plan", async () => {
   );
 });
 
-test("retention selects complete releases and protects latest even when newer tags exist", () => {
+test("retention selects complete releases and protects latest even when newer tags exist", async () => {
   const versions = [1, 2, 3, 4, 5].map((id) => ({
     id,
     name: `release-${id}`,
@@ -59,7 +59,11 @@ test("retention selects complete releases and protects latest even when newer ta
   // the v2 deployment entry point still points to the older complete index.
   versions[0].metadata.container.tags = ["latest"];
   assert.deepEqual(
-    retainedReleases(versions).map((version) => version.id),
+    (
+      await retainedReleases(versions, async () => ({
+        annotations: { [`${releaseAnnotation}.version`]: "1" },
+      }))
+    ).map((version) => version.id),
     [1, 4, 3],
   );
 });
@@ -117,5 +121,38 @@ test("cleanup gives in-progress staging images time to finish without retaining 
       (version) => version.name,
     ),
     ["abandoned", "obsolete-release"],
+  );
+});
+
+test("release selection ignores tagged manifests without release metadata and rejects an invalid latest", async () => {
+  const versions = [
+    {
+      id: 1,
+      name: "complete",
+      created_at: "2026-10-15",
+      metadata: { container: { tags: ["latest"] } },
+    },
+    {
+      id: 2,
+      name: "incomplete",
+      created_at: "2026-10-14",
+      metadata: { container: { tags: ["sha-" + "a".repeat(40)] } },
+    },
+  ];
+  const load = async (name) =>
+    name === "complete" ? { annotations: { [`${releaseAnnotation}.version`]: "1" } } : {};
+  assert.deepEqual(
+    (await retainedReleases(versions, load)).map(({ name }) => name),
+    ["complete"],
+  );
+  await assert.rejects(
+    retainedReleases(versions, async () => ({})),
+    /Latest does not reference/,
+  );
+  await assert.rejects(
+    retainedReleases(versions, async () => {
+      throw new Error("HTTP 503");
+    }),
+    /HTTP 503/,
   );
 });

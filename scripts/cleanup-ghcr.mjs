@@ -21,12 +21,21 @@ export async function retainedDigests(versions, loadManifest) {
   return digests;
 }
 
-export function retainedReleases(versions, count = 3) {
-  const releases = versions.filter((version) =>
+export async function retainedReleases(versions, loadManifest, count = 3) {
+  const candidates = versions.filter((version) =>
     version.metadata.container.tags.some(
       (tag) => tag === "latest" || /^sha-[a-f0-9]{40}$/.test(tag),
     ),
   );
+  const releases = [];
+  for (const version of candidates) {
+    const manifest = await loadManifest(version.name);
+    if (manifest.annotations?.["io.oh-my-paper.release.version"] === "1") {
+      releases.push(version);
+    } else if (version.metadata.container.tags.includes("latest")) {
+      throw new Error("Latest does not reference a complete release");
+    }
+  }
   const latest = releases.find((version) => version.metadata.container.tags.includes("latest"));
   return [
     ...(latest ? [latest] : []),
@@ -119,7 +128,7 @@ async function main() {
       },
     };
   }
-  const releases = retainedReleases(packages.web.versions);
+  const releases = await retainedReleases(packages.web.versions, packages.web.loadManifest);
   if (!releases.length) throw new Error("No complete published release found");
   const digests = await releaseDigests(releases, `${owner}/${repository}`, (target, digest) =>
     packages[target].loadManifest(digest),
