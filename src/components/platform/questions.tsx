@@ -1,7 +1,7 @@
 "use client";
 import { GradeSelect } from "./grade-select";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   SUBJECTS,
   type BankQuestion,
@@ -15,6 +15,7 @@ import { MarkdownText } from "@/components/markdown-text";
 import { Field, Panel, Submit } from "./primitives";
 import { StringListEditor } from "./editable-list";
 import { QuestionOptionsEditor } from "./question-options-editor";
+import { useUnsavedChanges } from "./use-unsaved-changes";
 export type Mutate = (command: PlatformCommand) => Promise<{ id?: string; error?: string }>;
 export const QUESTION_LABELS: Record<QuestionType, string> = {
   SINGLE: "单选题",
@@ -88,6 +89,7 @@ export function QuestionEditor({
   mutate,
   pending,
   close,
+  onSaved,
   defaults,
 }: {
   defaults?: { subject: string; grade: string };
@@ -95,14 +97,28 @@ export function QuestionEditor({
   mutate: Mutate;
   pending: boolean;
   close: () => void;
+  onSaved?: (result: Awaited<ReturnType<Mutate>>) => void;
 }) {
   const [type, setType] = useState<QuestionType>(question?.type ?? "SINGLE"),
     [content, setContent] = useState(question?.content ?? freshContent());
   const [knowledgeTags, setKnowledgeTags] = useState(question?.knowledgeTags ?? []);
+  const [dirty, setDirty] = useState(false);
+  const { confirmDiscard, markSaved } = useUnsavedChanges(
+    dirty,
+    "有未保存的试题修改，离开后会丢失。确定离开？",
+  );
+  const [saving, setSaving] = useState(false);
+  const submitting = useRef(false);
+  const uploadInFlight = useRef(false);
+  const [uploadFile, setUploadFile] = useState<File>();
+  const [saveError, setSaveError] = useState("");
   const [uploading, setUploading] = useState(false),
     [uploadError, setUploadError] = useState("");
   async function uploadImage(file?: File) {
-    if (!file) return;
+    if (!file || uploadInFlight.current) return;
+    uploadInFlight.current = true;
+    setDirty(true);
+    setUploadFile(file);
     setUploading(true);
     setUploadError("");
     try {
@@ -113,45 +129,126 @@ export function QuestionEditor({
         body: form,
       });
       setContent((current) => ({ ...current, images: [...current.images, r.url] }));
+      setUploadFile(undefined);
     } catch (e) {
       setUploadError(e instanceof Error ? e.message : "图片上传失败");
     } finally {
+      uploadInFlight.current = false;
       setUploading(false);
     }
   }
-  const patch = (value: Partial<QuestionContent>) => setContent({ ...content, ...value });
+  const patch = (value: Partial<QuestionContent>) => {
+    setDirty(true);
+    setContent((current) => ({ ...current, ...value }));
+  };
   const patchPart = (index: number, value: Partial<QuestionPart>) =>
     patch({ parts: content.parts.map((p, i) => (i === index ? { ...p, ...value } : p)) });
+  const cancel = () => {
+    if (!submitting.current && confirmDiscard()) close();
+  };
+  function changeType(next: QuestionType, partIndex?: number) {
+    const current = partIndex === undefined ? content : content.parts[partIndex];
+    const previous = partIndex === undefined ? type : content.parts[partIndex].type;
+    const wasChoice = previous === "SINGLE" || previous === "MULTIPLE";
+    const isChoice = next === "SINGLE" || next === "MULTIPLE";
+    const effects: string[] = [];
+    if (partIndex === undefined && next !== "MIXED" && content.parts.length)
+      effects.push("移除已有小问及其答案");
+    if (wasChoice && !isChoice && current.options.some((option) => option.text.trim()))
+      effects.push("移除选择题选项");
+    if (wasChoice !== isChoice && current.answers.length) effects.push("清空原题型的答案");
+    if (next === "SINGLE" && wasChoice && current.answers.length > 1)
+      effects.push("仅保留第一个正确答案");
+    if (effects.length && !window.confirm(`切换题型将${effects.join("、")}。确定切换？`)) return;
+    const update = {
+      options: isChoice ? current.options : [],
+      answers:
+        wasChoice !== isChoice
+          ? []
+          : next === "SINGLE"
+            ? current.answers.slice(0, 1)
+            : current.answers,
+    };
+    if (partIndex === undefined) {
+      setType(next);
+      patch({ ...update, parts: next === "MIXED" ? content.parts : [] });
+    } else {
+      patchPart(partIndex, { ...update, type: next as QuestionPart["type"] });
+    }
+  }
   return (
     <Panel
       title={question ? "编辑试题" : "创建试题"}
       description="填写题干、选项与答案，也可上传配图。选择题可直接勾选正确答案。"
       actions={
-        <button className="button secondary" onClick={close}>
+        <button
+          type="button"
+          className="button secondary"
+          disabled={saving || pending}
+          onClick={cancel}
+        >
           关闭编辑
         </button>
       }
     >
       <form
         className="p-form"
+        onChange={(event) => {
+          const field = event.target;
+          if (
+            (field instanceof HTMLInputElement || field instanceof HTMLSelectElement) &&
+            ["subject", "grade", "difficulty"].includes(field.name)
+          )
+            setDirty(true);
+        }}
         onSubmit={async (e) => {
           e.preventDefault();
           e.stopPropagation();
+          if (submitting.current || pending || uploadInFlight.current || uploadFile) return;
+          submitting.current = true;
+          setSaving(true);
+          setSaveError("");
           const d = new FormData(e.currentTarget);
-          const result = await mutate({
-            type: "question.save",
-            question: {
-              id: question?.id,
-              type,
-              subject: String(d.get("subject")),
-              grade: String(d.get("grade")),
-              difficulty: Number(d.get("difficulty")),
-              knowledgeTags,
-              content,
-            },
-          });
-          if (result.error) return;
-          close();
+          let saved = false;
+          try {
+            const result = await mutate({
+              type: "question.save",
+              question: {
+                id: question?.id,
+                type,
+                subject: String(d.get("subject")),
+                grade: String(d.get("grade")),
+                difficulty: Number(d.get("difficulty")),
+                knowledgeTags,
+                content: {
+                  ...content,
+                  options: type === "SINGLE" || type === "MULTIPLE" ? content.options : [],
+                  parts:
+                    type === "MIXED"
+                      ? content.parts.map((part) => ({
+                          ...part,
+                          options:
+                            part.type === "SINGLE" || part.type === "MULTIPLE" ? part.options : [],
+                        }))
+                      : [],
+                },
+              },
+            });
+            if (result.error) {
+              setSaveError(result.error);
+              return;
+            }
+            saved = true;
+            markSaved();
+            setDirty(false);
+            if (onSaved) onSaved(result);
+            else close();
+          } catch (error) {
+            setSaveError(error instanceof Error ? error.message : "试题保存失败，请重试。");
+          } finally {
+            submitting.current = saved;
+            setSaving(saved);
+          }
         }}
       >
         <div className="p-form-grid">
@@ -173,9 +270,7 @@ export function QuestionEditor({
             <select
               value={type}
               onChange={(e) => {
-                const next = e.target.value as QuestionType;
-                setType(next);
-                if (next === "SINGLE") patch({ answers: content.answers.slice(0, 1) });
+                changeType(e.target.value as QuestionType);
               }}
             >
               {Object.entries(QUESTION_LABELS).map(([k, v]) => (
@@ -241,25 +336,50 @@ export function QuestionEditor({
           label="知识点"
           itemLabel="知识点"
           values={knowledgeTags}
-          onChange={setKnowledgeTags}
+          onChange={(tags) => {
+            setDirty(true);
+            setKnowledgeTags(tags);
+          }}
         />
         <Field label="上传题目配图" hint="支持 PNG、JPG；上传后图片与题目一起保存。">
           <input
             type="file"
             accept="image/png,image/jpeg"
-            disabled={uploading}
-            onChange={(e) => void uploadImage(e.target.files?.[0])}
+            disabled={uploading || saving || pending}
+            onChange={(e) => {
+              void uploadImage(e.target.files?.[0]);
+              e.target.value = "";
+            }}
           />
         </Field>
         {uploading && (
           <p role="status" className="p-muted">
-            正在上传配图…
+            正在上传配图…配图上传完成后可保存。
           </p>
         )}
         {uploadError && (
-          <p role="alert" className="field-error">
-            {uploadError}
-          </p>
+          <div role="alert" className="field-error">
+            <p>{uploadError}。配图尚未加入试题，请重试或移除后保存。</p>
+            <div className="p-actions">
+              <button
+                type="button"
+                className="button secondary"
+                onClick={() => void uploadImage(uploadFile)}
+              >
+                重试上传
+              </button>
+              <button
+                type="button"
+                className="button secondary"
+                onClick={() => {
+                  setUploadFile(undefined);
+                  setUploadError("");
+                }}
+              >
+                移除所选配图
+              </button>
+            </div>
+          </div>
         )}
         {content.images.map((url, i) => (
           <div className="p-list-row" key={url}>
@@ -299,14 +419,7 @@ export function QuestionEditor({
                   <Field label="小问题型">
                     <select
                       value={p.type}
-                      onChange={(e) =>
-                        patchPart(i, {
-                          type: e.target.value as QuestionPart["type"],
-                          ...(e.target.value === "SINGLE"
-                            ? { answers: p.answers.slice(0, 1) }
-                            : {}),
-                        })
-                      }
+                      onChange={(e) => changeType(e.target.value as QuestionPart["type"], i)}
                     >
                       {Object.entries(QUESTION_LABELS)
                         .filter(([k]) => k !== "MIXED")
@@ -374,11 +487,23 @@ export function QuestionEditor({
           </>
         )}
         <div className="p-actions">
-          <Submit pending={pending}>保存试题</Submit>
-          <button type="button" className="button secondary" onClick={close}>
+          <Submit pending={pending || saving} disabled={uploading || !!uploadFile}>
+            保存试题
+          </Submit>
+          <button
+            type="button"
+            className="button secondary"
+            disabled={saving || pending}
+            onClick={cancel}
+          >
             取消
           </button>
         </div>
+        {saveError && (
+          <p role="alert" className="field-error">
+            {saveError}
+          </p>
+        )}
       </form>
     </Panel>
   );

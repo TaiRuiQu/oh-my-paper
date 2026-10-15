@@ -1,10 +1,11 @@
 "use client";
 import { reviewRule } from "@/lib/document-layout";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { FinalGrade, PlatformState, Review, ScanSubmission } from "@/contracts/platform";
 import { Field, Submit, readForm, stringField, numberField } from "./primitives";
 import { QuestionBody, type Mutate } from "./questions";
+import { useUnsavedChanges } from "./use-unsaved-changes";
 export function SubmissionReview({
   submission,
   state,
@@ -221,27 +222,55 @@ function ReviewForm({
       feedback: ownReview?.partScores?.find((p) => p.partId === part.id)?.feedback ?? "",
     })),
   );
+  const [score, setScore] = useState(String(ownReview?.score ?? ""));
+  const [feedback, setFeedback] = useState(ownReview?.feedback ?? "");
+  const snapshot = JSON.stringify({ score, feedback, partScores });
+  const [savedSnapshot, setSavedSnapshot] = useState(snapshot);
+  const [submitted, setSubmitted] = useState(Boolean(ownReview));
+  const saving = useRef(false);
+  const dirty = snapshot !== savedSnapshot;
+  const { confirmDiscard, markSaved } = useUnsavedChanges(
+    dirty,
+    "有未提交的评分或反馈，离开后会丢失。确定离开？",
+  );
   const total = partScores.reduce((s, p) => s + p.score, 0);
   return (
     <form
       className="p-form"
       onSubmit={async (e) => {
         const d = readForm(e);
-        await mutate({
-          type: "review.save",
-          review: {
-            submissionId,
-            itemId: item.id,
-            round,
-            score: mixed ? total : numberField(d, "score"),
-            feedback: stringField(d, "feedback"),
-            ...(mixed ? { partScores } : {}),
-          },
-        });
+        if (saving.current || pending) return;
+        saving.current = true;
+        try {
+          const result = await mutate({
+            type: "review.save",
+            review: {
+              submissionId,
+              itemId: item.id,
+              round,
+              score: mixed ? total : numberField(d, "score"),
+              feedback: stringField(d, "feedback"),
+              ...(mixed ? { partScores } : {}),
+            },
+          });
+          if (!result.error) {
+            setSavedSnapshot(snapshot);
+            setSubmitted(true);
+            markSaved();
+          }
+        } finally {
+          saving.current = false;
+        }
       }}
     >
       <Field label="评阅轮次">
-        <select value={round} onChange={(e) => setRound(e.target.value as Review["round"])}>
+        <select
+          value={round}
+          disabled={pending}
+          onChange={(e) => {
+            if (confirmDiscard()) setRound(e.target.value as Review["round"]);
+          }}
+        >
           <option value="FIRST">第一评</option>
           {double && <option value="SECOND">第二评</option>}
           {double && (arbitration || ownReview?.round === "ARBITRATION") && (
@@ -249,73 +278,80 @@ function ReviewForm({
           )}
         </select>
       </Field>
-      {mixed ? (
-        <>
-          <h3>逐小问评分</h3>
-          {parts.map((part, index) => {
-            const maximum = totalWeight ? (item.score * part.score) / totalWeight : 0;
-            return (
-              <section className="p-part" key={part.id}>
-                <strong>
-                  第 {index + 1} 小问 · {Number(maximum.toFixed(4))} 分
-                </strong>
-                <p className="p-muted">{part.stem}</p>
-                <Field label={`第 ${index + 1} 小问得分`}>
-                  <input
-                    required
-                    type="number"
-                    min={0}
-                    max={maximum}
-                    step="any"
-                    value={partScores[index]?.score ?? 0}
-                    onChange={(e) =>
-                      setPartScores(
-                        partScores.map((p, i) =>
-                          i === index ? { ...p, score: Number(e.target.value) } : p,
-                        ),
-                      )
-                    }
-                  />
-                </Field>
-                <Field label={`第 ${index + 1} 小问反馈`}>
-                  <textarea
-                    value={partScores[index]?.feedback ?? ""}
-                    onChange={(e) =>
-                      setPartScores(
-                        partScores.map((p, i) =>
-                          i === index ? { ...p, feedback: e.target.value } : p,
-                        ),
-                      )
-                    }
-                  />
-                </Field>
-              </section>
-            );
-          })}
-          <p className="p-score" role="status">
-            合计 {Number(total.toFixed(4))} / {item.score} 分
-          </p>
-        </>
-      ) : (
-        <Field label={`得分（满分 ${item.score}）`}>
-          <input
-            required
-            type="number"
-            name="score"
-            min={0}
-            max={item.score}
-            step={0.5}
-            defaultValue={ownReview?.score}
+      <fieldset className="p-form p-review-fields" disabled={pending}>
+        {mixed ? (
+          <>
+            <h3>逐小问评分</h3>
+            {parts.map((part, index) => {
+              const maximum = totalWeight ? (item.score * part.score) / totalWeight : 0;
+              return (
+                <section className="p-part" key={part.id}>
+                  <strong>
+                    第 {index + 1} 小问 · {Number(maximum.toFixed(4))} 分
+                  </strong>
+                  <p className="p-muted">{part.stem}</p>
+                  <Field label={`第 ${index + 1} 小问得分`}>
+                    <input
+                      required
+                      type="number"
+                      min={0}
+                      max={maximum}
+                      step="any"
+                      value={partScores[index]?.score ?? 0}
+                      onChange={(e) =>
+                        setPartScores(
+                          partScores.map((p, i) =>
+                            i === index ? { ...p, score: Number(e.target.value) } : p,
+                          ),
+                        )
+                      }
+                    />
+                  </Field>
+                  <Field label={`第 ${index + 1} 小问反馈`}>
+                    <textarea
+                      value={partScores[index]?.feedback ?? ""}
+                      onChange={(e) =>
+                        setPartScores(
+                          partScores.map((p, i) =>
+                            i === index ? { ...p, feedback: e.target.value } : p,
+                          ),
+                        )
+                      }
+                    />
+                  </Field>
+                </section>
+              );
+            })}
+            <p className="p-score" role="status">
+              合计 {Number(total.toFixed(4))} / {item.score} 分
+            </p>
+          </>
+        ) : (
+          <Field label={`得分（满分 ${item.score}）`}>
+            <input
+              required
+              type="number"
+              name="score"
+              min={0}
+              max={item.score}
+              step={0.5}
+              value={score}
+              onChange={(e) => setScore(e.target.value)}
+            />
+          </Field>
+        )}
+        <Field label="批改反馈">
+          <textarea
+            name="feedback"
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            placeholder="指出错误与改进建议"
           />
         </Field>
-      )}
-      <Field label="批改反馈">
-        <textarea
-          name="feedback"
-          defaultValue={ownReview?.feedback}
-          placeholder="指出错误与改进建议"
-        />
-      </Field>
+      </fieldset>
+      <p className="p-muted" role="status">
+        {dirty ? "本题评分有未提交修改" : submitted ? "本轮评分已提交" : "本轮评分尚未提交"}
+      </p>
       <Submit pending={pending}>{ownReview ? "更新本轮评分" : "提交本轮评分"}</Submit>
     </form>
   );

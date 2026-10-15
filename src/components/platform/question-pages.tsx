@@ -182,8 +182,9 @@ export function QuestionListPage() {
 export function QuestionEditPage({ id }: { id?: string }) {
   const { mutate, pending } = useDomain();
   const router = useRouter();
-  const { question: q, loading } = useBankQuestion(id);
+  const { question: q, loading, error, status, retry } = useBankQuestion(id);
   if (loading) return <p role="status">正在加载试题…</p>;
+  if (error && status !== 404) return <QuestionLoadError status={status} retry={retry} />;
   if (id && !q) return <MissingRecord back="/questions" />;
   return (
     <>
@@ -193,16 +194,42 @@ export function QuestionEditPage({ id }: { id?: string }) {
         back={{ href: q ? `/questions/${id}` : "/questions", label: q ? "试题详情" : "全部试题" }}
       />
       <QuestionEditor
+        key={q?.id ?? "new"}
         question={q ?? null}
-        mutate={async (command) => {
-          const r = await mutate(command);
-          if (r.id) router.push(`/questions/${r.id}`);
-          return r;
+        mutate={mutate}
+        onSaved={(result) => {
+          router.push(`/questions/${result.id ?? id}`);
         }}
         pending={pending}
         close={() => router.push(q ? `/questions/${id}` : "/questions")}
       />
     </>
+  );
+}
+
+function QuestionLoadError({ status, retry }: { status?: number; retry: () => void }) {
+  return (
+    <Panel
+      title={status === 403 ? "无权访问此试题" : status === 401 ? "登录已失效" : "试题加载失败"}
+    >
+      <div className="p-panel-content">
+        <p role="alert">
+          {status === 403
+            ? "当前账号没有访问此试题的权限，请联系试题所有者或管理员。"
+            : status === 401
+              ? "请重新登录后再加载试题。"
+              : "暂时无法读取试题，请检查网络连接后重新加载。"}
+        </p>
+        <div className="p-actions">
+          <Button variant="outline" onClick={retry}>
+            重新加载
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/questions">返回题库</Link>
+          </Button>
+        </div>
+      </div>
+    </Panel>
   );
 }
 
@@ -216,8 +243,9 @@ export function QuestionDetailPage({
   usage?: boolean;
 }) {
   const { state } = useDomain();
-  const { question: q, loading } = useBankQuestion(id);
+  const { question: q, loading, error, status, retry } = useBankQuestion(id);
   if (loading) return <p role="status">正在加载试题…</p>;
+  if (error && status !== 404) return <QuestionLoadError status={status} retry={retry} />;
   if (!q) return <MissingRecord back="/questions" />;
   return (
     <>

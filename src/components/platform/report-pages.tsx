@@ -11,6 +11,7 @@ import { QuestionBody } from "./questions";
 import { AssessmentNavigation } from "./assessment-pages";
 import { MarkdownText } from "@/components/markdown-text";
 import { RevisionPaperLink } from "./revision-paper-pages";
+import { QuestionAnswers } from "./question-answers";
 
 export function ReportListPage() {
   const { state, area } = useDomain();
@@ -115,9 +116,10 @@ export function AssessmentReportPage({
       />
       <AssessmentNavigation id={id} active={`${root}/${id}/reports`} />
       <Analytics
+        key={id}
         state={state}
         fixedView={knowledge ? "knowledge" : "results"}
-        initialAssessmentId={id}
+        fixedAssessmentId={id}
         kind={area === "homework" ? "HOMEWORK" : "EXAM"}
       />
     </>
@@ -144,7 +146,7 @@ export function ClassReportPage({ id }: { id: string }) {
           { href: `/workspace/classes/${id}/settings`, label: "班级设置" },
         ]}
       />
-      <Analytics state={state} fixedView="results" initialClassroomId={id} />
+      <Analytics key={id} state={state} fixedView="results" fixedClassroomId={id} />
     </>
   );
 }
@@ -160,7 +162,7 @@ export function LearningResultsPage({ id }: { id?: string }) {
         description="查看老师已发布的本人原始分、赋分与正式排名。"
         back={id ? { href: "/learning/results", label: "全部成绩" } : undefined}
       />
-      <Analytics state={state} fixedView="results" initialAssessmentId={id} />
+      <Analytics key={id ?? "all"} state={state} fixedView="results" fixedAssessmentId={id} />
       {!id && state.assessments.length > 0 && (
         <Panel title="按考试查看">
           {state.assessments.map((a) => (
@@ -287,9 +289,10 @@ export function LearningReportPage({
                       查看作答原图
                     </a>
                   ))}
-                  <p>参考答案：{w.question.content.answers.join("；") || "见小问答案"}</p>
-                  <MarkdownText text={w.feedback || "暂无文字反馈"} />
                 </div>
+                <QuestionAnswers content={w.question.content} />
+                <strong>老师反馈</strong>
+                <MarkdownText text={w.feedback || "暂无文字反馈"} />
               </article>
             ))}
           {!report.wrongQuestions.length && <Empty>当前没有错题记录，继续保持。</Empty>}
@@ -302,15 +305,7 @@ export function LearningReportPage({
                 <QuestionBody question={q} />
                 <details>
                   <summary>完成练习后核对答案</summary>
-                  <div className="p-answers">
-                    <MarkdownText text={q.content.answers.join("；")} />
-                    <MarkdownText text={q.content.explanation} />
-                    {q.content.parts.map((p, i) => (
-                      <p key={p.id}>
-                        小问 {i + 1}：{p.answers.join("；")}
-                      </p>
-                    ))}
-                  </div>
+                  <QuestionAnswers content={q.content} />
                 </details>
               </article>
             ))

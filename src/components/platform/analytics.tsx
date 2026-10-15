@@ -11,6 +11,8 @@ import type {
 import { Empty, Panel } from "./primitives";
 import { QuestionBody } from "./questions";
 import { RevisionPaperLink } from "./revision-paper-pages";
+import { QuestionAnswers } from "./question-answers";
+import { MarkdownText } from "@/components/markdown-text";
 export function KnowledgeTable({ knowledge }: { knowledge: KnowledgeStat[] }) {
   return knowledge.length ? (
     <div className="p-table" role="region" aria-label="知识点掌握情况" tabIndex={0}>
@@ -54,6 +56,8 @@ export function Analytics({
   initialAssessmentId = "",
   initialClassroomId = "",
   initialStudentId = "",
+  fixedAssessmentId,
+  fixedClassroomId,
   kind,
 }: {
   state: PlatformState;
@@ -61,15 +65,28 @@ export function Analytics({
   initialAssessmentId?: string;
   initialClassroomId?: string;
   initialStudentId?: string;
+  fixedAssessmentId?: string;
+  fixedClassroomId?: string;
   kind?: "EXAM" | "HOMEWORK";
 }) {
-  const [assessmentId, setAssessmentId] = useState(initialAssessmentId),
-    [classroomId, setClassroomId] = useState(initialClassroomId),
+  const [selectedAssessmentId, setAssessmentId] = useState(initialAssessmentId),
+    [selectedClassroomId, setClassroomId] = useState(initialClassroomId),
     [studentId, setStudentId] = useState(
       initialStudentId ||
         (state.actor.role === "STUDENT" ? (state.analytics.students[0]?.studentId ?? "") : ""),
     ),
-    [view, setView] = useState(fixedView ?? "results");
+    [selectedView, setView] = useState("results");
+  const view = fixedView ?? selectedView;
+  const assessmentId = fixedAssessmentId ?? selectedAssessmentId;
+  const classroomId = fixedClassroomId ?? selectedClassroomId;
+  const availableClassrooms = state.classrooms.filter(
+    (c) =>
+      !fixedAssessmentId ||
+      state.assessments.find((a) => a.id === fixedAssessmentId)?.classroomIds.includes(c.id),
+  );
+  const availableAssessments = state.assessments.filter(
+    (a) => !fixedClassroomId || a.classroomIds.includes(fixedClassroomId),
+  );
   const studentMode = state.actor.role === "STUDENT";
   const scope = new URLSearchParams();
   if (assessmentId) scope.set("assessmentId", assessmentId);
@@ -103,35 +120,46 @@ export function Analytics({
         }
       >
         <div className="p-toolbar">
-          <select
-            aria-label="筛选考试"
-            value={assessmentId}
-            onChange={(e) => setAssessmentId(e.target.value)}
-          >
-            <option value="">全部考试 / 作业</option>
-            {state.assessments.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name}
-              </option>
-            ))}
-          </select>
-          {!studentMode && (
+          {fixedAssessmentId ? (
+            <span className="p-muted">
+              当前考试 / 作业：{state.assessments.find((a) => a.id === fixedAssessmentId)?.name}
+            </span>
+          ) : (
             <select
-              aria-label="筛选班级"
-              value={classroomId}
-              onChange={(e) => {
-                setClassroomId(e.target.value);
-                setStudentId("");
-              }}
+              aria-label="筛选考试"
+              value={assessmentId}
+              onChange={(e) => setAssessmentId(e.target.value)}
             >
-              <option value="">全部班级</option>
-              {state.classrooms.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
+              <option value="">全部考试 / 作业</option>
+              {availableAssessments.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name}
                 </option>
               ))}
             </select>
           )}
+          {!studentMode &&
+            (fixedClassroomId ? (
+              <span className="p-muted">
+                当前班级：{state.classrooms.find((c) => c.id === fixedClassroomId)?.name}
+              </span>
+            ) : (
+              <select
+                aria-label="筛选班级"
+                value={classroomId}
+                onChange={(e) => {
+                  setClassroomId(e.target.value);
+                  setStudentId("");
+                }}
+              >
+                <option value="">全部班级</option>
+                {availableClassrooms.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            ))}
           {!fixedView && (
             <div className="p-tabs">
               {[
@@ -327,8 +355,9 @@ export function Analytics({
                           alt="错题作答"
                         />
                       ))}
-                      <p>参考答案：{w.question.content.answers.join("；")}</p>
-                      <p className="p-muted">批改反馈：{w.feedback || "暂无文字反馈"}</p>
+                      <QuestionAnswers content={w.question.content} />
+                      <strong>批改反馈</strong>
+                      <MarkdownText text={w.feedback || "暂无文字反馈"} />
                       <div className="p-tags">
                         {w.question.knowledgeTags.map((t) => (
                           <span className="p-tag" key={t}>
@@ -358,8 +387,7 @@ export function Analytics({
                       </div>
                       <details>
                         <summary>查看参考答案</summary>
-                        <p>{q.content.answers.join("；")}</p>
-                        <p>{q.content.explanation}</p>
+                        <QuestionAnswers content={q.content} />
                       </details>
                     </article>
                   ))

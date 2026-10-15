@@ -719,6 +719,11 @@ td {
 .p-review-work .p-form {
   padding: 0;
 }
+.p-review-fields {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+}
 .p-review-work > .p-split > :last-child details {
   margin-top: 16px;
   font-size: 12px;

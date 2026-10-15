@@ -76,24 +76,41 @@ export function useQuestionPage(filters: QuestionSearchFilters, page: number) {
   };
 }
 export function useBankQuestion(id?: string) {
-  const [data, setData] = useState<{ question?: BankQuestion; loading: boolean; error?: string }>({
-    loading: !!id,
-  });
+  const [attempt, setAttempt] = useState(0);
+  const key = `${id ?? ""}:${attempt}`;
+  const [data, setData] = useState<{
+    key?: string;
+    question?: BankQuestion;
+    error?: string;
+    status?: number;
+  }>({});
   useEffect(() => {
     if (!id) return;
     const controller = new AbortController();
     fetch(`/api/platform/questions?id=${encodeURIComponent(id)}`, { signal: controller.signal })
       .then(async (response) => {
         const result = await response.json();
-        if (!response.ok) throw new Error(result.error ?? "试题加载失败");
-        setData({ question: result.question, loading: false });
+        if (controller.signal.aborted) return;
+        if (!response.ok) {
+          setData({ key, status: response.status, error: result.error ?? "试题加载失败" });
+          return;
+        }
+        setData({ key, question: result.question });
       })
       .catch((error) => {
-        if (!controller.signal.aborted) setData({ loading: false, error: error.message });
+        if (!controller.signal.aborted)
+          setData({ key, error: error instanceof Error ? error.message : "试题加载失败" });
       });
     return () => controller.abort();
-  }, [id]);
-  return data;
+  }, [id, key]);
+  const current = !!id && data.key === key;
+  return {
+    question: current ? data.question : undefined,
+    loading: !!id && !current,
+    error: current ? data.error : undefined,
+    status: current ? data.status : undefined,
+    retry: () => setAttempt((value) => value + 1),
+  };
 }
 export function QuestionBankPicker({
   open,

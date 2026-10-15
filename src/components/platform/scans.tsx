@@ -1,4 +1,6 @@
 "use client";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { DOCUMENT_UPLOAD_ACCEPT, type ScanUploadPage } from "@/contracts/uploads";
 import { prepareScanPages, appendScanPages } from "@/lib/document-upload";
 import { useState } from "react";
@@ -591,6 +593,7 @@ export function Scans({
                     <th>模式</th>
                     <th>状态</th>
                     <th>作答数量</th>
+                    <th>操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -612,6 +615,26 @@ export function Scans({
                         </span>
                       </td>
                       <td>{s.answers.length}</td>
+                      <td>
+                        <div className="p-actions">
+                          <Button asChild variant="outline" size="sm">
+                            <Link
+                              href={`${state.assessments.find((a) => a.id === s.assessmentId)?.kind === "HOMEWORK" ? "/homework" : "/exams"}/grading/${s.id}`}
+                            >
+                              查看答卷
+                            </Link>
+                          </Button>
+                          {s.status !== "GRADED" && (
+                            <Button asChild variant="ghost" size="sm">
+                              <Link
+                                href={`${state.assessments.find((a) => a.id === s.assessmentId)?.kind === "HOMEWORK" ? "/homework" : "/exams"}/grading/${s.id}#${s.status === "REVIEW" ? "scan-materials" : "question-review"}`}
+                              >
+                                {s.status === "REVIEW" ? "核对扫描" : "继续阅卷"}
+                              </Link>
+                            </Button>
+                          )}
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

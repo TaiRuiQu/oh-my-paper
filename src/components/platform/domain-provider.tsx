@@ -4,6 +4,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
   type Dispatch,
@@ -52,11 +53,17 @@ export function DomainProvider({
 }) {
   const [state, setState] = useState(initialState);
   const [pending, setPending] = useState(false);
+  const saving = useRef(false);
+  const [reloading, setReloading] = useState(false);
   const [scanFiles, setScanFiles] = useState<ScanUploadPage[]>([]);
-  const [notice, setNotice] = useState<{ text: string; error?: boolean }>();
+  const [notice, setNotice] = useState<{
+    text: string;
+    error?: boolean;
+    refreshFailed?: boolean;
+  }>();
   const notify = useCallback((text: string, error?: boolean) => setNotice({ text, error }), []);
   useEffect(() => {
-    if (!notice || notice.error) return;
+    if (!notice || notice.error || notice.refreshFailed) return;
     const timeout = setTimeout(() => setNotice(undefined), 4000);
     return () => clearTimeout(timeout);
   }, [notice]);
@@ -69,6 +76,8 @@ export function DomainProvider({
   }, [area, initialState.reviewing]);
   const mutate = useCallback(
     async (command: PlatformCommand) => {
+      if (saving.current) return { error: "正在保存，请稍候。" };
+      saving.current = true;
       setPending(true);
       try {
         const domain = commandDomains[command.type.split(".")[0]];
@@ -79,14 +88,22 @@ export function DomainProvider({
             ...jsonBody(command),
           },
         );
-        await refresh();
-        notify("已保存。");
+        try {
+          await refresh();
+          notify("已保存。");
+        } catch {
+          setNotice({
+            text: "已保存，列表暂未更新。请重新加载列表，无需再次保存。",
+            refreshFailed: true,
+          });
+        }
         return result;
       } catch (error) {
         const message = error instanceof Error ? error.message : "保存失败，请重试。";
         notify(message, true);
         return { error: message };
       } finally {
+        saving.current = false;
         setPending(false);
       }
     },
@@ -103,6 +120,29 @@ export function DomainProvider({
             role={notice.error ? "alert" : "status"}
           >
             <span>{notice.text}</span>
+            {notice.refreshFailed && (
+              <button
+                type="button"
+                className="button secondary"
+                disabled={reloading}
+                onClick={async () => {
+                  setReloading(true);
+                  try {
+                    await refresh();
+                    notify("列表已更新。");
+                  } catch {
+                    setNotice({
+                      text: "内容已保存，列表仍未更新。请检查网络后重新加载。",
+                      refreshFailed: true,
+                    });
+                  } finally {
+                    setReloading(false);
+                  }
+                }}
+              >
+                {reloading ? "正在重新加载…" : "重新加载列表"}
+              </button>
+            )}
             <button
               type="button"
               className="p-notice-close"

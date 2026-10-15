@@ -146,19 +146,32 @@ export function AssessmentCreatePage({ id, paperId }: { id?: string; paperId?: s
   const { root, homework, noun } = useAssessmentPaths();
   const router = useRouter();
   const assessment = state.assessments.find((a) => a.id === id);
+  const readOnly = !!assessment && state.submissions.some((s) => s.assessmentId === id);
   if (id && !assessment) return <MissingRecord back={root} />;
   return (
     <>
       <PageHeader
-        title={`${id ? "调整" : homework ? "布置" : "安排"}${noun}`}
+        title={
+          readOnly
+            ? `查看${homework ? "作业" : "考试"}安排`
+            : `${id ? "调整" : homework ? "布置" : "安排"}${noun}`
+        }
         description={
-          homework
-            ? "选择练习册和参与班级，保存参与班级与本次批改设置。"
-            : "选择考试试卷与班级，设置每科评阅方式和成绩赋分规则。"
+          readOnly
+            ? "查看本次安排，名称可在进度概览中重命名。"
+            : homework
+              ? "选择练习册和参与班级，保存参与班级与本次批改设置。"
+              : "选择考试试卷与班级，设置每科评阅方式和成绩赋分规则。"
         }
         back={{ href: id ? `${root}/${id}` : root, label: assessment?.name ?? `全部${noun}` }}
       />
-      {(!state.papers.length || !state.classrooms.length) && (
+      {readOnly && (
+        <p className="p-notice" role="status">
+          已有学生答卷，本次安排中的班级、科目、阅卷规则和赋分设置已锁定，只能查看。
+          如需修改名称，请返回<Link href={`${root}/${id}`}>进度概览</Link>使用“重命名”。
+        </p>
+      )}
+      {!readOnly && (!state.papers.length || !state.classrooms.length) && (
         <p className="p-notice">
           请先
           {!state.papers.length && (
@@ -179,10 +192,9 @@ export function AssessmentCreatePage({ id, paperId }: { id?: string; paperId?: s
         pending={pending}
         fixedKind={homework ? "HOMEWORK" : "EXAM"}
         initialPaperId={paperId}
-        mutate={async (command) => {
-          const r = await mutate(command);
-          if (r.id) router.push(`${root}/${r.id}`);
-          return r;
+        mutate={mutate}
+        onSaved={(result) => {
+          if (result.id) router.push(`${root}/${result.id}`);
         }}
         close={() => router.push(id ? `${root}/${id}` : root)}
       />
@@ -225,7 +237,7 @@ export function AssessmentOverviewPage({ id }: { id: string }) {
         back={{ href: root, label: homework ? "布置记录" : "全部考试" }}
         actions={
           <Button asChild variant="outline">
-            <Link href={`${root}/${id}/settings`}>调整安排</Link>
+            <Link href={`${root}/${id}/settings`}>{subs.length ? "查看安排" : "调整安排"}</Link>
           </Button>
         }
       />

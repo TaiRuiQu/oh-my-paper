@@ -9,6 +9,7 @@ import { MissingRecord, PageHeader } from "./page-header";
 import { SubmissionReview } from "./reviews";
 import { Scans } from "./scans";
 import { PlatformAI } from "./ai";
+import { SubmissionScanDetails } from "./submission-scan-details";
 
 export function ReviewQueuePage({
   assessmentId,
@@ -196,12 +197,20 @@ export function SubmissionReviewPage({ id }: { id: string }) {
       {assessment?.published && (
         <p className="p-notice">成绩已发布。请先在发布页面撤回，再调整评分。</p>
       )}
-      <Panel
-        title="逐题评阅"
-        description="评分保存后会更新进度。双评必须由不同教师完成，分差超阈值后由第三位教师仲裁。"
-      >
-        <SubmissionReview submission={submission} state={state} mutate={mutate} pending={pending} />
-      </Panel>
+      <SubmissionScanDetails submission={submission} />
+      <section id="question-review" aria-label="逐题评阅">
+        <Panel
+          title="逐题评阅"
+          description="评分保存后会更新进度。双评必须由不同教师完成，分差超阈值后由第三位教师仲裁。"
+        >
+          <SubmissionReview
+            submission={submission}
+            state={state}
+            mutate={mutate}
+            pending={pending}
+          />
+        </Panel>
+      </section>
     </>
   );
 }
