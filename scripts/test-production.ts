@@ -75,6 +75,16 @@ async function main() {
     console.log(
       "✓ Independent production Web and AI Worker start with only packaged runtime files",
     );
+    const cardScan = start(
+      environment.CARD_SCAN_PYTHON!,
+      ["tools/card-scan/scan.py", "--help"],
+      join(directory, "worker"),
+    );
+    assert.equal(
+      await finished(cardScan),
+      0,
+      "Packaged card scanner and its Python dependencies must load",
+    );
     const sandbox = start(
       process.execPath,
       ["--conditions=react-server", "sandbox-check.mjs"],

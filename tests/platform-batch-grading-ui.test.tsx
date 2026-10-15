@@ -102,6 +102,36 @@ it("uploads class materials and submits one task without student selection or an
     assetUrls: [page.url],
   });
 });
+it("requires the matching answer-card template for uploaded exam pages", async () => {
+  const exam = {
+    ...state,
+    assessments: [{ ...state.assessments[0], kind: "EXAM" as const }],
+    templates: ["card-a", "card-b"].map((id) => ({
+      id,
+      paperId: "paper",
+      name: id,
+      preset: false,
+    })),
+  } as PlatformState;
+  await act(async () => root.render(<BatchGradingForm state={exam} busy={false} start={start} />));
+  await select(0, "assignment");
+  await select(1, "class");
+  await upload();
+  const submit = async () =>
+    act(async () =>
+      container
+        .querySelector("form")!
+        .dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })),
+    );
+  await submit();
+  expect(start).not.toHaveBeenCalled();
+  await select(3, "card-b");
+  await submit();
+  expect(start).toHaveBeenCalledWith(
+    "BATCH_GRADE",
+    expect.objectContaining({ templateId: "card-b", assetUrls: [page.url] }),
+  );
+});
 it("can bulk grade existing unreviewed class work without uploading again", async () => {
   const existing = {
     ...state,
@@ -134,38 +164,43 @@ it("keeps successfully uploaded pages and reports a later file upload failure", 
   expect(container.textContent).toContain("已上传 1 页");
   expect(container.querySelector('[role="alert"]')?.textContent).toContain("PDF 无法读取");
 });
-it("confirms an unidentified page and resubmits only selected pending material", async () => {
-  vi.mocked(apiRequest).mockResolvedValue({ id: "recovered" });
-  const result: BatchGradingResult = {
-    assessmentId: "assignment",
-    assessmentKind: "HOMEWORK",
-    classroomId: "class",
-    paperId: "paper",
-    students: [],
-    pendingPages: [{ sourceUrl: page.url, reason: "未写姓名" }],
-  };
-  await act(async () =>
-    root.render(
-      <BatchGradingResults
-        state={state}
-        job={{ id: "job", modelId: "model" } as AiJobDTO}
-        result={result}
-      />,
-    ),
-  );
-  await select(0, student.id);
-  await act(async () => container.querySelector("button")!.click());
-  const body = JSON.parse(String(vi.mocked(apiRequest).mock.calls[0][1]?.body));
-  expect(body).toEqual({
-    kind: "BATCH_GRADE",
-    modelId: "model",
-    input: {
+it.each(["HOMEWORK", "EXAM"] as const)(
+  "confirms an unidentified %s page and preserves the template when retrying",
+  async (kind) => {
+    vi.mocked(apiRequest).mockResolvedValue({ id: "recovered" });
+    const result: BatchGradingResult = {
       assessmentId: "assignment",
+      assessmentKind: kind,
+      ...(kind === "EXAM" ? { templateId: "card" } : {}),
       classroomId: "class",
       paperId: "paper",
-      assetUrls: [page.url],
-      studentHints: [{ sourceUrl: page.url, studentId: student.id }],
-    },
-  });
-  expect(push).toHaveBeenCalledWith("/workspace/ai/recovered");
-});
+      students: [],
+      pendingPages: [{ sourceUrl: page.url, reason: "未写姓名" }],
+    };
+    await act(async () =>
+      root.render(
+        <BatchGradingResults
+          state={state}
+          job={{ id: "job", modelId: "model" } as AiJobDTO}
+          result={result}
+        />,
+      ),
+    );
+    await select(0, student.id);
+    await act(async () => container.querySelector("button")!.click());
+    const body = JSON.parse(String(vi.mocked(apiRequest).mock.calls[0][1]?.body));
+    expect(body).toEqual({
+      kind: "BATCH_GRADE",
+      modelId: "model",
+      input: {
+        assessmentId: "assignment",
+        classroomId: "class",
+        paperId: "paper",
+        ...(kind === "EXAM" ? { templateId: "card" } : {}),
+        assetUrls: [page.url],
+        studentHints: [{ sourceUrl: page.url, studentId: student.id }],
+      },
+    });
+    expect(push).toHaveBeenCalledWith("/workspace/ai/recovered");
+  },
+);

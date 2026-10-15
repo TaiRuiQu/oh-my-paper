@@ -5,6 +5,7 @@ import type { aiInputSchemas } from "@/contracts/platform-ai";
 import type { PlatformState } from "@/contracts/platform";
 import { AccessError, RequestError } from "@/server/http/errors";
 import { assertCanReview, type Db } from "./access";
+import { validateCardTemplate } from "./cards";
 
 export type BatchGradingInput = z.infer<typeof aiInputSchemas.BATCH_GRADE>;
 
@@ -28,6 +29,15 @@ export async function batchGradingContext(db: Db, state: PlatformState, input: B
   if (!paper.items.length) throw new RequestError(400, "请先添加题目与批改依据。");
   if (input.studentHints.some((hint) => !classroom.students.some((s) => s.id === hint.studentId)))
     throw new RequestError(400, "确认的学生必须属于所选班级。");
+  const template = input.templateId
+    ? state.templates.find((t) => t.id === input.templateId && t.paperId === paper.id && !t.preset)
+    : undefined;
+  if (input.templateId && (!template || assessment.kind !== "EXAM"))
+    throw new RequestError(400, "请选择本次考试试卷的答题卡模板。");
+  if (assessment.kind === "EXAM" && input.assetUrls.length) {
+    if (!template) throw new RequestError(400, "上传考试扫描页时请选择答题卡模板，以便自动切题。");
+    validateCardTemplate(template, paper);
+  }
   if (input.assetUrls.length) {
     const ids = input.assetUrls.map((url) => url.split("/").at(-1)!);
     const assets = await db.platformAsset.findMany({
@@ -53,5 +63,5 @@ export async function batchGradingContext(db: Db, state: PlatformState, input: B
   const pending = submissions.filter((s) => !state.reviews.some((r) => r.submissionId === s.id));
   if (!input.assetUrls.length && !pending.length)
     throw new RequestError(400, "请上传全班作业，或先录入待批改作答。");
-  return { assessment, classroom, paper, config, submissions, pending };
+  return { assessment, classroom, paper, config, submissions, pending, template };
 }

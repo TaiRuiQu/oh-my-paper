@@ -77,6 +77,7 @@ export async function processCardScan(options: {
   inputPath: string;
   template: CardTemplate;
   page?: number;
+  autoPage?: boolean;
   outputDir: string;
 }): Promise<ScanResult> {
   validateCardTemplate(options.template);
@@ -86,8 +87,13 @@ export async function processCardScan(options: {
   return runScan(options.inputPath, options.outputDir, {
     mode: "card",
     layout: options.template.layout,
-    page,
-    pageCode: cardPageCode(options.template.id, page),
+    page: options.autoPage ? 0 : page,
+    pageCode: options.autoPage ? undefined : cardPageCode(options.template.id, page),
+    pageCodes: options.autoPage
+      ? Array.from({ length: options.template.layout.pageCount }, (_, i) =>
+          cardPageCode(options.template.id, i + 1),
+        )
+      : undefined,
   });
 }
 export async function cropWorkbook(options: {

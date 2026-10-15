@@ -37,6 +37,7 @@ export function BatchGradingResults({
             assessmentId: result.assessmentId,
             classroomId: result.classroomId,
             paperId: result.paperId,
+            ...(result.templateId ? { templateId: result.templateId } : {}),
             assetUrls: selected.map((p) => p.sourceUrl),
             studentHints: selected.map((p) => ({
               sourceUrl: p.sourceUrl,

@@ -97,15 +97,22 @@ def crop(image, region, out, index):
     if not cv2.imwrite(str(path),image[top:bottom,left:right]): raise OSError('Could not write crop')
     return str(path)
 
-def scan(image, layout, page, output, expected_code=None):
+def scan(image, layout, page, output, expected_code=None, page_codes=None):
     corrected, metadata = align(image,layout)
     gray = cv2.cvtColor(corrected,cv2.COLOR_BGR2GRAY)
     actual_code = page_code(gray, layout)
+    if page_codes:
+        if actual_code in page_codes:
+            page = page_codes.index(actual_code) + 1
+        else:
+            # Reuse the same strict template/code validation for unordered batch uploads.
+            expected_code = page_codes[0]
     if expected_code and actual_code != expected_code:
         if not actual_code.startswith('101') or not actual_code.endswith('110'): raise ValueError('CARD_PAGE_CODE_MISSING: 页面识别码不清晰，请按模板重新打印')
         if actual_code[3:35] != expected_code[3:35]: raise ValueError('CARD_TEMPLATE_MISMATCH: 答题卡不属于所选模板')
         raise ValueError('CARD_PAGE_ORDER: 答题卡页码与上传顺序不符，请按每位学生的页码排序')
     metadata['pageCode'] = actual_code
+    metadata['page'] = page
     student, evidence = student_barcode(gray,layout) if layout['studentNumber'].get('mode') == 'BARCODE' else student_omr(gray,layout)
     metadata['studentNumber'] = evidence
     answers, review = [], student is None
@@ -145,7 +152,7 @@ def main():
     if image.shape[0]*image.shape[1] > 80_000_000: raise ValueError('Scan image too large')
     out = Path(args.output); out.mkdir(parents=True,exist_ok=True)
     if config['mode'] == 'card':
-        result = scan(image,config['layout'],config['page'],out,config.get('pageCode'))
+        result = scan(image,config['layout'],config['page'],out,config.get('pageCode'),config.get('pageCodes'))
     else:
         result = {'studentNumber':None,'answers':[{'itemId':r['itemId'],'text':'','images':[crop(image,r,out,i)],'box':{key:r[key] for key in ['page','x','y','width','height']}} for i,r in enumerate(config['regions'])],'alignment':{'corrected':False,'manual':True},'needsReview':False}
     print(json.dumps(result,allow_nan=False))

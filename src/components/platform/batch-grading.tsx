@@ -20,6 +20,7 @@ export function BatchGradingForm({
   const [assessmentId, setAssessmentId] = useState("");
   const [classroomId, setClassroomId] = useState("");
   const [paperId, setPaperId] = useState("");
+  const [templateId, setTemplateId] = useState("");
   const [pages, setPages] = useState<UploadedPage[]>([]);
   const [uploading, setUploading] = useState(false);
   const [failure, setFailure] = useState("");
@@ -39,6 +40,10 @@ export function BatchGradingForm({
         canReviewSubject(state.actor, assessment, classroom, p.subject, state.classrooms),
     ) ?? [];
   const selectedPaper = configs.length === 1 ? configs[0].paperId : paperId;
+  const templates = (state.templates ?? []).filter((t) => t.paperId === selectedPaper && !t.preset);
+  const selectedTemplate =
+    templates.length === 1 ? templates[0].id : templates.find((t) => t.id === templateId)?.id;
+  const needsTemplate = assessment?.kind === "EXAM" && pages.length > 0;
   const pending = state.submissions.filter(
     (s) =>
       s.assessmentId === assessmentId &&
@@ -86,6 +91,7 @@ export function BatchGradingForm({
           !assessment ||
           !classroom ||
           !selectedPaper ||
+          (needsTemplate && !selectedTemplate) ||
           (!pages.length && !pending.length)
         )
           return;
@@ -94,12 +100,12 @@ export function BatchGradingForm({
           classroomId,
           paperId: selectedPaper,
           assetUrls: pages.map((p) => p.url),
+          ...(needsTemplate ? { templateId: selectedTemplate } : {}),
         });
       }}
     >
       <p>
-        选择班级，上传全班作业或试卷。AI
-        自动识别姓名与考号、合并同一学生的多页作答、定位题目并逐题批改，无需手工框选。
+        选择班级，上传全班作业或答题卡。作业按学生独立批改；考试按答题卡模板自动切题，逐人逐题独立批改，无需手工框选。
       </p>
       <div className="p-form-grid">
         <Field label="作业 / 考试安排">
@@ -111,6 +117,7 @@ export function BatchGradingForm({
               setAssessmentId(e.target.value);
               setClassroomId("");
               setPaperId("");
+              setTemplateId("");
             }}
           >
             <option value="">选择安排</option>
@@ -131,6 +138,7 @@ export function BatchGradingForm({
             onChange={(e) => {
               setClassroomId(e.target.value);
               setPaperId("");
+              setTemplateId("");
             }}
           >
             <option value="">选择班级</option>
@@ -146,7 +154,10 @@ export function BatchGradingForm({
             required
             disabled={disabled || !classroom}
             value={selectedPaper}
-            onChange={(e) => setPaperId(e.target.value)}
+            onChange={(e) => {
+              setPaperId(e.target.value);
+              setTemplateId("");
+            }}
           >
             <option value="">选择题本</option>
             {configs.map((p) => (
@@ -156,7 +167,27 @@ export function BatchGradingForm({
             ))}
           </select>
         </Field>
+        {assessment?.kind === "EXAM" && (
+          <Field label="答题卡模板">
+            <select
+              required={needsTemplate}
+              disabled={disabled || !selectedPaper}
+              value={selectedTemplate ?? ""}
+              onChange={(e) => setTemplateId(e.target.value)}
+            >
+              <option value="">选择扫描材料使用的模板</option>
+              {templates.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          </Field>
+        )}
       </div>
+      {needsTemplate && !templates.length && (
+        <p className="p-notice">请先为这套试卷创建答题卡模板，或直接批改已录入的作答。</p>
+      )}
       {!state.assessments.some((a) => !a.published) && (
         <p className="p-notice">
           请先按班级布置作业或安排考试。已发布的成绩需要先撤回发布才能继续批改。
@@ -218,7 +249,13 @@ export function BatchGradingForm({
       )}
       <button
         className="button"
-        disabled={disabled || !classroom || !selectedPaper || (!pages.length && !pending.length)}
+        disabled={
+          disabled ||
+          !classroom ||
+          !selectedPaper ||
+          (needsTemplate && !selectedTemplate) ||
+          (!pages.length && !pending.length)
+        }
       >
         {uploading ? "正在上传…" : busy ? "正在提交…" : "开始班级批量批改"}
       </button>

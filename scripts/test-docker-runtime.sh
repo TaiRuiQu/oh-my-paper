@@ -69,6 +69,7 @@ if [ "$target" = web ] && [ -n "${EXPECTED_COMMIT_SHA:-}" ]; then
     }).catch(() => process.exit(1));'
 fi
 if [ "$target" = ai-worker ]; then
+  docker exec "$runtime" /opt/python-sandbox/bin/python tools/card-scan/scan.py --help
   docker exec "$runtime" node --conditions=react-server sandbox-check.mjs
 fi
 # Allow several queue polls to catch failures after module loading.

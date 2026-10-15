@@ -167,6 +167,36 @@ describe("answer cards and scans", () => {
     const crop = await sharp(result.answers[2].images[0]).metadata();
     expect(crop.width).toBeGreaterThan(600);
   }, 20000);
+  it("detects unordered card page numbers from the printed code and rejects another template", async () => {
+    const dir = await directory();
+    const template = generateCardTemplate(paper(12));
+    expect(template.layout.pageCount).toBeGreaterThan(1);
+    const source = join(dir, "page-2.png");
+    await sharp(Buffer.from(renderCardSvg(template, 2)))
+      .png()
+      .toFile(source);
+    const scan = await processCardScan({
+      inputPath: source,
+      template,
+      autoPage: true,
+      outputDir: join(dir, "auto"),
+    });
+    expect(scan.alignment.page).toBe(2);
+    expect(scan.answers.map((a) => a.itemId)).toEqual(
+      template.layout.regions.filter((r) => r.page === 2).map((r) => r.itemId),
+    );
+    await expect(
+      processCardScan({ inputPath: source, template, page: 1, outputDir: join(dir, "wrong-page") }),
+    ).rejects.toThrow("CARD_PAGE_ORDER");
+    await expect(
+      processCardScan({
+        inputPath: source,
+        template: { ...template, id: "another-template" },
+        autoPage: true,
+        outputDir: join(dir, "wrong-template"),
+      }),
+    ).rejects.toThrow("CARD_TEMPLATE_MISMATCH");
+  }, 20000);
   it("rejects missing registration marks and flags ambiguous student ID", async () => {
     const dir = await directory(),
       template = generateCardTemplate(paper()),

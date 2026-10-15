@@ -19,6 +19,7 @@ export type BatchGradingResult = {
   assessmentKind: "EXAM" | "HOMEWORK";
   classroomId: string;
   paperId: string;
+  templateId?: string;
   students: {
     studentId: string;
     name: string;
@@ -88,6 +89,7 @@ export const aiInputSchemas = {
       assessmentId: id,
       classroomId: id,
       paperId: id,
+      templateId: id.optional(),
       assetUrls: z
         .array(z.string().regex(/^\/api\/platform\/assets\/[\w-]+$/))
         .max(MAX_AI_BATCH_PAGES)

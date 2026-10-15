@@ -97,7 +97,13 @@ AI 执行轨迹的 Python / shell 输出图片在工具返回前写入共享 `st
 
 ## 班级批量批改
 
-`BATCH_GRADE` 输入 `{assessmentId,classroomId,paperId,assetUrls?:string[],studentHints?:{sourceUrl,studentId}[]}`。教师按班级一次上传图片或多页 PDF，最多 100 页 / 150 MB；不传图片则批改班内已录入且没有评分的作答。Agent 自主识别考号/姓名、合并页、自动定位与裁剪作答、逐题首评，查看真实图片后才能保存评分。未匹配学生的页保存在 `result.pendingPages`，教师可在任务结果确认学生后重新提交这些页面；模糊题保存在 `result.skipped`，不会捏造零分。所有页面须登记或待确认、所有已识别学生的题目须评分或跳过，完成时同事务保存作答、Review、ReviewEvent、资产及任务结果。提交前重新检查权限、题本设置、学生身份、作答与已有评分。
+`BATCH_GRADE` 输入 `{assessmentId,classroomId,paperId,templateId?:string,assetUrls?:string[],studentHints?:{sourceUrl,studentId}[]}`。教师按班级一次上传图片或多页 PDF，最多 100 页 / 150 MB；不传图片则批改班内已录入且没有评分的作答。
+
+作业由材料归属 Agent 识别学生并合并页面，再为每位学生创建独立评分 Agent，自主查看、切题、逐题首评。考试上传须指定所选试卷的答题卡模板，扫描工具按定位点与页面识别码校正、验证模板、识别实际页码和考号并切题，支持乱序多页材料；之后每个学生的每道题创建独立评分 Agent，混合题由该 Agent 完整逐小问评分。已录入的考试直接按学生、题目拆分。
+
+各评分 Agent 有独立对话、沙箱、图片白名单和证据查看记录；作业限于一个学生，考试限于一个学生的一道题，不提供跨题切题工具。调度逐个执行独立 Agent，所有模型用量累计到原 `AiJob`。评分 Agent 在授权范围内自主选择查看、计算、评分或记录无法辨认的题目。单个 Agent 失败不会写入半成品评分。
+
+未匹配学生或扫描异常的页保存在 `result.pendingPages`，考试结果保留 `templateId`，教师确认学生后可用相同模板重提这些页面；模糊题保存在 `result.skipped`，不会捏造零分。所有页面须登记或待确认、所有已识别学生的题目须评分或跳过，全部 Agent 完成后同事务保存作答、Review、ReviewEvent、资产及任务结果。提交前重新检查权限、题本与模板设置、学生身份、作答与已有评分。
 
 练习册首页统一显示姓名、班级、六位考号填写与填涂区，预览、PDF 打印与 Word 导出共享几何。原人工练习册录入与答题卡扫描仍可用于人工处理。
 
