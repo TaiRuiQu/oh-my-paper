@@ -24,6 +24,7 @@ import {
 import { aiActivityImages, aiTeacherActivity, aiTeacherFailure } from "@/lib/ai-teacher-display";
 import { formatDateTime } from "@/lib/date-time";
 import { AIJobStatus } from "./ai-job-list";
+import { AIJobCost } from "./ai-job-cost";
 import { AITraceImages } from "./ai-trace-content";
 import styles from "./ai-execution-trace.module.css";
 
@@ -200,6 +201,7 @@ export function AIExecutionTrace({
           )}
         </div>
       </div>
+      <AIJobCost job={job} />
       {job.status === "FAILED" && (
         <p role="alert" className={styles.error}>
           {aiTeacherFailure(job.error)}

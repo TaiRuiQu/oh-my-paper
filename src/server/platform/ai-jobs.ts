@@ -232,7 +232,14 @@ export async function runClaimedAiJob(
         if (events.length < 200) events.push(event);
         await getDb().aiJob.updateMany({
           where: { id: job.id, status: "RUNNING", workerId },
-          data: { events: json(events), heartbeatAt: new Date() },
+          data: {
+            events: json(events),
+            heartbeatAt: new Date(),
+            // Persist independently of the bounded trace, before the atomic domain commit.
+            ...(event && typeof event === "object" && !Array.isArray(event) && event.cost
+              ? { cost: json(event.cost) }
+              : {}),
+          },
         });
       },
     });

@@ -45,6 +45,7 @@ export async function loadAiModel(userId: string, modelId?: string) {
   }
   return {
     model,
+    baseURL: p.baseURL,
     identity: {
       modelId: stored.id,
       model: stored.name,

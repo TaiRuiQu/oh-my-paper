@@ -11,6 +11,7 @@ import { useDomain } from "@/components/platform/domain-provider";
 import { apiRequest } from "@/lib/http-client";
 import { aiTraceActivities, aiTraceGroups } from "@/lib/ai-trace-display";
 import { aiTraceFixtures } from "./fixtures/ai-traces";
+import { aiCostFixture } from "./fixtures/ai-cost";
 
 const { push, refresh, notify } = vi.hoisted(() => ({
   push: vi.fn(),
@@ -38,6 +39,7 @@ const job: AiJobDTO = {
   status: "RUNNING",
   input: { name: "练习", kind: "EXAM" },
   result: null,
+  cost: null,
   events: [
     { type: "tool", name: "inspect_image", status: "started", message: "private-event-details" },
   ],
@@ -109,6 +111,72 @@ it("updates a task's standalone timeline and preserves its complete execution re
   await expandTrace();
   expect(container.textContent).toContain("全部题目已保存");
   expect(refresh).toHaveBeenCalledOnce();
+});
+
+it("shows RMB cost after completion and preserves the pricing and exchange rate details", async () => {
+  vi.mocked(apiRequest).mockResolvedValue({ ...job, status: "COMPLETED", cost: aiCostFixture });
+  await act(async () => root.render(<AIJobDetailPage initialJob={job} />));
+  expect(container.querySelector('[aria-label="本次任务成本"]')).toBeNull();
+  await act(async () => vi.advanceTimersByTimeAsync(3000));
+  const cost = container.querySelector<HTMLDetailsElement>('[aria-label="本次任务成本"]')!;
+  expect(cost.querySelector("summary")?.textContent).toContain("估算成本 ¥0.014");
+  expect(cost.open).toBe(false);
+  expect(cost.textContent).toContain("$0.002");
+  expect(cost.textContent).toContain("1 美元 = 7 元人民币");
+  expect(cost.querySelector('a[href="https://models.dev/"]')).toBeTruthy();
+  expect(cost.querySelector('a[href="https://www.exchangerate-api.com"]')).toBeTruthy();
+});
+
+it("identifies the fallback exchange rate and shows recorded costs for a failed task", async () => {
+  await act(async () =>
+    root.render(
+      <AIJobDetailPage
+        initialJob={{
+          ...job,
+          status: "FAILED",
+          cost: {
+            ...aiCostFixture,
+            exchangeRate: { ...aiCostFixture.exchangeRate, source: "fallback" },
+          },
+        }}
+      />,
+    ),
+  );
+  const cost = container.querySelector('[aria-label="本次任务成本"]')!;
+  expect(cost.textContent).toContain("动态汇率获取失败");
+  expect(cost.textContent).toContain("备用汇率");
+  expect(cost.textContent).toContain("仅包含已记录调用");
+});
+
+it("shows completed task costs on the list and never presents unavailable pricing as zero", async () => {
+  vi.mocked(apiRequest).mockResolvedValue({
+    models: [],
+    jobs: [
+      { ...job, status: "COMPLETED", cost: aiCostFixture },
+      {
+        ...job,
+        id: "missing-price",
+        status: "COMPLETED",
+        cost: {
+          ...aiCostFixture,
+          status: "unavailable",
+          reason: "price_unavailable",
+          cny: null,
+          usd: null,
+          pricing: null,
+        },
+      },
+    ],
+  });
+  await act(async () =>
+    root.render(
+      <PlatformAI state={{} as PlatformState} tab="overview" refresh={refresh} notify={notify} />,
+    ),
+  );
+  await act(async () => vi.advanceTimersByTimeAsync(0));
+  expect(container.textContent).toContain("估算成本 ¥0.014");
+  expect(container.textContent).toContain("成本暂无法估算");
+  expect(container.textContent).not.toContain("¥0.00");
 });
 
 it("opens the newly created retry task and retains the failed task's trace", async () => {

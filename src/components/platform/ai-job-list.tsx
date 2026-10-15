@@ -6,6 +6,7 @@ import { AI_JOB_NAMES, AI_JOB_STATUSES, aiJobHref, aiJobResultLink } from "@/lib
 import { formatDateTime } from "@/lib/date-time";
 import { aiJobCurrentStep } from "@/lib/ai-trace-display";
 import { Empty, Panel } from "./primitives";
+import { AIJobCost } from "./ai-job-cost";
 import styles from "./ai-job-list.module.css";
 
 export function AIJobStatus({ job }: { job: AiJobDTO }) {
@@ -79,6 +80,7 @@ export function AIJobList({
                   <AIJobStatus job={job} />
                 </div>
                 <p className={styles.progress}>{aiJobCurrentStep(job)}</p>
+                <AIJobCost job={job} compact />
                 <time className={styles.time} dateTime={job.createdAt}>
                   {formatDateTime(job.createdAt)}
                 </time>

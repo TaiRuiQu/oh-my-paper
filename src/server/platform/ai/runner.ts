@@ -7,6 +7,7 @@ import { loadAiModel } from "./model";
 import { RequestError } from "@/server/http/errors";
 import { prepareResponsesStep } from "./responses";
 import { toolErrorDetails } from "./tools";
+import { createTaskCostTracker } from "./cost";
 export type AiTaskOptions = {
   userId: string;
   kind: AiKind;
@@ -69,7 +70,20 @@ export async function runAiTask(
     const features = await createTaskFeatures(options);
     try {
       const emit = options.onEvent ?? (async () => {});
-      await emit({ type: "start", kind: options.kind, model: configuration.identity });
+      const cost = await createTaskCostTracker({
+        ...configuration.identity,
+        baseURL: configuration.baseURL,
+      });
+      await emit(
+        JSON.parse(
+          JSON.stringify({
+            type: "start",
+            kind: options.kind,
+            model: configuration.identity,
+            cost: cost.snapshot(),
+          }),
+        ),
+      );
       const agent = new ToolLoopAgent({
         model: configuration.model,
         instructions: features.instructions,
@@ -170,6 +184,7 @@ export async function runAiTask(
           }
         },
         onStepEnd: async (e) => {
+          cost.add(e.usage);
           await emit(
             JSON.parse(
               JSON.stringify({
@@ -177,6 +192,7 @@ export async function runAiTask(
                 finishReason: e.finishReason,
                 toolNames: e.toolCalls.map((t) => t.toolName),
                 usage: e.usage,
+                cost: cost.snapshot(),
               }),
             ),
           );

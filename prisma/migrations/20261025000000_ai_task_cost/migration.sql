@@ -1,0 +1,1 @@
+ALTER TABLE "ai_jobs" ADD COLUMN "cost" JSONB;

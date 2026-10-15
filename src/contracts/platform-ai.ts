@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { consolidationPaperSchema } from "./revision-papers";
+import type { AiTaskCost } from "./ai-cost";
 export const MAX_AI_IMPORT_PAGES = 20;
 export const MAX_AI_BATCH_PAGES = 100;
 export const aiKinds = [
@@ -138,6 +139,7 @@ export type AiJobDTO = {
   status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED";
   input: unknown;
   result: unknown;
+  cost: AiTaskCost | null;
   events: unknown[];
   error: string | null;
   attempts: number;

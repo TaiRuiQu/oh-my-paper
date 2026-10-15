@@ -20,6 +20,7 @@ const mocked = vi.hoisted(() => ({
   readOwnedAsset: vi.fn(),
   saveImage: vi.fn(),
   loadAiModel: vi.fn(),
+  costAdd: vi.fn(),
   createSandboxSession: vi.fn(),
   sandboxRun: vi.fn(),
   sandboxDispose: vi.fn(),
@@ -39,6 +40,12 @@ vi.mock("@/server/platform/assets", () => ({
   assetId: (u: string) => u.split("/").at(-1),
 }));
 vi.mock("@/server/platform/ai/model", () => ({ loadAiModel: mocked.loadAiModel }));
+vi.mock("@/server/platform/ai/cost", () => ({
+  createTaskCostTracker: async () => ({
+    add: mocked.costAdd,
+    snapshot: () => ({ status: "unavailable", reason: "price_unavailable", cny: null }),
+  }),
+}));
 vi.mock("@/server/ai/sandbox", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/server/ai/sandbox")>()),
   createSandboxSession: mocked.createSandboxSession,
@@ -1321,6 +1328,13 @@ describe("SDK 7 autonomous agent loop", () => {
     });
     expect(result.summary).toBe("自主组卷完成");
     expect(model.doGenerateCalls).toHaveLength(4);
+    expect(mocked.costAdd).toHaveBeenCalledTimes(4);
+    expect(events).toContainEqual(
+      expect.objectContaining({
+        type: "step",
+        cost: expect.objectContaining({ reason: "price_unavailable" }),
+      }),
+    );
     expect(events.filter((e) => (e as { type: string }).type === "step")).toHaveLength(4);
     expect(events).toContainEqual(
       expect.objectContaining({ type: "tool", name: "python", status: "ended" }),

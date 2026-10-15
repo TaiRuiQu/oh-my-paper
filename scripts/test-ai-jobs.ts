@@ -129,13 +129,25 @@ async function main() {
       calls++;
       assert.equal(options.jobId, first.id);
       await options.onEvent?.({ type: "test-tool", name: "fake-persist" });
+      for (let i = 0; i < 201; i++) await options.onEvent?.({ type: "test-step" });
+      await options.onEvent?.({ type: "step", cost: { usd: 0.002, cny: 0.014 } });
+      // Domain commit marks the task complete before the worker receives its return value.
+      await db.aiJob.update({
+        where: { id: first.id },
+        data: {
+          status: "COMPLETED",
+          result: { summary: "atomic domain result" },
+          finishedAt: new Date(),
+        },
+      });
       return { summary: "queue mechanics only", result: { savedId: "fixture" } };
     };
     await runClaimedAiJob(job, job.workerId!, adapter);
     let persisted = await db.aiJob.findUniqueOrThrow({ where: { id: first.id } });
     assert.equal(persisted.status, "COMPLETED");
     assert.ok(persisted.finishedAt);
-    assert.equal((persisted.events as unknown[]).length, 1);
+    assert.equal((persisted.events as unknown[]).length, 200);
+    assert.deepEqual(persisted.cost, { usd: 0.002, cny: 0.014 });
     assert.equal(calls, 1);
     await assert.rejects(runClaimedAiJob(job, job.workerId!, adapter), /任务已结束/);
     assert.equal(calls, 1);

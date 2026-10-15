@@ -306,6 +306,7 @@ model AiJob {
   input Json
   result Json?
   events Json @default("[]")
+  cost Json?
   error String?
   attempts Int @default(0)
   workerId String?
