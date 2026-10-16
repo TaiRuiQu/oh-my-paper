@@ -1,0 +1,1350 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "46890563-1a22-4be1-bffd-69c0ff9da9b4",
+      "title": "八年级数学下册人教澳门版",
+      "stage": "初中",
+      "subject": "数学",
+      "version": "人教澳门版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/46890563-1a22-4be1-bffd-69c0ff9da9b4.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-05T13:57:22.660+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第十九章 二次根式",
+          "children": [
+            {
+              "title": "19.1 二次根式及其性质"
+            },
+            {
+              "title": "19.2 二次根式的乘法与除法"
+            },
+            {
+              "title": "19.3 二次根式的加法与减法"
+            },
+            {
+              "title": "阅读与思考 海伦-秦九韶公式"
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "二次根式",
+            "19.1 二次根式及其性质",
+            "19.2 二次根式的乘法与除法",
+            "19.3 二次根式的加法与减法",
+            "阅读与思考 海伦-秦九韶公式",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十章 勾股定理",
+          "children": [
+            {
+              "title": "20.1 勾股定理及其应用"
+            },
+            {
+              "title": "阅读与思考 勾股定理的证明"
+            },
+            {
+              "title": "20.2 勾股定理的逆定理及其应用"
+            },
+            {
+              "title": "图说数学史 数学瑰宝——勾股定理"
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "勾股定理",
+            "20.1 勾股定理及其应用",
+            "阅读与思考 勾股定理的证明",
+            "20.2 勾股定理的逆定理及其应用",
+            "图说数学史 数学瑰宝——勾股定理",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十一章 四边形",
+          "children": [
+            {
+              "title": "21.1 四边形及多边形",
+              "children": [
+                {
+                  "title": "21.1.1 四边形及其内角和"
+                },
+                {
+                  "title": "21.1.2 多边形及其内角和"
+                }
+              ]
+            },
+            {
+              "title": "探究与发现 用多边形镶嵌平面"
+            },
+            {
+              "title": "21.2 平行四边形",
+              "children": [
+                {
+                  "title": "21.2.1 平行四边形及其性质"
+                },
+                {
+                  "title": "21.2.2 平行四边形的判定"
+                },
+                {
+                  "title": "21.2.3 三角形的中位线"
+                }
+              ]
+            },
+            {
+              "title": "21.3 特殊的平行四边形",
+              "children": [
+                {
+                  "title": "21.3.1 矩形"
+                },
+                {
+                  "title": "21.3.2 菱形"
+                },
+                {
+                  "title": "21.3.3 正方形"
+                }
+              ]
+            },
+            {
+              "title": "探究与发现 利用菱形的性质和判定尺规作图"
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "四边形",
+            "21.1 四边形及多边形",
+            "21.1.1 四边形及其内角和",
+            "21.1.2 多边形及其内角和",
+            "探究与发现 用多边形镶嵌平面",
+            "21.2 平行四边形",
+            "21.2.1 平行四边形及其性质",
+            "21.2.2 平行四边形的判定",
+            "21.2.3 三角形的中位线",
+            "21.3 特殊的平行四边形",
+            "21.3.1 矩形",
+            "21.3.2 菱形",
+            "21.3.3 正方形",
+            "探究与发现 利用菱形的性质和判定尺规作图",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十二章 函数",
+          "children": [
+            {
+              "title": "22.1 函数的概念"
+            },
+            {
+              "title": "图说数学史 函数概念的探索之路"
+            },
+            {
+              "title": "22.2 函数的表示"
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "函数",
+            "22.1 函数的概念",
+            "图说数学史 函数概念的探索之路",
+            "22.2 函数的表示",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十三章 一次函数",
+          "children": [
+            {
+              "title": "23.1 一次函数的概念"
+            },
+            {
+              "title": "23.2 一次函数的图象和性质"
+            },
+            {
+              "title": "信息技术应用 探究函数的图象和性质"
+            },
+            {
+              "title": "23.3 一次函数与方程 （组）、不等式"
+            },
+            {
+              "title": "23.4 实际问题与一次函数"
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "一次函数",
+            "23.1 一次函数的概念",
+            "23.2 一次函数的图象和性质",
+            "信息技术应用 探究函数的图象和性质",
+            "23.3 一次函数与方程 （组）、不等式",
+            "23.4 实际问题与一次函数",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "综合与实践 音乐与数学",
+          "topics": ["综合与实践 音乐与数学"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十四章 数据的分析",
+          "children": [
+            {
+              "title": "24.1 数据的集中趋势",
+              "children": [
+                {
+                  "title": "24.1.1 平均数"
+                },
+                {
+                  "title": "24.1.2 中位数与众数"
+                }
+              ]
+            },
+            {
+              "title": "信息技术应用 利用统计软件求统计量"
+            },
+            {
+              "title": "24.2 数据的离散程度"
+            },
+            {
+              "title": "24.3 数据的四分位数"
+            },
+            {
+              "title": "24.4 数据的分组"
+            },
+            {
+              "title": "阅读与思考 大数据及其应用"
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "数据的分析",
+            "24.1 数据的集中趋势",
+            "24.1.1 平均数",
+            "24.1.2 中位数与众数",
+            "信息技术应用 利用统计软件求统计量",
+            "24.2 数据的离散程度",
+            "24.3 数据的四分位数",
+            "24.4 数据的分组",
+            "阅读与思考 大数据及其应用",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "综合与实践 学生体质健康调查与分析",
+          "topics": ["综合与实践 学生体质健康调查与分析"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "b677a95f-e947-46d3-805c-0b76b71a7379",
+      "title": "新教材-初中数学人教版七年级上册",
+      "stage": "初中",
+      "subject": "数学",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/b677a95f-e947-46d3-805c-0b76b71a7379.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-12-24T14:30:11.066+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一章 有理数",
+          "children": [
+            {
+              "title": "1.1正数和负数"
+            },
+            {
+              "title": "1.2有理数及其大小比较",
+              "children": [
+                {
+                  "title": "1.2.1 有理数的概念"
+                },
+                {
+                  "title": "1.2.2 数轴"
+                },
+                {
+                  "title": "1.2.3 相反数"
+                },
+                {
+                  "title": "1.2.4 绝对值"
+                },
+                {
+                  "title": "1.2.5 有理数的大小比较"
+                }
+              ]
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "有理数",
+            "1.1正数和负数",
+            "1.2有理数及其大小比较",
+            "1.2.1 有理数的概念",
+            "1.2.2 数轴",
+            "1.2.3 相反数",
+            "1.2.4 绝对值",
+            "1.2.5 有理数的大小比较",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 有理数的运算",
+          "children": [
+            {
+              "title": "2.1有理数的加法与减法",
+              "children": [
+                {
+                  "title": "2.1.1有理数的加法"
+                },
+                {
+                  "title": "2.1.2有理数的减法"
+                }
+              ]
+            },
+            {
+              "title": "2.2有理数的乘法与除法",
+              "children": [
+                {
+                  "title": "2.2.1有理数的乘法"
+                },
+                {
+                  "title": "2.2.2有理数的除法"
+                }
+              ]
+            },
+            {
+              "title": "2.3有理数的乘方",
+              "children": [
+                {
+                  "title": "2.3.1 乘方"
+                },
+                {
+                  "title": "2.3.2 科学记数法 2.3.3近似数"
+                }
+              ]
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "有理数的运算",
+            "2.1有理数的加法与减法",
+            "2.1.1有理数的加法",
+            "2.1.2有理数的减法",
+            "2.2有理数的乘法与除法",
+            "2.2.1有理数的乘法",
+            "2.2.2有理数的除法",
+            "2.3有理数的乘方",
+            "2.3.1 乘方",
+            "2.3.2 科学记数法 2.3.3近似数",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 代数式",
+          "children": [
+            {
+              "title": "3.1列代数式表示数量关系"
+            },
+            {
+              "title": "3.2代数式的值"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": ["代数式", "3.1列代数式表示数量关系", "3.2代数式的值", "小结"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 整式的加减",
+          "children": [
+            {
+              "title": "4.1整式"
+            },
+            {
+              "title": "4.2整式的加法与减法"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": ["整式的加减", "4.1整式", "4.2整式的加法与减法", "小结"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五章 一元一次方程",
+          "children": [
+            {
+              "title": "5.1方程",
+              "children": [
+                {
+                  "title": "5.1.1 从算式到方程"
+                },
+                {
+                  "title": "5.1.2 等式的性质"
+                }
+              ]
+            },
+            {
+              "title": "5.2解一元一次方程"
+            },
+            {
+              "title": "5.3实际问题与一元一次方程"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "一元一次方程",
+            "5.1方程",
+            "5.1.1 从算式到方程",
+            "5.1.2 等式的性质",
+            "5.2解一元一次方程",
+            "5.3实际问题与一元一次方程",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六章 几何图形初步",
+          "children": [
+            {
+              "title": "6.1几何图形",
+              "children": [
+                {
+                  "title": "6.1.1 立体图形与平面图形"
+                },
+                {
+                  "title": "6.1.2 点、线、面、体"
+                }
+              ]
+            },
+            {
+              "title": "6.2直线、射线、线段",
+              "children": [
+                {
+                  "title": "6.2.1 直线、射线、线段"
+                },
+                {
+                  "title": "6.2.2 线段的比较与运算"
+                }
+              ]
+            },
+            {
+              "title": "6.3角",
+              "children": [
+                {
+                  "title": "6.3.1 角的概念"
+                },
+                {
+                  "title": "6.3.2 角的比较与运算"
+                },
+                {
+                  "title": "6.3.3 余角和补角"
+                }
+              ]
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "几何图形初步",
+            "6.1几何图形",
+            "6.1.1 立体图形与平面图形",
+            "6.1.2 点、线、面、体",
+            "6.2直线、射线、线段",
+            "6.2.1 直线、射线、线段",
+            "6.2.2 线段的比较与运算",
+            "6.3角",
+            "6.3.1 角的概念",
+            "6.3.2 角的比较与运算",
+            "6.3.3 余角和补角",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "2400a73c-0da9-4536-804c-cb01f99f03fb",
+      "title": "新教材-初中数学人教版七年级下册",
+      "stage": "初中",
+      "subject": "数学",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2400a73c-0da9-4536-804c-cb01f99f03fb.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-01-26T10:30:05.799+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第七章 相交线与平行线",
+          "children": [
+            {
+              "title": "7.1 相交线",
+              "children": [
+                {
+                  "title": "7.1.1两条直线相交"
+                },
+                {
+                  "title": "7.1.2两条直线垂直"
+                },
+                {
+                  "title": "7.1.3两条直线被第三条直线所截"
+                }
+              ]
+            },
+            {
+              "title": "7.2 平行线",
+              "children": [
+                {
+                  "title": "7.2.1平行线的概念"
+                },
+                {
+                  "title": "7.2.2平行线的判定"
+                },
+                {
+                  "title": "7.2.3平行线的性质"
+                }
+              ]
+            },
+            {
+              "title": "7.3 定义、命题、定理"
+            },
+            {
+              "title": "7.4 平移"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "相交线与平行线",
+            "7.1 相交线",
+            "7.1.1两条直线相交",
+            "7.1.2两条直线垂直",
+            "7.1.3两条直线被第三条直线所截",
+            "7.2 平行线",
+            "7.2.1平行线的概念",
+            "7.2.2平行线的判定",
+            "7.2.3平行线的性质",
+            "7.3 定义、命题、定理",
+            "7.4 平移",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八章 实数",
+          "children": [
+            {
+              "title": "8.1 平方根"
+            },
+            {
+              "title": "8.2 立方根"
+            },
+            {
+              "title": "8.3 实数及其简单运算"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": ["实数", "8.1 平方根", "8.2 立方根", "8.3 实数及其简单运算", "小结"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第九章 平面直角坐标系",
+          "children": [
+            {
+              "title": "9.1 用坐标描述平面内点的位置",
+              "children": [
+                {
+                  "title": "9.1.1 平面直角坐标系的概念"
+                },
+                {
+                  "title": "9.1.2 用坐标描述简单几何图形"
+                }
+              ]
+            },
+            {
+              "title": "9.2 坐标方法的简单应用",
+              "children": [
+                {
+                  "title": "9.2.1 用坐标表示地理位置"
+                },
+                {
+                  "title": "9.2.2 用坐标表示平移"
+                }
+              ]
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "平面直角坐标系",
+            "9.1 用坐标描述平面内点的位置",
+            "9.1.1 平面直角坐标系的概念",
+            "9.1.2 用坐标描述简单几何图形",
+            "9.2 坐标方法的简单应用",
+            "9.2.1 用坐标表示地理位置",
+            "9.2.2 用坐标表示平移",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十章 二元一次方程组",
+          "children": [
+            {
+              "title": "10.1 二元一次方程组的概念"
+            },
+            {
+              "title": "10.2 消元——解二元一次方程组",
+              "children": [
+                {
+                  "title": "10.2.1 代入消元法"
+                },
+                {
+                  "title": "10.2.2 加减消元法"
+                }
+              ]
+            },
+            {
+              "title": "10.3 实际问题与二元一次方程组"
+            },
+            {
+              "title": "*10.4 三元一次方程组的解法"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "二元一次方程组",
+            "10.1 二元一次方程组的概念",
+            "10.2 消元——解二元一次方程组",
+            "10.2.1 代入消元法",
+            "10.2.2 加减消元法",
+            "10.3 实际问题与二元一次方程组",
+            "*10.4 三元一次方程组的解法",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十一章 不等式与不等式组",
+          "children": [
+            {
+              "title": "11.1 不等式",
+              "children": [
+                {
+                  "title": "11.1.1 不等式及其解集"
+                },
+                {
+                  "title": "11.1.2 不等式的性质"
+                }
+              ]
+            },
+            {
+              "title": "11.2 一元一次不等式"
+            },
+            {
+              "title": "11.3 一元一次不等式组"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "不等式与不等式组",
+            "11.1 不等式",
+            "11.1.1 不等式及其解集",
+            "11.1.2 不等式的性质",
+            "11.2 一元一次不等式",
+            "11.3 一元一次不等式组",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十二章 数据的收集、整理与描述",
+          "children": [
+            {
+              "title": "12.1 统计调查",
+              "children": [
+                {
+                  "title": "12.1.1 全面调查"
+                },
+                {
+                  "title": "12.1.2 抽样调查"
+                }
+              ]
+            },
+            {
+              "title": "12.2 用统计图描述数据",
+              "children": [
+                {
+                  "title": "12.2.1 扇形图、条形图和折线图"
+                },
+                {
+                  "title": "12.2.2 直方图"
+                },
+                {
+                  "title": "12.2.3 趋势图"
+                }
+              ]
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "数据的收集、整理与描述",
+            "12.1 统计调查",
+            "12.1.1 全面调查",
+            "12.1.2 抽样调查",
+            "12.2 用统计图描述数据",
+            "12.2.1 扇形图、条形图和折线图",
+            "12.2.2 直方图",
+            "12.2.3 趋势图",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "7593f06c-44a8-44af-8e38-84e97ffde3ba",
+      "title": "新教材-人教版初中数学九年级上册",
+      "stage": "初中",
+      "subject": "数学",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/7593f06c-44a8-44af-8e38-84e97ffde3ba.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T08:51:20.312+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第二十五章 一元二次方程",
+          "children": [
+            {
+              "title": "25.1 一元二次方程的概念"
+            },
+            {
+              "title": "25.2 降次——解一元二次方程"
+            },
+            {
+              "title": "25.3 实际问题与一元二次方程"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "一元二次方程",
+            "25.1 一元二次方程的概念",
+            "25.2 降次——解一元二次方程",
+            "25.3 实际问题与一元二次方程",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十六章 二次函数",
+          "children": [
+            {
+              "title": "26.1 二次函数的概念"
+            },
+            {
+              "title": "26.2 二次函数的图象和性质"
+            },
+            {
+              "title": "26.3 二次函数与一元二次方程"
+            },
+            {
+              "title": "26.4 实际问题与二次函数"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "二次函数",
+            "26.1 二次函数的概念",
+            "26.2 二次函数的图象和性质",
+            "26.3 二次函数与一元二次方程",
+            "26.4 实际问题与二次函数",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十七章 反比例函数",
+          "children": [
+            {
+              "title": "27.1 反比例函数的概念"
+            },
+            {
+              "title": "27.2 反比例函数的图象和性质"
+            },
+            {
+              "title": "27.3 实际问题与反比例函数"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "反比例函数",
+            "27.1 反比例函数的概念",
+            "27.2 反比例函数的图象和性质",
+            "27.3 实际问题与反比例函数",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十八章 旋转",
+          "children": [
+            {
+              "title": "28.1 图形的旋转"
+            },
+            {
+              "title": "28.2 中心对称"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": ["旋转", "28.1 图形的旋转", "28.2 中心对称", "小结"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十九章 圆",
+          "children": [
+            {
+              "title": "29.1 圆的有关概念"
+            },
+            {
+              "title": "29.2 圆的有关性质"
+            },
+            {
+              "title": "29.3 弧长和扇形面积"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": ["圆", "29.1 圆的有关概念", "29.2 圆的有关性质", "29.3 弧长和扇形面积", "小结"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三十章 直线与圆的位置关系",
+          "children": [
+            {
+              "title": "30.1 直线与圆"
+            },
+            {
+              "title": "30.2 三角形的内切圆"
+            },
+            {
+              "title": "30.3 正多边形与圆"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "直线与圆的位置关系",
+            "30.1 直线与圆",
+            "30.2 三角形的内切圆",
+            "30.3 正多边形与圆",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "37dcf330-a406-4f3a-8602-0222736f9a90",
+      "title": "新教材-初中数学人教版八年级上册",
+      "stage": "初中",
+      "subject": "数学",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/37dcf330-a406-4f3a-8602-0222736f9a90.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-07-29T16:29:24.506+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第十三章 三角形",
+          "children": [
+            {
+              "title": "13.1 三角形的概念"
+            },
+            {
+              "title": "13.2 与三角形有关的线段"
+            },
+            {
+              "title": "13.3 三角形的内角与外角",
+              "children": [
+                {
+                  "title": "阅读与思考 为什么要证明"
+                }
+              ]
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "三角形",
+            "13.1 三角形的概念",
+            "13.2 与三角形有关的线段",
+            "13.3 三角形的内角与外角",
+            "阅读与思考 为什么要证明",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "综合与实践 确定匀质薄板的重心位置",
+          "topics": ["综合与实践 确定匀质薄板的重心位置"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十四章 全等三角形",
+          "children": [
+            {
+              "title": "14.1 全等三角形及其性质"
+            },
+            {
+              "title": "14.2 三角形全等的判定",
+              "children": [
+                {
+                  "title": "信息技术应用 探究三角形全等的条件"
+                }
+              ]
+            },
+            {
+              "title": "14.3 角的平分线",
+              "children": [
+                {
+                  "title": "图说数学史 公理化方法"
+                }
+              ]
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "全等三角形",
+            "14.1 全等三角形及其性质",
+            "14.2 三角形全等的判定",
+            "信息技术应用 探究三角形全等的条件",
+            "14.3 角的平分线",
+            "图说数学史 公理化方法",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十五章 轴对称",
+          "children": [
+            {
+              "title": "15.1 图形的轴对称"
+            },
+            {
+              "title": "15.2 画轴对称的图形"
+            },
+            {
+              "title": "15.3 等腰三角形",
+              "children": [
+                {
+                  "title": "探究与发现 三角形中边与角之间的不等关系"
+                }
+              ]
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "轴对称",
+            "15.1 图形的轴对称",
+            "15.2 画轴对称的图形",
+            "15.3 等腰三角形",
+            "探究与发现 三角形中边与角之间的不等关系",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "综合与实践 最短路径问题",
+          "topics": ["综合与实践 最短路径问题"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十六章 整式的乘法",
+          "children": [
+            {
+              "title": "16.1 幂的运算"
+            },
+            {
+              "title": "16.2 整式的乘法"
+            },
+            {
+              "title": "16.3 乘法公式",
+              "children": [
+                {
+                  "title": "阅读与思考 杨辉三角"
+                }
+              ]
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "整式的乘法",
+            "16.1 幂的运算",
+            "16.2 整式的乘法",
+            "16.3 乘法公式",
+            "阅读与思考 杨辉三角",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十七章 因式分解",
+          "children": [
+            {
+              "title": "17.1 用提公因式法分解因式"
+            },
+            {
+              "title": "17.2 用公式法分解因式",
+              "children": [
+                {
+                  "title": "阅读与思考 x²+(p+q)x+pq型式子的因式分解"
+                }
+              ]
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "因式分解",
+            "17.1 用提公因式法分解因式",
+            "17.2 用公式法分解因式",
+            "阅读与思考 x²+(p+q)x+pq型式子的因式分解",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十八章 分式",
+          "children": [
+            {
+              "title": "18.1 分式及其基本性质"
+            },
+            {
+              "title": "18.2 分式的乘法与除法"
+            },
+            {
+              "title": "18.3 分式的加法与减法",
+              "children": [
+                {
+                  "title": "阅读与思考 容器中的水能倒完吗"
+                }
+              ]
+            },
+            {
+              "title": "18.4 整数指数幂"
+            },
+            {
+              "title": "18.5 分式方程"
+            },
+            {
+              "title": "数学活动"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "分式",
+            "18.1 分式及其基本性质",
+            "18.2 分式的乘法与除法",
+            "18.3 分式的加法与减法",
+            "阅读与思考 容器中的水能倒完吗",
+            "18.4 整数指数幂",
+            "18.5 分式方程",
+            "数学活动",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ac01a19f-5e3d-4a9d-becd-ae42a865601e",
+      "title": "新教材-初中数学人教版八年级下册",
+      "stage": "初中",
+      "subject": "数学",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ac01a19f-5e3d-4a9d-becd-ae42a865601e.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-02-25T15:17:03.559+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第十九章 二次根式",
+          "children": [
+            {
+              "title": "19.1 二次根式及其性质"
+            },
+            {
+              "title": "19.2 二次根式的乘法与除法"
+            },
+            {
+              "title": "19.3 二次根式的加法与减法"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "二次根式",
+            "19.1 二次根式及其性质",
+            "19.2 二次根式的乘法与除法",
+            "19.3 二次根式的加法与减法",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十章 勾股定理",
+          "children": [
+            {
+              "title": "20.1 勾股定理及其应用"
+            },
+            {
+              "title": "20.2 勾股定理的逆定理及其应用"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": ["勾股定理", "20.1 勾股定理及其应用", "20.2 勾股定理的逆定理及其应用", "小结"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十一章 四边形",
+          "children": [
+            {
+              "title": "21.1 四边形及多边形"
+            },
+            {
+              "title": "21.2 平行四边形"
+            },
+            {
+              "title": "21.3 特殊的平行四边形"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "四边形",
+            "21.1 四边形及多边形",
+            "21.2 平行四边形",
+            "21.3 特殊的平行四边形",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十二章 函数",
+          "children": [
+            {
+              "title": "22.1 函数的概念"
+            },
+            {
+              "title": "22.2 函数的表示"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": ["函数", "22.1 函数的概念", "22.2 函数的表示", "小结"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十三章 一次函数",
+          "children": [
+            {
+              "title": "23.1 一次函数的概念"
+            },
+            {
+              "title": "23.2 一次函数的图象和性质"
+            },
+            {
+              "title": "23.3 一次函数与方程 （组）、不等式"
+            },
+            {
+              "title": "23.4 实际问题与一次函数"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "一次函数",
+            "23.1 一次函数的概念",
+            "23.2 一次函数的图象和性质",
+            "23.3 一次函数与方程 （组）、不等式",
+            "23.4 实际问题与一次函数",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十四章 数据的分析",
+          "children": [
+            {
+              "title": "24.1 数据的集中趋势"
+            },
+            {
+              "title": "24.2 数据的离散程度"
+            },
+            {
+              "title": "24.3 数据的四分位数"
+            },
+            {
+              "title": "24.4 数据的分组"
+            },
+            {
+              "title": "小结"
+            }
+          ],
+          "topics": [
+            "数据的分析",
+            "24.1 数据的集中趋势",
+            "24.2 数据的离散程度",
+            "24.3 数据的四分位数",
+            "24.4 数据的分组",
+            "小结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "stage": "初中",
+  "subject": "英语",
+  "books": [
+    {
+      "id": "57e82dcb-941b-4edb-86d0-073d9ab2b035",
+      "title": "初中英语人教版九年级全一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/english/units-1.json",
+      "unit_count": 15
+    },
+    {
+      "id": "64d17a31-923e-400c-8207-53bc0346e6f0",
+      "title": "新教材-初中英语人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/english/units-1.json",
+      "unit_count": 10
+    },
+    {
+      "id": "2d2e7f0e-11a7-4cde-b106-98cb10119081",
+      "title": "新教材-初中英语人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/english/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "4ebc4ee9-5149-44c6-8dc0-d6b56128fc6e",
+      "title": "新教材-初中英语人教版九年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/english/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "362cc792-7fbb-42f1-808a-9cca686bcc5a",
+      "title": "新教材-初中英语人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/english/units-2.json",
+      "unit_count": 8
+    },
+    {
+      "id": "62e99b8e-395f-4977-ba8a-17b5818bc464",
+      "title": "新教材-初中英语人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/english/units-2.json",
+      "unit_count": 8
+    },
+    {
+      "id": "8153c612-7847-40f1-b7d6-5ee49b99ca62",
+      "title": "初中英语人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/english/units-2.json",
+      "unit_count": 12
+    },
+    {
+      "id": "48345a04-f9d9-4340-88ae-e32a56f7348e",
+      "title": "初中英语人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/english/units-2.json",
+      "unit_count": 12
+    },
+    {
+      "id": "d8f71bd6-3394-495d-b8bb-0f1a76353a25",
+      "title": "初中英语人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/english/units-3.json",
+      "unit_count": 12
+    },
+    {
+      "id": "ba84232d-99ff-4b6e-b3a1-355d93cb35dc",
+      "title": "初中英语人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/english/units-3.json",
+      "unit_count": 11
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "stage": "小学",
+  "subject": "语文",
+  "books": [
+    {
+      "id": "117306e1-40c4-4106-bebb-b01a34927951",
+      "title": "小学语文统编版五年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-1.json",
+      "unit_count": 15
+    },
+    {
+      "id": "46fcb680-0486-4d3c-8d25-073bdf922c8e",
+      "title": "小学语文统编版六年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "fafb7ff0-f6bb-4fe4-bc6c-362380b28735",
+      "title": "小学语文统编版四年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "b7062df1-f929-458e-964c-d778f89ca255",
+      "title": "新教材-小学语文统编版一年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-1.json",
+      "unit_count": 9
+    },
+    {
+      "id": "2d22a5c9-80b8-46cb-8595-564f5c368f3e",
+      "title": "新教材-小学语文统编版一年级下册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-2.json",
+      "unit_count": 11
+    },
+    {
+      "id": "22707f9a-a593-44a7-89ee-3f4d78905f2e",
+      "title": "新教材-小学语文统编版三年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-2.json",
+      "unit_count": 8
+    },
+    {
+      "id": "6042ef62-a820-41aa-858d-1d6f1d6e3aa7",
+      "title": "新教材-小学语文统编版三年级下册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-2.json",
+      "unit_count": 8
+    },
+    {
+      "id": "4bf136c9-43cc-4005-8c8b-b21d21bad96f",
+      "title": "新教材-小学语文统编版二年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-2.json",
+      "unit_count": 8
+    },
+    {
+      "id": "ac9ba3ad-c2ab-4736-b347-dabae34c6b80",
+      "title": "新教材-小学语文统编版二年级下册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-3.json",
+      "unit_count": 8
+    },
+    {
+      "id": "fb0308d9-2e7f-480b-8723-f48852bb2f28",
+      "title": "新教材-小学语文统编版五年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-3.json",
+      "unit_count": 11
+    },
+    {
+      "id": "cec38514-a1b4-40ff-b7bb-e443b56a1dbd",
+      "title": "新教材-小学语文统编版六年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-3.json",
+      "unit_count": 8
+    },
+    {
+      "id": "1cea417b-ba9c-44b7-b7c1-db53a962f2d4",
+      "title": "新教材-小学语文统编版四年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-3.json",
+      "unit_count": 11
+    },
+    {
+      "id": "5ce96672-f52f-4c2f-9c3d-016ed1415278",
+      "title": "小学语文统编版一年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-4.json",
+      "unit_count": 10
+    },
+    {
+      "id": "2fbcdb5d-0682-4cca-b979-076d0119e3d3",
+      "title": "小学语文统编版一年级下册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-4.json",
+      "unit_count": 7
+    },
+    {
+      "id": "0eb31453-f373-4c85-8f3c-2bff5f49552e",
+      "title": "小学语文统编版三年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-4.json",
+      "unit_count": 8
+    },
+    {
+      "id": "ecc10b88-9661-451f-b9c1-b6dd5fd9a72d",
+      "title": "小学语文统编版三年级下册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-4.json",
+      "unit_count": 8
+    },
+    {
+      "id": "2aa68399-4700-4030-8973-457cf32384dc",
+      "title": "小学语文统编版二年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-5.json",
+      "unit_count": 3
+    },
+    {
+      "id": "f863fdd1-e34d-4aa6-8c6d-7dab5afa66b9",
+      "title": "小学语文统编版二年级下册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-5.json",
+      "unit_count": 3
+    },
+    {
+      "id": "edbd7846-7206-42ec-8be5-f690e9d873aa",
+      "title": "小学语文统编版五年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-5.json",
+      "unit_count": 9
+    },
+    {
+      "id": "4d2e2415-46d3-47f4-8393-30707820123c",
+      "title": "小学语文统编版六年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-5.json",
+      "unit_count": 8
+    },
+    {
+      "id": "c86543a9-4b6a-4d79-8353-c805af23273c",
+      "title": "小学语文统编版四年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/chinese/units-5.json",
+      "unit_count": 9
+    }
+  ]
+}

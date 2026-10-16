@@ -1,0 +1,169 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "c9daceed-c876-4e77-8ff2-97ca7ca114be",
+      "title": "新教材-初中俄语人教版七年级上册",
+      "stage": "初中",
+      "subject": "俄语",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/c9daceed-c876-4e77-8ff2-97ca7ca114be.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-08-25T18:06:36.904+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Aлфавит",
+          "topics": ["Aлфавит"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 1",
+          "topics": ["Урок 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 2",
+          "topics": ["Урок 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 3",
+          "topics": ["Урок 3"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 4",
+          "topics": ["Урок 4"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 5",
+          "topics": ["Урок 5"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 6",
+          "topics": ["Урок 6"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 7",
+          "topics": ["Урок 7"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "7868340c-dbf1-440a-8aa6-a7326f1d25af",
+      "title": "新教材-初中俄语人教版八年级上册",
+      "stage": "初中",
+      "subject": "俄语",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/7868340c-dbf1-440a-8aa6-a7326f1d25af.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-08-25T18:06:36.015+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Урок 1",
+          "topics": ["Урок 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 2",
+          "topics": ["Урок 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 3",
+          "topics": ["Урок 3"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 4",
+          "topics": ["Урок 4"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 5",
+          "topics": ["Урок 5"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 6",
+          "topics": ["Урок 6"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 7",
+          "topics": ["Урок 7"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "a2ff49b0-e3bb-4fba-b605-3b854783ac8e",
+      "title": "新教材-初中俄语人教版八年级下册",
+      "stage": "初中",
+      "subject": "俄语",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/a2ff49b0-e3bb-4fba-b605-3b854783ac8e.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-02-11T23:42:10.830+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Урок 1",
+          "topics": ["Урок 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 2",
+          "topics": ["Урок 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 3",
+          "topics": ["Урок 3"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 4",
+          "topics": ["Урок 4"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 5",
+          "topics": ["Урок 5"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 6",
+          "topics": ["Урок 6"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Урок 7",
+          "topics": ["Урок 7"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

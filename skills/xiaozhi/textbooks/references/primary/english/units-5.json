@@ -1,0 +1,1324 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "eb0a886b-b6e6-25f4-14b7-8d792eafa560",
+      "title": "小学英语人教版（精通）三年级起点（主编：郝建平）四年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（精通）（主编：郝建平）",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/eb0a886b-b6e6-25f4-14b7-8d792eafa560.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:14.696+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Welcome to my new home!",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Lesson 4"
+            },
+            {
+              "title": "Lesson 5"
+            },
+            {
+              "title": "Lesson 6"
+            }
+          ],
+          "topics": [
+            "Unit 1 Welcome to my new home!",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Lesson 4",
+            "Lesson 5",
+            "Lesson 6"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 There are forty students in our class.",
+          "children": [
+            {
+              "title": "Lesson 7"
+            },
+            {
+              "title": "Lesson 8"
+            },
+            {
+              "title": "Lesson 9"
+            },
+            {
+              "title": "Lesson 10"
+            },
+            {
+              "title": "Lesson 11"
+            },
+            {
+              "title": "Lesson 12"
+            }
+          ],
+          "topics": [
+            "Unit 2 There are forty students in our class.",
+            "Lesson 7",
+            "Lesson 8",
+            "Lesson 9",
+            "Lesson 10",
+            "Lesson 11",
+            "Lesson 12"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 What subject do you like best?",
+          "children": [
+            {
+              "title": "Lesson 13"
+            },
+            {
+              "title": "Lesson 14"
+            },
+            {
+              "title": "Lesson 15"
+            },
+            {
+              "title": "Lesson 16"
+            },
+            {
+              "title": "Lesson 17"
+            },
+            {
+              "title": "Lesson 18"
+            }
+          ],
+          "topics": [
+            "Unit 3 What subject do you like best?",
+            "Lesson 13",
+            "Lesson 14",
+            "Lesson 15",
+            "Lesson 16",
+            "Lesson 17",
+            "Lesson 18"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 1",
+          "children": [
+            {
+              "title": "Fun time 1 Recycle 1"
+            },
+            {
+              "title": "Fun time 1 Recycle 2"
+            },
+            {
+              "title": "Fun time 1 Project"
+            }
+          ],
+          "topics": [
+            "Fun Time 1",
+            "Fun time 1 Recycle 1",
+            "Fun time 1 Recycle 2",
+            "Fun time 1 Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 There are seven days in a week.",
+          "children": [
+            {
+              "title": "Lesson 19"
+            },
+            {
+              "title": "Lesson 20"
+            },
+            {
+              "title": "Lesson 21"
+            },
+            {
+              "title": "Lesson 22"
+            },
+            {
+              "title": "Lesson 23"
+            },
+            {
+              "title": "Lesson 24"
+            }
+          ],
+          "topics": [
+            "Unit 4 There are seven days in a week.",
+            "Lesson 19",
+            "Lesson 20",
+            "Lesson 21",
+            "Lesson 22",
+            "Lesson 23",
+            "Lesson 24"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 What will you do this weekend?",
+          "children": [
+            {
+              "title": "Lesson 25"
+            },
+            {
+              "title": "Lesson 26"
+            },
+            {
+              "title": "Lesson 27"
+            },
+            {
+              "title": "Lesson 28"
+            },
+            {
+              "title": "Lesson 29"
+            },
+            {
+              "title": "Lesson 30"
+            }
+          ],
+          "topics": [
+            "Unit 5 What will you do this weekend?",
+            "Lesson 25",
+            "Lesson 26",
+            "Lesson 27",
+            "Lesson 28",
+            "Lesson 29",
+            "Lesson 30"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Would you like to take a trip?",
+          "children": [
+            {
+              "title": "Lesson 31"
+            },
+            {
+              "title": "Lesson 32"
+            },
+            {
+              "title": "Lesson 33"
+            },
+            {
+              "title": "Lesson 34"
+            },
+            {
+              "title": "Lesson 35"
+            },
+            {
+              "title": "Lesson 36"
+            }
+          ],
+          "topics": [
+            "Unit 6 Would you like to take a trip?",
+            "Lesson 31",
+            "Lesson 32",
+            "Lesson 33",
+            "Lesson 34",
+            "Lesson 35",
+            "Lesson 36"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 2",
+          "children": [
+            {
+              "title": "Fun time 2 Recycle 1"
+            },
+            {
+              "title": "Fun time 2 Recycle 2"
+            },
+            {
+              "title": "Fun time 2 Project"
+            }
+          ],
+          "topics": [
+            "Fun Time 2",
+            "Fun time 2 Recycle 1",
+            "Fun time 2 Recycle 2",
+            "Fun time 2 Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "6663d9d6-7838-4395-8f5f-b0614613bfe4",
+      "title": "新教材-小学英语人教大同版三年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教大同版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/6663d9d6-7838-4395-8f5f-b0614613bfe4.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-08-19T11:40:45.462+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Starter",
+          "children": [
+            {
+              "title": "Listen and say"
+            },
+            {
+              "title": "Look,listen and read"
+            },
+            {
+              "title": "Listen and say Listen and sing"
+            },
+            {
+              "title": "Look and role-play"
+            }
+          ],
+          "topics": [
+            "Starter",
+            "Listen and say",
+            "Look,listen and read",
+            "Listen and say Listen and sing",
+            "Look and role-play"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 1 Making new friends",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 1 Making new friends",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 My family",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 2 My family",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 In my schoolbag",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 3 In my schoolbag",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 In the classroom",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 4 In the classroom",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Fun at the zoo",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 5 Fun at the zoo",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 My puppets",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 6 My puppets",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "28df26bb-a36c-4e03-8279-efe0fe74faaa",
+      "title": "新教材-小学英语人教大同版三年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教大同版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/28df26bb-a36c-4e03-8279-efe0fe74faaa.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-02-06T17:05:26.210+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Starter",
+          "children": [
+            {
+              "title": "Listen and say"
+            },
+            {
+              "title": "Look and read & Read and make & Colour and write"
+            },
+            {
+              "title": "Say and trace & Look and circle & Listen and trace"
+            },
+            {
+              "title": "Look and role-play"
+            }
+          ],
+          "topics": [
+            "Starter",
+            "Listen and say",
+            "Look and read & Read and make & Colour and write",
+            "Say and trace & Look and circle & Listen and trace",
+            "Look and role-play"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 1 All about fruit",
+          "children": [
+            {
+              "title": "Experience & Develop"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 1 All about fruit",
+            "Experience & Develop",
+            "Understand",
+            "Discover",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Dream toys",
+          "children": [
+            {
+              "title": "Experience & Explore"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 2 Dream toys",
+            "Experience & Explore",
+            "Understand",
+            "Discover & Develop",
+            "Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Things in the park",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 3 Things in the park",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Actions",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 4 Actions",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Our clothes",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 5 Our clothes",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Our pets",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 6 Our pets",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "6e2bcdf5-5fb6-414a-9f32-5f394faaaa52",
+      "title": "新教材-小学英语人教大同版四年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教大同版",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/6e2bcdf5-5fb6-414a-9f32-5f394faaaa52.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-08-05T16:08:16.563+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Starter",
+          "children": [
+            {
+              "title": "Listen and say"
+            },
+            {
+              "title": "Look, listen and read & Look and write & Listen and number"
+            },
+            {
+              "title": "Read and circle & Think and talk"
+            },
+            {
+              "title": "Look and role-play"
+            }
+          ],
+          "topics": [
+            "Starter",
+            "Listen and say",
+            "Look, listen and read & Look and write & Listen and number",
+            "Read and circle & Think and talk",
+            "Look and role-play"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 1 Places in a city",
+          "children": [
+            {
+              "title": "Experience & Develop"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 1 Places in a city",
+            "Experience & Develop",
+            "Understand",
+            "Discover",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Sports Day",
+          "children": [
+            {
+              "title": "Experience & Explore"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 2 Sports Day",
+            "Experience & Explore",
+            "Understand",
+            "Discover & Develop",
+            "Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 School surprise",
+          "children": [
+            {
+              "title": "Experience & Explore"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 3 School surprise",
+            "Experience & Explore",
+            "Understand",
+            "Discover & Develop",
+            "Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Food shopping",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 4 Food shopping",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Getting around",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 5 Getting around",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Jobs Day",
+          "children": [
+            {
+              "title": "Experience"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover & Develop"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 6 Jobs Day",
+            "Experience",
+            "Understand",
+            "Discover & Develop",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "bdd5b104-4b7e-40eb-8921-cbf8d60879f1",
+      "title": "新教材-小学英语人教大同版四年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教大同版",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/bdd5b104-4b7e-40eb-8921-cbf8d60879f1.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-02-11T17:29:46.430+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Starter",
+          "children": [
+            {
+              "title": "Listen and say"
+            },
+            {
+              "title": "Listen and read"
+            },
+            {
+              "title": "Play a game"
+            },
+            {
+              "title": "Look and role-play"
+            }
+          ],
+          "topics": [
+            "Starter",
+            "Listen and say",
+            "Listen and read",
+            "Play a game",
+            "Look and role-play"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 1 The weather outside",
+          "children": [
+            {
+              "title": "Experience & Develop"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 1 The weather outside",
+            "Experience & Develop",
+            "Understand",
+            "Discover",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Seasons of fun",
+          "children": [
+            {
+              "title": "Experience & Develop"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 2 Seasons of fun",
+            "Experience & Develop",
+            "Understand",
+            "Discover",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Time to get up",
+          "children": [
+            {
+              "title": "Experience & Develop"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 3 Time to get up",
+            "Experience & Develop",
+            "Understand",
+            "Discover",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 A busy week",
+          "children": [
+            {
+              "title": "Experience & Develop"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 4 A busy week",
+            "Experience & Develop",
+            "Understand",
+            "Discover",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "topics": ["Revision 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Festival fun",
+          "children": [
+            {
+              "title": "Experience & Develop"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 5 Festival fun",
+            "Experience & Develop",
+            "Understand",
+            "Discover",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Story time",
+          "children": [
+            {
+              "title": "Experience & Develop"
+            },
+            {
+              "title": "Understand"
+            },
+            {
+              "title": "Discover"
+            },
+            {
+              "title": "Explore & Apply"
+            },
+            {
+              "title": "Review"
+            }
+          ],
+          "topics": [
+            "Unit 6 Story time",
+            "Experience & Develop",
+            "Understand",
+            "Discover",
+            "Explore & Apply",
+            "Review"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "STEAM ahead",
+          "topics": ["STEAM ahead"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Words and expressions in each unit",
+          "topics": ["Words and expressions in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Vocabulary",
+          "topics": ["Vocabulary"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8dabed50-6eed-40dd-8bea-c70f0718114d",
+      "title": "新教材-小学英语人教版（PEP）（主编：吴欣）三年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8dabed50-6eed-40dd-8bea-c70f0718114d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-08-12T15:56:18.017+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Making friends",
+          "children": [
+            {
+              "title": "part A How do we greet friends?"
+            },
+            {
+              "title": "part B How can we be a good friend?"
+            },
+            {
+              "title": "part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 1 Making friends",
+            "part A How do we greet friends?",
+            "part B How can we be a good friend?",
+            "part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Different families",
+          "children": [
+            {
+              "title": "part A Who lives with you?"
+            },
+            {
+              "title": "part B How are families different?"
+            },
+            {
+              "title": "part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 2 Different families",
+            "part A Who lives with you?",
+            "part B How are families different?",
+            "part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Amazing animals",
+          "children": [
+            {
+              "title": "part A What pets do you know?"
+            },
+            {
+              "title": "part B What wild animals do you know?"
+            },
+            {
+              "title": "part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 3 Amazing animals",
+            "part A What pets do you know?",
+            "part B What wild animals do you know?",
+            "part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Plants around us",
+          "children": [
+            {
+              "title": "part A What do we get from plants?"
+            },
+            {
+              "title": "part B How can we help plants?"
+            },
+            {
+              "title": "part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 4 Plants around us",
+            "part A What do we get from plants?",
+            "part B How can we help plants?",
+            "part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 The colourful world",
+          "children": [
+            {
+              "title": "part A What colours do you see?"
+            },
+            {
+              "title": "part B How do colours help us?"
+            },
+            {
+              "title": "part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 5 The colourful world",
+            "part A What colours do you see?",
+            "part B How do colours help us?",
+            "part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Useful numbers",
+          "children": [
+            {
+              "title": "part A When do we use numbers?"
+            },
+            {
+              "title": "part B How useful are numbers?"
+            },
+            {
+              "title": "part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 6 Useful numbers",
+            "part A When do we use numbers?",
+            "part B How useful are numbers?",
+            "part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision Being a good guest",
+          "topics": ["Revision Being a good guest"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

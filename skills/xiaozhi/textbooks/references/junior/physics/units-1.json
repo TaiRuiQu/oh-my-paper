@@ -1,0 +1,1223 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "5a228904-f03b-404b-bff8-618361025657",
+      "title": "新教材-初中物理人教版九年级全一册",
+      "stage": "初中",
+      "subject": "物理",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/5a228904-f03b-404b-bff8-618361025657.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-07-29T16:28:55.266+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第十三章 内能",
+          "children": [
+            {
+              "title": "第1节 热量 比热容"
+            },
+            {
+              "title": "第2节 分子动理论的初步知识"
+            },
+            {
+              "title": "第3节 内能"
+            }
+          ],
+          "topics": ["内能", "热量 比热容", "分子动理论的初步知识"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十四章 内能的利用",
+          "children": [
+            {
+              "title": "第1节 能量的转化与守恒"
+            },
+            {
+              "title": "第2节 热机"
+            },
+            {
+              "title": "第3节 热机的效率"
+            },
+            {
+              "title": "第4节 跨学科实践：制作简易热机模型"
+            }
+          ],
+          "topics": [
+            "内能的利用",
+            "能量的转化与守恒",
+            "热机",
+            "热机的效率",
+            "跨学科实践：制作简易热机模型"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十五章 电流和电路",
+          "children": [
+            {
+              "title": "第1节 两种电荷"
+            },
+            {
+              "title": "第2节 电流和电路"
+            },
+            {
+              "title": "第3节 串联电路和并联电路"
+            },
+            {
+              "title": "第4节 电流的测量"
+            },
+            {
+              "title": "第5节 串、并联电路中电流的规律"
+            }
+          ],
+          "topics": [
+            "电流和电路",
+            "两种电荷",
+            "串联电路和并联电路",
+            "电流的测量",
+            "串、并联电路中电流的规律"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十六章 电压 电阻",
+          "children": [
+            {
+              "title": "第1节 电压"
+            },
+            {
+              "title": "第2节 串、并联电路中电压的规律"
+            },
+            {
+              "title": "第3节 电阻"
+            },
+            {
+              "title": "第4节 变阻器"
+            },
+            {
+              "title": "第5节 跨学科实践：制作简易调光台灯"
+            }
+          ],
+          "topics": [
+            "电压 电阻",
+            "电压",
+            "串、并联电路中电压的规律",
+            "电阻",
+            "变阻器",
+            "跨学科实践：制作简易调光台灯"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十七章 欧姆定律",
+          "children": [
+            {
+              "title": "第1节 电流与电压、电阻的关系"
+            },
+            {
+              "title": "第2节 欧姆定律"
+            },
+            {
+              "title": "第3节 电阻的测量"
+            },
+            {
+              "title": "第4节 欧姆定律在串、并联电路中的应用"
+            }
+          ],
+          "topics": [
+            "欧姆定律",
+            "电流与电压、电阻的关系",
+            "电阻的测量",
+            "欧姆定律在串、并联电路中的应用"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十八章 电功率",
+          "children": [
+            {
+              "title": "第1节 电能 电功"
+            },
+            {
+              "title": "第2节 电功率"
+            },
+            {
+              "title": "第3节 跨学科实践：为家庭节约用电提建议"
+            },
+            {
+              "title": "第4节 焦耳定律"
+            }
+          ],
+          "topics": ["电功率", "电能 电功", "跨学科实践：为家庭节约用电提建议", "焦耳定律"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十九章 生活用电",
+          "children": [
+            {
+              "title": "第1节 安全用电"
+            },
+            {
+              "title": "第2节 家庭电路的基本组成"
+            },
+            {
+              "title": "第3节 跨学科实践：为家庭电路做设计"
+            }
+          ],
+          "topics": ["生活用电", "安全用电", "家庭电路的基本组成", "跨学科实践：为家庭电路做设计"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十章 电与磁",
+          "children": [
+            {
+              "title": "第1节 磁现象 磁场"
+            },
+            {
+              "title": "第2节 电生磁"
+            },
+            {
+              "title": "第3节 电磁铁 电磁继电器"
+            },
+            {
+              "title": "第4节 电动机"
+            },
+            {
+              "title": "第5节 跨学科实践：制作简易直流电动机"
+            },
+            {
+              "title": "第6节 磁生电"
+            }
+          ],
+          "topics": [
+            "电与磁",
+            "磁现象 磁场",
+            "电生磁",
+            "电磁铁 电磁继电器",
+            "电动机",
+            "跨学科实践：制作简易直流电动机",
+            "磁生电"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十一章 电磁波及其应用",
+          "children": [
+            {
+              "title": "第1节 电磁波的海洋"
+            },
+            {
+              "title": "第2节 广播、电视和移动通信"
+            },
+            {
+              "title": "第3节 卫星通信和光纤通信"
+            }
+          ],
+          "topics": [
+            "电磁波及其应用",
+            "电磁波的海洋",
+            "广播、电视和移动通信",
+            "卫星通信和光纤通信"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十二章 能源与可持续发展",
+          "children": [
+            {
+              "title": "第1节 能源利用的现状和面临的挑战"
+            },
+            {
+              "title": "第2节 新能源的发展"
+            },
+            {
+              "title": "第3节 跨学科实践：为节约能源设计方案"
+            }
+          ],
+          "topics": [
+            "能源与可持续发展",
+            "能源利用的现状和面临的挑战",
+            "新能源的发展",
+            "跨学科实践：为节约能源设计方案"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "5370d999-5dd2-4c64-a9ed-089ec2694300",
+      "title": "新教材-初中物理人教版八年级上册",
+      "stage": "初中",
+      "subject": "物理",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/5370d999-5dd2-4c64-a9ed-089ec2694300.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-08-13T14:43:52.705+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "绪言",
+          "children": [
+            {
+              "title": "开启科学探索之旅"
+            }
+          ],
+          "topics": ["绪言", "开启科学探索之旅"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一章 机械运动",
+          "children": [
+            {
+              "title": "第一节 长度和时间的测量"
+            },
+            {
+              "title": "第二节 运动的描述"
+            },
+            {
+              "title": "第三节 运动的快慢"
+            },
+            {
+              "title": "第四节 速度的测量"
+            }
+          ],
+          "topics": ["机械运动", "长度和时间的测量", "运动的描述", "运动的快慢", "速度的测量"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 声现象",
+          "children": [
+            {
+              "title": "第一节 声音的产生与传播"
+            },
+            {
+              "title": "第二节 声音的特性"
+            },
+            {
+              "title": "第三节 声的利用"
+            },
+            {
+              "title": "第四节 噪声的危害和控制"
+            },
+            {
+              "title": "第五节 跨学科实践：制作隔音房间模型"
+            }
+          ],
+          "topics": [
+            "声现象",
+            "声音的产生与传播",
+            "声音的特性",
+            "声的利用",
+            "噪声的危害和控制",
+            "跨学科实践：制作隔音房间模型"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 物态变化",
+          "children": [
+            {
+              "title": "第一节 温度"
+            },
+            {
+              "title": "第二节 熔化和凝固"
+            },
+            {
+              "title": "第三节 汽化和液化"
+            },
+            {
+              "title": "第四节 升华和凝华"
+            },
+            {
+              "title": "第五节 跨学科实践：探索厨房中的物态变化问题"
+            }
+          ],
+          "topics": [
+            "物态变化",
+            "温度",
+            "熔化和凝固",
+            "汽化和液化",
+            "升华和凝华",
+            "跨学科实践：探索厨房中的物态变化问题"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 光现象",
+          "children": [
+            {
+              "title": "第一节 光的直线传播"
+            },
+            {
+              "title": "第二节 光的反射"
+            },
+            {
+              "title": "第三节 平面镜成像"
+            },
+            {
+              "title": "第四节 光的折射"
+            },
+            {
+              "title": "第五节 光的色散"
+            }
+          ],
+          "topics": ["光现象", "光的直线传播", "光的反射", "平面镜成像", "光的折射", "光的色散"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五章 透镜及其应用",
+          "children": [
+            {
+              "title": "第一节 透镜"
+            },
+            {
+              "title": "第二节 生活中的透镜"
+            },
+            {
+              "title": "第三节 凸透镜成像的规律"
+            },
+            {
+              "title": "第四节 眼睛和眼镜"
+            },
+            {
+              "title": "第五节 跨学科实践：制作望远镜"
+            }
+          ],
+          "topics": [
+            "透镜及其应用",
+            "透镜",
+            "生活中的透镜",
+            "凸透镜成像的规律",
+            "眼睛和眼镜",
+            "跨学科实践：制作望远镜"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六章 质量与密度",
+          "children": [
+            {
+              "title": "第一节 质量"
+            },
+            {
+              "title": "第二节 密度"
+            },
+            {
+              "title": "第三节 测量液体和固体的密度"
+            },
+            {
+              "title": "第四节 密度的应用"
+            }
+          ],
+          "topics": ["质量与密度", "质量", "密度", "测量液体和固体的密度", "密度的应用"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "d31ed57a-d283-498c-84d8-c587fe349b22",
+      "title": "新教材-初中物理人教版八年级下册",
+      "stage": "初中",
+      "subject": "物理",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/d31ed57a-d283-498c-84d8-c587fe349b22.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-01-26T10:26:44.588+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第七章 力",
+          "children": [
+            {
+              "title": "第1节 力"
+            },
+            {
+              "title": "第2节 弹力"
+            },
+            {
+              "title": "第3节 重力"
+            }
+          ],
+          "topics": ["力", "弹力", "重力"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八章 运动和力",
+          "children": [
+            {
+              "title": "第1节 牛顿第一定律"
+            },
+            {
+              "title": "第2节 二力平衡"
+            },
+            {
+              "title": "第3节 摩擦力"
+            },
+            {
+              "title": "第4节 同一直线上二力的合成"
+            }
+          ],
+          "topics": ["运动和力", "牛顿第一定律", "二力平衡", "摩擦力", "同一直线上二力的合成"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第九章 压强",
+          "children": [
+            {
+              "title": "第1节 压强"
+            },
+            {
+              "title": "第2节 液体的压强"
+            },
+            {
+              "title": "第3节 大气压强"
+            },
+            {
+              "title": "第4节 跨学科实践：制作简易活塞式抽水机"
+            },
+            {
+              "title": "第5节 流体压强与流速的关系"
+            }
+          ],
+          "topics": [
+            "压强",
+            "液体的压强",
+            "大气压强",
+            "跨学科实践：制作简易活塞式抽水机",
+            "流体压强与流速的关系"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十章 浮力",
+          "children": [
+            {
+              "title": "第1节 浮力"
+            },
+            {
+              "title": "第2节 阿基米德原理"
+            },
+            {
+              "title": "第3节 物体的浮沉条件及应用"
+            },
+            {
+              "title": "第4节 跨学科实践：制作微型密度计"
+            }
+          ],
+          "topics": ["浮力", "阿基米德原理", "物体的浮沉条件及应用", "跨学科实践：制作微型密度计"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十一章 功和机械能",
+          "children": [
+            {
+              "title": "第1节 功"
+            },
+            {
+              "title": "第2节 功率"
+            },
+            {
+              "title": "第3节 动能和势能"
+            },
+            {
+              "title": "第4节 机械能及其转化"
+            }
+          ],
+          "topics": ["功和机械能", "功", "功率", "动能和势能", "机械能及其转化"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十二章 简单机械",
+          "children": [
+            {
+              "title": "第1节 杠杆"
+            },
+            {
+              "title": "第2节 跨学科实践：制作简易杆秤"
+            },
+            {
+              "title": "第3节 滑轮"
+            },
+            {
+              "title": "第4节 机械效率"
+            }
+          ],
+          "topics": ["简单机械", "杠杆", "跨学科实践：制作简易杆秤", "滑轮", "机械效率"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "e5053b45-7755-4017-8c2b-e7d35d307958",
+      "title": "初中物理人教版九年级全一册",
+      "stage": "初中",
+      "subject": "物理",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "九年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/e5053b45-7755-4017-8c2b-e7d35d307958.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:10.552+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第十三章 内能",
+          "children": [
+            {
+              "title": "第1节 分子热运动"
+            },
+            {
+              "title": "第2节 内能"
+            },
+            {
+              "title": "第3节 比热容"
+            }
+          ],
+          "topics": ["内能", "分子热运动", "比热容"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十四章 内能的利用",
+          "children": [
+            {
+              "title": "第1节 热机"
+            },
+            {
+              "title": "第2节 热机的效率"
+            },
+            {
+              "title": "第3节 能量的转化和守恒"
+            }
+          ],
+          "topics": ["内能的利用", "热机", "热机的效率", "能量的转化和守恒"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十五章 电流和电路",
+          "children": [
+            {
+              "title": "第1节 两种电荷"
+            },
+            {
+              "title": "第2节 电流和电路"
+            },
+            {
+              "title": "第3节 串联和并联"
+            },
+            {
+              "title": "第4节 电流的测量"
+            },
+            {
+              "title": "第5节 串、并联电路中电流的规律"
+            }
+          ],
+          "topics": [
+            "电流和电路",
+            "两种电荷",
+            "串联和并联",
+            "电流的测量",
+            "串、并联电路中电流的规律"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十六章 电压 电阻",
+          "children": [
+            {
+              "title": "第1节 电压"
+            },
+            {
+              "title": "第2节 串、并联电路中电压的规律"
+            },
+            {
+              "title": "第3节 电阻"
+            },
+            {
+              "title": "第4节 变阻器"
+            }
+          ],
+          "topics": ["电压 电阻", "电压", "串、并联电路中电压的规律", "电阻", "变阻器"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十七章 欧姆定律",
+          "children": [
+            {
+              "title": "第1节 电流与电压和电阻的关系"
+            },
+            {
+              "title": "第2节 欧姆定律"
+            },
+            {
+              "title": "第3节 电阻的测量"
+            },
+            {
+              "title": "*第4节 欧姆定律在串、并联电路中的应用"
+            }
+          ],
+          "topics": [
+            "欧姆定律",
+            "电流与电压和电阻的关系",
+            "电阻的测量",
+            "*第4节 欧姆定律在串、并联电路中的应用"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十八章 电功率",
+          "children": [
+            {
+              "title": "第1节 电能 电功"
+            },
+            {
+              "title": "第2节 电功率"
+            },
+            {
+              "title": "第3节 测量小灯泡的电功率"
+            },
+            {
+              "title": "第4节 焦耳定律"
+            }
+          ],
+          "topics": ["电功率", "电能 电功", "测量小灯泡的电功率", "焦耳定律"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十九章 生活用电",
+          "children": [
+            {
+              "title": "第1节 家庭电路"
+            },
+            {
+              "title": "第2节 家庭电路中电流过大的原因"
+            },
+            {
+              "title": "第3节 安全用电"
+            }
+          ],
+          "topics": ["生活用电", "家庭电路", "家庭电路中电流过大的原因", "安全用电"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十章 电与磁",
+          "children": [
+            {
+              "title": "第1节 磁现象 磁场"
+            },
+            {
+              "title": "第2节 电生磁"
+            },
+            {
+              "title": "第3节 电磁铁 电磁继电器"
+            },
+            {
+              "title": "第4节 电动机"
+            },
+            {
+              "title": "第5节 磁生电"
+            }
+          ],
+          "topics": ["电与磁", "磁现象 磁场", "电生磁", "电磁铁 电磁继电器", "电动机", "磁生电"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十一章 信息的传递",
+          "children": [
+            {
+              "title": "第1节 现代顺风耳──电话"
+            },
+            {
+              "title": "第2节 电磁波的海洋"
+            },
+            {
+              "title": "第3节 广播、电视和移动通信"
+            },
+            {
+              "title": "第4节 越来越宽的信息之路"
+            }
+          ],
+          "topics": [
+            "信息的传递",
+            "现代顺风耳──电话",
+            "电磁波的海洋",
+            "广播、电视和移动通信",
+            "越来越宽的信息之路"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二十二章 能源与可持续发展",
+          "children": [
+            {
+              "title": "第1节 能源"
+            },
+            {
+              "title": "第2节 核能"
+            },
+            {
+              "title": "第3节 太阳能"
+            },
+            {
+              "title": "第4节 能源与可持续发展"
+            }
+          ],
+          "topics": ["能源与可持续发展", "能源", "核能", "太阳能"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "中考复习",
+          "children": [
+            {
+              "title": "第一章 机械运动"
+            },
+            {
+              "title": "第二章 声现象"
+            },
+            {
+              "title": "第三章 热现象"
+            },
+            {
+              "title": "第四章 光现象"
+            },
+            {
+              "title": "第五章 透镜及其应用"
+            },
+            {
+              "title": "第六章 质量和密度"
+            },
+            {
+              "title": "第七章 力"
+            },
+            {
+              "title": "第八章 运动和力"
+            },
+            {
+              "title": "第九章 压强"
+            },
+            {
+              "title": "第十章 浮力"
+            },
+            {
+              "title": "第十一章 功和机械能",
+              "children": [
+                {
+                  "title": "第十一章 功和功率复习"
+                },
+                {
+                  "title": "第十一章 机械能及其转化复习"
+                }
+              ]
+            },
+            {
+              "title": "第十二章 简单机械",
+              "children": [
+                {
+                  "title": "第十二章 杠杆复习"
+                },
+                {
+                  "title": "第十二章 滑轮复习"
+                },
+                {
+                  "title": "第十二章 机械效率复习"
+                }
+              ]
+            },
+            {
+              "title": "第十三章 内能"
+            },
+            {
+              "title": "第十四章 内能的利用"
+            },
+            {
+              "title": "第十五章 电流和电路"
+            },
+            {
+              "title": "第十六章 电压 电阻"
+            },
+            {
+              "title": "第十七章 欧姆定律"
+            },
+            {
+              "title": "第十八章 电功率"
+            },
+            {
+              "title": "第十九章 生活用电"
+            },
+            {
+              "title": "第二十章 电与磁"
+            },
+            {
+              "title": "科学探究",
+              "children": [
+                {
+                  "title": "怎样提出可探究的科学问题"
+                },
+                {
+                  "title": "怎样设计实验"
+                },
+                {
+                  "title": "从电路开关走向人工智能"
+                }
+              ]
+            },
+            {
+              "title": "复习方法",
+              "children": [
+                {
+                  "title": "基础知识复习的思路和方法"
+                },
+                {
+                  "title": "中考物理典型实验复习的思路和方法"
+                },
+                {
+                  "title": "浮力 、阿基米德原理和物体的浮沉条件及其应用"
+                },
+                {
+                  "title": "中考物理复习（一）"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "中考复习",
+            "机械运动",
+            "声现象",
+            "热现象",
+            "光现象",
+            "透镜及其应用",
+            "质量和密度",
+            "力",
+            "运动和力",
+            "压强",
+            "浮力",
+            "功和机械能",
+            "功和功率复习",
+            "机械能及其转化复习",
+            "简单机械",
+            "杠杆复习",
+            "滑轮复习",
+            "机械效率复习",
+            "内能",
+            "内能的利用",
+            "电流和电路",
+            "电压 电阻",
+            "欧姆定律",
+            "电功率",
+            "生活用电",
+            "电与磁",
+            "科学探究",
+            "怎样提出可探究的科学问题",
+            "怎样设计实验",
+            "从电路开关走向人工智能",
+            "复习方法",
+            "基础知识复习的思路和方法",
+            "中考物理典型实验复习的思路和方法",
+            "浮力 、阿基米德原理和物体的浮沉条件及其应用",
+            "中考物理复习（一）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "其他",
+          "topics": ["其他"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "2e4ddce0-ef72-479e-bc9a-415ae64966b8",
+      "title": "初中物理人教版八年级上册",
+      "stage": "初中",
+      "subject": "物理",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2e4ddce0-ef72-479e-bc9a-415ae64966b8.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:21.152+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "科学之旅",
+          "topics": ["科学之旅"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一章 机械运动",
+          "children": [
+            {
+              "title": "第1节 长度和时间的测量"
+            },
+            {
+              "title": "第2节 运动的描述"
+            },
+            {
+              "title": "第3节 运动的快慢"
+            },
+            {
+              "title": "第4节 测量平均速度"
+            }
+          ],
+          "topics": ["机械运动", "长度和时间的测量", "运动的描述", "运动的快慢", "测量平均速度"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 声现象",
+          "children": [
+            {
+              "title": "第1节 声音的产生与传播"
+            },
+            {
+              "title": "第2节 声音的特性"
+            },
+            {
+              "title": "第3节 声的利用"
+            },
+            {
+              "title": "第4节 噪声的危害和控制"
+            }
+          ],
+          "topics": ["声现象", "声音的产生与传播", "声音的特性", "声的利用", "噪声的危害和控制"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 物态变化",
+          "children": [
+            {
+              "title": "第1节 温度"
+            },
+            {
+              "title": "第2节 熔化和凝固"
+            },
+            {
+              "title": "第3节 汽化和液化"
+            },
+            {
+              "title": "第4节 升华和凝华"
+            }
+          ],
+          "topics": ["物态变化", "温度", "熔化和凝固", "汽化和液化", "升华和凝华"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 光现象",
+          "children": [
+            {
+              "title": "第1节 光的直线传播"
+            },
+            {
+              "title": "第2节 光的反射"
+            },
+            {
+              "title": "第3节 平面镜成像"
+            },
+            {
+              "title": "第4节 光的折射"
+            },
+            {
+              "title": "第5节 光的色散"
+            }
+          ],
+          "topics": ["光现象", "光的直线传播", "光的反射", "平面镜成像", "光的折射", "光的色散"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五章 透镜及其应用",
+          "children": [
+            {
+              "title": "第1节 透镜"
+            },
+            {
+              "title": "第2节 生活中的透镜"
+            },
+            {
+              "title": "第3节 凸透镜成像的规律"
+            },
+            {
+              "title": "第4节 眼睛和眼镜"
+            },
+            {
+              "title": "第5节 显微镜和望远镜"
+            }
+          ],
+          "topics": [
+            "透镜及其应用",
+            "透镜",
+            "生活中的透镜",
+            "凸透镜成像的规律",
+            "眼睛和眼镜",
+            "显微镜和望远镜"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六章 质量与密度",
+          "children": [
+            {
+              "title": "第1节 质量"
+            },
+            {
+              "title": "第2节 密度"
+            },
+            {
+              "title": "第3节 测量物质的密度"
+            },
+            {
+              "title": "第4节 密度与社会生活"
+            }
+          ],
+          "topics": ["质量与密度", "质量", "密度", "测量物质的密度", "密度与社会生活"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "其他",
+          "topics": ["其他"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "56e39c85-7cbc-4111-9b8c-eca52c1c548b",
+      "title": "初中物理人教版八年级下册",
+      "stage": "初中",
+      "subject": "物理",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/56e39c85-7cbc-4111-9b8c-eca52c1c548b.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:57.937+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第七章 力",
+          "children": [
+            {
+              "title": "第1节 力"
+            },
+            {
+              "title": "第2节 弹力"
+            },
+            {
+              "title": "第3节 重力"
+            }
+          ],
+          "topics": ["力", "弹力", "重力"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八章 运动和力",
+          "children": [
+            {
+              "title": "第1节 牛顿第一定律"
+            },
+            {
+              "title": "第2节 二力平衡"
+            },
+            {
+              "title": "第3节 摩擦力"
+            }
+          ],
+          "topics": ["运动和力", "牛顿第一定律", "二力平衡", "摩擦力"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第九章 压强",
+          "children": [
+            {
+              "title": "第1节 压强"
+            },
+            {
+              "title": "第2节 液体的压强"
+            },
+            {
+              "title": "第3节 大气压强"
+            },
+            {
+              "title": "第4节 流体压强与流速的关系"
+            }
+          ],
+          "topics": ["压强", "液体的压强", "大气压强", "流体压强与流速的关系"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十章 浮力",
+          "children": [
+            {
+              "title": "第1节 浮力"
+            },
+            {
+              "title": "第2节 阿基米德原理"
+            },
+            {
+              "title": "第3节 物体的浮沉条件及应用"
+            }
+          ],
+          "topics": ["浮力", "阿基米德原理", "物体的浮沉条件及应用"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十一章 功和机械能",
+          "children": [
+            {
+              "title": "第1节 功"
+            },
+            {
+              "title": "第2节 功率"
+            },
+            {
+              "title": "第3节 动能和势能"
+            },
+            {
+              "title": "第4节 机械能及其转化"
+            }
+          ],
+          "topics": ["功和机械能", "功", "功率", "动能和势能", "机械能及其转化"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十二章 简单机械",
+          "children": [
+            {
+              "title": "第1节 杠杆"
+            },
+            {
+              "title": "第2节 滑轮"
+            },
+            {
+              "title": "第3节 机械效率"
+            }
+          ],
+          "topics": ["简单机械", "杠杆", "滑轮", "机械效率"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

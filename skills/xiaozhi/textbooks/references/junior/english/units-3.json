@@ -1,0 +1,809 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "d8f71bd6-3394-495d-b8bb-0f1a76353a25",
+      "title": "初中英语人教版八年级上册",
+      "stage": "初中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/d8f71bd6-3394-495d-b8bb-0f1a76353a25.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:01.773+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Where did you go on vacation?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a —2e"
+            },
+            {
+              "title": "Section B 3a —4 Self check"
+            },
+            {
+              "title": "Unit1 Where did you go on vacation?"
+            }
+          ],
+          "topics": [
+            "Unit 1 Where did you go on vacation?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a —2e",
+            "Section B 3a —4 Self check",
+            "Unit1 Where did you go on vacation?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 How often do you exercise?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a —2e"
+            },
+            {
+              "title": "Section B 3a —4 Self check"
+            },
+            {
+              "title": "Unit 2 How often do you exercise?"
+            }
+          ],
+          "topics": [
+            "Unit 2 How often do you exercise?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a —2e",
+            "Section B 3a —4 Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 I'm more outgoing than my sister.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a —2e"
+            },
+            {
+              "title": "Section B 3a —4 Self check"
+            },
+            {
+              "title": "Unit 3 I’m more outgoing than my sister."
+            }
+          ],
+          "topics": [
+            "Unit 3 I'm more outgoing than my sister.",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a —2e",
+            "Section B 3a —4 Self check",
+            "Unit 3 I’m more outgoing than my sister."
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 What's the best movie theater?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a —2e"
+            },
+            {
+              "title": "Section B 3a —4 Self check"
+            },
+            {
+              "title": "Unit 4 What’s the best movie theater?"
+            }
+          ],
+          "topics": [
+            "Unit 4 What's the best movie theater?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a —2e",
+            "Section B 3a —4 Self check",
+            "Unit 4 What’s the best movie theater?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Do you want to watch a game show?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 2d—3c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a —2e"
+            },
+            {
+              "title": "Section B 3a —4 Self check"
+            },
+            {
+              "title": "Unit 5 Do you want to watch a game show?"
+            }
+          ],
+          "topics": [
+            "Unit 5 Do you want to watch a game show?",
+            "Section A 1a—2d",
+            "Section A 2d—3c",
+            "Section B 1a—1d",
+            "Section B 2a —2e",
+            "Section B 3a —4 Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "期中复习",
+          "children": [
+            {
+              "title": "Period 1 A Review of adverbs of frequency, indefinite pronouns, the comparative degree and the su..."
+            },
+            {
+              "title": "Period 2 Past experiences and daily practice"
+            },
+            {
+              "title": "Period 3 My experience/Practice of…"
+            },
+            {
+              "title": "Period 4 Preferences"
+            },
+            {
+              "title": "Period 5 My favorite…"
+            }
+          ],
+          "topics": [
+            "期中复习",
+            "Period 1 A Review of adverbs of frequency, indefinite pronouns, the comparative degree and the su...",
+            "Period 2 Past experiences and daily practice",
+            "Period 3 My experience/Practice of…",
+            "Period 4 Preferences",
+            "Period 5 My favorite…"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 I'm going to study computer science.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a —2e"
+            },
+            {
+              "title": "Section B 3a —4 Self check"
+            },
+            {
+              "title": "Unit 6 I’m going to study computer science."
+            }
+          ],
+          "topics": [
+            "Unit 6 I'm going to study computer science.",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a —2e",
+            "Section B 3a —4 Self check",
+            "Unit 6 I’m going to study computer science."
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 7 Will people have robots?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a —2e"
+            },
+            {
+              "title": "Section B 3a —4 Self check"
+            },
+            {
+              "title": "Unit 7 Will people have robots?"
+            }
+          ],
+          "topics": [
+            "Unit 7 Will people have robots?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a —2e",
+            "Section B 3a —4 Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 8 How do you make a banana milk shake?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a —2e"
+            },
+            {
+              "title": "Section B 3a —4 Self check"
+            },
+            {
+              "title": "Unit 8 How do you make a banana milk shake?"
+            }
+          ],
+          "topics": [
+            "Unit 8 How do you make a banana milk shake?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a —2e",
+            "Section B 3a —4 Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 9 Can you come to my party?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1f"
+            },
+            {
+              "title": "Section B 2a —2e"
+            },
+            {
+              "title": "Section B 3a —4 Self check"
+            },
+            {
+              "title": "Unit 9 Can you come to my party?"
+            }
+          ],
+          "topics": [
+            "Unit 9 Can you come to my party?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1f",
+            "Section B 2a —2e",
+            "Section B 3a —4 Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 10 If you go to the party,you 'll have a great time!",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a —2e"
+            },
+            {
+              "title": "Section B 3a —4 Self check"
+            },
+            {
+              "title": "Unit 10 If you go to the party, you’ll have a great time!"
+            }
+          ],
+          "topics": [
+            "Unit 10 If you go to the party,you 'll have a great time!",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1d",
+            "Section B 2a —2e",
+            "Section B 3a —4 Self check",
+            "Unit 10 If you go to the party, you’ll have a great time!"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "期末复习",
+          "children": [
+            {
+              "title": "Period 1 Imperative Sentences and the Simple Future Tense"
+            },
+            {
+              "title": "Period 2 Future life and jobs"
+            },
+            {
+              "title": "Period 3 My life expectations"
+            },
+            {
+              "title": "Period 4 Planning an event: Organizing a party"
+            },
+            {
+              "title": "Period 5 Planning an event: write an invitation letter"
+            }
+          ],
+          "topics": [
+            "期末复习",
+            "Period 1 Imperative Sentences and the Simple Future Tense",
+            "Period 2 Future life and jobs",
+            "Period 3 My life expectations",
+            "Period 4 Planning an event: Organizing a party",
+            "Period 5 Planning an event: write an invitation letter"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ba84232d-99ff-4b6e-b3a1-355d93cb35dc",
+      "title": "初中英语人教版八年级下册",
+      "stage": "初中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ba84232d-99ff-4b6e-b3a1-355d93cb35dc.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:38.878+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 What's the matter?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 1 What's the matter?",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 I 'll help to clean up the city parks?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 2 I 'll help to clean up the city parks?",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Could you please clean your room?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 3 Could you please clean your room?",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Why don't you talk to your parents?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 4 Why don't you talk to your parents?",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 what were you doing when the rainstorm came?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 5 what were you doing when the rainstorm came?",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 An old man tried to move the mountains.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 6 An old man tried to move the mountains.",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 7 What's the highest mountain in the world?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 7 What's the highest mountain in the world?",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 8 Have you read Treasure Island yet?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 8 Have you read Treasure Island yet?",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 9 Have you ever been to a museum?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 9 Have you ever been to a museum?",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 10 I 've had this bike for three years.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2d"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 10 I 've had this bike for three years.",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—2d",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "专题课",
+          "children": [
+            {
+              "title": "写作专题",
+              "children": [
+                {
+                  "title": "写作专题一"
+                },
+                {
+                  "title": "写作专题二"
+                },
+                {
+                  "title": "写作专题三"
+                },
+                {
+                  "title": "写作专题四"
+                },
+                {
+                  "title": "写作专题五"
+                },
+                {
+                  "title": "写作专题六"
+                }
+              ]
+            },
+            {
+              "title": "完形填空专题",
+              "children": [
+                {
+                  "title": "完形填空专题一"
+                },
+                {
+                  "title": "完形填空专题二"
+                }
+              ]
+            },
+            {
+              "title": "语法专题",
+              "children": [
+                {
+                  "title": "语法专题一"
+                },
+                {
+                  "title": "语法专题二"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "专题课",
+            "写作专题",
+            "写作专题一",
+            "写作专题二",
+            "写作专题三",
+            "写作专题四",
+            "写作专题五",
+            "写作专题六",
+            "完形填空专题",
+            "完形填空专题一",
+            "完形填空专题二",
+            "语法专题",
+            "语法专题一",
+            "语法专题二"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

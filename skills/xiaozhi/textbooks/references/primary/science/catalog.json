@@ -1,0 +1,237 @@
+{
+  "stage": "小学",
+  "subject": "科学",
+  "books": [
+    {
+      "id": "8ae7e58b-7545-a17f-0175-693b2c9c0214",
+      "title": "小学科学人教鄂教版五年级下册",
+      "version": "人教鄂教版",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "8ae7e58b-7545-a17f-0175-693c00b5021a",
+      "title": "小学科学人教鄂教版六年级下册",
+      "version": "人教鄂教版",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-7545-a17f-0175-693a92290210",
+      "title": "小学科学人教鄂教版四年级下册",
+      "version": "人教鄂教版",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "a6dfbe2b-c9a8-4e6d-83fc-c47bf4c2d13e",
+      "title": "新教材-小学科学人教鄂教版一年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "c390907b-f3dd-49ae-85bf-b96b38f321aa",
+      "title": "新教材-小学科学人教鄂教版一年级下册",
+      "version": "人教鄂教版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ceba1dc8-2db8-4334-8098-f2727c1a094f",
+      "title": "新教材-小学科学人教鄂教版三年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "b1cc167a-e0d8-4009-9fd4-1f744878962c",
+      "title": "新教材-小学科学人教鄂教版三年级下册",
+      "version": "人教鄂教版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "043fb379-edcf-47a5-8be1-4a9456de23c2",
+      "title": "新教材-小学科学人教鄂教版二年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "982900f1-2738-435b-9b1c-c023631c9619",
+      "title": "新教材-小学科学人教鄂教版二年级下册",
+      "version": "人教鄂教版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ebd569e5-253b-422c-a2e2-d4fd68938857",
+      "title": "新教材-小学科学人教版五年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "新教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "1ab600fe-68ce-48c5-8471-bfa6a3ebb929",
+      "title": "新教材-小学科学人教版六年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "e2144701-e508-49c5-8766-bf2c202bcff1",
+      "title": "新教材-小学科学人教版四年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-2.json",
+      "unit_count": 5
+    },
+    {
+      "id": "d0f11c88-e64b-409e-9393-9e921dabe241",
+      "title": "小学科学人教鄂教版一年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-622e-5af3-0162-462a82e60464",
+      "title": "小学科学人教鄂教版一年级下册",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "e727491e-52c8-4214-a20c-f4c9e7a484ae",
+      "title": "小学科学人教鄂教版三年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-2.json",
+      "unit_count": 5
+    },
+    {
+      "id": "8ae7e58b-74dd-6f1a-0175-20d48fd00338",
+      "title": "小学科学人教鄂教版三年级下册",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "026cf32a-3d60-403a-a2be-83a30229fb28",
+      "title": "小学科学人教鄂教版二年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-6957-ae85-0169-9859da712c01",
+      "title": "小学科学人教鄂教版二年级下册",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "6772ee07-3fec-4d55-8afe-8e9c84a43b29",
+      "title": "小学科学人教鄂教版五年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-2.json",
+      "unit_count": 5
+    },
+    {
+      "id": "17fffc4f-472c-4906-8be4-f714d056b695",
+      "title": "小学科学人教鄂教版六年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-2.json",
+      "unit_count": 5
+    },
+    {
+      "id": "0acae6ec-f1ff-4ec6-8227-5cd903e286bf",
+      "title": "小学科学人教鄂教版四年级上册",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/science/units-2.json",
+      "unit_count": 6
+    }
+  ]
+}

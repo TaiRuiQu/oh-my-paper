@@ -1,0 +1,171 @@
+{
+  "stage": "初中",
+  "subject": "数学",
+  "books": [
+    {
+      "id": "fc56445a-c517-4dfb-8cba-7b299fa032b7",
+      "title": "初中数学人教版九年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "32c79ffa-3baf-45fa-b969-d8c1c2775831",
+      "title": "七年级数学上册人教澳门版",
+      "version": "人教澳门版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "2ac5791f-7144-4e7c-860a-1e3df3249474",
+      "title": "七年级数学下册人教澳门版",
+      "version": "人教澳门版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "63057cb5-0d20-444c-88da-672f15092624",
+      "title": "八年级数学上册人教澳门版",
+      "version": "人教澳门版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "46890563-1a22-4be1-bffd-69c0ff9da9b4",
+      "title": "八年级数学下册人教澳门版",
+      "version": "人教澳门版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-2.json",
+      "unit_count": 8
+    },
+    {
+      "id": "b677a95f-e947-46d3-805c-0b76b71a7379",
+      "title": "新教材-初中数学人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "2400a73c-0da9-4536-804c-cb01f99f03fb",
+      "title": "新教材-初中数学人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "7593f06c-44a8-44af-8e38-84e97ffde3ba",
+      "title": "新教材-人教版初中数学九年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "37dcf330-a406-4f3a-8602-0222736f9a90",
+      "title": "新教材-初中数学人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-2.json",
+      "unit_count": 8
+    },
+    {
+      "id": "ac01a19f-5e3d-4a9d-becd-ae42a865601e",
+      "title": "新教材-初中数学人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "921f145d-f79f-4ef4-91ee-4565622c95c6",
+      "title": "初中数学人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-3.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8375f8b8-926c-4dba-a219-1b8714526458",
+      "title": "初中数学人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-3.json",
+      "unit_count": 6
+    },
+    {
+      "id": "f83d3172-35fa-4912-8787-84893e64f58e",
+      "title": "初中数学人教版九年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-3.json",
+      "unit_count": 5
+    },
+    {
+      "id": "d92ca54e-2cdc-4921-95f3-769eafd0c814",
+      "title": "初中数学人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-4.json",
+      "unit_count": 5
+    },
+    {
+      "id": "fa60dc59-2eea-444d-80fb-f008d6b8d572",
+      "title": "初中数学人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/math/units-4.json",
+      "unit_count": 6
+    }
+  ]
+}

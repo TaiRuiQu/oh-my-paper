@@ -1,0 +1,223 @@
+.workspace,
+.stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  min-width: 0;
+}
+.workspace > *,
+.stack > *,
+.panelBody,
+.panelBody > *,
+.entry,
+.entry > *,
+.attendanceRows,
+.attendanceRow > *,
+.workspace details,
+.workspace :global(.p-panel),
+.workspace :global(.p-panel-heading) > div,
+.workspace :global(.p-form),
+.workspace :global(.p-form-grid),
+.workspace :global(.markdown-content) {
+  min-width: 0;
+  max-width: 100%;
+}
+.workspace :global(input),
+.workspace :global(select),
+.workspace :global(textarea) {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.workspace :global(.markdown-content pre),
+.workspace :global(.katex-display) {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.workspace :global(.markdown-content),
+.entryHeader > *,
+.metadata > span,
+.navigation a {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.workspace :global(.p-panel),
+.workspace :global(.p-heading) {
+  margin-bottom: 0;
+}
+.panelBody {
+  padding: 20px 22px;
+}
+.panelBody :global(.p-form) {
+  padding: 0;
+}
+.toolbar {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.toolbar > label {
+  min-width: 160px;
+}
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 0;
+}
+.row + .row {
+  border-top: 1px solid var(--line);
+}
+.row p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.help {
+  color: var(--muted);
+  font-size: 13px;
+  max-width: 72ch;
+}
+.section {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 18px;
+}
+.section h3,
+.section h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.entry {
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0 18px;
+  display: grid;
+  gap: 12px;
+}
+.entryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.tableRegion {
+  overflow-x: auto;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  margin: 14px 0;
+  border: 1px solid var(--line);
+}
+.tableRegion:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.table {
+  width: 100%;
+  min-width: 650px;
+  border-collapse: collapse;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+.table th {
+  background: var(--table-header, #eff2f0);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.table th,
+.table td {
+  padding: 12px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+.table tr:last-child td {
+  border-bottom: 0;
+}
+.table :global(input),
+.table :global(select) {
+  min-width: 120px;
+}
+.table :global(input[type="checkbox"]) {
+  min-width: auto;
+}
+.table td small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.attendanceRows {
+  display: grid;
+}
+.attendanceRow {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) minmax(130px, 1fr) minmax(180px, 2fr);
+  gap: 12px;
+  align-items: start;
+}
+.attendanceRow:last-child {
+  border-bottom: 0;
+}
+.attendanceRow small {
+  display: block;
+  color: var(--muted);
+}
+.history {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  list-style: none;
+}
+.history li {
+  border-bottom: 1px solid var(--line);
+  padding: 0 0 14px;
+}
+.history p {
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+.readOnlyText {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-width: 72ch;
+}
+.navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+.navigation a {
+  color: var(--accent);
+  text-underline-offset: 4px;
+}
+@media (max-width: 640px) {
+  .panelBody {
+    padding: 14px;
+  }
+  .toolbar > label {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .row > div {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+  .attendanceRow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

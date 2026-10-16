@@ -1,0 +1,138 @@
+{
+  "stage": "高中",
+  "subject": "通用技术",
+  "books": [
+    {
+      "id": "ff808081-7b0a-8395-017b-0f1b97ac0231",
+      "title": "高中通用技术人教版必修 技术与设计1",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 技术与设计1",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "43da8165-c2d0-379d-8ade-c8f669714480",
+      "title": "高中通用技术人教版必修 技术与设计2",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 技术与设计2",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "536d1cbc-4ad5-329b-8eb8-4ff0a3b69d26",
+      "title": "高中通用技术人教版选择性必修1",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修1",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "48d99cef-5afd-3096-bd89-28c8313b4c4e",
+      "title": "高中通用技术人教版选择性必修10 科技人文融合创新专题",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修10 科技人文融合创新专题",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-1.json",
+      "unit_count": 2
+    },
+    {
+      "id": "fa55fd38-aa0d-3635-bed4-e17c4caba9b6",
+      "title": "高中通用技术人教版选择性必修11 产品三维设计与制造",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修11 产品三维设计与制造",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "7a47be49-b025-3477-8559-f4a53d1eefb4",
+      "title": "高中通用技术人教版选择性必修2",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "337397a6-5c35-3551-aea0-f3ba2e6f0288",
+      "title": "高中通用技术人教版选择性必修3",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "65859ec9-d9c5-3c6b-a4e8-2066b89f253c",
+      "title": "高中通用技术人教版选择性必修4",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修4",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "9f5fd4ba-6545-37cf-9f0c-5c18b9afd95f",
+      "title": "高中通用技术人教版选择性必修6 智能家居应用设计",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修6 智能家居应用设计",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "99aa5884-9566-38b0-b318-3fc6baa7ffac",
+      "title": "高中通用技术人教版选择性必修7 职业技术基础",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修7 职业技术基础",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "3d75e2c3-45f4-33b1-8d19-6ec2ed7eeac8",
+      "title": "高中通用技术人教版选择性必修8 技术与职业探索",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修8 技术与职业探索",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "7adfca3e-fcda-384c-8a08-353542476675",
+      "title": "高中通用技术人教版选择性必修9 创造力开发与技术发明",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修9 创造力开发与技术发明",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/general-technology/units-2.json",
+      "unit_count": 4
+    }
+  ]
+}

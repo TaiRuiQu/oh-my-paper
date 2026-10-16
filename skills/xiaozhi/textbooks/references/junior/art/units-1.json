@@ -1,0 +1,889 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "83c78a7d-4cc0-3415-5289-d001a5c1a973",
+      "title": "初中美术人教版九年级下册",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/83c78a7d-4cc0-3415-5289-d001a5c1a973.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:49.363+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 外国美术名作巡礼",
+          "children": [
+            {
+              "title": "第1课 丰富多彩的亚非拉美术作品"
+            },
+            {
+              "title": "第2课 各具特色的欧美美术作品"
+            }
+          ],
+          "topics": ["外国美术名作巡礼", "丰富多彩的亚非拉美术作品", "各具特色的欧美美术作品"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 保护世界遗产",
+          "topics": ["保护世界遗产"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 动漫艺术",
+          "children": [
+            {
+              "title": "第1课 形式和内容丰富的动漫"
+            },
+            {
+              "title": "第2课 动漫形象设计"
+            },
+            {
+              "title": "第3课 动画作品设计制作"
+            }
+          ],
+          "topics": ["动漫艺术", "形式和内容丰富的动漫", "动漫形象设计", "动画作品设计制作"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 20世纪中国美术巡礼",
+          "topics": ["20世纪中国美术巡礼"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 留下眷恋 带走真情",
+          "topics": ["留下眷恋 带走真情"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "f1a3a84f-4f73-4818-8523-d9120c582cc0",
+      "title": "新教材-初中艺术·美术人教版七年级上册",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/f1a3a84f-4f73-4818-8523-d9120c582cc0.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:42:20.323+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 峥嵘岁月——美术中的历史",
+          "children": [
+            {
+              "title": "第1课 情感表达"
+            },
+            {
+              "title": "第2课 表现形式"
+            },
+            {
+              "title": "第3课 创作手法"
+            }
+          ],
+          "topics": ["峥嵘岁月——美术中的历史", "情感表达", "表现形式", "创作手法"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 时代乐章——线与色的造型",
+          "children": [
+            {
+              "title": "第1课 城市名片"
+            },
+            {
+              "title": "第2课 科技之光"
+            },
+            {
+              "title": "第3课 自然之美"
+            }
+          ],
+          "topics": ["时代乐章——线与色的造型", "城市名片", "科技之光", "自然之美"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 运动之美——视觉传达设计",
+          "children": [
+            {
+              "title": "第1课 标志设计"
+            },
+            {
+              "title": "第2课 吉祥物设计"
+            },
+            {
+              "title": "第3课 奖牌设计"
+            }
+          ],
+          "topics": ["运动之美——视觉传达设计", "标志设计", "吉祥物设计", "奖牌设计"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 情境交融——舞台艺术·美术设计",
+          "children": [
+            {
+              "title": "第1课 身临其境"
+            },
+            {
+              "title": "第2课 活灵活现"
+            }
+          ],
+          "topics": ["情境交融——舞台艺术·美术设计", "身临其境", "活灵活现"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "7e710fe8-9eb9-47ce-add4-83f22d4e54a9",
+      "title": "新教材-初中艺术·美术人教版七年级下册",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/7e710fe8-9eb9-47ce-add4-83f22d4e54a9.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-01-26T10:24:00.982+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 时代赞歌——社会主义建设成就",
+          "children": [
+            {
+              "title": "第1课 辉煌成就"
+            },
+            {
+              "title": "第2课 生活之美"
+            }
+          ],
+          "topics": ["时代赞歌——社会主义建设成就", "辉煌成就", "生活之美"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 多彩校园——动态与场景表现",
+          "children": [
+            {
+              "title": "第1课 精彩瞬间"
+            },
+            {
+              "title": "第2课 律动青春"
+            }
+          ],
+          "topics": ["多彩校园——动态与场景表现", "精彩瞬间", "律动青春"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 美美与共——校园艺术节设计",
+          "children": [
+            {
+              "title": "第1课 广而告之"
+            },
+            {
+              "title": "第2课 盛情邀约"
+            },
+            {
+              "title": "第3课 各美其美"
+            }
+          ],
+          "topics": ["美美与共——校园艺术节设计", "广而告之", "盛情邀约", "各美其美"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 赓续血脉——寻访革命遗址",
+          "children": [
+            {
+              "title": "第1课 寻根之旅"
+            },
+            {
+              "title": "第2课 永恒记忆"
+            }
+          ],
+          "topics": ["赓续血脉——寻访革命遗址", "寻根之旅", "永恒记忆"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "603479f3-e6db-4956-8b2d-658b25dc63ec",
+      "title": "新教材-人教版艺术·美术九年级上",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/603479f3-e6db-4956-8b2d-658b25dc63ec.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:44:16.555+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 多元世界——世界美术巡礼",
+          "children": [
+            {
+              "title": "第1课 亚非拉美术"
+            },
+            {
+              "title": "第2课 西方古典美术"
+            },
+            {
+              "title": "第3课 西方现代美术"
+            }
+          ],
+          "topics": ["多元世界——世界美术巡礼", "亚非拉美术", "西方古典美术", "西方现代美术"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 逐格变换——剪纸动画制作",
+          "children": [
+            {
+              "title": "第1课 角色设计"
+            },
+            {
+              "title": "第2课 场景设计"
+            },
+            {
+              "title": "第3课 拍摄制作"
+            }
+          ],
+          "topics": ["逐格变换——剪纸动画制作", "角色设计", "场景设计", "拍摄制作"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 奇妙空间——创意素描",
+          "children": [
+            {
+              "title": "第1课 形体结构"
+            },
+            {
+              "title": "第2课 创意空间"
+            }
+          ],
+          "topics": ["奇妙空间——创意素描", "形体结构", "创意空间"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 共生共享——世界遗产掠影",
+          "children": [
+            {
+              "title": "第1课 文明之光"
+            },
+            {
+              "title": "第2课 故宫六百年"
+            }
+          ],
+          "topics": ["共生共享——世界遗产掠影", "文明之光", "故宫六百年"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "d09c3fe3-058c-41ab-82cf-74365b6f43df",
+      "title": "新教材-初中艺术·美术人教版八年级上册",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/d09c3fe3-058c-41ab-82cf-74365b6f43df.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:42:56.547+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 丹青意蕴——中国传统色彩",
+          "children": [
+            {
+              "title": "第 1 课 国色之美"
+            },
+            {
+              "title": "第 2 课 国色之韵"
+            },
+            {
+              "title": "第 3 课 国色新尚"
+            }
+          ],
+          "topics": [
+            "丹青意蕴——中国传统色彩",
+            "第 1 课 国色之美",
+            "第 2 课 国色之韵",
+            "第 3 课 国色新尚"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 可游可居——中国园林艺术",
+          "children": [
+            {
+              "title": "第 1 课 因地制宜"
+            },
+            {
+              "title": "第 2 课 精心经营"
+            },
+            {
+              "title": "第 3 课 叠山理水"
+            }
+          ],
+          "topics": [
+            "可游可居——中国园林艺术",
+            "第 1 课 因地制宜",
+            "第 2 课 精心经营",
+            "第 3 课 叠山理水"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 搜尽奇峰——中国山水画艺术",
+          "children": [
+            {
+              "title": "第 1 课 传移模写"
+            },
+            {
+              "title": "第 2 课 应物象形"
+            },
+            {
+              "title": "第 3 课 气韵生动"
+            }
+          ],
+          "topics": [
+            "搜尽奇峰——中国山水画艺术",
+            "第 1 课 传移模写",
+            "第 2 课 应物象形",
+            "第 3 课 气韵生动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 守正创新——书籍装帧艺术",
+          "children": [
+            {
+              "title": "第 1 课 书林漫步"
+            },
+            {
+              "title": "第 2 课 封面设计"
+            }
+          ],
+          "topics": ["守正创新——书籍装帧艺术", "第 1 课 书林漫步", "第 2 课 封面设计"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "2c235f65-3293-4508-81c9-fa3651cb94df",
+      "title": "新教材-初中艺术·美术人教版八年级下册",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2c235f65-3293-4508-81c9-fa3651cb94df.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:43:33.330+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 经纬天地——现代纤维艺术",
+          "children": [
+            {
+              "title": "第1课 入古出新"
+            },
+            {
+              "title": "第2课 组织之趣"
+            },
+            {
+              "title": "第3课 多元表达"
+            }
+          ],
+          "topics": ["经纬天地——现代纤维艺术", "入古出新", "组织之趣", "多元表达"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 霓裳羽衣——服饰欣赏与搭配",
+          "children": [
+            {
+              "title": "第1课 服饰之美"
+            },
+            {
+              "title": "第2课 五彩衣裳"
+            },
+            {
+              "title": "第3课 服装搭配"
+            }
+          ],
+          "topics": ["霓裳羽衣——服饰欣赏与搭配", "服饰之美", "五彩衣裳", "服装搭配"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 素布敷彩——印染欣赏与设计",
+          "children": [
+            {
+              "title": "第1课 蓝白雅韵"
+            },
+            {
+              "title": "第2课 扎染新生"
+            }
+          ],
+          "topics": ["素布敷彩——印染欣赏与设计", "蓝白雅韵", "扎染新生"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 空间创设——居室与环境设计",
+          "children": [
+            {
+              "title": "第1课 美丽校园"
+            },
+            {
+              "title": "第2课 温馨居室"
+            }
+          ],
+          "topics": ["空间创设——居室与环境设计", "美丽校园", "温馨居室"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "f1b15c6c-e4ce-f57d-3b55-ac347f1a14b8",
+      "title": "初中美术人教版七年级上册",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/f1b15c6c-e4ce-f57d-3b55-ac347f1a14b8.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:18.511+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 什么是美术",
+          "children": [
+            {
+              "title": "第1课 富于创造力的造型艺术"
+            },
+            {
+              "title": "第2课 美术是个大家族"
+            }
+          ],
+          "topics": ["什么是美术", "富于创造力的造型艺术", "美术是个大家族"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 多彩的学校生活",
+          "children": [
+            {
+              "title": "第1课 小伙伴"
+            },
+            {
+              "title": "第2课 在校园中健康成长"
+            },
+            {
+              "title": "第3课 我们的风采"
+            }
+          ],
+          "topics": ["多彩的学校生活", "小伙伴", "在校园中健康成长", "我们的风采"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 传递我们的心声",
+          "children": [
+            {
+              "title": "第1课 有创意的字"
+            },
+            {
+              "title": "第2课 精美的报刊"
+            }
+          ],
+          "topics": ["传递我们的心声", "有创意的字", "精美的报刊"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 美丽的校园",
+          "children": [
+            {
+              "title": "第1课 描绘我们的校园"
+            },
+            {
+              "title": "第2课 设计我们的校园"
+            }
+          ],
+          "topics": ["美丽的校园", "描绘我们的校园", "设计我们的校园"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 实用又美观的日用产品",
+          "topics": ["实用又美观的日用产品"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "19b544cf-b6b4-6ba6-114a-1bbb3847437a",
+      "title": "初中美术人教版七年级下册",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/19b544cf-b6b4-6ba6-114a-1bbb3847437a.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:05.905+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 美术是创造性劳动",
+          "children": [
+            {
+              "title": "第1课 源于生活 高于生活"
+            },
+            {
+              "title": "第2课 营造艺术的情趣和意境"
+            }
+          ],
+          "topics": ["美术是创造性劳动", "源于生活 高于生活", "营造艺术的情趣和意境"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 春天的畅想",
+          "children": [
+            {
+              "title": "第1课 色彩的魅力"
+            },
+            {
+              "title": "第2课 春天的畅想"
+            }
+          ],
+          "topics": ["春天的畅想", "色彩的魅力"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 富有活力的运动会",
+          "children": [
+            {
+              "title": "第1课 凝练的视觉符号"
+            },
+            {
+              "title": "第2课 亲切的使者"
+            },
+            {
+              "title": "第3课 喜悦与收获"
+            }
+          ],
+          "topics": ["富有活力的运动会", "凝练的视觉符号", "亲切的使者", "喜悦与收获"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 校园艺术节",
+          "children": [
+            {
+              "title": "第1课 广而告之"
+            },
+            {
+              "title": "第2课 盛情邀约"
+            },
+            {
+              "title": "第3课 独特的装扮"
+            }
+          ],
+          "topics": ["校园艺术节", "广而告之", "盛情邀约", "独特的装扮"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 平面设计的盛宴",
+          "topics": ["平面设计的盛宴"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ea21589e-9be6-f5d1-9544-afdf1e2b5cfe",
+      "title": "初中美术人教版九年级上册",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ea21589e-9be6-f5d1-9544-afdf1e2b5cfe.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:14.110+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 感受中国古代美术名作",
+          "children": [
+            {
+              "title": "第1课 独树一帜的中国画"
+            },
+            {
+              "title": "第2课 异彩纷呈的中国古代雕塑、工艺和建筑"
+            }
+          ],
+          "topics": [
+            "感受中国古代美术名作",
+            "独树一帜的中国画",
+            "异彩纷呈的中国古代雕塑、工艺和建筑"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 情趣浓郁 能工巧匠",
+          "children": [
+            {
+              "title": "第1课 剪纸"
+            },
+            {
+              "title": "第2课 编结艺术"
+            },
+            {
+              "title": "第3课 线材造型"
+            },
+            {
+              "title": "第4课 蜡染与扎染"
+            },
+            {
+              "title": "第5课 彩塑"
+            }
+          ],
+          "topics": ["情趣浓郁 能工巧匠", "剪纸", "编结艺术", "线材造型", "蜡染与扎染", "彩塑"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 土和火的艺术",
+          "topics": ["土和火的艺术"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 古城古镇美术文化考察",
+          "children": [
+            {
+              "title": "第1课 古城古镇考察"
+            },
+            {
+              "title": "第2课 民俗文化展"
+            }
+          ],
+          "topics": ["古城古镇美术文化考察", "古城古镇考察", "民俗文化展"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 中国民间美术",
+          "children": [
+            {
+              "title": "第1课 民间美术的主要种类"
+            },
+            {
+              "title": "第2课 民间美术的功能与特点"
+            },
+            {
+              "title": "第3课 我国少数民族的美术文化"
+            }
+          ],
+          "topics": [
+            "中国民间美术",
+            "民间美术的主要种类",
+            "民间美术的功能与特点",
+            "我国少数民族的美术文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "292ce060-ba61-67a8-5587-4ec46152411c",
+      "title": "初中美术人教版八年级上册",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/292ce060-ba61-67a8-5587-4ec46152411c.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-10-14T10:19:10.892+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 美术的主要表现手段",
+          "children": [
+            {
+              "title": "第1课 造型的表现力"
+            },
+            {
+              "title": "第2课 色彩的感染力"
+            },
+            {
+              "title": "第3课 构图的作用"
+            }
+          ],
+          "topics": ["美术的主要表现手段", "造型的表现力", "色彩的感染力", "构图的作用"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 读书、爱书的情结",
+          "children": [
+            {
+              "title": "第1课 书林漫步"
+            },
+            {
+              "title": "第2课 手工书设计"
+            },
+            {
+              "title": "第3课 方寸钤记——藏书印"
+            },
+            {
+              "title": "第4课 书间精灵——藏书票"
+            }
+          ],
+          "topics": [
+            "读书、爱书的情结",
+            "书林漫步",
+            "手工书设计",
+            "方寸钤记——藏书印",
+            "书间精灵——藏书票"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 笔墨丹青",
+          "children": [
+            {
+              "title": "第1课 诗书画印的完美结合"
+            },
+            {
+              "title": "第2课 借物寓意"
+            },
+            {
+              "title": "第3课 寄情山水"
+            }
+          ],
+          "topics": ["笔墨丹青", "诗书画印的完美结合", "借物寓意", "寄情山水"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 自己办展览",
+          "topics": ["自己办展览"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 展示设计作品欣赏",
+          "topics": ["展示设计作品欣赏"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ce9ac281-3257-29ea-9c56-e4a96b66f1f3",
+      "title": "初中美术人教版八年级下册",
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ce9ac281-3257-29ea-9c56-e4a96b66f1f3.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:54.607+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 美术作品的深层意蕴",
+          "children": [
+            {
+              "title": "第1课 情感的抒发与理念的表达"
+            },
+            {
+              "title": "第2课 弘扬真善美"
+            }
+          ],
+          "topics": ["美术作品的深层意蕴", "情感的抒发与理念的表达", "弘扬真善美"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 纹样与生活",
+          "children": [
+            {
+              "title": "第1课 了解纹样"
+            },
+            {
+              "title": "第2课 设计纹样"
+            }
+          ],
+          "topics": ["纹样与生活", "了解纹样", "设计纹样"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 为生活增添情趣",
+          "children": [
+            {
+              "title": "第1课 插花"
+            },
+            {
+              "title": "第2课 摆件巧安排"
+            },
+            {
+              "title": "第3课 漂亮的手工灯饰"
+            },
+            {
+              "title": "第4课 装饰画"
+            }
+          ],
+          "topics": ["为生活增添情趣", "插花", "摆件巧安排", "漂亮的手工灯饰", "装饰画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 美好宜人的居住环境",
+          "children": [
+            {
+              "title": "第1课 和谐温馨的生活空间"
+            },
+            {
+              "title": "第2课 装点居室"
+            },
+            {
+              "title": "第3课 关注社区居住环境"
+            }
+          ],
+          "topics": ["美好宜人的居住环境", "和谐温馨的生活空间", "装点居室", "关注社区居住环境"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 移步换景 别有洞天——中国古典园林欣赏",
+          "topics": ["移步换景 别有洞天——中国古典园林欣赏"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

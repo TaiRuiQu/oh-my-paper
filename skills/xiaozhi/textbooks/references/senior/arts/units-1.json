@@ -1,0 +1,931 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "daff30a0-aa8c-3778-84aa-638f10d9e7ad",
+      "title": "高中艺术人教版必修1 艺术与生活",
+      "stage": "高中",
+      "subject": "艺术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修1 艺术与生活",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/daff30a0-aa8c-3778-84aa-638f10d9e7ad.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-10-24T14:35:11.111+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 从生活到艺术",
+          "children": [
+            {
+              "title": "第1课 远古岩画"
+            },
+            {
+              "title": "第2课 缤纷彩陶"
+            },
+            {
+              "title": "第3课 华夏礼仪"
+            },
+            {
+              "title": "第4课 寄情乐舞"
+            }
+          ],
+          "topics": ["从生活到艺术", "远古岩画", "缤纷彩陶", "华夏礼仪", "寄情乐舞"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 从艺术到生活",
+          "children": [
+            {
+              "title": "第1课 美化环境"
+            },
+            {
+              "title": "第2课 诗意栖居"
+            },
+            {
+              "title": "第3课 设计用品"
+            },
+            {
+              "title": "第4课 音声传情"
+            }
+          ],
+          "topics": ["从艺术到生活", "美化环境", "诗意栖居", "设计用品", "音声传情"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 生活中的艺术情怀",
+          "children": [
+            {
+              "title": "第1课 春夏秋冬"
+            },
+            {
+              "title": "第2课 梅兰竹菊"
+            },
+            {
+              "title": "第3课 月下情怀"
+            },
+            {
+              "title": "第4课 天地生灵"
+            }
+          ],
+          "topics": ["生活中的艺术情怀", "春夏秋冬", "梅兰竹菊", "月下情怀", "天地生灵"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 节庆生活的艺术表现",
+          "children": [
+            {
+              "title": "第1课 辞旧迎新过大年"
+            },
+            {
+              "title": "第2课 玉珠飞花泼水节"
+            },
+            {
+              "title": "第3课 草原盛会那达慕"
+            },
+            {
+              "title": "第4课 欢庆光明火把节"
+            }
+          ],
+          "topics": [
+            "节庆生活的艺术表现",
+            "辞旧迎新过大年",
+            "玉珠飞花泼水节",
+            "草原盛会那达慕",
+            "欢庆光明火把节"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "5f959116-57b1-303f-ac1d-4d9009fa94ea",
+      "title": "高中艺术人教版必修2 艺术与文化（上册）",
+      "stage": "高中",
+      "subject": "艺术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修2 艺术与文化（上册）",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/5f959116-57b1-303f-ac1d-4d9009fa94ea.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-10-24T14:34:52.365+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 艺术线条",
+          "children": [
+            {
+              "title": "第1课 书法之线"
+            },
+            {
+              "title": "第2课 旋律之线"
+            },
+            {
+              "title": "第3课 舞动之线"
+            },
+            {
+              "title": "第4课 情韵之线"
+            }
+          ],
+          "topics": ["艺术线条", "书法之线", "旋律之线", "舞动之线", "情韵之线"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 艺术节奏",
+          "children": [
+            {
+              "title": "第1课 时间的节奏"
+            },
+            {
+              "title": "第2课 空间的动感"
+            },
+            {
+              "title": "第3课 身体的律动"
+            },
+            {
+              "title": "第4课 语言的韵律"
+            }
+          ],
+          "topics": ["艺术节奏", "时间的节奏", "空间的动感", "身体的律动", "语言的韵律"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 艺术形式",
+          "children": [
+            {
+              "title": "第1课 结构平衡"
+            },
+            {
+              "title": "第2课 对比统一"
+            },
+            {
+              "title": "第3课 具象抽象"
+            },
+            {
+              "title": "第4课 意象之美"
+            }
+          ],
+          "topics": ["艺术形式", "结构平衡", "对比统一", "具象抽象", "意象之美"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 艺术风格",
+          "children": [
+            {
+              "title": "第1课 民族风格"
+            },
+            {
+              "title": "第2课 时代风格"
+            },
+            {
+              "title": "第3课 流派风格"
+            },
+            {
+              "title": "第4课 个人风格"
+            }
+          ],
+          "topics": ["艺术风格", "民族风格", "时代风格", "流派风格", "个人风格"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "1aabb959-9322-319c-a40c-a3f774943797",
+      "title": "高中艺术人教版必修2 艺术与文化（下册）",
+      "stage": "高中",
+      "subject": "艺术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修2 艺术与文化（下册）",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/1aabb959-9322-319c-a40c-a3f774943797.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-10-24T14:34:46.816+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第五单元 文化风尚",
+          "children": [
+            {
+              "title": "第1课 大唐气象"
+            },
+            {
+              "title": "第2课 文艺复兴"
+            },
+            {
+              "title": "第3课 中西汇流"
+            },
+            {
+              "title": "第4课 推陈出新"
+            }
+          ],
+          "topics": ["文化风尚", "大唐气象", "文艺复兴", "中西汇流", "推陈出新"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 文化明珠",
+          "children": [
+            {
+              "title": "第1课 大美敦煌"
+            },
+            {
+              "title": "第2课 丝路风情"
+            },
+            {
+              "title": "第3课 海丝古城"
+            },
+            {
+              "title": "第4课 海岛之韵"
+            }
+          ],
+          "topics": ["文化明珠", "大美敦煌", "丝路风情", "海丝古城", "海岛之韵"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元 剧场文化",
+          "children": [
+            {
+              "title": "第1课 梨园芳踪"
+            },
+            {
+              "title": "第2课 音韵悠扬"
+            },
+            {
+              "title": "第3课 妙舞翩跹"
+            },
+            {
+              "title": "第4课 话意传情"
+            }
+          ],
+          "topics": ["剧场文化", "梨园芳踪", "音韵悠扬", "妙舞翩跹", "话意传情"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元 传媒文化",
+          "children": [
+            {
+              "title": "第1课 影像时空"
+            },
+            {
+              "title": "第2课 动漫空间"
+            },
+            {
+              "title": "第3课 博物之旅"
+            },
+            {
+              "title": "第4课 网上艺术活动"
+            }
+          ],
+          "topics": ["传媒文化", "影像时空", "动漫空间", "博物之旅", "网上艺术活动"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "195c438f-6bbc-3649-a747-be6138510144",
+      "title": "高中艺术人教版必修3 艺术与科学",
+      "stage": "高中",
+      "subject": "艺术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修3 艺术与科学",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/195c438f-6bbc-3649-a747-be6138510144.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-10-24T14:34:46.037+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 艺术中的科学现象",
+          "children": [
+            {
+              "title": "第1课 艺术中的科学密码"
+            },
+            {
+              "title": "第2课 艺术中的科学幻想"
+            },
+            {
+              "title": "第3课 艺术中的科技之光"
+            },
+            {
+              "title": "第4课 艺术活动的心理科学"
+            }
+          ],
+          "topics": [
+            "艺术中的科学现象",
+            "艺术中的科学密码",
+            "艺术中的科学幻想",
+            "艺术中的科技之光",
+            "艺术活动的心理科学"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 科学中的艺术现象",
+          "children": [
+            {
+              "title": "第1课 橡皮泥几何"
+            },
+            {
+              "title": "第2课 分形的魅力"
+            },
+            {
+              "title": "第3课 逻辑怪圈"
+            },
+            {
+              "title": "第4课 美丽化学"
+            }
+          ],
+          "topics": ["科学中的艺术现象", "橡皮泥几何", "分形的魅力", "逻辑怪圈", "美丽化学"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 艺术与科学的互动",
+          "children": [
+            {
+              "title": "第1课 艺术家与科学家"
+            },
+            {
+              "title": "第2课 科学丰富艺术创意"
+            },
+            {
+              "title": "第3课 艺术活动促进科学创造"
+            },
+            {
+              "title": "第4课 艺术、科学与生命"
+            }
+          ],
+          "topics": [
+            "艺术与科学的互动",
+            "艺术家与科学家",
+            "科学丰富艺术创意",
+            "艺术活动促进科学创造",
+            "艺术、科学与生命"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 艺术与科学的融合发展",
+          "children": [
+            {
+              "title": "第1课 新的艺术创作方式"
+            },
+            {
+              "title": "第2课 新的艺术表演方式"
+            },
+            {
+              "title": "第3课 虚拟技术与艺术"
+            },
+            {
+              "title": "第4课 人工智能与艺术"
+            }
+          ],
+          "topics": [
+            "艺术与科学的融合发展",
+            "新的艺术创作方式",
+            "新的艺术表演方式",
+            "虚拟技术与艺术",
+            "人工智能与艺术"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "a7331480-d310-3f1e-af23-871e7732b305",
+      "title": "高中艺术人教版选择性必修1 美术创意实践",
+      "stage": "高中",
+      "subject": "艺术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修1 美术创意实践",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/a7331480-d310-3f1e-af23-871e7732b305.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-10-24T14:35:06.912+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 绘画的经典与创作",
+          "children": [
+            {
+              "title": "第1课 道法自然的中国山水画"
+            },
+            {
+              "title": "第2课 情趣盎然的中国花鸟画"
+            },
+            {
+              "title": "第3课 生动写实的素描肖像画"
+            },
+            {
+              "title": "第4课 瑰丽纷呈的色彩静物画"
+            }
+          ],
+          "topics": [
+            "绘画的经典与创作",
+            "道法自然的中国山水画",
+            "情趣盎然的中国花鸟画",
+            "生动写实的素描肖像画",
+            "瑰丽纷呈的色彩静物画"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 雕塑的材料与造型",
+          "children": [
+            {
+              "title": "第1课 纸上生花的立体造型"
+            },
+            {
+              "title": "第2课 质朴纯真的民间泥塑"
+            },
+            {
+              "title": "第3课 铜筋铁骨的金属雕塑"
+            },
+            {
+              "title": "第4课 巧夺天工的玉雕工艺"
+            }
+          ],
+          "topics": [
+            "雕塑的材料与造型",
+            "纸上生花的立体造型",
+            "质朴纯真的民间泥塑",
+            "铜筋铁骨的金属雕塑",
+            "巧夺天工的玉雕工艺"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 建筑的空间与表现",
+          "children": [
+            {
+              "title": "第1课 空间透视的建筑绘画"
+            },
+            {
+              "title": "第2课 诗情画意的中国园林"
+            },
+            {
+              "title": "第3课 多元创新的现代建筑"
+            },
+            {
+              "title": "第4课 三维立体的建筑模型"
+            }
+          ],
+          "topics": [
+            "建筑的空间与表现",
+            "空间透视的建筑绘画",
+            "诗情画意的中国园林",
+            "多元创新的现代建筑",
+            "三维立体的建筑模型"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 创意设计与校园文化",
+          "children": [
+            {
+              "title": "第1课 校园活动招贴画"
+            },
+            {
+              "title": "第2课 校园文创产品设计"
+            },
+            {
+              "title": "第3课 校园艺术与科学"
+            },
+            {
+              "title": "第4课 校园艺术文化展"
+            }
+          ],
+          "topics": [
+            "创意设计与校园文化",
+            "校园活动招贴画",
+            "校园文创产品设计",
+            "校园艺术与科学",
+            "校园艺术文化展"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "13fd289a-f23e-31ff-beec-9939f114bc0d",
+      "title": "高中艺术人教版选择性必修2 音乐情境表演",
+      "stage": "高中",
+      "subject": "艺术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2 音乐情境表演",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/13fd289a-f23e-31ff-beec-9939f114bc0d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-10-24T14:34:45.202+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 乡音乡情",
+          "children": [
+            {
+              "title": "第1课 大地回响"
+            },
+            {
+              "title": "第2课 钟鼓之乐"
+            },
+            {
+              "title": "第3课 丝竹和鸣"
+            },
+            {
+              "title": "第4课 时代心声"
+            }
+          ],
+          "topics": ["乡音乡情", "大地回响", "钟鼓之乐", "丝竹和鸣", "时代心声"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 艺海荟萃",
+          "children": [
+            {
+              "title": "第1课 诗乐同辉"
+            },
+            {
+              "title": "第2课 琴歌相偕"
+            },
+            {
+              "title": "第3课 音画交响"
+            },
+            {
+              "title": "第4课 曲苑逐新"
+            }
+          ],
+          "topics": ["艺海荟萃", "诗乐同辉", "琴歌相偕", "音画交响", "曲苑逐新"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 戏韵流芳",
+          "children": [
+            {
+              "title": "第1课 昆兰雅韵"
+            },
+            {
+              "title": "第2课 京腔国粹"
+            },
+            {
+              "title": "第3课 灵秀越声"
+            },
+            {
+              "title": "第4课 梨园新春"
+            }
+          ],
+          "topics": ["戏韵流芳", "昆兰雅韵", "京腔国粹", "灵秀越声", "梨园新春"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 绚丽舞台",
+          "children": [
+            {
+              "title": "第1课 魅力歌剧"
+            },
+            {
+              "title": "第2课 羽衣翩跹"
+            },
+            {
+              "title": "第3课 踏歌起舞"
+            },
+            {
+              "title": "第4课 银幕流声"
+            }
+          ],
+          "topics": ["绚丽舞台", "魅力歌剧", "羽衣翩跹", "踏歌起舞", "银幕流声"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "6941d8e5-b8de-355c-b148-a22e0b1ab2a3",
+      "title": "高中艺术人教版选择性必修3 舞蹈创编与表演",
+      "stage": "高中",
+      "subject": "艺术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 舞蹈创编与表演",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/6941d8e5-b8de-355c-b148-a22e0b1ab2a3.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-10-24T14:34:53.162+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 中国古典舞",
+          "children": [
+            {
+              "title": "第1课 训练之章"
+            },
+            {
+              "title": "第2课 身韵之美"
+            },
+            {
+              "title": "第3课 表演之绚"
+            }
+          ],
+          "topics": ["中国古典舞", "训练之章", "身韵之美", "表演之绚"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 中国民族民间舞",
+          "children": [
+            {
+              "title": "第1课 大地欢动"
+            },
+            {
+              "title": "第2课 农牧风姿"
+            },
+            {
+              "title": "第3课 滨海灵韵"
+            },
+            {
+              "title": "第4课 草原气魄"
+            },
+            {
+              "title": "第5课 绿洲情致"
+            }
+          ],
+          "topics": ["中国民族民间舞", "大地欢动", "农牧风姿", "滨海灵韵", "草原气魄", "绿洲情致"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 芭蕾与现代舞",
+          "children": [
+            {
+              "title": "第1课 足尖上的艺术"
+            },
+            {
+              "title": "第2课 直指心灵的艺术"
+            }
+          ],
+          "topics": ["芭蕾与现代舞", "足尖上的艺术", "直指心灵的艺术"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 异国舞影",
+          "children": [
+            {
+              "title": "第1课 典雅内敛的东亚舞蹈"
+            },
+            {
+              "title": "第2课 古老神秘的南亚舞蹈"
+            },
+            {
+              "title": "第3课 缤纷多姿的欧洲舞蹈"
+            },
+            {
+              "title": "第4课 热情如火的拉美舞蹈"
+            }
+          ],
+          "topics": [
+            "异国舞影",
+            "典雅内敛的东亚舞蹈",
+            "古老神秘的南亚舞蹈",
+            "缤纷多姿的欧洲舞蹈",
+            "热情如火的拉美舞蹈"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "a8c69f0e-498b-3e96-af74-ee4a7819e47b",
+      "title": "高中艺术人教版选择性必修4 戏剧创编与表演",
+      "stage": "高中",
+      "subject": "艺术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修4 戏剧创编与表演",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/a8c69f0e-498b-3e96-af74-ee4a7819e47b.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-10-24T14:35:07.284+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 认识戏剧",
+          "children": [
+            {
+              "title": "第1课 戏剧源起"
+            },
+            {
+              "title": "第2课 创作规律"
+            },
+            {
+              "title": "第3课 表演素质"
+            },
+            {
+              "title": "第4课 创作方法"
+            }
+          ],
+          "topics": ["认识戏剧", "戏剧源起", "创作规律", "表演素质", "创作方法"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 戏剧表演",
+          "children": [
+            {
+              "title": "第1课 表演特性"
+            },
+            {
+              "title": "第2课 戏剧台词"
+            },
+            {
+              "title": "第3课 戏剧形体"
+            },
+            {
+              "title": "第4课 表演空间"
+            }
+          ],
+          "topics": ["戏剧表演", "表演特性", "戏剧台词", "戏剧形体", "表演空间"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 小品创编与训练",
+          "children": [
+            {
+              "title": "第1课 选择生活中的素材"
+            },
+            {
+              "title": "第2课 创编中的仔细推敲"
+            },
+            {
+              "title": "第3课 课本剧的改编妙想"
+            },
+            {
+              "title": "第4课 排演中的精雕细琢"
+            }
+          ],
+          "topics": [
+            "小品创编与训练",
+            "选择生活中的素材",
+            "创编中的仔细推敲",
+            "课本剧的改编妙想",
+            "排演中的精雕细琢"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 经典诞生与创演",
+          "children": [
+            {
+              "title": "第1课 剧本的诞生过程"
+            },
+            {
+              "title": "第2课 经典剧本的研读"
+            },
+            {
+              "title": "第3课 戏剧片段的排演"
+            },
+            {
+              "title": "第4课 舞台的综合魅力"
+            }
+          ],
+          "topics": [
+            "经典诞生与创演",
+            "剧本的诞生过程",
+            "经典剧本的研读",
+            "戏剧片段的排演",
+            "舞台的综合魅力"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "e8ca557a-1ca1-38dc-9c0f-114ebd516550",
+      "title": "高中艺术人教版选择性必修5 影视与数字媒体艺术实践",
+      "stage": "高中",
+      "subject": "艺术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修5 影视与数字媒体艺术实践",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/e8ca557a-1ca1-38dc-9c0f-114ebd516550.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-10-24T14:35:11.853+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 领略光影之美",
+          "children": [
+            {
+              "title": "第1课 电影艺术的起源"
+            },
+            {
+              "title": "第2课 影视创新的足迹"
+            }
+          ],
+          "topics": ["领略光影之美", "电影艺术的起源", "影视创新的足迹"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 开启影视创作之旅",
+          "children": [
+            {
+              "title": "第1课 如何制造戏剧冲突"
+            },
+            {
+              "title": "第2课 如何塑造人物形象"
+            },
+            {
+              "title": "第3课 如何设计故事情节"
+            },
+            {
+              "title": "第4课 如何拓展创意思维"
+            }
+          ],
+          "topics": [
+            "开启影视创作之旅",
+            "如何制造戏剧冲突",
+            "如何塑造人物形象",
+            "如何设计故事情节",
+            "如何拓展创意思维"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 变身光影造梦师",
+          "children": [
+            {
+              "title": "第1课 影视艺术的筑梦者"
+            },
+            {
+              "title": "第2课 镜头语言的大千世界"
+            },
+            {
+              "title": "第3课 如何进行影视美术设计"
+            },
+            {
+              "title": "第4课 场面调度的运筹帷幄"
+            },
+            {
+              "title": "第5课 蒙太奇的神奇魅力"
+            },
+            {
+              "title": "第6课 声音的丰富律动"
+            }
+          ],
+          "topics": [
+            "变身光影造梦师",
+            "影视艺术的筑梦者",
+            "镜头语言的大千世界",
+            "如何进行影视美术设计",
+            "场面调度的运筹帷幄",
+            "蒙太奇的神奇魅力",
+            "声音的丰富律动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 探索幕后的大世界",
+          "children": [
+            {
+              "title": "第1课 时间线上的神奇剪刀"
+            },
+            {
+              "title": "第2课 光影特效的魔术师"
+            },
+            {
+              "title": "第3课 影视作品的创意“宣发”"
+            },
+            {
+              "title": "第4课 影评写作的理智与情感"
+            }
+          ],
+          "topics": [
+            "探索幕后的大世界",
+            "时间线上的神奇剪刀",
+            "光影特效的魔术师",
+            "影视作品的创意“宣发”",
+            "影评写作的理智与情感"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

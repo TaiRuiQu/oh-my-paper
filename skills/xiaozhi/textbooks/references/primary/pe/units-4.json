@@ -1,0 +1,499 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "20e0654d-1510-4fed-a58e-f2a324be709d",
+      "title": "新教材-小学体育与健康人教版一年级全一册",
+      "stage": "小学",
+      "subject": "体育与健康",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/20e0654d-1510-4fed-a58e-f2a324be709d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T09:40:02.586+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 体育文化与体育精神",
+          "children": [
+            {
+              "title": "1 我们爱运动"
+            },
+            {
+              "title": "2 游戏比赛守规则"
+            }
+          ],
+          "topics": ["体育文化与体育精神", "1 我们爱运动", "2 游戏比赛守规则"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 健康行为与生活方式",
+          "children": [
+            {
+              "title": "3 好好吃饭"
+            },
+            {
+              "title": "4 充足睡眠"
+            },
+            {
+              "title": "5 爱清洁，讲卫生"
+            },
+            {
+              "title": "6 坐立行我最美"
+            }
+          ],
+          "topics": [
+            "健康行为与生活方式",
+            "3 好好吃饭",
+            "4 充足睡眠",
+            "5 爱清洁，讲卫生",
+            "6 坐立行我最美"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 生长发育与心理健康",
+          "children": [
+            {
+              "title": "7 认识身体"
+            },
+            {
+              "title": "8 认识情绪"
+            }
+          ],
+          "topics": ["生长发育与心理健康", "7 认识身体", "8 认识情绪"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 疾病预防与安全应急",
+          "children": [
+            {
+              "title": "9 安全运动和游戏"
+            },
+            {
+              "title": "10 生病了怎么办"
+            }
+          ],
+          "topics": ["疾病预防与安全应急", "9 安全运动和游戏", "10 生病了怎么办"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "90245be8-ad9b-48cc-8e4b-da028a6ecad5",
+      "title": "新教材-小学体育与健康人教版三年级全一册",
+      "stage": "小学",
+      "subject": "体育与健康",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/90245be8-ad9b-48cc-8e4b-da028a6ecad5.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T09:42:13.870+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 体育文化与体育精神",
+          "children": [
+            {
+              "title": "1 认识中华武术"
+            },
+            {
+              "title": "2 体育比赛展风采"
+            }
+          ],
+          "topics": ["体育文化与体育精神", "1 认识中华武术", "2 体育比赛展风采"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 健康行为与生活方式",
+          "children": [
+            {
+              "title": "3 选择新鲜卫生的食物"
+            },
+            {
+              "title": "4 含糖饮料要少喝"
+            },
+            {
+              "title": "5 保持良好睡眠"
+            },
+            {
+              "title": "6 预防近视很重要"
+            }
+          ],
+          "topics": [
+            "健康行为与生活方式",
+            "3 选择新鲜卫生的食物",
+            "4 含糖饮料要少喝",
+            "5 保持良好睡眠",
+            "6 预防近视很重要"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 生长发育与心理健康",
+          "children": [
+            {
+              "title": "7 学会调节情绪"
+            },
+            {
+              "title": "8 学会与他人交往"
+            }
+          ],
+          "topics": ["生长发育与心理健康", "7 学会调节情绪", "8 学会与他人交往"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 疾病预防与安全应急",
+          "children": [
+            {
+              "title": "9 学会处理割伤、刺伤和烧烫伤"
+            },
+            {
+              "title": "10 中暑的预防与处理"
+            }
+          ],
+          "topics": ["疾病预防与安全应急", "9 学会处理割伤、刺伤和烧烫伤", "10 中暑的预防与处理"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "2b89e623-3e08-4a5f-969f-4998b490c8f6",
+      "title": "新教材-小学体育与健康人教版二年级全一册",
+      "stage": "小学",
+      "subject": "体育与健康",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2b89e623-3e08-4a5f-969f-4998b490c8f6.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T09:41:12.893+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 体育文化与体育精神",
+          "children": [
+            {
+              "title": "1 了解中华传统体育"
+            },
+            {
+              "title": "2 初识奥运会"
+            }
+          ],
+          "topics": ["体育文化与体育精神", "1 了解中华传统体育", "2 初识奥运会"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 健康行为与生活方式",
+          "children": [
+            {
+              "title": "3 天天运动"
+            },
+            {
+              "title": "4 足量喝水"
+            },
+            {
+              "title": "5 爱护眼睛"
+            }
+          ],
+          "topics": ["健康行为与生活方式", "3 天天运动", "4 足量喝水", "5 爱护眼睛"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 生长发育与心理健康",
+          "children": [
+            {
+              "title": "6 男生和女生"
+            },
+            {
+              "title": "7 会沟通，能交流"
+            }
+          ],
+          "topics": ["生长发育与心理健康", "6 男生和女生", "7 会沟通，能交流"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 疾病预防与安全应急",
+          "children": [
+            {
+              "title": "8 我会拨打“120”"
+            },
+            {
+              "title": "9 学会处理轻微外伤"
+            },
+            {
+              "title": "10 防溺水，知危险"
+            }
+          ],
+          "topics": [
+            "疾病预防与安全应急",
+            "8 我会拨打“120”",
+            "9 学会处理轻微外伤",
+            "10 防溺水，知危险"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "94b8b87c-35ae-4132-8a4c-71fcde718184",
+      "title": "新教材-义务教育教科书•体育与健康_五年级_全一册_人民教育出版社",
+      "stage": "小学",
+      "subject": "体育与健康",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "五年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/94b8b87c-35ae-4132-8a4c-71fcde718184.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T13:57:25.973+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 体育文化与体育精神",
+          "children": [
+            {
+              "title": "1 增强自信，勇于挑战"
+            },
+            {
+              "title": "2 中华传统养生健身方法"
+            }
+          ],
+          "topics": ["体育文化与体育精神", "1 增强自信，勇于挑战", "2 中华传统养生健身方法"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 健康行为与生活方式",
+          "children": [
+            {
+              "title": "3 制订计划，科学锻炼"
+            },
+            {
+              "title": "4 营养均衡，饮食多样"
+            },
+            {
+              "title": "5 关注健康，远离疾病"
+            },
+            {
+              "title": "6 视力不良的防控"
+            },
+            {
+              "title": "7 拒绝饮酒"
+            }
+          ],
+          "topics": [
+            "健康行为与生活方式",
+            "3 制订计划，科学锻炼",
+            "4 营养均衡，饮食多样",
+            "5 关注健康，远离疾病",
+            "6 视力不良的防控",
+            "7 拒绝饮酒"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 生长发育与心理健康",
+          "children": [
+            {
+              "title": "8 拥抱青春期"
+            },
+            {
+              "title": "9 调节情绪方法多"
+            }
+          ],
+          "topics": ["生长发育与心理健康", "8 拥抱青春期", "9 调节情绪方法多"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 疾病预防与安全应急",
+          "children": [
+            {
+              "title": "10 识别骨折，正确处理"
+            }
+          ],
+          "topics": ["疾病预防与安全应急", "10 识别骨折，正确处理"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "610576b2-e176-47ac-9459-5269f404c994",
+      "title": "新教材-义务教育教科书•体育与健康_六年级_全一册_人民教育出版社",
+      "stage": "小学",
+      "subject": "体育与健康",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/610576b2-e176-47ac-9459-5269f404c994.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T14:00:09.975+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 体育文化与体育精神",
+          "children": [
+            {
+              "title": "1 公平竞争，追求卓越"
+            },
+            {
+              "title": "2 弘扬女排精神"
+            }
+          ],
+          "topics": ["体育文化与体育精神", "1 公平竞争，追求卓越", "2 弘扬女排精神"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 健康行为与生活方式",
+          "children": [
+            {
+              "title": "3 呵护脊柱健康"
+            },
+            {
+              "title": "4 体重与健康"
+            },
+            {
+              "title": "5 吃对三餐，适当运动"
+            },
+            {
+              "title": "6 珍爱生命，远离毒品"
+            }
+          ],
+          "topics": [
+            "健康行为与生活方式",
+            "3 呵护脊柱健康",
+            "4 体重与健康",
+            "5 吃对三餐，适当运动",
+            "6 珍爱生命，远离毒品"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 生长发育与心理健康",
+          "children": [
+            {
+              "title": "7 人际交往讲技巧"
+            }
+          ],
+          "topics": ["生长发育与心理健康", "7 人际交往讲技巧"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 疾病预防与安全应急",
+          "children": [
+            {
+              "title": "8 预防传染病"
+            },
+            {
+              "title": "9 心肺复苏的方法"
+            }
+          ],
+          "topics": ["疾病预防与安全应急", "8 预防传染病", "9 心肺复苏的方法"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ea1ea6be-ebd4-4713-850c-6d82dc0b5a0f",
+      "title": "新教材-义务教育教科书•体育与健康_四年级_全一册_人民教育出版社",
+      "stage": "小学",
+      "subject": "体育与健康",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ea1ea6be-ebd4-4713-850c-6d82dc0b5a0f.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T13:54:44.271+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 体育文化与体育精神",
+          "children": [
+            {
+              "title": "1 奥林匹克圣火传友谊"
+            },
+            {
+              "title": "2 迎难而上我最棒"
+            },
+            {
+              "title": "3 团结协作力量大"
+            }
+          ],
+          "topics": [
+            "体育文化与体育精神",
+            "1 奥林匹克圣火传友谊",
+            "2 迎难而上我最棒",
+            "3 团结协作力量大"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 健康行为与生活方式",
+          "children": [
+            {
+              "title": "4 体育锻炼讲科学"
+            },
+            {
+              "title": "5 规律作息好习惯"
+            },
+            {
+              "title": "6 近视了怎么办"
+            },
+            {
+              "title": "7 远离烟草危害"
+            }
+          ],
+          "topics": [
+            "健康行为与生活方式",
+            "4 体育锻炼讲科学",
+            "5 规律作息好习惯",
+            "6 近视了怎么办",
+            "7 远离烟草危害"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 生长发育与心理健康",
+          "children": [
+            {
+              "title": "8 青春期变化早知道"
+            }
+          ],
+          "topics": ["生长发育与心理健康", "8 青春期变化早知道"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 疾病预防与安全应急",
+          "children": [
+            {
+              "title": "9 学会处理扭伤和挫伤"
+            },
+            {
+              "title": "10 冻伤的预防与处理"
+            }
+          ],
+          "topics": ["疾病预防与安全应急", "9 学会处理扭伤和挫伤", "10 冻伤的预防与处理"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+"use client";
+
+import type { ReactNode, FormEvent } from "react";
+import { Button } from "@/components/ui/button";
+
+export function Field({
+  label,
+  children,
+  hint,
+}: {
+  label: string;
+  children: ReactNode;
+  hint?: string;
+}) {
+  return (
+    <label className="p-field">
+      <span>{label}</span>
+      {children}
+      {hint && <small>{hint}</small>}
+    </label>
+  );
+}
+
+export function Panel({
+  title,
+  description,
+  actions,
+  children,
+}: {
+  title: string;
+  description?: string;
+  actions?: ReactNode;
+  children: ReactNode;
+}) {
+  return (
+    <section className="p-panel">
+      <div className="p-panel-heading">
+        <div>
+          <h2>{title}</h2>
+          {description && <p>{description}</p>}
+        </div>
+        {actions && <div className="p-actions">{actions}</div>}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+export function Empty({ children }: { children: ReactNode }) {
+  return <p className="p-empty">{children}</p>;
+}
+
+export function Submit({
+  pending,
+  disabled = false,
+  children = "保存",
+}: {
+  pending: boolean;
+  disabled?: boolean;
+  children?: ReactNode;
+}) {
+  return (
+    <Button type="submit" disabled={pending || disabled} aria-busy={pending}>
+      {pending ? "正在保存…" : children}
+    </Button>
+  );
+}
+
+export function readForm(event: FormEvent<HTMLFormElement>) {
+  event.preventDefault();
+  return new FormData(event.currentTarget);
+}
+
+export const stringField = (data: FormData, name: string) => String(data.get(name) ?? "").trim();
+export const numberField = (data: FormData, name: string) => Number(data.get(name) ?? 0);

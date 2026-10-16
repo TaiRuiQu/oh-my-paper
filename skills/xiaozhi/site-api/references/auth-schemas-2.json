@@ -1,0 +1,457 @@
+{
+  "note": "Registered library routes; app configuration may disable operations. See frontend.md for availability and auth.md for index.",
+  "endpoints": [
+    {
+      "operation": "getSession",
+      "path": "/api/auth/get-session",
+      "methods": ["GET", "POST"],
+      "requireHeaders": true,
+      "body": null,
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "disableCookieCache": {
+            "type": "boolean",
+            "description": "Disable cookie cache and fetch session from database"
+          },
+          "disableRefresh": {
+            "type": "boolean",
+            "description": "Disable session refresh. Useful for checking session status, without updating the session"
+          }
+        }
+      },
+      "description": "Get the current session",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": ["object", "null"],
+                "properties": {
+                  "session": {
+                    "$ref": "#/components/schemas/Session"
+                  },
+                  "user": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                },
+                "required": ["session", "user"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "isUsernameAvailable",
+      "path": "/api/auth/is-username-available",
+      "methods": ["POST"],
+      "requireHeaders": false,
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "The username to check"
+          }
+        },
+        "required": ["username"]
+      },
+      "query": null,
+      "description": null,
+      "responses": null
+    },
+    {
+      "operation": "linkSocialAccount",
+      "path": "/api/auth/link-social",
+      "methods": ["POST"],
+      "requireHeaders": true,
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "callbackURL": {
+            "type": "string",
+            "description": "The URL to redirect to after the user has signed in"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "apple",
+                  "atlassian",
+                  "cloudflare",
+                  "cognito",
+                  "discord",
+                  "facebook",
+                  "figma",
+                  "github",
+                  "microsoft",
+                  "google",
+                  "huggingface",
+                  "slack",
+                  "spotify",
+                  "twitch",
+                  "twitter",
+                  "dropbox",
+                  "kick",
+                  "linear",
+                  "linkedin",
+                  "gitlab",
+                  "tiktok",
+                  "reddit",
+                  "roblox",
+                  "salesforce",
+                  "vk",
+                  "zoom",
+                  "notion",
+                  "kakao",
+                  "naver",
+                  "line",
+                  "paybin",
+                  "paypal",
+                  "polar",
+                  "railway",
+                  "vercel",
+                  "wechat"
+                ]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "idToken": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string"
+              },
+              "nonce": {
+                "type": "string"
+              },
+              "accessToken": {
+                "type": "string"
+              },
+              "refreshToken": {
+                "type": "string"
+              }
+            },
+            "required": ["token"]
+          },
+          "requestSignUp": {
+            "type": "boolean"
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Additional scopes to request from the provider"
+          },
+          "errorCallbackURL": {
+            "type": "string",
+            "description": "The URL to redirect to if there is an error during the link process"
+          },
+          "disableRedirect": {
+            "type": "boolean",
+            "description": "Disable automatic redirection to the provider. Useful for handling the redirection yourself"
+          },
+          "loginHint": {
+            "type": "string",
+            "description": "The login hint to use for the authorization code request"
+          },
+          "additionalParams": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Extra query parameters to append to the provider authorization URL (e.g. Cognito identity_provider, Google hd)."
+          },
+          "additionalData": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": ["provider"]
+      },
+      "query": null,
+      "description": "Link a social account to the user",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "The authorization URL to redirect the user to"
+                  },
+                  "redirect": {
+                    "type": "boolean",
+                    "description": "Indicates if the user should be redirected to the authorization URL"
+                  },
+                  "status": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["redirect"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "listUserAccounts",
+      "path": "/api/auth/list-accounts",
+      "methods": ["GET"],
+      "requireHeaders": false,
+      "body": null,
+      "query": null,
+      "description": "List all accounts linked to the user",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "providerId": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "accountId": {
+                      "type": "string"
+                    },
+                    "userId": {
+                      "type": "string"
+                    },
+                    "scopes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "providerId",
+                    "createdAt",
+                    "updatedAt",
+                    "accountId",
+                    "userId",
+                    "scopes"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "listSessions",
+      "path": "/api/auth/list-sessions",
+      "methods": ["GET"],
+      "requireHeaders": true,
+      "body": null,
+      "query": null,
+      "description": "List all active sessions for the user",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "ok",
+      "path": "/api/auth/ok",
+      "methods": ["GET"],
+      "requireHeaders": false,
+      "body": null,
+      "query": null,
+      "description": "Check if the API is working",
+      "responses": {
+        "200": {
+          "description": "API is working",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ok": {
+                    "type": "boolean",
+                    "description": "Indicates if the API is working"
+                  }
+                },
+                "required": ["ok"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "refreshToken",
+      "path": "/api/auth/refresh-token",
+      "methods": ["POST"],
+      "requireHeaders": false,
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "accountId": {
+                "type": "string",
+                "description": "The Better Auth account ID"
+              },
+              "userId": {
+                "type": "string",
+                "description": "The user ID associated with the account"
+              }
+            },
+            "required": ["accountId"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "useAccountCookie": {
+                "type": "boolean",
+                "const": true,
+                "description": "Select the current OAuth account from its signed cookie"
+              },
+              "userId": {
+                "type": "string",
+                "description": "The user ID associated with the account"
+              }
+            },
+            "required": ["useAccountCookie"],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "query": null,
+      "description": "Refresh the access token using a refresh token",
+      "responses": {
+        "200": {
+          "description": "Access token refreshed successfully",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tokenType": {
+                    "type": "string"
+                  },
+                  "idToken": {
+                    "type": "string"
+                  },
+                  "accessToken": {
+                    "type": "string"
+                  },
+                  "refreshToken": {
+                    "type": "string"
+                  },
+                  "accessTokenExpiresAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "refreshTokenExpiresAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Invalid refresh token or provider configuration"
+        }
+      }
+    },
+    {
+      "operation": "requestPasswordReset",
+      "path": "/api/auth/request-password-reset",
+      "methods": ["POST"],
+      "requireHeaders": false,
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+            "description": "The email address of the user to send a password reset email to"
+          },
+          "redirectTo": {
+            "type": "string",
+            "description": "The URL to redirect the user to reset their password. If the token isn't valid or expired, it'll be redirected with a query parameter `?error=INVALID_TOKEN`. If the token is valid, it'll be redirected with a query parameter `?token=VALID_TOKEN"
+          }
+        },
+        "required": ["email"]
+      },
+      "query": null,
+      "description": "Send a password reset email to the user",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

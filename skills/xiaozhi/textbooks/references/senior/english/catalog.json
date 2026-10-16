@@ -1,0 +1,83 @@
+{
+  "stage": "高中",
+  "subject": "英语",
+  "books": [
+    {
+      "id": "2ffd7e2f-d83f-45b6-9a85-f6c655861f04",
+      "title": "高中英语人教版选择性必修 第三册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第三册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/english/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "4ebdf6c8-4c90-4537-88ea-3902a6676598",
+      "title": "高中英语人教版选择性必修 第四册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第四册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/english/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "9b661b42-54bc-48c5-9b03-21a03c78176f",
+      "title": "高中英语人教版高一必修 第一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/english/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "75399b4d-e3e1-4dfa-8f53-39abb8fb0a7a",
+      "title": "高中英语人教版高一必修 第三册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第三册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/english/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "f5aa0d4b-88b5-47fb-864e-dab60d73b671",
+      "title": "高中英语人教版高一必修 第二册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/english/units-2.json",
+      "unit_count": 5
+    },
+    {
+      "id": "42bb696f-cb72-446f-9fd9-afed0dc50773",
+      "title": "高中英语人教版高二选择性必修 第一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修 第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/english/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "7dc81670-4682-4bc2-87cd-f9b843d230cb",
+      "title": "高中英语人教版高二选择性必修 第二册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修 第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/english/units-2.json",
+      "unit_count": 5
+    }
+  ]
+}

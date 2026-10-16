@@ -1,0 +1,844 @@
+{
+  "formatVersion": 1,
+  "delegatedAuth": [
+    {
+      "path": "/api/auth/account-info",
+      "methods": ["GET"],
+      "reference": "references/auth-schemas-1.json"
+    },
+    {
+      "path": "/api/auth/callback/:id",
+      "methods": ["GET", "POST"],
+      "reference": "references/auth-schemas-1.json"
+    },
+    {
+      "path": "/api/auth/change-email",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-1.json"
+    },
+    {
+      "path": "/api/auth/change-password",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-1.json"
+    },
+    {
+      "path": "/api/auth/delete-user",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-1.json"
+    },
+    {
+      "path": "/api/auth/delete-user/callback",
+      "methods": ["GET"],
+      "reference": "references/auth-schemas-1.json"
+    },
+    {
+      "path": "/api/auth/error",
+      "methods": ["GET"],
+      "reference": "references/auth-schemas-1.json"
+    },
+    {
+      "path": "/api/auth/get-access-token",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-1.json"
+    },
+    {
+      "path": "/api/auth/get-session",
+      "methods": ["GET", "POST"],
+      "reference": "references/auth-schemas-2.json"
+    },
+    {
+      "path": "/api/auth/is-username-available",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-2.json"
+    },
+    {
+      "path": "/api/auth/link-social",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-2.json"
+    },
+    {
+      "path": "/api/auth/list-accounts",
+      "methods": ["GET"],
+      "reference": "references/auth-schemas-2.json"
+    },
+    {
+      "path": "/api/auth/list-sessions",
+      "methods": ["GET"],
+      "reference": "references/auth-schemas-2.json"
+    },
+    {
+      "path": "/api/auth/ok",
+      "methods": ["GET"],
+      "reference": "references/auth-schemas-2.json"
+    },
+    {
+      "path": "/api/auth/refresh-token",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-2.json"
+    },
+    {
+      "path": "/api/auth/request-password-reset",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-2.json"
+    },
+    {
+      "path": "/api/auth/reset-password",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-3.json"
+    },
+    {
+      "path": "/api/auth/reset-password/:token",
+      "methods": ["GET"],
+      "reference": "references/auth-schemas-3.json"
+    },
+    {
+      "path": "/api/auth/revoke-other-sessions",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-3.json"
+    },
+    {
+      "path": "/api/auth/revoke-session",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-3.json"
+    },
+    {
+      "path": "/api/auth/revoke-sessions",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-3.json"
+    },
+    {
+      "path": "/api/auth/send-verification-email",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-3.json"
+    },
+    {
+      "path": "/api/auth/sign-in/email",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-3.json"
+    },
+    {
+      "path": "/api/auth/sign-in/social",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-3.json"
+    },
+    {
+      "path": "/api/auth/sign-in/username",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-4.json"
+    },
+    {
+      "path": "/api/auth/sign-out",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-4.json"
+    },
+    {
+      "path": "/api/auth/sign-up/email",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-4.json"
+    },
+    {
+      "path": "/api/auth/unlink-account",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-4.json"
+    },
+    {
+      "path": "/api/auth/update-session",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-4.json"
+    },
+    {
+      "path": "/api/auth/update-user",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-4.json"
+    },
+    {
+      "path": "/api/auth/verify-email",
+      "methods": ["GET"],
+      "reference": "references/auth-schemas-4.json"
+    },
+    {
+      "path": "/api/auth/verify-password",
+      "methods": ["POST"],
+      "reference": "references/auth-schemas-4.json"
+    }
+  ],
+  "routeCount": 61,
+  "methodCount": 71,
+  "implicitMethodCount": 104,
+  "routes": [
+    {
+      "path": "/api/auth/{...all}",
+      "methods": ["GET", "POST"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/auth/[...all]/route.ts",
+      "sha256": "db57cd211a3a71cd34f054b39c88be6a532279f51632f0678feedd783aea2aed",
+      "references": {
+        "GET": "references/frontend.md",
+        "POST": "references/frontend.md"
+      }
+    },
+    {
+      "path": "/api/health",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/health/route.ts",
+      "sha256": "ea83a84dcbd33d67d5f091fa77d04a66bc40e8baffcbed6a75981979ddd9bb7a",
+      "references": {
+        "GET": "references/frontend.md"
+      }
+    },
+    {
+      "path": "/api/platform/{area}/commands",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/[area]/commands/route.ts",
+      "sha256": "1faa99913f0d8a06935c28d599077a7cab634a1e92a47028cad716173d0f41e8",
+      "references": {
+        "POST": "references/platform.md"
+      }
+    },
+    {
+      "path": "/api/platform/{area}/state",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/[area]/state/route.ts",
+      "sha256": "a8a0f7b1e3b9e8ad54451c2f6f6c5c85b1e59c20c48f184599b09ba977c4442c",
+      "references": {
+        "GET": "references/platform.md"
+      }
+    },
+    {
+      "path": "/api/platform/accounts/import",
+      "methods": ["GET", "POST", "PUT"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/accounts/import/route.ts",
+      "sha256": "afe90f434064aa6dcd7c67720713b7b453598fc245677fcc961688b2088ec143",
+      "references": {
+        "GET": "references/admin.md",
+        "POST": "references/admin.md",
+        "PUT": "references/admin.md"
+      }
+    },
+    {
+      "path": "/api/platform/admin/ai-progress",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/admin/ai-progress/route.ts",
+      "sha256": "75629947077e83bc450f67285463d9da076a9ab119f42d9de7e41cfab41cec9b",
+      "references": {
+        "GET": "references/ai.md"
+      }
+    },
+    {
+      "path": "/api/platform/admin/permissions/{id}/history",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/admin/permissions/[id]/history/route.ts",
+      "sha256": "47f811818c78262bc255db9551d199b14ade645dc3fe268c8a1fae9ade22433b",
+      "references": {
+        "GET": "references/admin.md"
+      }
+    },
+    {
+      "path": "/api/platform/admin",
+      "methods": ["GET", "POST"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/admin/route.ts",
+      "sha256": "66e334787df1fbd823232ee555c5f5d3c1673747a608581e332bb56168e8d178",
+      "references": {
+        "GET": "references/admin.md",
+        "POST": "references/admin.md"
+      }
+    },
+    {
+      "path": "/api/platform/ai/{id}/events",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/ai/[id]/events/route.ts",
+      "sha256": "3f289f8d2bda56a29e3d1ea36234245f311cf59772caae1d82233e033d52e2b2",
+      "references": {
+        "GET": "references/ai.md"
+      }
+    },
+    {
+      "path": "/api/platform/ai/{id}/retry",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/ai/[id]/retry/route.ts",
+      "sha256": "7eea33f71a2b3b7170de7fa1e8709dcca5314fa36321b48ad99f423727f66096",
+      "references": {
+        "POST": "references/ai.md"
+      }
+    },
+    {
+      "path": "/api/platform/ai/{id}",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/ai/[id]/route.ts",
+      "sha256": "8ad27c66a75d6b97f5000f559fcaabe94f40c9f60f3e5ac91781fc9d66227f15",
+      "references": {
+        "GET": "references/ai.md"
+      }
+    },
+    {
+      "path": "/api/platform/ai/events",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/ai/events/route.ts",
+      "sha256": "c4d4de622880cfaf9a74ec454616942068901ad0cc9e17e9b4f62c20873d9f41",
+      "references": {
+        "GET": "references/ai.md"
+      }
+    },
+    {
+      "path": "/api/platform/ai",
+      "methods": ["GET", "POST"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/ai/route.ts",
+      "sha256": "4ea581073d72f5195ea738c73f9e70ac10aeeb7157dbef9aa313c0a8aa43ed62",
+      "references": {
+        "GET": "references/ai.md",
+        "POST": "references/ai.md"
+      }
+    },
+    {
+      "path": "/api/platform/analytics",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/analytics/route.ts",
+      "sha256": "7d4f56281f990803251f0c11667b8a3d3f725e31c8dc57925b889d8f23e3608e",
+      "references": {
+        "GET": "references/platform.md"
+      }
+    },
+    {
+      "path": "/api/platform/assets/{id}",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/assets/[id]/route.ts",
+      "sha256": "4f68bd0e256ab1ff71cf533206a3af37e20007ae33cd2d07905d74ad178f45ac",
+      "references": {
+        "GET": "references/materials.md"
+      }
+    },
+    {
+      "path": "/api/platform/assets",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/assets/route.ts",
+      "sha256": "4e84ea0df64b39483ff03fc71b194aefddecc24ba03716157d25672b790ae7a7",
+      "references": {
+        "POST": "references/materials.md"
+      }
+    },
+    {
+      "path": "/api/platform/barcodes",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/barcodes/route.ts",
+      "sha256": "93b80e66b4515c715e8c4120be834185ab0451ba050a5e78d8d1f711a6bfd4fb",
+      "references": {
+        "GET": "references/materials.md"
+      }
+    },
+    {
+      "path": "/api/platform/homework/assignments/{id}/history",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/homework/assignments/[id]/history/route.ts",
+      "sha256": "aa794d8ec9229294d1f045d4916c27db1b054e1fc852b0f00fd28f932ac5cccf",
+      "references": {
+        "GET": "references/homework.md"
+      }
+    },
+    {
+      "path": "/api/platform/homework/assignments/{id}/preview",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/homework/assignments/[id]/preview/route.ts",
+      "sha256": "63ed71eb697091bef6571cab84d115df50f35129e733f605ec919dacf1199c5a",
+      "references": {
+        "GET": "references/homework.md"
+      }
+    },
+    {
+      "path": "/api/platform/homework/assignments/{id}",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/homework/assignments/[id]/route.ts",
+      "sha256": "ab015f40b7b84d977e344a4bebe53d289984e3db65445eda9318d4a1e9401347",
+      "references": {
+        "GET": "references/homework.md"
+      }
+    },
+    {
+      "path": "/api/platform/homework/assignments",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/homework/assignments/route.ts",
+      "sha256": "77c1163263a98ac395217e58138673655ccad701fd35b29ad7fd1428f2006e54",
+      "references": {
+        "GET": "references/homework.md"
+      }
+    },
+    {
+      "path": "/api/platform/homework/commands",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/homework/commands/route.ts",
+      "sha256": "48d4f990e5fd8baa65afb62a4483117db357f7220e57a9c2ea9752c3bd3d3c6f",
+      "references": {
+        "POST": "references/homework.md"
+      }
+    },
+    {
+      "path": "/api/platform/homework/works/{id}/assets",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/homework/works/[id]/assets/route.ts",
+      "sha256": "b0e98ada2f93403283976b87a42bbdb72db03c830e7a1f6ba91f5aca0f5f7af1",
+      "references": {
+        "POST": "references/homework.md"
+      }
+    },
+    {
+      "path": "/api/platform/materials",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/materials/route.ts",
+      "sha256": "10dcc40c33dc3bb7a5f87dc914e55d02aae06e469b13df7bf3fbede35a7a1726",
+      "references": {
+        "POST": "references/materials.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/commands",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/practice/commands/route.ts",
+      "sha256": "10f6eb9f9aad966f4b07a5ce5263b47cd0c26b913d9db4e0e0fecaff9b25fb35",
+      "references": {
+        "POST": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/evidence",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/practice/evidence/route.ts",
+      "sha256": "fd9053b9ec07b64291e778c4acca016812d05902bfe20aea9ebed7cd93a97c0b",
+      "references": {
+        "GET": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/reviews/{id}",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/practice/reviews/[id]/route.ts",
+      "sha256": "0e0fc11461424ef7289f040a0ce93c362344697b8c351149c7f6db116ee3965d",
+      "references": {
+        "GET": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/reviews",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/practice/reviews/route.ts",
+      "sha256": "c725e7654dab46f7f4c0cd7e05f75519b16328477bed83cde6d18ecc7cd3cfbd",
+      "references": {
+        "GET": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/sessions/{id}/assets",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/practice/sessions/[id]/assets/route.ts",
+      "sha256": "d7c4df45c4e08103e8eedc3269dde6857a7988c31fd073b124260ac9b6abe582",
+      "references": {
+        "POST": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/sessions/{id}/history",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/practice/sessions/[id]/history/route.ts",
+      "sha256": "9c9eabead0829869d1a588d59c3094fa7577237ef2e335340dea8e9054ae8a8f",
+      "references": {
+        "GET": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/sessions/{id}",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/practice/sessions/[id]/route.ts",
+      "sha256": "1862de78beb08fde72dcfd359227797814dc7c2983e99238c320374b3a0c20e8",
+      "references": {
+        "GET": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/sessions",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/practice/sessions/route.ts",
+      "sha256": "05936a6a33c7b9261f7af6f63eb1113d13421476d71423ad7eaefebbd5b84aa1",
+      "references": {
+        "GET": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/sets/{id}/preview",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/practice/sets/[id]/preview/route.ts",
+      "sha256": "e6eb43f30b261ebcdb291ef3c63fdcd126d574c8a475e387dcfa8798ffee20bc",
+      "references": {
+        "GET": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/sets/{id}",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/practice/sets/[id]/route.ts",
+      "sha256": "2c52c8217a676bc521c3a1628059fb22de4b22b9ef46bd0b8f1d59900ad68906",
+      "references": {
+        "GET": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/sets",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/practice/sets/route.ts",
+      "sha256": "0791896c253ff030d5549c789c35adcd5e08400d75fc62ba99af3e72c6db87ae",
+      "references": {
+        "GET": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/practice/sources",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/practice/sources/route.ts",
+      "sha256": "15a07de06cba3698955bdc054d46bae6c2b3e2e48561b55f432637d6789caf2b",
+      "references": {
+        "GET": "references/practice.md"
+      }
+    },
+    {
+      "path": "/api/platform/print",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/print/route.ts",
+      "sha256": "41aef7aad070af9fde127151b8d923b22b80ab8336365bac2952a9c61e123930",
+      "references": {
+        "GET": "references/materials.md"
+      }
+    },
+    {
+      "path": "/api/platform/questions",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/questions/route.ts",
+      "sha256": "bbc7835eb52d91e579882322191b665a8372e43bad903d9c84b304667310c691",
+      "references": {
+        "GET": "references/platform.md"
+      }
+    },
+    {
+      "path": "/api/platform/revision-papers",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/revision-papers/route.ts",
+      "sha256": "a7f4cc687888aebf8a88df3e142a0fc21b7040848bdf7cf4a0e0ca842573d4a6",
+      "references": {
+        "POST": "references/materials.md"
+      }
+    },
+    {
+      "path": "/api/platform/roster-history",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/roster-history/route.ts",
+      "sha256": "68b038120eac46394d64d24d0a88a90201b75197b271a6eaa5ceb5241f5ae136",
+      "references": {
+        "GET": "references/platform.md"
+      }
+    },
+    {
+      "path": "/api/platform",
+      "methods": ["GET", "POST"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/route.ts",
+      "sha256": "5540f58ea4692d66ae3237484d73bfb15d295226d69d2ea7f04a4a68a861b549",
+      "references": {
+        "GET": "references/platform.md",
+        "POST": "references/platform.md"
+      }
+    },
+    {
+      "path": "/api/platform/scan",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/scan/route.ts",
+      "sha256": "53bf12651350b61bea97c6cc5da7346ed92b26c938f975855baea3cdbf0acb1a",
+      "references": {
+        "POST": "references/materials.md"
+      }
+    },
+    {
+      "path": "/api/platform/school/commands",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/school/commands/route.ts",
+      "sha256": "542eb4f8a164c77990f6e8def2ca2af262687263b4bb2b5cb42a98b6252a4f0c",
+      "references": {
+        "POST": "references/school.md"
+      }
+    },
+    {
+      "path": "/api/platform/school/schedule",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/school/schedule/route.ts",
+      "sha256": "b04d0d07c76dd5f21bdbd063da2e3734502ee886fdcb9d374690013f9b1d730d",
+      "references": {
+        "GET": "references/school.md"
+      }
+    },
+    {
+      "path": "/api/platform/school/state",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/school/state/route.ts",
+      "sha256": "fd226850d73232999d207bcef1fb9813d2d295b1482bd8af21e4f8b7856a7393",
+      "references": {
+        "GET": "references/school.md"
+      }
+    },
+    {
+      "path": "/api/platform/school/timetable/check",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/school/timetable/check/route.ts",
+      "sha256": "cc93e4987ce4811c5fdb187c6e51419e8eaa60d43c71f70c7b6988672199dfff",
+      "references": {
+        "GET": "references/school.md"
+      }
+    },
+    {
+      "path": "/api/platform/teaching/commands",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/teaching/commands/route.ts",
+      "sha256": "f4e20a40a6e64806efd7b930141e8ca01a8d9303cb9af2830877a3368ab2a050",
+      "references": {
+        "POST": "references/teaching.md"
+      }
+    },
+    {
+      "path": "/api/platform/teaching/sessions/{id}/history",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/teaching/sessions/[id]/history/route.ts",
+      "sha256": "02fb2648bf7cdd00a5f0413048a0dd0655725f13a3d03154c83808584d804e57",
+      "references": {
+        "GET": "references/teaching.md"
+      }
+    },
+    {
+      "path": "/api/platform/teaching/sessions/{id}/roster-preview",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/teaching/sessions/[id]/roster-preview/route.ts",
+      "sha256": "4e17b2f5703d6012163f0324f09166941a3531ec261140d4a79ffd61bddf0101",
+      "references": {
+        "GET": "references/teaching.md"
+      }
+    },
+    {
+      "path": "/api/platform/teaching/sessions/{id}",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/teaching/sessions/[id]/route.ts",
+      "sha256": "a3a153be5ab9128dd140965ab938a634522f4f476045f9a4a03f9480127bc362",
+      "references": {
+        "GET": "references/teaching.md"
+      }
+    },
+    {
+      "path": "/api/platform/teaching/sessions",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/teaching/sessions/route.ts",
+      "sha256": "40904c657caaf54e2485f67033d909e6ae31956d0250d7f201d8b959806fa859",
+      "references": {
+        "GET": "references/teaching.md"
+      }
+    },
+    {
+      "path": "/api/platform/templates",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/platform/templates/route.ts",
+      "sha256": "a19872f7c475fcf54db33a37850c4e2ef41b5aced5fdef6db783ba53fc207737",
+      "references": {
+        "POST": "references/materials.md"
+      }
+    },
+    {
+      "path": "/api/platform/users",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/platform/users/route.ts",
+      "sha256": "9f3f4afbbf09a43e283292375cd74ea8d88def589c276005635380909afa8a40",
+      "references": {
+        "GET": "references/platform.md"
+      }
+    },
+    {
+      "path": "/api/xiaozhi/{id}/events",
+      "methods": ["GET"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/xiaozhi/[id]/events/route.ts",
+      "sha256": "bd52e7b88c85b23f273ac57c1beee4919797816630a9b7b8901c8569571328bc",
+      "references": {
+        "GET": "references/frontend.md"
+      }
+    },
+    {
+      "path": "/api/xiaozhi/{id}/messages",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/xiaozhi/[id]/messages/route.ts",
+      "sha256": "952dbecb6d7072cc27516b12fb681c6d45cb51ffe082d394e90e8aaf37ab2274",
+      "references": {
+        "POST": "references/frontend.md"
+      }
+    },
+    {
+      "path": "/api/xiaozhi/{id}",
+      "methods": ["DELETE", "GET", "PATCH"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/xiaozhi/[id]/route.ts",
+      "sha256": "4aba267590bdcc3fe5300bfc35fa996766057050bf495cfcc623904408d187f1",
+      "references": {
+        "DELETE": "references/frontend.md",
+        "GET": "references/frontend.md",
+        "PATCH": "references/frontend.md"
+      }
+    },
+    {
+      "path": "/api/xiaozhi/{id}/stop",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/xiaozhi/[id]/stop/route.ts",
+      "sha256": "d2a6308336053649e30cabf88b73659b07d3cc9eb1edd0ac76c085610b07917e",
+      "references": {
+        "POST": "references/frontend.md"
+      }
+    },
+    {
+      "path": "/api/xiaozhi/attachments",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/xiaozhi/attachments/route.ts",
+      "sha256": "30b9d41dbe78491c914aa52f74978d6566d3d767a264220040be74896293ce95",
+      "references": {
+        "POST": "references/frontend.md"
+      }
+    },
+    {
+      "path": "/api/xiaozhi",
+      "methods": ["GET", "POST"],
+      "implicitMethods": ["HEAD", "OPTIONS"],
+      "source": "src/app/api/xiaozhi/route.ts",
+      "sha256": "b63b20551f3b0036edac6c42366cc35dbc0eb41a6dec7b977231c0015f7c6de9",
+      "references": {
+        "GET": "references/frontend.md",
+        "POST": "references/frontend.md"
+      }
+    },
+    {
+      "path": "/api/xiaozhi/skills/{id}",
+      "methods": ["DELETE", "PUT"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/xiaozhi/skills/[id]/route.ts",
+      "sha256": "4fd359ed0efdd9315059ac62e64ddefd4a9398997b4a38295c1aa8a2bcc1f801",
+      "references": {
+        "DELETE": "references/frontend.md",
+        "PUT": "references/frontend.md"
+      }
+    },
+    {
+      "path": "/api/xiaozhi/skills",
+      "methods": ["POST"],
+      "implicitMethods": ["OPTIONS"],
+      "source": "src/app/api/xiaozhi/skills/route.ts",
+      "sha256": "81b9d9be309f2fd747779e6bc4a3efcccba7ff2736977cc4b13b9e0d202191b5",
+      "references": {
+        "POST": "references/frontend.md"
+      }
+    }
+  ],
+  "sourceGroups": {
+    "contracts": {
+      "directory": "src/contracts",
+      "files": 18,
+      "sha256": "307ea5455e305b8912ab7ebbbb3be650f9cd1f3bcd58006a8b8adf871826a443"
+    },
+    "platform-services": {
+      "directory": "src/server/platform",
+      "files": 79,
+      "sha256": "b46c1eec3d7976310b514576ed46d4489e8c7eed69202550a50a91ee3044622e"
+    },
+    "auth-services": {
+      "directory": "src/server/auth",
+      "files": 6,
+      "sha256": "4a97e3880aad5bb8c09ed1968f2c6b9b2a0893e188113734a6da0262e1d15e48"
+    },
+    "http-services": {
+      "directory": "src/server/http",
+      "files": 2,
+      "sha256": "9746f42de1bb96e270e5cc9a6d89e2a4ab90277c8438966169fcb95c27e38dea"
+    },
+    "xiaozhi-runtime": {
+      "directory": "src/server/xiaozhi",
+      "files": 11,
+      "sha256": "c6856ea9bd8c6f7b05b3cb51439b923936b83b140a12e771366dddc48ad63291"
+    },
+    "ai-runtime": {
+      "directory": "src/server/ai",
+      "files": 2,
+      "sha256": "8d034f4c5d271d7ba2d129e773fb005f954f27f46a8f97e3561bf18ddcf55d89"
+    },
+    "lib": {
+      "directory": "src/lib",
+      "files": 32,
+      "sha256": "fbc6b3b4b5740f6636f9a5e4a11058a8ed0ce49042357d20574b08072670a2a1"
+    },
+    "config": {
+      "directory": "src/server/config",
+      "files": 1,
+      "sha256": "37a90a4480532c02a952b4533632a41f3e1024c684ae0a95434aee52fc2e3cec"
+    }
+  },
+  "additionalSourceHashes": {
+    "prisma/schema.prisma": "b53dacfb6060c90986cc943f6a22b8e30fb40328e32533f6ac9b6f75f9bdc9dd",
+    "src/server/errors.ts": "c4b882f7ce7406155621357d7c5be86a5aa9d6fe8f3d7189e05ab19b10ef4337",
+    "src/server/logger.ts": "45066d213c6f8b1513e587c4efa372fa4051c2b60a79731d6d1347c1d63ce7fc",
+    "src/lib/ai-progress-codec.ts": "e41b3531549782de6ec5af04bac98d4d662b007ac6e4c0db0c59a12f206771e4",
+    "scripts/scanner-bridge/bridge.py": "c3bcd8be82768aac1091627c4f9432bec1b6c91d3b5617a2fa6a7a198331edbc"
+  },
+  "dependencyVersions": {
+    "next": "16.4.0",
+    "better-auth": "1.7.7",
+    "zod": "4.6.5"
+  }
+}

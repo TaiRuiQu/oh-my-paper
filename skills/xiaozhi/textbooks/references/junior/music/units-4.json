@@ -1,0 +1,368 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "e51bb45d-93dd-6fc3-04dd-35807ab422e4",
+      "title": "初中音乐人教版八年级下册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/e51bb45d-93dd-6fc3-04dd-35807ab422e4.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:10.931+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 华夏古韵",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "阳关三叠"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "原始狩猎图"
+                },
+                {
+                  "title": "哀郢"
+                },
+                {
+                  "title": "楚商"
+                },
+                {
+                  "title": "流水"
+                },
+                {
+                  "title": "杏花天影"
+                }
+              ]
+            },
+            {
+              "title": "音乐故事",
+              "children": [
+                {
+                  "title": "广陵散"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "华夏古韵",
+            "唱歌",
+            "阳关三叠",
+            "欣赏",
+            "原始狩猎图",
+            "哀郢",
+            "楚商",
+            "流水",
+            "杏花天影",
+            "音乐故事",
+            "广陵散"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 梨园风采",
+          "children": [
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "海岛冰轮初转腾"
+                },
+                {
+                  "title": "我正在城楼观山景"
+                }
+              ]
+            },
+            {
+              "title": "学唱京剧",
+              "children": [
+                {
+                  "title": "儿行千里母担忧"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "游园惊梦"
+                },
+                {
+                  "title": "智斗"
+                },
+                {
+                  "title": "打虎上山"
+                }
+              ]
+            },
+            {
+              "title": "知识与实践"
+            }
+          ],
+          "topics": [
+            "梨园风采",
+            "欣赏",
+            "海岛冰轮初转腾",
+            "我正在城楼观山景",
+            "学唱京剧",
+            "儿行千里母担忧",
+            "游园惊梦",
+            "智斗",
+            "打虎上山",
+            "知识与实践"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 西乐撷英（一）",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "英雄凯旋歌"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "G弦上的咏叹调"
+                },
+                {
+                  "title": "小夜曲"
+                },
+                {
+                  "title": "c小调第五（命运）交响曲"
+                }
+              ]
+            },
+            {
+              "title": "音乐家故事",
+              "children": [
+                {
+                  "title": "贝多芬与《月光奏鸣曲》"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "g小调第四十交响曲"
+                },
+                {
+                  "title": "竖笛演奏小步舞曲"
+                }
+              ]
+            },
+            {
+              "title": "自我评测"
+            },
+            {
+              "title": "活动与探究"
+            }
+          ],
+          "topics": [
+            "西乐撷英（一）",
+            "唱歌",
+            "英雄凯旋歌",
+            "欣赏",
+            "G弦上的咏叹调",
+            "小夜曲",
+            "c小调第五（命运）交响曲",
+            "音乐家故事",
+            "贝多芬与《月光奏鸣曲》",
+            "g小调第四十交响曲",
+            "竖笛演奏小步舞曲",
+            "自我评测",
+            "活动与探究"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 神州音韵（四）",
+          "children": [
+            {
+              "title": "*唱歌",
+              "children": [
+                {
+                  "title": "在那遥远的地方"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "大漠之夜"
+                },
+                {
+                  "title": "玛依拉"
+                },
+                {
+                  "title": "阳光照耀着塔什库尔干"
+                }
+              ]
+            },
+            {
+              "title": "*唱歌",
+              "children": [
+                {
+                  "title": "牧歌"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "万马奔腾"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "乌夏克木卡姆"
+                },
+                {
+                  "title": "半个月亮爬上来"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "神州音韵（四）",
+            "*唱歌",
+            "在那遥远的地方",
+            "欣赏",
+            "大漠之夜",
+            "玛依拉",
+            "阳光照耀着塔什库尔干",
+            "牧歌",
+            "万马奔腾",
+            "选听",
+            "乌夏克木卡姆",
+            "半个月亮爬上来"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 音乐故事（一）",
+          "children": [
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "梁山伯与祝英台"
+                }
+              ]
+            },
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "化蝶"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "十面埋伏"
+                },
+                {
+                  "title": "《长恨歌》选段"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "音乐故事（一）",
+            "欣赏",
+            "梁山伯与祝英台",
+            "唱歌",
+            "化蝶",
+            "十面埋伏",
+            "《长恨歌》选段"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 夏日情怀",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "夏日泛舟海上"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "夏夜"
+                },
+                {
+                  "title": "六月——船歌"
+                },
+                {
+                  "title": "彩云追月"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "夏日里最后一朵玫瑰"
+                }
+              ]
+            },
+            {
+              "title": "竖笛演奏",
+              "children": [
+                {
+                  "title": "美丽的梦神"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "夏日情怀",
+            "唱歌",
+            "夏日泛舟海上",
+            "欣赏",
+            "夏夜",
+            "六月——船歌",
+            "彩云追月",
+            "选听",
+            "夏日里最后一朵玫瑰",
+            "竖笛演奏",
+            "美丽的梦神"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1277 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "ff808081-4371-757b-0143-9462e6b13beb",
+      "title": "初中音乐人教版（五线谱）八年级上册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ff808081-4371-757b-0143-9462e6b13beb.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-07-01T18:30:41.990+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 歌舞青春",
+          "children": [
+            {
+              "title": "*唱歌",
+              "children": [
+                {
+                  "title": "青春舞曲"
+                }
+              ]
+            },
+            {
+              "title": "选唱",
+              "children": [
+                {
+                  "title": "共青团团员之歌"
+                },
+                {
+                  "title": "集体舞"
+                },
+                {
+                  "title": "校园圆舞曲"
+                }
+              ]
+            },
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "拉起手"
+                }
+              ]
+            },
+            {
+              "title": "竖笛演奏",
+              "children": [
+                {
+                  "title": "青春舞曲"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "歌舞青春",
+            "*唱歌",
+            "青春舞曲",
+            "选唱",
+            "共青团团员之歌",
+            "集体舞",
+            "校园圆舞曲",
+            "唱歌",
+            "拉起手",
+            "竖笛演奏"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 电子空间站",
+          "children": [
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "西班牙斗牛舞曲"
+                }
+              ]
+            },
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "我的未来不是梦"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "丝绸之路"
+                },
+                {
+                  "title": "《动物世界》片头曲"
+                },
+                {
+                  "title": "雨林"
+                }
+              ]
+            },
+            {
+              "title": "音乐工作站"
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "橄榄树"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "夜莺"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "电子空间站",
+            "欣赏",
+            "西班牙斗牛舞曲",
+            "唱歌",
+            "我的未来不是梦",
+            "丝绸之路",
+            "《动物世界》片头曲",
+            "雨林",
+            "音乐工作站",
+            "橄榄树",
+            "选听",
+            "夜莺"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 歌剧之夜",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "洪湖水，浪打浪"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "歌剧《白毛女》选段"
+                },
+                {
+                  "title": "今夜无人入睡"
+                },
+                {
+                  "title": "卡门序曲"
+                },
+                {
+                  "title": "猎人合唱"
+                },
+                {
+                  "title": "回忆"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "歌剧之夜",
+            "唱歌",
+            "洪湖水，浪打浪",
+            "欣赏",
+            "歌剧《白毛女》选段",
+            "今夜无人入睡",
+            "卡门序曲",
+            "猎人合唱",
+            "回忆"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 神州音韵（三）",
+          "children": [
+            {
+              "title": "*唱歌",
+              "children": [
+                {
+                  "title": "采花"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "火把节"
+                },
+                {
+                  "title": "远方的客人请你留下来"
+                },
+                {
+                  "title": "北方水草茂盛的家乡"
+                },
+                {
+                  "title": "蝉虫歌"
+                }
+              ]
+            },
+            {
+              "title": "竖笛演奏",
+              "children": [
+                {
+                  "title": "跳月歌"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "神州音韵（三）",
+            "*唱歌",
+            "采花",
+            "欣赏",
+            "火把节",
+            "远方的客人请你留下来",
+            "北方水草茂盛的家乡",
+            "蝉虫歌",
+            "竖笛演奏",
+            "跳月歌"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 环球之旅（三）——非洲与美洲",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "依呀呀噢咧噢"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "鼓的语言"
+                },
+                {
+                  "title": "丰多姆佛洛姆的舞蹈"
+                },
+                {
+                  "title": "当太阳降落"
+                },
+                {
+                  "title": "依内妈妈"
+                },
+                {
+                  "title": "桑巴"
+                },
+                {
+                  "title": "探戈舞曲"
+                }
+              ]
+            },
+            {
+              "title": "*唱歌",
+              "children": [
+                {
+                  "title": "红河谷"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "老黑奴"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "环球之旅（三）——非洲与美洲",
+            "唱歌",
+            "依呀呀噢咧噢",
+            "欣赏",
+            "鼓的语言",
+            "丰多姆佛洛姆的舞蹈",
+            "当太阳降落",
+            "依内妈妈",
+            "桑巴",
+            "探戈舞曲",
+            "*唱歌",
+            "红河谷",
+            "老黑奴"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 冬之旅",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "踏雪寻梅"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "溜冰圆舞曲"
+                },
+                {
+                  "title": "沁园春·雪"
+                },
+                {
+                  "title": "十一月·雪橇"
+                },
+                {
+                  "title": "菩提树"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "飞雪迎春"
+                },
+                {
+                  "title": "我爱你，塞北的雪"
+                },
+                {
+                  "title": "我像雪花天上来"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "冬之旅",
+            "唱歌",
+            "踏雪寻梅",
+            "欣赏",
+            "溜冰圆舞曲",
+            "沁园春·雪",
+            "十一月·雪橇",
+            "菩提树",
+            "选听",
+            "飞雪迎春",
+            "我爱你，塞北的雪",
+            "我像雪花天上来"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "1c19108e-a6b2-18cf-4724-16e470e7be47",
+      "title": "初中音乐人教版（五线谱）八年级下册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/1c19108e-a6b2-18cf-4724-16e470e7be47.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:07.917+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 华夏古韵",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "阳关三叠"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "原始狩猎图"
+                },
+                {
+                  "title": "哀郢"
+                },
+                {
+                  "title": "楚商"
+                },
+                {
+                  "title": "流水"
+                },
+                {
+                  "title": "杏花天影"
+                }
+              ]
+            },
+            {
+              "title": "音乐故事",
+              "children": [
+                {
+                  "title": "广陵散"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "华夏古韵",
+            "唱歌",
+            "阳关三叠",
+            "欣赏",
+            "原始狩猎图",
+            "哀郢",
+            "楚商",
+            "流水",
+            "杏花天影",
+            "音乐故事",
+            "广陵散"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 梨园风采",
+          "children": [
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "海岛冰轮初转腾"
+                },
+                {
+                  "title": "我正在城楼观山景"
+                }
+              ]
+            },
+            {
+              "title": "学唱京剧",
+              "children": [
+                {
+                  "title": "儿行千里母担忧"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "游园惊梦"
+                },
+                {
+                  "title": "智斗"
+                },
+                {
+                  "title": "打虎上山"
+                }
+              ]
+            },
+            {
+              "title": "知识与实践"
+            }
+          ],
+          "topics": [
+            "梨园风采",
+            "欣赏",
+            "海岛冰轮初转腾",
+            "我正在城楼观山景",
+            "学唱京剧",
+            "儿行千里母担忧",
+            "游园惊梦",
+            "智斗",
+            "打虎上山",
+            "知识与实践"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 西乐撷英（一）",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "英雄凯旋歌"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "G弦上的咏叹调"
+                },
+                {
+                  "title": "小夜曲"
+                },
+                {
+                  "title": "c小调第五（命运）交响曲"
+                }
+              ]
+            },
+            {
+              "title": "音乐家故事",
+              "children": [
+                {
+                  "title": "贝多芬与《月光奏鸣曲》"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "g小调第四十交响曲"
+                },
+                {
+                  "title": "竖笛演奏小步舞曲"
+                }
+              ]
+            },
+            {
+              "title": "自我评测"
+            },
+            {
+              "title": "活动与探究"
+            }
+          ],
+          "topics": [
+            "西乐撷英（一）",
+            "唱歌",
+            "英雄凯旋歌",
+            "欣赏",
+            "G弦上的咏叹调",
+            "小夜曲",
+            "c小调第五（命运）交响曲",
+            "音乐家故事",
+            "贝多芬与《月光奏鸣曲》",
+            "g小调第四十交响曲",
+            "竖笛演奏小步舞曲",
+            "自我评测",
+            "活动与探究"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 神州音韵（四）",
+          "children": [
+            {
+              "title": "*唱歌",
+              "children": [
+                {
+                  "title": "在那遥远的地方"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "大漠之夜"
+                },
+                {
+                  "title": "玛依拉"
+                },
+                {
+                  "title": "阳光照耀着塔什库尔干"
+                }
+              ]
+            },
+            {
+              "title": "*唱歌",
+              "children": [
+                {
+                  "title": "牧歌"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "万马奔腾"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "乌夏克木卡姆"
+                },
+                {
+                  "title": "半个月亮爬上来"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "神州音韵（四）",
+            "*唱歌",
+            "在那遥远的地方",
+            "欣赏",
+            "大漠之夜",
+            "玛依拉",
+            "阳光照耀着塔什库尔干",
+            "牧歌",
+            "万马奔腾",
+            "选听",
+            "乌夏克木卡姆",
+            "半个月亮爬上来"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 音乐故事（一）",
+          "children": [
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "梁山伯与祝英台"
+                }
+              ]
+            },
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "化蝶"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "十面埋伏"
+                },
+                {
+                  "title": "《长恨歌》选段"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "音乐故事（一）",
+            "欣赏",
+            "梁山伯与祝英台",
+            "唱歌",
+            "化蝶",
+            "十面埋伏",
+            "《长恨歌》选段"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 夏日情怀",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "夏日泛舟海上"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "夏夜"
+                },
+                {
+                  "title": "六月——船歌"
+                },
+                {
+                  "title": "彩云追月"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "夏日里最后一朵玫瑰"
+                }
+              ]
+            },
+            {
+              "title": "竖笛演奏",
+              "children": [
+                {
+                  "title": "美丽的梦神"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "夏日情怀",
+            "唱歌",
+            "夏日泛舟海上",
+            "欣赏",
+            "夏夜",
+            "六月——船歌",
+            "彩云追月",
+            "选听",
+            "夏日里最后一朵玫瑰",
+            "竖笛演奏",
+            "美丽的梦神"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "1dfa8dd7-b0e3-4bf5-81f6-c53793d718f5",
+      "title": "新教材-初中艺术·音乐人教版七年级上册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/1dfa8dd7-b0e3-4bf5-81f6-c53793d718f5.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T13:04:27.896+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 生活中的音乐",
+          "children": [
+            {
+              "title": "学习项目一 生活中的艺术·音乐"
+            },
+            {
+              "title": "学习项目二 艺术·音乐开启心灵之窗"
+            },
+            {
+              "title": "学习项目三 学习乐谱，记录你的艺术·音乐生活"
+            }
+          ],
+          "topics": [
+            "生活中的音乐",
+            "学习项目一 生活中的艺术·音乐",
+            "学习项目二 艺术·音乐开启心灵之窗",
+            "学习项目三 学习乐谱，记录你的艺术·音乐生活"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 多彩的音乐风格",
+          "children": [
+            {
+              "title": "学习项目一 中国艺术·音乐万花筒"
+            },
+            {
+              "title": "学习项目二 世界民族艺术·音乐博览会"
+            }
+          ],
+          "topics": [
+            "多彩的音乐风格",
+            "学习项目一 中国艺术·音乐万花筒",
+            "学习项目二 世界民族艺术·音乐博览会"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 中国音乐的历史进程",
+          "children": [
+            {
+              "title": "学习项目一 中国艺术·音乐考古博物馆"
+            },
+            {
+              "title": "学习项目二 中国近现代艺术·音乐风云录"
+            },
+            {
+              "title": "学习项目三 歌唱我们的祖国"
+            }
+          ],
+          "topics": [
+            "中国音乐的历史进程",
+            "学习项目一 中国艺术·音乐考古博物馆",
+            "学习项目二 中国近现代艺术·音乐风云录",
+            "学习项目三 歌唱我们的祖国"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 西方音乐发展史掠影",
+          "children": [
+            {
+              "title": "学习项目一 从古希腊到古典主义"
+            },
+            {
+              "title": "学习项目二 艺术·音乐中的浪漫主义"
+            },
+            {
+              "title": "学习项目三 20世纪西方艺术·音乐轨迹"
+            }
+          ],
+          "topics": [
+            "西方音乐发展史掠影",
+            "学习项目一 从古希腊到古典主义",
+            "学习项目二 艺术·音乐中的浪漫主义",
+            "学习项目三 20世纪西方艺术·音乐轨迹"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "印在心里的歌",
+          "children": [
+            {
+              "title": "中华人民共和国国歌"
+            },
+            {
+              "title": "国际歌"
+            }
+          ],
+          "topics": ["印在心里的歌", "中华人民共和国国歌", "国际歌"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "4359cfcc-916c-42ed-8253-d57d8c72275c",
+      "title": "新教材-初中艺术·音乐人教版七年级下册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/4359cfcc-916c-42ed-8253-d57d8c72275c.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T13:34:33.015+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 声·音·乐",
+          "children": [
+            {
+              "title": "学习项目一 音乐从振动开始"
+            },
+            {
+              "title": "学习项目二 建设舒适听觉环境"
+            },
+            {
+              "title": "学习项目三 提升美好听觉体验"
+            }
+          ],
+          "topics": [
+            "声·音·乐",
+            "学习项目一 音乐从振动开始",
+            "学习项目二 建设舒适听觉环境",
+            "学习项目三 提升美好听觉体验"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 音乐的独特魅力",
+          "children": [
+            {
+              "title": "学习项目一 音乐是什么样的艺术?"
+            },
+            {
+              "title": "学习项目二 音乐为什么会让人浮想联翩?"
+            },
+            {
+              "title": "学习项目三 音乐是自由想象的艺术"
+            }
+          ],
+          "topics": [
+            "音乐的独特魅力",
+            "学习项目一 音乐是什么样的艺术?",
+            "学习项目二 音乐为什么会让人浮想联翩?",
+            "学习项目三 音乐是自由想象的艺术"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 欣赏的智慧",
+          "children": [
+            {
+              "title": "学习项目一 感受声音的每个瞬间"
+            },
+            {
+              "title": "学习项目二 感受音乐的每个层次"
+            },
+            {
+              "title": "学习项目三 感受音乐的铺垫与高潮"
+            }
+          ],
+          "topics": [
+            "欣赏的智慧",
+            "学习项目一 感受声音的每个瞬间",
+            "学习项目二 感受音乐的每个层次",
+            "学习项目三 感受音乐的铺垫与高潮"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 音乐表演的“二度创作”",
+          "children": [
+            {
+              "title": "学习项目一 音乐中的“高难度”"
+            },
+            {
+              "title": "学习项目二 表演艺术家的二度创作"
+            },
+            {
+              "title": "学习项目三 记谱法与二度创作的空间"
+            }
+          ],
+          "topics": [
+            "音乐表演的“二度创作”",
+            "学习项目一 音乐中的“高难度”",
+            "学习项目二 表演艺术家的二度创作",
+            "学习项目三 记谱法与二度创作的空间"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "印在心里的歌",
+          "children": [
+            {
+              "title": "中国人民解放军军歌"
+            },
+            {
+              "title": "保卫黄河"
+            }
+          ],
+          "topics": ["印在心里的歌", "中国人民解放军军歌", "保卫黄河"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "d16cfb59-065a-4e78-abac-489176972457",
+      "title": "新教材-初中艺术·音乐人教版九年级上册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/d16cfb59-065a-4e78-abac-489176972457.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T13:05:03.968+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 音乐的数字化",
+          "children": [
+            {
+              "title": "学习项目一 数字化时代的音乐创作"
+            },
+            {
+              "title": "学习项目二 一个人的音乐工程"
+            }
+          ],
+          "topics": [
+            "音乐的数字化",
+            "学习项目一 数字化时代的音乐创作",
+            "学习项目二 一个人的音乐工程"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 音乐的传播",
+          "children": [
+            {
+              "title": "学习项目一 一首作品的旅行"
+            },
+            {
+              "title": "学习项目二 一首作品旅途中的伙伴"
+            }
+          ],
+          "topics": ["音乐的传播", "学习项目一 一首作品的旅行", "学习项目二 一首作品旅途中的伙伴"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 音乐的品鉴",
+          "children": [
+            {
+              "title": "学习项目一 音乐审美有差异"
+            },
+            {
+              "title": "学习项目二 音乐审美有标准"
+            }
+          ],
+          "topics": ["音乐的品鉴", "学习项目一 音乐审美有差异", "学习项目二 音乐审美有标准"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 一部校园音乐剧的诞生",
+          "children": [
+            {
+              "title": "学习项目一 校园音乐剧策划会"
+            },
+            {
+              "title": "学习项目二 校园音乐剧创演"
+            },
+            {
+              "title": "学习项目三 校园音乐剧宣传与总结"
+            }
+          ],
+          "topics": [
+            "一部校园音乐剧的诞生",
+            "学习项目一 校园音乐剧策划会",
+            "学习项目二 校园音乐剧创演",
+            "学习项目三 校园音乐剧宣传与总结"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "印在心里的歌 我爱你 中国 妈妈教我一支歌",
+          "topics": ["印在心里的歌 我爱你 中国 妈妈教我一支歌"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "学习测评",
+          "topics": ["学习测评"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "b7f10fc1-1760-4413-8cea-904106d682c3",
+      "title": "新教材-初中艺术·音乐人教版八年级上册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/b7f10fc1-1760-4413-8cea-904106d682c3.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T13:04:45.919+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 旋律的奥秘",
+          "children": [
+            {
+              "title": "学习项目一 揭开旋律表现的奥秘"
+            },
+            {
+              "title": "学习项目二 探索旋律结构的规律"
+            },
+            {
+              "title": "学习项目三 让旋律“不一般”"
+            }
+          ],
+          "topics": [
+            "旋律的奥秘",
+            "学习项目一 揭开旋律表现的奥秘",
+            "学习项目二 探索旋律结构的规律",
+            "学习项目三 让旋律“不一般”"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 和声的力量",
+          "children": [
+            {
+              "title": "学习项目一 原位和弦的构成与变体"
+            },
+            {
+              "title": "学习项目二 旋律中的分解和弦"
+            },
+            {
+              "title": "学习项目三 为班级小乐队编配合奏曲"
+            }
+          ],
+          "topics": [
+            "和声的力量",
+            "学习项目一 原位和弦的构成与变体",
+            "学习项目二 旋律中的分解和弦",
+            "学习项目三 为班级小乐队编配合奏曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 复调的智慧",
+          "children": [
+            {
+              "title": "学习项目一 多样的复调"
+            },
+            {
+              "title": "学习项目二 回文诗与赋格曲"
+            },
+            {
+              "title": "学习项目三 编织有趣的复调"
+            }
+          ],
+          "topics": [
+            "复调的智慧",
+            "学习项目一 多样的复调",
+            "学习项目二 回文诗与赋格曲",
+            "学习项目三 编织有趣的复调"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 配器的色彩",
+          "children": [
+            {
+              "title": "学习项目一 色彩丰富的声音世界"
+            },
+            {
+              "title": "学习项目二 乐器音色分类"
+            },
+            {
+              "title": "学习项目三 配器——声音调色板上的艺术"
+            },
+            {
+              "title": "学习项目四 音乐调色师训练营"
+            }
+          ],
+          "topics": [
+            "配器的色彩",
+            "学习项目一 色彩丰富的声音世界",
+            "学习项目二 乐器音色分类",
+            "学习项目三 配器——声音调色板上的艺术",
+            "学习项目四 音乐调色师训练营"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "印在心里的歌",
+          "children": [
+            {
+              "title": "没有共产党就没有新中国 我的祖国"
+            }
+          ],
+          "topics": ["印在心里的歌", "没有共产党就没有新中国 我的祖国"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "学习测评",
+          "topics": ["学习测评"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "6033e03b-c59f-4b2f-8fb3-0e5d038dcaa8",
+      "title": "新教材-初中艺术·音乐人教版八年级下册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/6033e03b-c59f-4b2f-8fb3-0e5d038dcaa8.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T13:34:49.791+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 结构的美感",
+          "children": [
+            {
+              "title": "学习项目一 统一、变化与平衡"
+            },
+            {
+              "title": "学习项目二 中国传统音乐的多段联缀体结构"
+            }
+          ],
+          "topics": [
+            "结构的美感",
+            "学习项目一 统一、变化与平衡",
+            "学习项目二 中国传统音乐的多段联缀体结构"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 人声的交响",
+          "children": [
+            {
+              "title": "学习项目一 合唱的力量"
+            },
+            {
+              "title": "学习项目二 康塔塔与清唱剧"
+            }
+          ],
+          "topics": ["人声的交响", "学习项目一 合唱的力量", "学习项目二 康塔塔与清唱剧"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 乐器的交响",
+          "children": [
+            {
+              "title": "学习项目一 复杂的音乐表达"
+            },
+            {
+              "title": "学习项目二 用音乐叙事与抒情"
+            },
+            {
+              "title": "学习项目三 交响曲"
+            },
+            {
+              "title": "学习项目四 协奏曲"
+            }
+          ],
+          "topics": [
+            "乐器的交响",
+            "学习项目一 复杂的音乐表达",
+            "学习项目二 用音乐叙事与抒情",
+            "学习项目三 交响曲",
+            "学习项目四 协奏曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 综合舞台艺术",
+          "children": [
+            {
+              "title": "学习项目一 走进歌剧"
+            },
+            {
+              "title": "学习项目二 走进舞剧"
+            },
+            {
+              "title": "学习项目三 走进戏曲"
+            }
+          ],
+          "topics": [
+            "综合舞台艺术",
+            "学习项目一 走进歌剧",
+            "学习项目二 走进舞剧",
+            "学习项目三 走进戏曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "印在心里的歌 中国共产主义青年团团歌 唱支山歌给党听",
+          "topics": ["印在心里的歌 中国共产主义青年团团歌 唱支山歌给党听"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "学习测评",
+          "topics": ["学习测评"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

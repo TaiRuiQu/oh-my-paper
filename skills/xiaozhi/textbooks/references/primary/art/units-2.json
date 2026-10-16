@@ -1,0 +1,1042 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "8802490c-37dc-eeee-768d-eebbeaede2fc",
+      "title": "小学美术人教版一年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8802490c-37dc-eeee-768d-eebbeaede2fc.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:52.749+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 认识美术工具",
+          "topics": ["认识美术工具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 大家都来做",
+          "topics": ["大家都来做"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 彩线连彩点",
+          "topics": ["彩线连彩点"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 下雨啦",
+          "topics": ["下雨啦"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 五彩的烟花",
+          "topics": ["五彩的烟花"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 美丽的印纹",
+          "topics": ["美丽的印纹"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 小挂饰",
+          "topics": ["小挂饰"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 鱼儿游游",
+          "topics": ["鱼儿游游"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 我在空中飞",
+          "topics": ["我在空中飞"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 我的新朋友",
+          "topics": ["我的新朋友"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 花儿寄深情",
+          "topics": ["花儿寄深情"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 我做的“文具”",
+          "topics": ["我做的“文具”"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 会动的小纸人",
+          "topics": ["会动的小纸人"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 繁忙的大街",
+          "topics": ["繁忙的大街"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 乘上列车去画画",
+          "topics": ["乘上列车去画画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 童话里的小屋",
+          "topics": ["童话里的小屋"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 会滚的玩具",
+          "topics": ["会滚的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 电脑美术",
+          "topics": ["电脑美术"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第19课 过年啦",
+          "topics": ["过年啦"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第20课 美丽的植物和动物",
+          "topics": ["美丽的植物和动物"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "5d7ce48e-1933-2b34-8e5f-9ae5c41755e4",
+      "title": "小学美术人教版一年级下册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/5d7ce48e-1933-2b34-8e5f-9ae5c41755e4.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:20.018+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 影子的游戏",
+          "topics": ["影子的游戏"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 走近大自然",
+          "topics": ["走近大自然"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 花地毯",
+          "topics": ["花地毯"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 分一分 变一变",
+          "topics": ["分一分 变一变"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 有趣的半圆形",
+          "topics": ["有趣的半圆形"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 摸一摸 画一画",
+          "topics": ["摸一摸 画一画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 纸风铃",
+          "topics": ["纸风铃"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 瓢虫的花衣裳",
+          "topics": ["瓢虫的花衣裳"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 生活中的趣事",
+          "topics": ["生活中的趣事"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 泡泡飞呀飞",
+          "topics": ["泡泡飞呀飞"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 太空里的植物",
+          "topics": ["太空里的植物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 妈妈的节日",
+          "topics": ["妈妈的节日"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 各式各样的水果",
+          "topics": ["各式各样的水果"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 可爱的动物",
+          "topics": ["可爱的动物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 乘上大船游世界",
+          "topics": ["乘上大船游世界"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 打开的柜门",
+          "topics": ["打开的柜门"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 会摇的玩具",
+          "topics": ["会摇的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 电脑美术",
+          "topics": ["电脑美术"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第19课 化装舞会",
+          "topics": ["化装舞会"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第20课 汉字中的象形文字",
+          "topics": ["汉字中的象形文字"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "d9cbb6ba-7858-a006-8396-46c380876f96",
+      "title": "小学美术人教版三年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/d9cbb6ba-7858-a006-8396-46c380876f96.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:02.754+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 魔幻的颜色",
+          "topics": ["魔幻的颜色"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 万花筒",
+          "topics": ["万花筒"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 大人国与小人国",
+          "topics": ["大人国与小人国"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 前前后后",
+          "topics": ["前前后后"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 登山游戏",
+          "topics": ["登山游戏"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 黑与白",
+          "topics": ["黑与白"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 快乐的回忆",
+          "topics": ["快乐的回忆"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 星空的联想",
+          "topics": ["星空的联想"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 天然的纹理",
+          "topics": ["天然的纹理"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 美丽的花",
+          "topics": ["美丽的花"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 各式各样的鞋",
+          "topics": ["各式各样的鞋"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 团包纸工",
+          "topics": ["团包纸工"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 化平凡为神奇",
+          "topics": ["化平凡为神奇"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 梦幻的城堡",
+          "topics": ["梦幻的城堡"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 我设计的自行车",
+          "topics": ["我设计的自行车"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 新颖的电脑",
+          "topics": ["新颖的电脑"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 会响的玩具",
+          "topics": ["会响的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 电脑美术──画“花布”",
+          "topics": ["电脑美术──画“花布”"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第19课 美术小记者",
+          "topics": ["美术小记者"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第20课 迷人的动画片",
+          "topics": ["迷人的动画片"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "42e5a3b7-e92d-a5d6-e94b-1faaab86be02",
+      "title": "小学美术人教版三年级下册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/42e5a3b7-e92d-a5d6-e94b-1faaab86be02.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:43.274+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 水墨游戏",
+          "topics": ["水墨游戏"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 重重复复",
+          "topics": ["重重复复"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 曲曲直直",
+          "topics": ["曲曲直直"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 平平稳稳",
+          "topics": ["平平稳稳"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 感受音乐",
+          "topics": ["感受音乐"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 多彩的梦",
+          "topics": ["多彩的梦"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 变幻无穷的形象",
+          "topics": ["变幻无穷的形象"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 未来的建筑",
+          "topics": ["未来的建筑"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 难忘的朋友",
+          "topics": ["难忘的朋友"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 快乐的节日",
+          "topics": ["快乐的节日"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 动物的花衣裳",
+          "topics": ["动物的花衣裳"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 多彩的窗户",
+          "topics": ["多彩的窗户"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 彩线贴画",
+          "topics": ["彩线贴画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 立体的画面",
+          "topics": ["立体的画面"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 我们班级的标志",
+          "topics": ["我们班级的标志"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 家乡的桥和塔",
+          "topics": ["家乡的桥和塔"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 会“演戏”的玩具",
+          "topics": ["会“演戏”的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 电脑美术──“喷笔”画画",
+          "topics": ["电脑美术──“喷笔”画画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第19课 保护珍稀野生动物",
+          "topics": ["保护珍稀野生动物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第20课 认识图形标志",
+          "topics": ["认识图形标志"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "66fb415f-420b-a76f-4cc6-29f3198e04eb",
+      "title": "小学美术人教版二年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/66fb415f-420b-a76f-4cc6-29f3198e04eb.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:26.524+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 流动的颜色",
+          "topics": ["流动的颜色"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 染色游戏",
+          "topics": ["染色游戏"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 装饰自己的名字",
+          "topics": ["装饰自己的名字"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 彩泥世界快乐多",
+          "topics": ["彩泥世界快乐多"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 奇妙的电话机",
+          "topics": ["奇妙的电话机"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 花花衣",
+          "topics": ["花花衣"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 对折剪纸",
+          "topics": ["对折剪纸"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 对印的图形",
+          "topics": ["对印的图形"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 蜻蜓飞飞",
+          "topics": ["蜻蜓飞飞"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 画出你的想象",
+          "topics": ["画出你的想象"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 儿歌变画",
+          "topics": ["儿歌变画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 巧用瓶盖",
+          "topics": ["巧用瓶盖"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 回家的路",
+          "topics": ["回家的路"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 做一道拿手“菜”",
+          "topics": ["做一道拿手“菜”"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 我和马儿在一起",
+          "topics": ["我和马儿在一起"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 风来了",
+          "topics": ["风来了"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 会转的玩具",
+          "topics": ["会转的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 电脑美术——复制粘贴真神奇",
+          "topics": ["电脑美术——复制粘贴真神奇"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第19课 指偶剧场",
+          "topics": ["指偶剧场"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第20课 丰富多彩的玩具",
+          "topics": ["丰富多彩的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "4d8248c1-b842-5507-4fa4-afaa25d367be",
+      "title": "小学美术人教版二年级下册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/4d8248c1-b842-5507-4fa4-afaa25d367be.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:50.741+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 纸片插接",
+          "topics": ["纸片插接"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 重重叠叠",
+          "topics": ["重重叠叠"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 点、线、面",
+          "topics": ["点、线、面"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 漂亮的包装纸",
+          "topics": ["漂亮的包装纸"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 五味瓶",
+          "topics": ["五味瓶"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 得奖啦",
+          "topics": ["得奖啦"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 美丽的孔雀",
+          "topics": ["美丽的孔雀"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 叶子上的小“血管”",
+          "topics": ["叶子上的小“血管”"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 漂亮的花边",
+          "topics": ["漂亮的花边"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 脚印的联想",
+          "topics": ["脚印的联想"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 蔬果变变变",
+          "topics": ["蔬果变变变"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 小鸟的家",
+          "topics": ["小鸟的家"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 动物的故事",
+          "topics": ["动物的故事"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 友谊卡",
+          "topics": ["友谊卡"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 家乡变了样",
+          "topics": ["家乡变了样"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 我的老师",
+          "topics": ["我的老师"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 会爬的玩具",
+          "topics": ["会爬的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 电脑美术──复制翻转画花边",
+          "topics": ["电脑美术──复制翻转画花边"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第19课 娃娃家",
+          "topics": ["娃娃家"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第20课 五彩缤纷的生活",
+          "topics": ["五彩缤纷的生活"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "0a35579c-6ddb-f15d-fbeb-002c535a7954",
+      "title": "小学美术人教版五年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/0a35579c-6ddb-f15d-fbeb-002c535a7954.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:26:55.183+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 色彩的对比",
+          "topics": ["色彩的对比"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 色彩的和谐",
+          "topics": ["色彩的和谐"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 美丽的纹样",
+          "topics": ["美丽的纹样"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 趣味文字",
+          "topics": ["趣味文字"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 画龙点睛",
+          "topics": ["画龙点睛"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 快乐刮画",
+          "topics": ["快乐刮画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 无笔画",
+          "topics": ["无笔画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 鸟语花香",
+          "topics": ["鸟语花香"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 诗情画意",
+          "topics": ["诗情画意"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 彩墨脸谱",
+          "topics": ["彩墨脸谱"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 陶泥的世界",
+          "topics": ["陶泥的世界"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 元宵节里挂彩灯",
+          "topics": ["元宵节里挂彩灯"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 太空新居",
+          "topics": ["太空新居"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 会跳的玩具",
+          "topics": ["会跳的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 神奇的装饰柱",
+          "topics": ["神奇的装饰柱"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 电脑美术──“反色”效果",
+          "topics": ["电脑美术──“反色”效果"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 电脑动画",
+          "topics": ["电脑动画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 美术学习记录袋",
+          "topics": ["美术学习记录袋"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第19课 爱护家园",
+          "topics": ["爱护家园"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第20课 珍爱国宝──古代陶瓷艺术",
+          "topics": ["珍爱国宝──古代陶瓷艺术"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "4747397b-d249-d913-b70b-291367335543",
+      "title": "小学美术人教版六年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/4747397b-d249-d913-b70b-291367335543.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:46.205+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 基本形体切挖",
+          "topics": ["基本形体切挖"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 点的集合",
+          "topics": ["点的集合"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 远去的路",
+          "topics": ["远去的路"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 线与造型",
+          "topics": ["线与造型"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 风景写生",
+          "topics": ["风景写生"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 让剪影动起来",
+          "topics": ["让剪影动起来"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 漂浮的画",
+          "topics": ["漂浮的画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 山山水水",
+          "topics": ["山山水水"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 彩墨家园",
+          "topics": ["彩墨家园"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 我做的乐器",
+          "topics": ["我做的乐器"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 废旧物的“新生命”",
+          "topics": ["废旧物的“新生命”"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 保护文物",
+          "topics": ["保护文物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 古建筑的保护",
+          "topics": ["古建筑的保护"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 电脑美术──版画效果的图画",
+          "topics": ["电脑美术──版画效果的图画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 中国画与油画欣赏",
+          "topics": ["中国画与油画欣赏"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "a1541850-719e-3c49-017d-6fe5edb1a268",
+      "title": "小学美术人教版四年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/a1541850-719e-3c49-017d-6fe5edb1a268.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:25.202+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 色彩的冷与暖",
+          "topics": ["色彩的冷与暖"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 画家的调色板",
+          "topics": ["画家的调色板"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 蔬果的剖面",
+          "topics": ["蔬果的剖面"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 生活中的线条",
+          "topics": ["生活中的线条"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 节奏的美感",
+          "topics": ["节奏的美感"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 最受尊敬的人",
+          "topics": ["最受尊敬的人"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 今天我值日",
+          "topics": ["今天我值日"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 趣味游乐园",
+          "topics": ["趣味游乐园"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 彩墨世界",
+          "topics": ["彩墨世界"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 我是汽车设计师",
+          "topics": ["我是汽车设计师"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 拟人的形象",
+          "topics": ["拟人的形象"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 精美的邮票",
+          "topics": ["精美的邮票"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 规划每一天",
+          "topics": ["规划每一天"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 给您提个醒儿",
+          "topics": ["给您提个醒儿"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 有创意的书",
+          "topics": ["有创意的书"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 穿编的乐趣",
+          "topics": ["穿编的乐趣"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 会“走”的玩具",
+          "topics": ["会“走”的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 电脑美术──“变形”画画",
+          "topics": ["电脑美术──“变形”画画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第19课 我快乐 我成长",
+          "topics": ["我快乐 我成长"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第20课 漫画欣赏",
+          "topics": ["漫画欣赏"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

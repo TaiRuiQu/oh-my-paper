@@ -1,0 +1,1349 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1548699901fb",
+      "title": "高中语文统编版选择性必修 下册",
+      "stage": "高中",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-77b3-bac9-0178-1548699901fb.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:05.149+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "第1课",
+              "children": [
+                {
+                  "title": "氓"
+                },
+                {
+                  "title": "离骚（节选）"
+                }
+              ]
+            },
+            {
+              "title": "第2课",
+              "children": [
+                {
+                  "title": "*孔雀东南飞并序"
+                }
+              ]
+            },
+            {
+              "title": "第3课",
+              "children": [
+                {
+                  "title": "蜀道难"
+                },
+                {
+                  "title": "*蜀相"
+                }
+              ]
+            },
+            {
+              "title": "第4课",
+              "children": [
+                {
+                  "title": "*望海潮（东南形胜）"
+                },
+                {
+                  "title": "*扬州慢（淮左名都）"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": [
+            "氓",
+            "离骚（节选）",
+            "*孔雀东南飞并序",
+            "蜀道难",
+            "*蜀相",
+            "*望海潮（东南形胜）",
+            "*扬州慢（淮左名都）",
+            "单元研习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "第5课",
+              "children": [
+                {
+                  "title": "阿Q正传（节选）"
+                },
+                {
+                  "title": "*边城（节选）"
+                }
+              ]
+            },
+            {
+              "title": "第6课",
+              "children": [
+                {
+                  "title": "大堰河——我的保姆"
+                },
+                {
+                  "title": "*再别康桥"
+                }
+              ]
+            },
+            {
+              "title": "第7课",
+              "children": [
+                {
+                  "title": "风景谈"
+                },
+                {
+                  "title": "*秦腔"
+                }
+              ]
+            },
+            {
+              "title": "第8课",
+              "children": [
+                {
+                  "title": "茶馆（节选）"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": [
+            "阿Q正传（节选）",
+            "*边城（节选）",
+            "大堰河——我的保姆",
+            "*再别康桥",
+            "风景谈",
+            "*秦腔",
+            "茶馆（节选）",
+            "单元研习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "第9课",
+              "children": [
+                {
+                  "title": "陈情表"
+                },
+                {
+                  "title": "*项脊轩志"
+                }
+              ]
+            },
+            {
+              "title": "第10课",
+              "children": [
+                {
+                  "title": "兰亭集序"
+                },
+                {
+                  "title": "归去来兮辞并序"
+                }
+              ]
+            },
+            {
+              "title": "第11课",
+              "children": [
+                {
+                  "title": "*种树郭橐驼传"
+                }
+              ]
+            },
+            {
+              "title": "第12课",
+              "children": [
+                {
+                  "title": "*石钟山记"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": [
+            "陈情表",
+            "*项脊轩志",
+            "兰亭集序",
+            "归去来兮辞并序",
+            "*种树郭橐驼传",
+            "*石钟山记",
+            "单元研习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "第13课",
+              "children": [
+                {
+                  "title": "自然选择的证明"
+                },
+                {
+                  "title": "*宇宙的边疆"
+                }
+              ]
+            },
+            {
+              "title": "第14课",
+              "children": [
+                {
+                  "title": "*天文学上的旷世之争"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": ["自然选择的证明", "*宇宙的边疆", "*天文学上的旷世之争", "单元研习任务"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "古诗词诵读",
+          "children": [
+            {
+              "title": "拟行路难（其四）"
+            },
+            {
+              "title": "客至"
+            },
+            {
+              "title": "登快阁"
+            },
+            {
+              "title": "临安春雨初霁"
+            }
+          ],
+          "topics": ["古诗词诵读", "拟行路难（其四）", "客至", "登快阁", "临安春雨初霁"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "高考复习",
+          "children": [
+            {
+              "title": "记叙文写作"
+            },
+            {
+              "title": "古诗鉴赏"
+            },
+            {
+              "title": "现代文阅读"
+            },
+            {
+              "title": "文言文阅读"
+            },
+            {
+              "title": "议论文写作"
+            },
+            {
+              "title": "高考语文复习（一）"
+            },
+            {
+              "title": "高考语文复习（二）"
+            },
+            {
+              "title": "高考语文复习（三）"
+            },
+            {
+              "title": "高考语文复习（四）"
+            },
+            {
+              "title": "高考语文复习（五）"
+            },
+            {
+              "title": "高考语文复习（六）"
+            },
+            {
+              "title": "小说文本阅读能力提升策略"
+            },
+            {
+              "title": "诗歌难点突破——得过手法这一关"
+            },
+            {
+              "title": "议论文难点定向清除——如何结合当下"
+            },
+            {
+              "title": "诗歌鉴赏"
+            },
+            {
+              "title": "小说阅读（一）"
+            },
+            {
+              "title": "文学作品阅读一一小说"
+            },
+            {
+              "title": "文学作品阅读一一散文"
+            },
+            {
+              "title": "小说阅读（二）"
+            },
+            {
+              "title": "高考语文备考方法谈"
+            }
+          ],
+          "topics": [
+            "高考复习",
+            "记叙文写作",
+            "古诗鉴赏",
+            "现代文阅读",
+            "文言文阅读",
+            "议论文写作",
+            "高考语文复习（一）",
+            "高考语文复习（二）",
+            "高考语文复习（三）",
+            "高考语文复习（四）",
+            "高考语文复习（五）",
+            "高考语文复习（六）",
+            "小说文本阅读能力提升策略",
+            "诗歌难点突破——得过手法这一关",
+            "议论文难点定向清除——如何结合当下",
+            "诗歌鉴赏",
+            "小说阅读（一）",
+            "文学作品阅读一一小说",
+            "文学作品阅读一一散文",
+            "小说阅读（二）",
+            "高考语文备考方法谈"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "其他",
+          "children": [
+            {
+              "title": "一个消逝了的山村"
+            }
+          ],
+          "topics": ["其他", "一个消逝了的山村"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "5f325e4e-50ac-4bf0-948d-00e1adf9b69d",
+      "title": "高中语文统编版高一必修 上册",
+      "stage": "高中",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/5f325e4e-50ac-4bf0-948d-00e1adf9b69d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:20.999+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "第1课",
+              "children": [
+                {
+                  "title": "沁园春·长沙"
+                }
+              ]
+            },
+            {
+              "title": "第2课",
+              "children": [
+                {
+                  "title": "立在地球边上放号"
+                },
+                {
+                  "title": "红烛"
+                },
+                {
+                  "title": "*峨日朵雪峰之侧"
+                },
+                {
+                  "title": "*致云雀"
+                }
+              ]
+            },
+            {
+              "title": "第3课",
+              "children": [
+                {
+                  "title": "百合花"
+                },
+                {
+                  "title": "*哦，香雪"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": [
+            "沁园春·长沙",
+            "立在地球边上放号",
+            "红烛",
+            "*峨日朵雪峰之侧",
+            "*致云雀",
+            "百合花",
+            "*哦，香雪",
+            "单元学习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "第4课",
+              "children": [
+                {
+                  "title": "喜看稻菽千重浪——记首届国家最高科技奖获得者袁隆平"
+                },
+                {
+                  "title": "*心有一团火，温暖众人心"
+                },
+                {
+                  "title": "*“探界者”钟扬"
+                }
+              ]
+            },
+            {
+              "title": "第5课",
+              "children": [
+                {
+                  "title": "以工匠精神雕琢时代品质"
+                }
+              ]
+            },
+            {
+              "title": "第6课",
+              "children": [
+                {
+                  "title": "芣苢"
+                },
+                {
+                  "title": "文氏外孙入村收麦"
+                },
+                {
+                  "title": "插秧歌"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": [
+            "喜看稻菽千重浪——记首届国家最高科技奖获得者袁隆平",
+            "*心有一团火，温暖众人心",
+            "*“探界者”钟扬",
+            "以工匠精神雕琢时代品质",
+            "芣苢",
+            "文氏外孙入村收麦",
+            "插秧歌",
+            "单元学习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "第7课",
+              "children": [
+                {
+                  "title": "短歌行"
+                },
+                {
+                  "title": "*归园田居（其一）"
+                }
+              ]
+            },
+            {
+              "title": "第8课",
+              "children": [
+                {
+                  "title": "梦游天姥吟留别"
+                },
+                {
+                  "title": "登高"
+                },
+                {
+                  "title": "*琵琶行并序"
+                }
+              ]
+            },
+            {
+              "title": "第9课",
+              "children": [
+                {
+                  "title": "念奴娇·赤壁怀古"
+                },
+                {
+                  "title": "*永遇乐·京口北固亭怀古"
+                },
+                {
+                  "title": "*声声慢（寻寻觅觅）"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": [
+            "短歌行",
+            "*归园田居（其一）",
+            "梦游天姥吟留别",
+            "登高",
+            "*琵琶行并序",
+            "念奴娇·赤壁怀古",
+            "*永遇乐·京口北固亭怀古",
+            "*声声慢（寻寻觅觅）",
+            "单元学习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 家乡文化生活",
+          "children": [
+            {
+              "title": "学习活动",
+              "children": [
+                {
+                  "title": "一 记录家乡的人和物"
+                },
+                {
+                  "title": "二 家乡文化生活现状调查"
+                },
+                {
+                  "title": "三 参与家乡文化建设"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "家乡文化生活",
+            "学习活动",
+            "一 记录家乡的人和物",
+            "二 家乡文化生活现状调查",
+            "三 参与家乡文化建设"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 我们的家园",
+          "children": [
+            {
+              "title": "第四单元起始课"
+            },
+            {
+              "title": "走近“守门人”——访谈文学家纪念馆的“守门人”"
+            },
+            {
+              "title": "文学家纪念馆“守门人”的群像——学写人物志"
+            },
+            {
+              "title": "故宫的文创产品究竟有多“火”？——学会做调查"
+            },
+            {
+              "title": "文创产品的冷与热——学写调查报告"
+            },
+            {
+              "title": "博物馆一日游——撰写家乡博物馆游学指南"
+            },
+            {
+              "title": "让文物“活”起来——我为家乡博物馆布展提建议"
+            }
+          ],
+          "topics": [
+            "我们的家园",
+            "起始课",
+            "走近“守门人”——访谈文学家纪念馆的“守门人”",
+            "文学家纪念馆“守门人”的群像——学写人物志",
+            "故宫的文创产品究竟有多“火”？——学会做调查",
+            "文创产品的冷与热——学写调查报告",
+            "博物馆一日游——撰写家乡博物馆游学指南",
+            "让文物“活”起来——我为家乡博物馆布展提建议"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 整本书阅读",
+          "children": [
+            {
+              "title": "《乡土中国》",
+              "children": [
+                {
+                  "title": "《乡土中国》阅读指导"
+                },
+                {
+                  "title": "《乡土中国》深入研读"
+                },
+                {
+                  "title": "《乡土中国》交流分享"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "整本书阅读",
+            "《乡土中国》",
+            "《乡土中国》阅读指导",
+            "《乡土中国》深入研读",
+            "《乡土中国》交流分享"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元",
+          "children": [
+            {
+              "title": "第10课",
+              "children": [
+                {
+                  "title": "劝学"
+                },
+                {
+                  "title": "*师说"
+                }
+              ]
+            },
+            {
+              "title": "第11课",
+              "children": [
+                {
+                  "title": "反对党八股（节选）"
+                }
+              ]
+            },
+            {
+              "title": "第12课",
+              "children": [
+                {
+                  "title": "拿来主义"
+                }
+              ]
+            },
+            {
+              "title": "第13课",
+              "children": [
+                {
+                  "title": "*读书：目的和前提"
+                },
+                {
+                  "title": "*上图书馆"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": [
+            "劝学",
+            "*师说",
+            "反对党八股（节选）",
+            "拿来主义",
+            "*读书：目的和前提",
+            "*上图书馆",
+            "单元学习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元",
+          "children": [
+            {
+              "title": "第14课",
+              "children": [
+                {
+                  "title": "故都的秋"
+                },
+                {
+                  "title": "*荷塘月色"
+                }
+              ]
+            },
+            {
+              "title": "第15课",
+              "children": [
+                {
+                  "title": "我与地坛（节选）"
+                }
+              ]
+            },
+            {
+              "title": "第16课",
+              "children": [
+                {
+                  "title": "赤壁赋"
+                },
+                {
+                  "title": "*登泰山记"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": [
+            "故都的秋",
+            "*荷塘月色",
+            "我与地坛（节选）",
+            "赤壁赋",
+            "*登泰山记",
+            "单元学习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元 词语积累与词语解释",
+          "children": [
+            {
+              "title": "学习活动",
+              "children": [
+                {
+                  "title": "一 丰富词语积累"
+                },
+                {
+                  "title": "二 把握古今词义的联系与区别"
+                },
+                {
+                  "title": "三 词义的辨析和词语的使用"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "词语积累与词语解释",
+            "学习活动",
+            "一 丰富词语积累",
+            "二 把握古今词义的联系与区别",
+            "三 词义的辨析和词语的使用"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "古诗词诵读",
+          "children": [
+            {
+              "title": "静女"
+            },
+            {
+              "title": "涉江采芙蓉"
+            },
+            {
+              "title": "虞美人（春花秋月何时了）"
+            },
+            {
+              "title": "鹊桥仙（纤云弄巧）"
+            }
+          ],
+          "topics": [
+            "古诗词诵读",
+            "静女",
+            "涉江采芙蓉",
+            "虞美人（春花秋月何时了）",
+            "鹊桥仙（纤云弄巧）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "其他",
+          "topics": ["其他"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "5ab21a30-f60a-42ce-a813-90b2f73966cf",
+      "title": "高中语文统编版高一必修 下册",
+      "stage": "高中",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/5ab21a30-f60a-42ce-a813-90b2f73966cf.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:18.203+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "第1课",
+              "children": [
+                {
+                  "title": "子路、曾皙、冉有、公西华侍坐"
+                },
+                {
+                  "title": "*齐桓晋文之事"
+                },
+                {
+                  "title": "庖丁解牛"
+                }
+              ]
+            },
+            {
+              "title": "第2课",
+              "children": [
+                {
+                  "title": "烛之武退秦师"
+                }
+              ]
+            },
+            {
+              "title": "第3课",
+              "children": [
+                {
+                  "title": "鸿门宴"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": [
+            "子路、曾皙、冉有、公西华侍坐",
+            "*齐桓晋文之事",
+            "庖丁解牛",
+            "烛之武退秦师",
+            "鸿门宴",
+            "单元学习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "第4课",
+              "children": [
+                {
+                  "title": "窦娥冤（节选）"
+                }
+              ]
+            },
+            {
+              "title": "第5课",
+              "children": [
+                {
+                  "title": "雷雨（节选）"
+                }
+              ]
+            },
+            {
+              "title": "第6课",
+              "children": [
+                {
+                  "title": "*哈姆雷特（节选）"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": ["窦娥冤（节选）", "雷雨（节选）", "*哈姆雷特（节选）", "单元学习任务"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "第7课",
+              "children": [
+                {
+                  "title": "青蒿素：人类征服疾病的一小步"
+                },
+                {
+                  "title": "*一名物理学家的教育历程"
+                }
+              ]
+            },
+            {
+              "title": "第8课",
+              "children": [
+                {
+                  "title": "中国建筑的特征"
+                }
+              ]
+            },
+            {
+              "title": "第9课",
+              "children": [
+                {
+                  "title": "说“木叶”"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": [
+            "青蒿素：人类征服疾病的一小步",
+            "*一名物理学家的教育历程",
+            "中国建筑的特征",
+            "说“木叶”",
+            "单元学习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "信息时代的语文生活"
+            },
+            {
+              "title": "学习活动",
+              "children": [
+                {
+                  "title": "一 认识多媒介"
+                },
+                {
+                  "title": "二 善用多媒介"
+                },
+                {
+                  "title": "三 辨识媒介信息"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "信息时代的语文生活",
+            "学习活动",
+            "一 认识多媒介",
+            "二 善用多媒介",
+            "三 辨识媒介信息"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元",
+          "children": [
+            {
+              "title": "第10课",
+              "children": [
+                {
+                  "title": "在《人民报》创刊纪念会上的演说"
+                },
+                {
+                  "title": "在马克思墓前的讲话"
+                }
+              ]
+            },
+            {
+              "title": "第11课",
+              "children": [
+                {
+                  "title": "谏逐客书"
+                },
+                {
+                  "title": "*与妻书"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": [
+            "在《人民报》创刊纪念会上的演说",
+            "在马克思墓前的讲话",
+            "谏逐客书",
+            "*与妻书",
+            "单元学习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元",
+          "children": [
+            {
+              "title": "第12课",
+              "children": [
+                {
+                  "title": "祝福"
+                }
+              ]
+            },
+            {
+              "title": "第13课",
+              "children": [
+                {
+                  "title": "林教头风雪山神庙"
+                },
+                {
+                  "title": "*装在套子里的人"
+                }
+              ]
+            },
+            {
+              "title": "第14课",
+              "children": [
+                {
+                  "title": "促织"
+                },
+                {
+                  "title": "*变形记（节选）"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": [
+            "祝福",
+            "林教头风雪山神庙",
+            "*装在套子里的人",
+            "促织",
+            "*变形记（节选）",
+            "单元学习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元",
+          "children": [
+            {
+              "title": "整本书阅读",
+              "children": [
+                {
+                  "title": "《红楼梦》"
+                }
+              ]
+            }
+          ],
+          "topics": ["整本书阅读", "《红楼梦》"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元",
+          "children": [
+            {
+              "title": "第15课",
+              "children": [
+                {
+                  "title": "谏太宗十思疏"
+                },
+                {
+                  "title": "*答司马谏议书"
+                }
+              ]
+            },
+            {
+              "title": "第16课",
+              "children": [
+                {
+                  "title": "阿房宫赋"
+                },
+                {
+                  "title": "*六国论"
+                }
+              ]
+            },
+            {
+              "title": "单元学习任务"
+            }
+          ],
+          "topics": ["谏太宗十思疏", "*答司马谏议书", "阿房宫赋", "*六国论", "单元学习任务"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "古诗词诵读",
+          "children": [
+            {
+              "title": "登岳阳楼"
+            },
+            {
+              "title": "桂枝香·金陵怀古"
+            },
+            {
+              "title": "念奴娇·过洞庭"
+            },
+            {
+              "title": "游园（【皂罗袍】）"
+            },
+            {
+              "title": "作业和试题讲解",
+              "children": [
+                {
+                  "title": "作业和试题讲解"
+                },
+                {
+                  "title": "7、8两课书练习"
+                },
+                {
+                  "title": "练习讲评"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "古诗词诵读",
+            "登岳阳楼",
+            "桂枝香·金陵怀古",
+            "念奴娇·过洞庭",
+            "游园（【皂罗袍】）",
+            "作业和试题讲解",
+            "7、8两课书练习",
+            "练习讲评"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "fcd20fd4-1ab9-4783-bbf1-7ef3cc06bf0a",
+      "title": "高中语文统编版高二选择性必修 上册",
+      "stage": "高中",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修 上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/fcd20fd4-1ab9-4783-bbf1-7ef3cc06bf0a.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:27.841+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "第1课",
+              "children": [
+                {
+                  "title": "中国人民站起来了"
+                }
+              ]
+            },
+            {
+              "title": "第2课",
+              "children": [
+                {
+                  "title": "长征胜利万岁"
+                },
+                {
+                  "title": "*大战中的插曲"
+                }
+              ]
+            },
+            {
+              "title": "第3课",
+              "children": [
+                {
+                  "title": "别了，“不列颠尼亚”"
+                },
+                {
+                  "title": "*县委书记的榜样——焦裕禄"
+                }
+              ]
+            },
+            {
+              "title": "第4课",
+              "children": [
+                {
+                  "title": "在民族复兴的历史丰碑上——2020中国抗疫记"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": [
+            "中国人民站起来了",
+            "长征胜利万岁",
+            "*大战中的插曲",
+            "别了，“不列颠尼亚”",
+            "*县委书记的榜样——焦裕禄",
+            "在民族复兴的历史丰碑上——2020中国抗疫记",
+            "单元研习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "第5课",
+              "children": [
+                {
+                  "title": "《论语》十二章"
+                },
+                {
+                  "title": "大学之道"
+                },
+                {
+                  "title": "*人皆有不忍人之心"
+                }
+              ]
+            },
+            {
+              "title": "第6课",
+              "children": [
+                {
+                  "title": "《老子》四章"
+                },
+                {
+                  "title": "*五石之瓠"
+                }
+              ]
+            },
+            {
+              "title": "第7课",
+              "children": [
+                {
+                  "title": "*兼爱"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": [
+            "《论语》十二章",
+            "大学之道",
+            "*人皆有不忍人之心",
+            "《老子》四章",
+            "*五石之瓠",
+            "*兼爱",
+            "单元研习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "第8课",
+              "children": [
+                {
+                  "title": "大卫·科波菲尔（节选）"
+                }
+              ]
+            },
+            {
+              "title": "第9课",
+              "children": [
+                {
+                  "title": "复活（节选）"
+                }
+              ]
+            },
+            {
+              "title": "第10课",
+              "children": [
+                {
+                  "title": "老人与海（节选）"
+                }
+              ]
+            },
+            {
+              "title": "第11课",
+              "children": [
+                {
+                  "title": "*百年孤独（节选）"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": [
+            "大卫·科波菲尔（节选）",
+            "复活（节选）",
+            "老人与海（节选）",
+            "*百年孤独（节选）",
+            "单元研习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 逻辑的力量",
+          "children": [
+            {
+              "title": "学习活动",
+              "children": [
+                {
+                  "title": "一 发现潜藏的逻辑谬误"
+                },
+                {
+                  "title": "二 运用有效的推理形式"
+                },
+                {
+                  "title": "三 采用合理的论证方法"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "逻辑的力量",
+            "学习活动",
+            "一 发现潜藏的逻辑谬误",
+            "二 运用有效的推理形式",
+            "三 采用合理的论证方法"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "古诗词诵读",
+          "children": [
+            {
+              "title": "无衣"
+            },
+            {
+              "title": "春江花月夜"
+            },
+            {
+              "title": "将进酒"
+            },
+            {
+              "title": "江城子·乙卯正月二十日夜记梦"
+            }
+          ],
+          "topics": ["古诗词诵读", "无衣", "春江花月夜", "将进酒", "江城子·乙卯正月二十日夜记梦"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

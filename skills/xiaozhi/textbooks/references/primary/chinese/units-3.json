@@ -1,0 +1,1437 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "ac9ba3ad-c2ab-4736-b347-dabae34c6b80",
+      "title": "新教材-小学语文统编版二年级下册",
+      "stage": "小学",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ac9ba3ad-c2ab-4736-b347-dabae34c6b80.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-02-25T14:05:37.900+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元·阅读",
+          "children": [
+            {
+              "title": "1 古诗二首",
+              "children": [
+                {
+                  "title": "咏柳"
+                },
+                {
+                  "title": "村居"
+                }
+              ]
+            },
+            {
+              "title": "2 找春天"
+            },
+            {
+              "title": "3 开满鲜花的小路"
+            },
+            {
+              "title": "4 邓小平爷爷植树"
+            },
+            {
+              "title": "语文园地一"
+            }
+          ],
+          "topics": [
+            "·阅读",
+            "1 古诗二首",
+            "咏柳",
+            "村居",
+            "2 找春天",
+            "3 开满鲜花的小路",
+            "4 邓小平爷爷植树",
+            "语文园地一"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元·阅读",
+          "children": [
+            {
+              "title": "5 雷锋叔叔，你在哪里"
+            },
+            {
+              "title": "6 千人糕"
+            },
+            {
+              "title": "7 我不是最弱小的"
+            },
+            {
+              "title": "语文园地二"
+            },
+            {
+              "title": "快乐读书吧",
+              "children": [
+                {
+                  "title": "读读儿童故事"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "·阅读",
+            "5 雷锋叔叔，你在哪里",
+            "6 千人糕",
+            "7 我不是最弱小的",
+            "语文园地二",
+            "快乐读书吧",
+            "读读儿童故事"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元·识字",
+          "children": [
+            {
+              "title": "1 神州谣"
+            },
+            {
+              "title": "2 传统节日"
+            },
+            {
+              "title": "3 “贝”的故事"
+            },
+            {
+              "title": "4 中国美食"
+            },
+            {
+              "title": "语文园地三"
+            }
+          ],
+          "topics": ["·识字", "1 神州谣", "2 传统节日", "3 “贝”的故事", "4 中国美食", "语文园地三"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元·阅读",
+          "children": [
+            {
+              "title": "8 彩色的梦"
+            },
+            {
+              "title": "9 一匹出色的马"
+            },
+            {
+              "title": "10 枫树上的喜鹊"
+            },
+            {
+              "title": "语文园地四"
+            }
+          ],
+          "topics": ["·阅读", "8 彩色的梦", "9 一匹出色的马", "10 枫树上的喜鹊", "语文园地四"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元·阅读",
+          "children": [
+            {
+              "title": "11 寓言二则",
+              "children": [
+                {
+                  "title": "亡羊补牢"
+                },
+                {
+                  "title": "揠苗助长"
+                }
+              ]
+            },
+            {
+              "title": "12 画杨桃"
+            },
+            {
+              "title": "13 小马过河"
+            },
+            {
+              "title": "语文园地五"
+            }
+          ],
+          "topics": [
+            "·阅读",
+            "11 寓言二则",
+            "亡羊补牢",
+            "揠苗助长",
+            "12 画杨桃",
+            "13 小马过河",
+            "语文园地五"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元·阅读",
+          "children": [
+            {
+              "title": "14 古诗二首",
+              "children": [
+                {
+                  "title": "绝句"
+                },
+                {
+                  "title": "晓出净慈寺送林子方"
+                }
+              ]
+            },
+            {
+              "title": "15 雷雨"
+            },
+            {
+              "title": "16 要是你在野外迷了路"
+            },
+            {
+              "title": "17 太空生活趣事多"
+            },
+            {
+              "title": "语文园地六"
+            }
+          ],
+          "topics": [
+            "·阅读",
+            "14 古诗二首",
+            "绝句",
+            "晓出净慈寺送林子方",
+            "15 雷雨",
+            "16 要是你在野外迷了路",
+            "17 太空生活趣事多",
+            "语文园地六"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元·阅读",
+          "children": [
+            {
+              "title": "18 大象的耳朵"
+            },
+            {
+              "title": "19 蜘蛛开店"
+            },
+            {
+              "title": "20 青蛙卖泥塘"
+            },
+            {
+              "title": "21 小毛虫"
+            },
+            {
+              "title": "语文园地七"
+            }
+          ],
+          "topics": [
+            "·阅读",
+            "18 大象的耳朵",
+            "19 蜘蛛开店",
+            "20 青蛙卖泥塘",
+            "21 小毛虫",
+            "语文园地七"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元·阅读",
+          "children": [
+            {
+              "title": "22 羿射九日"
+            },
+            {
+              "title": "23 黄帝的传说"
+            },
+            {
+              "title": "24 大禹治水"
+            },
+            {
+              "title": "语文园地八"
+            }
+          ],
+          "topics": ["·阅读", "22 羿射九日", "23 黄帝的传说", "24 大禹治水", "语文园地八"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "fb0308d9-2e7f-480b-8723-f48852bb2f28",
+      "title": "新教材-小学语文统编版五年级上册",
+      "stage": "小学",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/fb0308d9-2e7f-480b-8723-f48852bb2f28.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T08:55:16.225+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "1 桂花雨"
+                },
+                {
+                  "title": "2 落花生"
+                },
+                {
+                  "title": "3* 珍珠鸟"
+                }
+              ]
+            },
+            {
+              "title": "口语交际",
+              "children": [
+                {
+                  "title": "制定班级公约"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "我的心爱之物."
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "1 桂花雨",
+            "2 落花生",
+            "3* 珍珠鸟",
+            "口语交际",
+            "制定班级公约",
+            "习作",
+            "我的心爱之物.",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "4 冀中的地道战"
+                },
+                {
+                  "title": "5 将相和.."
+                },
+                {
+                  "title": "6 什么比猎豹的速度更快"
+                },
+                {
+                  "title": "7 “诺曼底号”遇难记"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "“漫画”老师"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "4 冀中的地道战",
+            "5 将相和..",
+            "6 什么比猎豹的速度更快",
+            "7 “诺曼底号”遇难记",
+            "习作",
+            "“漫画”老师",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "8 猎人海力布"
+                },
+                {
+                  "title": "9 牛郎织女（一）"
+                },
+                {
+                  "title": "10* 牛郎织女（二）"
+                }
+              ]
+            },
+            {
+              "title": "口语交际",
+              "children": [
+                {
+                  "title": "讲民间故事"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "故事新编."
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            },
+            {
+              "title": "快乐读书吧",
+              "children": [
+                {
+                  "title": "从前有座山"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "8 猎人海力布",
+            "9 牛郎织女（一）",
+            "10* 牛郎织女（二）",
+            "口语交际",
+            "讲民间故事",
+            "习作",
+            "故事新编.",
+            "语文园地",
+            "快乐读书吧",
+            "从前有座山"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "11 古诗三首"
+                },
+                {
+                  "title": "12 少年中国说（节选）"
+                },
+                {
+                  "title": "13 圆明园的毁灭"
+                },
+                {
+                  "title": "14* 梅兰芳蓄须明志"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "二十年后的家乡"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "11 古诗三首",
+            "12 少年中国说（节选）",
+            "13 圆明园的毁灭",
+            "14* 梅兰芳蓄须明志",
+            "习作",
+            "二十年后的家乡",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "15 太阳"
+                },
+                {
+                  "title": "16 金字塔"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "介绍一种事物"
+                },
+                {
+                  "title": "例文"
+                }
+              ]
+            }
+          ],
+          "topics": ["阅读", "15 太阳", "16 金字塔", "习作", "介绍一种事物", "例文"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 .",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "17 慈母情深"
+                },
+                {
+                  "title": "18 父爱之舟"
+                },
+                {
+                  "title": "19* 航天员写给孩子的信"
+                }
+              ]
+            },
+            {
+              "title": "口语交际",
+              "children": [
+                {
+                  "title": "父母之爱"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "我想对您说"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "17 慈母情深",
+            "18 父爱之舟",
+            "19* 航天员写给孩子的信",
+            "口语交际",
+            "父母之爱",
+            "习作",
+            "我想对您说",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "20 古诗三首"
+                },
+                {
+                  "title": "21 第一场雪"
+                },
+                {
+                  "title": "22 白鹭"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "我最喜爱的季节"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "20 古诗三首",
+            "21 第一场雪",
+            "22 白鹭",
+            "习作",
+            "我最喜爱的季节",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "23 古人谈读书"
+                },
+                {
+                  "title": "24 忆读书"
+                },
+                {
+                  "title": "25* 走遍天下书为侣"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "推荐一本书"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "23 古人谈读书",
+            "24 忆读书",
+            "25* 走遍天下书为侣",
+            "习作",
+            "推荐一本书",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "识字表",
+          "topics": ["识字表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "写字表",
+          "topics": ["写字表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "词语表",
+          "topics": ["词语表"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "cec38514-a1b4-40ff-b7bb-e443b56a1dbd",
+      "title": "新教材-小学语文统编版六年级上册",
+      "stage": "小学",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/cec38514-a1b4-40ff-b7bb-e443b56a1dbd.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T08:59:29.483+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "1 草原"
+                },
+                {
+                  "title": "2 丁香结"
+                },
+                {
+                  "title": "3 古诗词三首"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "变形记"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": ["阅读", "1 草原", "2 丁香结", "3 古诗词三首", "习作", "变形记", "语文园地"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "4 七律·长征"
+                },
+                {
+                  "title": "5 狼牙山五壮士"
+                },
+                {
+                  "title": "6 开国大典"
+                },
+                {
+                  "title": "7 我的战友邱少云"
+                }
+              ]
+            },
+            {
+              "title": "口语交际",
+              "children": [
+                {
+                  "title": "演讲"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "多彩的活动"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "4 七律·长征",
+            "5 狼牙山五壮士",
+            "6 开国大典",
+            "7 我的战友邱少云",
+            "口语交际",
+            "演讲",
+            "习作",
+            "多彩的活动",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "8 竹节人"
+                },
+                {
+                  "title": "9 宇宙生命之谜"
+                },
+                {
+                  "title": "10 故宫博物院"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "_____让生活更美好"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "8 竹节人",
+            "9 宇宙生命之谜",
+            "10 故宫博物院",
+            "习作",
+            "_____让生活更美好",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "11 桥"
+                },
+                {
+                  "title": "12 穷人"
+                },
+                {
+                  "title": "13 金色的鱼钩"
+                }
+              ]
+            },
+            {
+              "title": "口语交际",
+              "children": [
+                {
+                  "title": "请你支持我"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "笔尖流出的故事"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            },
+            {
+              "title": "快乐读书吧",
+              "children": [
+                {
+                  "title": "笑与泪，经历与成长"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "11 桥",
+            "12 穷人",
+            "13 金色的鱼钩",
+            "口语交际",
+            "请你支持我",
+            "习作",
+            "笔尖流出的故事",
+            "语文园地",
+            "快乐读书吧",
+            "笑与泪，经历与成长"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "14 灯光"
+                },
+                {
+                  "title": "15 盼"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "围绕中心意思写"
+                },
+                {
+                  "title": "例文"
+                }
+              ]
+            }
+          ],
+          "topics": ["阅读", "14 灯光", "15 盼", "习作", "围绕中心意思写", "例文"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "16 只有一个地球"
+                },
+                {
+                  "title": "17 青山不老"
+                },
+                {
+                  "title": "18 三黑和土地"
+                },
+                {
+                  "title": "19 古诗三首"
+                }
+              ]
+            },
+            {
+              "title": "口语交际",
+              "children": [
+                {
+                  "title": "意见不同怎么办"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "学写倡议书"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "16 只有一个地球",
+            "17 青山不老",
+            "18 三黑和土地",
+            "19 古诗三首",
+            "口语交际",
+            "意见不同怎么办",
+            "习作",
+            "学写倡议书",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "20 文言文二则"
+                },
+                {
+                  "title": "21 表里的生物"
+                },
+                {
+                  "title": "22 他们那时候多有趣啊."
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "插上科学的翅膀飞"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "20 文言文二则",
+            "21 表里的生物",
+            "22 他们那时候多有趣啊.",
+            "习作",
+            "插上科学的翅膀飞",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "23 少年闰土"
+                },
+                {
+                  "title": "24 好的故事"
+                },
+                {
+                  "title": "25 我的伯父鲁迅先生"
+                },
+                {
+                  "title": "26 有的人"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "传承好家风"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            },
+            {
+              "title": "写字表"
+            },
+            {
+              "title": "词语表"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "23 少年闰土",
+            "24 好的故事",
+            "25 我的伯父鲁迅先生",
+            "26 有的人",
+            "习作",
+            "传承好家风",
+            "语文园地",
+            "写字表",
+            "词语表"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "1cea417b-ba9c-44b7-b7c1-db53a962f2d4",
+      "title": "新教材-小学语文统编版四年级上册",
+      "stage": "小学",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/1cea417b-ba9c-44b7-b7c1-db53a962f2d4.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T08:52:54.481+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "1 观潮"
+                },
+                {
+                  "title": "2 繁星"
+                },
+                {
+                  "title": "3* 现代诗二首"
+                }
+              ]
+            },
+            {
+              "title": "口语交际",
+              "children": [
+                {
+                  "title": "我们与环境"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "推荐一个好地方.."
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "1 观潮",
+            "2 繁星",
+            "3* 现代诗二首",
+            "口语交际",
+            "我们与环境",
+            "习作",
+            "推荐一个好地方..",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "4 一个豆荚里的五粒豆"
+                },
+                {
+                  "title": "5 夜间飞行的秘密"
+                },
+                {
+                  "title": "6 方帽子店."
+                },
+                {
+                  "title": "7* 田忌赛马."
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "我的家人"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "4 一个豆荚里的五粒豆",
+            "5 夜间飞行的秘密",
+            "6 方帽子店.",
+            "7* 田忌赛马.",
+            "习作",
+            "我的家人",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "8 古诗三首."
+                },
+                {
+                  "title": "9 爬山虎的脚"
+                },
+                {
+                  "title": "10 蟋蟀的住宅 ."
+                }
+              ]
+            },
+            {
+              "title": "口语交际",
+              "children": [
+                {
+                  "title": "爱护眼睛，保护视力."
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "写观察日记"
+                }
+              ]
+            },
+            {
+              "title": "语文园地 ."
+            }
+          ],
+          "topics": [
+            "阅读",
+            "8 古诗三首.",
+            "9 爬山虎的脚",
+            "10 蟋蟀的住宅 .",
+            "口语交际",
+            "爱护眼睛，保护视力.",
+            "习作",
+            "写观察日记",
+            "语文园地 ."
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "11 盘古开天地"
+                },
+                {
+                  "title": "12 精卫填海"
+                },
+                {
+                  "title": "13 普罗米修斯"
+                },
+                {
+                  "title": "14* 女娲补天"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "我和____过一天"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            },
+            {
+              "title": "快乐读书吧",
+              "children": [
+                {
+                  "title": "很久很久以前"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "11 盘古开天地",
+            "12 精卫填海",
+            "13 普罗米修斯",
+            "14* 女娲补天",
+            "习作",
+            "我和____过一天",
+            "语文园地",
+            "快乐读书吧",
+            "很久很久以前"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "15 麻雀."
+                },
+                {
+                  "title": "16 爬天都峰"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "生活万花筒.."
+                },
+                {
+                  "title": "例文"
+                }
+              ]
+            }
+          ],
+          "topics": ["阅读", "15 麻雀.", "16 爬天都峰", "习作", "生活万花筒..", "例文"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "17 长城."
+                },
+                {
+                  "title": "18 颐和园."
+                },
+                {
+                  "title": "19* 秦兵马俑."
+                }
+              ]
+            },
+            {
+              "title": "口语交际",
+              "children": [
+                {
+                  "title": "我是小小讲解员"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "中国的世界文化遗产"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "17 长城.",
+            "18 颐和园.",
+            "19* 秦兵马俑.",
+            "口语交际",
+            "我是小小讲解员",
+            "习作",
+            "中国的世界文化遗产",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "20 牛和鹅"
+                },
+                {
+                  "title": "21 一只窝囊的大老虎."
+                },
+                {
+                  "title": "22* 陀螺."
+                },
+                {
+                  "title": "23 王戎不取道旁李."
+                }
+              ]
+            },
+            {
+              "title": "口语交际",
+              "children": [
+                {
+                  "title": "安慰.."
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "我的心儿怦怦跳"
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "20 牛和鹅",
+            "21 一只窝囊的大老虎.",
+            "22* 陀螺.",
+            "23 王戎不取道旁李.",
+            "口语交际",
+            "安慰..",
+            "习作",
+            "我的心儿怦怦跳",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "24 我将无我，不负人民."
+                },
+                {
+                  "title": "25 为中华之崛起而读书"
+                },
+                {
+                  "title": "26* 延安，我把你追寻"
+                },
+                {
+                  "title": "27 古诗三首"
+                }
+              ]
+            },
+            {
+              "title": "习作",
+              "children": [
+                {
+                  "title": "写信."
+                }
+              ]
+            },
+            {
+              "title": "语文园地"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "24 我将无我，不负人民.",
+            "25 为中华之崛起而读书",
+            "26* 延安，我把你追寻",
+            "27 古诗三首",
+            "习作",
+            "写信.",
+            "语文园地"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "识字表",
+          "topics": ["识字表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "写字表",
+          "topics": ["写字表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "词语表",
+          "topics": ["词语表"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,748 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "8bff1029-5533-4ee8-8fcf-c8cfb39af358",
+      "title": "高中美术人教版必修 美术鉴赏",
+      "stage": "高中",
+      "subject": "美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 美术鉴赏",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8bff1029-5533-4ee8-8fcf-c8cfb39af358.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:08.969+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 鉴赏基础",
+          "children": [
+            {
+              "title": "第1课 美术作品的创作"
+            },
+            {
+              "title": "第2课 如何鉴赏美术作品"
+            }
+          ],
+          "topics": ["鉴赏基础", "美术作品的创作", "如何鉴赏美术作品"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 中国美术鉴赏",
+          "children": [
+            {
+              "title": "第3课 象外之境一中国传统山水画"
+            },
+            {
+              "title": "第4课 画外之意一中国传统花鸟画、人物画"
+            },
+            {
+              "title": "第5课 书为心画一中国书法"
+            },
+            {
+              "title": "第6课 凝神造像一中国传统雕塑"
+            },
+            {
+              "title": "第7课 华夏意匠一中国传统建筑与园林艺术"
+            },
+            {
+              "title": "第8课 天工开物一中国传统工艺美术"
+            },
+            {
+              "title": "第9课 美在民间一中国民间美术"
+            },
+            {
+              "title": "第10课 传承与创新一中国近现代美术"
+            }
+          ],
+          "topics": [
+            "中国美术鉴赏",
+            "象外之境一中国传统山水画",
+            "画外之意一中国传统花鸟画、人物画",
+            "书为心画一中国书法",
+            "凝神造像一中国传统雕塑",
+            "华夏意匠一中国传统建筑与园林艺术",
+            "天工开物一中国传统工艺美术",
+            "美在民间一中国民间美术",
+            "传承与创新一中国近现代美术"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 外国美术鉴赏",
+          "children": [
+            {
+              "title": "第11课 美术的曙光一史前与早期文明的美术"
+            },
+            {
+              "title": "第12课 理想与典范一古希腊与古罗马美术"
+            },
+            {
+              "title": "第13课 宗教的象征一欧洲中世纪美术"
+            },
+            {
+              "title": "第14课 人性的崛起一文艺复兴美术"
+            },
+            {
+              "title": "第15课 权力与理性一17、18 世纪西方美术"
+            },
+            {
+              "title": "第16课 变革与突破一19世纪西方美术"
+            },
+            {
+              "title": "第17课 实验与多元一20世纪以来的西方美术"
+            },
+            {
+              "title": "第18课 多彩的文明一亚非拉美术"
+            }
+          ],
+          "topics": [
+            "外国美术鉴赏",
+            "美术的曙光一史前与早期文明的美术",
+            "理想与典范一古希腊与古罗马美术",
+            "宗教的象征一欧洲中世纪美术",
+            "人性的崛起一文艺复兴美术",
+            "权力与理性一17、18 世纪西方美术",
+            "变革与突破一19世纪西方美术",
+            "实验与多元一20世纪以来的西方美术",
+            "多彩的文明一亚非拉美术"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fda36790a51",
+      "title": "高中美术人教版选择性必修1 绘画",
+      "stage": "高中",
+      "subject": "美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修1 绘画",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-77b3-bac9-0178-1fda36790a51.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:05.907+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 点线面",
+          "children": [
+            {
+              "title": "第1课 绘画的诞生（落笔）"
+            },
+            {
+              "title": "第2课 神来之笔（幻想与偶然）"
+            }
+          ],
+          "topics": ["点线面", "绘画的诞生（落笔）", "神来之笔（幻想与偶然）"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 色彩",
+          "children": [
+            {
+              "title": "第1课 多姿与多彩（生活色彩）"
+            },
+            {
+              "title": "第2课 文明的瑰宝（艺术色彩）"
+            },
+            {
+              "title": "第3课 历史的图谱（文化色彩）"
+            }
+          ],
+          "topics": [
+            "色彩",
+            "多姿与多彩（生活色彩）",
+            "文明的瑰宝（艺术色彩）",
+            "历史的图谱（文化色彩）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 形体",
+          "children": [
+            {
+              "title": "第1课 客观看物体（认知形体）"
+            },
+            {
+              "title": "第2课 主观看物体（表现形体）"
+            }
+          ],
+          "topics": ["形体", "客观看物体（认知形体）", "主观看物体（表现形体）"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 空间",
+          "children": [
+            {
+              "title": "第1课 制造距离感（现实空间）"
+            },
+            {
+              "title": "第2课 真实的悖论（矛盾空间）"
+            },
+            {
+              "title": "第3课 用认知绘画（想象空间）"
+            }
+          ],
+          "topics": [
+            "空间",
+            "制造距离感（现实空间）",
+            "真实的悖论（矛盾空间）",
+            "用认知绘画（想象空间）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 构图",
+          "children": [
+            {
+              "title": "第1课 为眼睛做导游（构建画面）"
+            },
+            {
+              "title": "第2课 纯粹的构图（解构与重构）"
+            }
+          ],
+          "topics": ["构图", "为眼睛做导游（构建画面）", "纯粹的构图（解构与重构）"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 表现",
+          "children": [
+            {
+              "title": "第1课 园艺师的种子（主题与题材）"
+            },
+            {
+              "title": "第2课 创作是怎样“炼”成的（有画要说）"
+            },
+            {
+              "title": "第3课 众人拾柴（集体创作）"
+            }
+          ],
+          "topics": [
+            "表现",
+            "园艺师的种子（主题与题材）",
+            "创作是怎样“炼”成的（有画要说）",
+            "众人拾柴（集体创作）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录",
+          "children": [
+            {
+              "title": "绘画材料与技法"
+            },
+            {
+              "title": "绘画知识拓展"
+            },
+            {
+              "title": "中外绘画年表概览"
+            }
+          ],
+          "topics": ["附录", "绘画材料与技法", "绘画知识拓展", "中外绘画年表概览"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fda65880a53",
+      "title": "高中美术人教版选择性必修2 中国书画",
+      "stage": "高中",
+      "subject": "美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2 中国书画",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-77b3-bac9-0178-1fda65880a53.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:06.041+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 妙笔丹青 意韵深厚的中国画",
+          "children": [
+            {
+              "title": "第1课 书画同源"
+            },
+            {
+              "title": "第2课 山水情怀"
+            },
+            {
+              "title": "第3课 缘物寄情"
+            },
+            {
+              "title": "第4课 以形写神"
+            },
+            {
+              "title": "第5课 继承创新"
+            }
+          ],
+          "topics": [
+            "妙笔丹青 意韵深厚的中国画",
+            "书画同源",
+            "山水情怀",
+            "缘物寄情",
+            "以形写神",
+            "继承创新"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 源远流长 独一无二的中国书法",
+          "children": [
+            {
+              "title": "第6课 学书有法"
+            },
+            {
+              "title": "第7课 结字章法"
+            }
+          ],
+          "topics": ["源远流长 独一无二的中国书法", "学书有法", "结字章法"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 方寸之间 气象万千的中国篆刻",
+          "children": [
+            {
+              "title": "第8课 方寸之间"
+            },
+            {
+              "title": "第9课 篆刻之道"
+            }
+          ],
+          "topics": ["方寸之间 气象万千的中国篆刻", "方寸之间", "篆刻之道"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "综合练习 诗书画印",
+          "topics": ["综合练习 诗书画印"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fda8cda0a55",
+      "title": "高中美术人教版选择性必修3 雕塑",
+      "stage": "高中",
+      "subject": "美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 雕塑",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-77b3-bac9-0178-1fda8cda0a55.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:06.163+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "雕塑概述",
+          "topics": ["雕塑概述"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一单元 雕塑的技法与实践（一）",
+          "children": [
+            {
+              "title": "第1课 抟土造人——泥塑"
+            },
+            {
+              "title": "第2课 凿石刻木——石雕 木雕"
+            },
+            {
+              "title": "第3课 精雕细琢——石膏浮雕刻制"
+            }
+          ],
+          "topics": [
+            "雕塑的技法与实践（一）",
+            "抟土造人——泥塑",
+            "凿石刻木——石雕 木雕",
+            "精雕细琢——石膏浮雕刻制"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 雕塑的技法与实践（二）",
+          "children": [
+            {
+              "title": "第1课 雕塑中的铸（筑）造与锻造"
+            },
+            {
+              "title": "第2课 雕塑中的构成与连接"
+            }
+          ],
+          "topics": ["雕塑的技法与实践（二）", "雕塑中的铸（筑）造与锻造", "雕塑中的构成与连接"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fdab5e00a57",
+      "title": "高中美术人教版选择性必修4 设计",
+      "stage": "高中",
+      "subject": "美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修4 设计",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-77b3-bac9-0178-1fdab5e00a57.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:06.297+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "设计概述",
+          "topics": ["设计概述"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一单元 沟通你我 连接世界（视觉传达设计）",
+          "children": [
+            {
+              "title": "第1课 提炼与抽象——顺畅沟通世界"
+            },
+            {
+              "title": "第2课 笔形与架构——表达文字内涵"
+            },
+            {
+              "title": "第3课 归纳与表现——明晰数据信息"
+            },
+            {
+              "title": "第4课 结构与造型——保护与提升产品"
+            }
+          ],
+          "topics": [
+            "沟通你我 连接世界（视觉传达设计）",
+            "提炼与抽象——顺畅沟通世界",
+            "笔形与架构——表达文字内涵",
+            "归纳与表现——明晰数据信息",
+            "结构与造型——保护与提升产品"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 发现问题 解决问题 （产品设计）",
+          "children": [
+            {
+              "title": "第1课 功能与审美——营造多样生活"
+            },
+            {
+              "title": "第2课 改良与创新——推动社会发展"
+            },
+            {
+              "title": "第3课 需求与服务——满足受众需求"
+            },
+            {
+              "title": "第4课 程序与方法——确保有效实施"
+            }
+          ],
+          "topics": [
+            "发现问题 解决问题 （产品设计）",
+            "功能与审美——营造多样生活",
+            "改良与创新——推动社会发展",
+            "需求与服务——满足受众需求",
+            "程序与方法——确保有效实施"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 源于自然 高于自然（环境设计）",
+          "children": [
+            {
+              "title": "第1课 科技与文化——决定建筑形式"
+            },
+            {
+              "title": "第2课 人工与自然——塑造环境景观"
+            },
+            {
+              "title": "第3课 形态与材料——构架室内空间"
+            },
+            {
+              "title": "第4课 光影与色彩——营造室内气氛"
+            }
+          ],
+          "topics": [
+            "源于自然 高于自然（环境设计）",
+            "科技与文化——决定建筑形式",
+            "人工与自然——塑造环境景观",
+            "形态与材料——构架室内空间",
+            "光影与色彩——营造室内气氛"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 创造价值 服务人民",
+          "children": [
+            {
+              "title": "第1课 提升商业价值"
+            },
+            {
+              "title": "第2课 传播国家形象"
+            },
+            {
+              "title": "第3课 弘扬传统文化"
+            },
+            {
+              "title": "第4课 回归以人为本"
+            },
+            {
+              "title": "第5课 推广可持续理念"
+            }
+          ],
+          "topics": [
+            "创造价值 服务人民",
+            "提升商业价值",
+            "传播国家形象",
+            "弘扬传统文化",
+            "回归以人为本",
+            "推广可持续理念"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fdadd1f0a59",
+      "title": "高中美术人教版选择性必修5 工艺",
+      "stage": "高中",
+      "subject": "美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修5 工艺",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-77b3-bac9-0178-1fdadd1f0a59.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:06.442+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 工艺与文化",
+          "topics": ["工艺与文化"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 陶瓷工艺",
+          "topics": ["陶瓷工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 扎染工艺",
+          "topics": ["扎染工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 蜡染工艺",
+          "topics": ["蜡染工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 造纸工艺",
+          "topics": ["造纸工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 草编工艺",
+          "topics": ["草编工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 竹编工艺",
+          "topics": ["竹编工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 纺织工艺",
+          "topics": ["纺织工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 刺绣工艺",
+          "topics": ["刺绣工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 皮影工艺",
+          "topics": ["皮影工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 榫卯工艺",
+          "topics": ["榫卯工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 木工工艺",
+          "topics": ["木工工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 刻模工艺",
+          "topics": ["刻模工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 剪纸工艺",
+          "topics": ["剪纸工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 花灯工艺",
+          "topics": ["花灯工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 风筝工艺",
+          "topics": ["风筝工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 折扇工艺",
+          "topics": ["折扇工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 装帧工艺",
+          "topics": ["装帧工艺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "非物质文化遗产",
+          "topics": ["非物质文化遗产"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fdb04ca0a5b",
+      "title": "高中美术人教版选择性必修6 现代媒体艺术",
+      "stage": "高中",
+      "subject": "美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修6 现代媒体艺术",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-77b3-bac9-0178-1fdb04ca0a5b.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:06.560+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "导论",
+          "topics": ["导论"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一单元：摄影的要素与本质",
+          "children": [
+            {
+              "title": "第1课：摄影的技术要素与基本操作"
+            },
+            {
+              "title": "第2课：摄影中的图像修辞"
+            },
+            {
+              "title": "第3课：纪实摄影的方法与原则"
+            },
+            {
+              "title": "第4课：摄影中的叙事与情感"
+            }
+          ],
+          "topics": [
+            "：摄影的要素与本质",
+            "：摄影的技术要素与基本操作",
+            "：摄影中的图像修辞",
+            "：纪实摄影的方法与原则",
+            "：摄影中的叙事与情感"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元：摄像的媒介与表达",
+          "children": [
+            {
+              "title": "第1课：从静态影像到动态影像"
+            },
+            {
+              "title": "第2课：运动的景别——摄像手段"
+            },
+            {
+              "title": "第3课：组接与配合——影像叙事"
+            },
+            {
+              "title": "第4课：分工与合作——创作流程"
+            },
+            {
+              "title": "第5课：构思与策划——讲给未来的故事"
+            }
+          ],
+          "topics": [
+            "：摄像的媒介与表达",
+            "：从静态影像到动态影像",
+            "：运动的景别——摄像手段",
+            "：组接与配合——影像叙事",
+            "：分工与合作——创作流程",
+            "：构思与策划——讲给未来的故事"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元：数字媒体艺术的手段与方法",
+          "children": [
+            {
+              "title": "第1课：复制与传播——数字绘画的创作特点"
+            },
+            {
+              "title": "第2课：无纸化变革——数字动画的创作方法"
+            },
+            {
+              "title": "第3课：天人合一——可体验的真实"
+            },
+            {
+              "title": "第4课：优化后的世界——图像选择的标准"
+            }
+          ],
+          "topics": [
+            "：数字媒体艺术的手段与方法",
+            "：复制与传播——数字绘画的创作特点",
+            "：无纸化变革——数字动画的创作方法",
+            "：天人合一——可体验的真实",
+            "：优化后的世界——图像选择的标准"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元：现代科技语境下的交互式思维方式",
+          "children": [
+            {
+              "title": "第1课：情境与需求——想象力的框架"
+            },
+            {
+              "title": "第2课：创新与模式——可以触摸的想法"
+            }
+          ],
+          "topics": [
+            "：现代科技语境下的交互式思维方式",
+            "：情境与需求——想象力的框架",
+            "：创新与模式——可以触摸的想法"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

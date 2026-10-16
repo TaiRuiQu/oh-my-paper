@@ -1,0 +1,700 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "65859ec9-d9c5-3c6b-a4e8-2066b89f253c",
+      "title": "高中通用技术人教版选择性必修4",
+      "stage": "高中",
+      "subject": "通用技术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修4",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/65859ec9-d9c5-3c6b-a4e8-2066b89f253c.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:25.609+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一章 家政概述",
+          "children": [
+            {
+              "title": "第 1节 家政的概念",
+              "children": [
+                {
+                  "title": "1.1 家政的含义和内容"
+                },
+                {
+                  "title": "1.2 家政的意义"
+                },
+                {
+                  "title": "1.3 家政的特点"
+                }
+              ]
+            },
+            {
+              "title": "第2节 国内外家政理念",
+              "children": [
+                {
+                  "title": "2.1 中国的家政理念"
+                },
+                {
+                  "title": "2.2 外国的家政理念"
+                },
+                {
+                  "title": "2.3 中外家政教育的发展"
+                }
+              ]
+            },
+            {
+              "title": "第3节 家政技术的发展",
+              "children": [
+                {
+                  "title": "3.1 古代的家政技术"
+                },
+                {
+                  "title": "3.2 现代家政技术改变家庭生活"
+                },
+                {
+                  "title": "3.3 未来家政技术的发展"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "家政概述",
+            "第 1节 家政的概念",
+            "1.1 家政的含义和内容",
+            "1.2 家政的意义",
+            "1.3 家政的特点",
+            "国内外家政理念",
+            "2.1 中国的家政理念",
+            "2.2 外国的家政理念",
+            "2.3 中外家政教育的发展",
+            "家政技术的发展",
+            "3.1 古代的家政技术",
+            "3.2 现代家政技术改变家庭生活",
+            "3.3 未来家政技术的发展"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 家庭管理与技术",
+          "children": [
+            {
+              "title": "第 1节 家庭管理",
+              "children": [
+                {
+                  "title": "1.1 家庭管理"
+                },
+                {
+                  "title": "1.2 家庭人际关系在家庭管理中的作用"
+                }
+              ]
+            },
+            {
+              "title": "第2节 常用家电的管理",
+              "children": [
+                {
+                  "title": "2.1 家用电器的概念"
+                },
+                {
+                  "title": "2.2 常用家电的技术构成及主要技术参数"
+                },
+                {
+                  "title": "2.3 家电的发展趋势与智能家电的使用"
+                },
+                {
+                  "title": "2.4 常用家电的日常维护与家用照明电路常见故障及检修"
+                }
+              ]
+            },
+            {
+              "title": "第3节 家具的管理",
+              "children": [
+                {
+                  "title": "3.1 家具的技术构成"
+                },
+                {
+                  "title": "3.2 家具的主要技术参数"
+                },
+                {
+                  "title": "3.3 家具的选购与保养"
+                }
+              ]
+            },
+            {
+              "title": "第4节 家居环境的管理",
+              "children": [
+                {
+                  "title": "4.1 家居环境建设的作用"
+                },
+                {
+                  "title": "4.2 家居环境建设的方法"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "家庭管理与技术",
+            "第 1节 家庭管理",
+            "1.1 家庭管理",
+            "1.2 家庭人际关系在家庭管理中的作用",
+            "常用家电的管理",
+            "2.1 家用电器的概念",
+            "2.2 常用家电的技术构成及主要技术参数",
+            "2.3 家电的发展趋势与智能家电的使用",
+            "2.4 常用家电的日常维护与家用照明电路常见故障及检修",
+            "家具的管理",
+            "3.1 家具的技术构成",
+            "3.2 家具的主要技术参数",
+            "3.3 家具的选购与保养",
+            "家居环境的管理",
+            "4.1 家居环境建设的作用",
+            "4.2 家居环境建设的方法"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 家庭理财与技术",
+          "children": [
+            {
+              "title": "第 1节 家庭理财方式和效率",
+              "children": [
+                {
+                  "title": "1.1 家庭理财的概念"
+                },
+                {
+                  "title": "1.2 家庭理财的方式"
+                },
+                {
+                  "title": "1.3 家庭理财的效率"
+                },
+                {
+                  "title": "1.4 家庭理财的风险"
+                },
+                {
+                  "title": "1.5 家庭财产管理方案"
+                }
+              ]
+            },
+            {
+              "title": "第2节 家庭收入与支出",
+              "children": [
+                {
+                  "title": "2.1 家庭收入"
+                },
+                {
+                  "title": "2.2 家庭支出"
+                },
+                {
+                  "title": "2.3 家庭收入与支出的构成"
+                },
+                {
+                  "title": "2.4 开源节流"
+                },
+                {
+                  "title": "2.5 编制家庭账目表"
+                }
+              ]
+            },
+            {
+              "title": "第3节 家庭消费结构",
+              "children": [
+                {
+                  "title": "3.1 家庭消费结构"
+                },
+                {
+                  "title": "3.2 消费信息"
+                },
+                {
+                  "title": "3.3 消费动机"
+                },
+                {
+                  "title": "3.4 消费规划"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "家庭理财与技术",
+            "第 1节 家庭理财方式和效率",
+            "1.1 家庭理财的概念",
+            "1.2 家庭理财的方式",
+            "1.3 家庭理财的效率",
+            "1.4 家庭理财的风险",
+            "1.5 家庭财产管理方案",
+            "家庭收入与支出",
+            "2.1 家庭收入",
+            "2.2 家庭支出",
+            "2.3 家庭收入与支出的构成",
+            "2.4 开源节流",
+            "2.5 编制家庭账目表",
+            "家庭消费结构",
+            "3.1 家庭消费结构",
+            "3.2 消费信息",
+            "3.3 消费动机",
+            "3.4 消费规划"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 家庭保健与技术",
+          "children": [
+            {
+              "title": "第 1节 家庭常用医疗保健设备及应用",
+              "children": [
+                {
+                  "title": "1.1 智能可穿戴医疗保健设备"
+                },
+                {
+                  "title": "1.2 家庭常用保健设备"
+                },
+                {
+                  "title": "1.3 家庭突发疾病和急救措施"
+                }
+              ]
+            },
+            {
+              "title": "第2节 家庭事故的防范",
+              "children": [
+                {
+                  "title": "2.1 家庭事故及其防治"
+                },
+                {
+                  "title": "2.2 家庭事故应急预案"
+                }
+              ]
+            },
+            {
+              "title": "第3节 家庭环境污染的因素和防范",
+              "children": [
+                {
+                  "title": "3.1 造成家庭环境污染的因素"
+                },
+                {
+                  "title": "3.2 保护家庭环境的技术措施"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "家庭保健与技术",
+            "第 1节 家庭常用医疗保健设备及应用",
+            "1.1 智能可穿戴医疗保健设备",
+            "1.2 家庭常用保健设备",
+            "1.3 家庭突发疾病和急救措施",
+            "家庭事故的防范",
+            "2.1 家庭事故及其防治",
+            "2.2 家庭事故应急预案",
+            "家庭环境污染的因素和防范",
+            "3.1 造成家庭环境污染的因素",
+            "3.2 保护家庭环境的技术措施"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "9f5fd4ba-6545-37cf-9f0c-5c18b9afd95f",
+      "title": "高中通用技术人教版选择性必修6 智能家居应用设计",
+      "stage": "高中",
+      "subject": "通用技术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修6 智能家居应用设计",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/9f5fd4ba-6545-37cf-9f0c-5c18b9afd95f.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:24.143+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第 1 章 智能家居架构与功能",
+          "children": [
+            {
+              "title": "第 1 节 智能家居定义"
+            },
+            {
+              "title": "第 2 节 智能家居功能与分类"
+            },
+            {
+              "title": "第 3 节 智能家居与传统家居的比较"
+            },
+            {
+              "title": "第 4 节 智能家居的控制与实现"
+            }
+          ],
+          "topics": [
+            "第 1 章 智能家居架构与功能",
+            "第 1 节 智能家居定义",
+            "第 2 节 智能家居功能与分类",
+            "第 3 节 智能家居与传统家居的比较",
+            "第 4 节 智能家居的控制与实现"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第 2 章 智能家居与物联通信",
+          "children": [
+            {
+              "title": "第 1 节 物联网"
+            },
+            {
+              "title": "第 2 节 传感网络与组网技术"
+            },
+            {
+              "title": "第 3 节 物联网中的传感器"
+            },
+            {
+              "title": "第 4 节 智能家居物联通信的实现途径"
+            }
+          ],
+          "topics": [
+            "第 2 章 智能家居与物联通信",
+            "第 1 节 物联网",
+            "第 2 节 传感网络与组网技术",
+            "第 3 节 物联网中的传感器",
+            "第 4 节 智能家居物联通信的实现途径"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第 3 章 智能家居简易产品设计",
+          "children": [
+            {
+              "title": "第 1 节 继电器控制 LED 灯"
+            },
+            {
+              "title": "第 2 节 数字温湿度计"
+            },
+            {
+              "title": "第 3 节 人体感应灯"
+            },
+            {
+              "title": "第 4 节 电动窗帘与智能窗帘"
+            }
+          ],
+          "topics": [
+            "第 3 章 智能家居简易产品设计",
+            "第 1 节 继电器控制 LED 灯",
+            "第 2 节 数字温湿度计",
+            "第 3 节 人体感应灯",
+            "第 4 节 电动窗帘与智能窗帘"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第 4 章 智能家居系统设计与实现",
+          "children": [
+            {
+              "title": "第 1 节 智能家居系统的软硬件组成"
+            },
+            {
+              "title": "第 2 节 智能灯光控制系统"
+            },
+            {
+              "title": "第 3 节 数据采集系统"
+            },
+            {
+              "title": "第 4 节 智能安防系统"
+            }
+          ],
+          "topics": [
+            "第 4 章 智能家居系统设计与实现",
+            "第 1 节 智能家居系统的软硬件组成",
+            "第 2 节 智能灯光控制系统",
+            "第 3 节 数据采集系统",
+            "第 4 节 智能安防系统"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "99aa5884-9566-38b0-b318-3fc6baa7ffac",
+      "title": "高中通用技术人教版选择性必修7 职业技术基础",
+      "stage": "高中",
+      "subject": "通用技术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修7 职业技术基础",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/99aa5884-9566-38b0-b318-3fc6baa7ffac.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:19.117+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一章 材料及其加工",
+          "children": [
+            {
+              "title": "第 1 节 材料及其特性"
+            },
+            {
+              "title": "第 2 节 材料加工"
+            },
+            {
+              "title": "第 3 节 材料应用与未来"
+            }
+          ],
+          "topics": [
+            "材料及其加工",
+            "第 1 节 材料及其特性",
+            "第 2 节 材料加工",
+            "第 3 节 材料应用与未来"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 能源及其转换",
+          "children": [
+            {
+              "title": "第 1 节 能源概述"
+            },
+            {
+              "title": "第 2 节 新型绿色能源"
+            },
+            {
+              "title": "第 3 节 节能减排与低碳生活"
+            }
+          ],
+          "topics": [
+            "能源及其转换",
+            "第 1 节 能源概述",
+            "第 2 节 新型绿色能源",
+            "第 3 节 节能减排与低碳生活"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 信息及其管理",
+          "children": [
+            {
+              "title": "第 1 节 信息概述"
+            },
+            {
+              "title": "第 2 节 现代信息技术"
+            },
+            {
+              "title": "第 3 节 信息管理"
+            },
+            {
+              "title": "第 4 节 信息技术实践"
+            }
+          ],
+          "topics": [
+            "信息及其管理",
+            "第 1 节 信息概述",
+            "第 2 节 现代信息技术",
+            "第 3 节 信息管理",
+            "第 4 节 信息技术实践"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 技术使用与维护",
+          "children": [
+            {
+              "title": "第 1 节 技术产品的生命周期和寿命"
+            },
+            {
+              "title": "第 2 节 技术产品的用户手册及操作规程"
+            },
+            {
+              "title": "第 3 节 技术产品的故障诊断与维护"
+            }
+          ],
+          "topics": [
+            "技术使用与维护",
+            "第 1 节 技术产品的生命周期和寿命",
+            "第 2 节 技术产品的用户手册及操作规程",
+            "第 3 节 技术产品的故障诊断与维护"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "3d75e2c3-45f4-33b1-8d19-6ec2ed7eeac8",
+      "title": "高中通用技术人教版选择性必修8 技术与职业探索",
+      "stage": "高中",
+      "subject": "通用技术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修8 技术与职业探索",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/3d75e2c3-45f4-33b1-8d19-6ec2ed7eeac8.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:40.076+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一章 技术与职业结构",
+          "children": [
+            {
+              "title": "第 1 节 技术进步与就业发展"
+            },
+            {
+              "title": "第 2 节 三次产业与行业分类"
+            },
+            {
+              "title": "第 3 节 专业划分与职业分类"
+            }
+          ],
+          "topics": [
+            "技术与职业结构",
+            "第 1 节 技术进步与就业发展",
+            "第 2 节 三次产业与行业分类",
+            "第 3 节 专业划分与职业分类"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 技术与职业素养",
+          "children": [
+            {
+              "title": "第 1 节 职业能力的培养"
+            },
+            {
+              "title": "第 2 节 职业素养的培养"
+            },
+            {
+              "title": "第 3 节 积极参与社会实践"
+            }
+          ],
+          "topics": [
+            "技术与职业素养",
+            "第 1 节 职业能力的培养",
+            "第 2 节 职业素养的培养",
+            "第 3 节 积极参与社会实践"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 技术与职业选择",
+          "children": [
+            {
+              "title": "第 1 节 自我认知"
+            },
+            {
+              "title": "第 2 节 职业决策"
+            },
+            {
+              "title": "第 3 节 择业依据"
+            }
+          ],
+          "topics": ["技术与职业选择", "第 1 节 自我认知", "第 2 节 职业决策", "第 3 节 择业依据"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 技术与创业能力",
+          "children": [
+            {
+              "title": "第 1 节 创新是高质量创业的动力"
+            },
+            {
+              "title": "第 2 节 创业能力"
+            },
+            {
+              "title": "第 3 节 创业计划书"
+            }
+          ],
+          "topics": [
+            "技术与创业能力",
+            "第 1 节 创新是高质量创业的动力",
+            "第 2 节 创业能力",
+            "第 3 节 创业计划书"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "7adfca3e-fcda-384c-8a08-353542476675",
+      "title": "高中通用技术人教版选择性必修9 创造力开发与技术发明",
+      "stage": "高中",
+      "subject": "通用技术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修9 创造力开发与技术发明",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/7adfca3e-fcda-384c-8a08-353542476675.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:43.310+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一章 技术与创造力开发",
+          "children": [
+            {
+              "title": "第 1 节 技术创新"
+            },
+            {
+              "title": "第 2 节 创造力及其开发"
+            }
+          ],
+          "topics": ["技术与创造力开发", "第 1 节 技术创新", "第 2 节 创造力及其开发"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 创新思维与技法",
+          "children": [
+            {
+              "title": "第 1 节 创造性思维"
+            },
+            {
+              "title": "第 2 节 创造技法"
+            }
+          ],
+          "topics": ["创新思维与技法", "第 1 节 创造性思维", "第 2 节 创造技法"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 创新工具与创客文化",
+          "children": [
+            {
+              "title": "第 1 节 创新工具"
+            },
+            {
+              "title": "第 2 节 创客文化"
+            },
+            {
+              "title": "第 3 节 创新设计与制造"
+            }
+          ],
+          "topics": [
+            "创新工具与创客文化",
+            "第 1 节 创新工具",
+            "第 2 节 创客文化",
+            "第 3 节 创新设计与制造"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 发明成果及专利",
+          "children": [
+            {
+              "title": "第 1 节 知识产权"
+            },
+            {
+              "title": "第 2 节 申请专利"
+            }
+          ],
+          "topics": ["发明成果及专利", "第 1 节 知识产权", "第 2 节 申请专利"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

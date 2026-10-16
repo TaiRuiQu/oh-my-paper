@@ -1,0 +1,1444 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "0e4d8960-3fb3-463c-9fa8-9649f1ede92e",
+      "title": "小学英语人教版（一年级起点）（主编：吴欣）二年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（一年级起点）（主编：吴欣）",
+      "revision_label": "平台未标新旧",
+      "grade": "二年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/0e4d8960-3fb3-463c-9fa8-9649f1ede92e.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:26:58.031+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Playtime",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Review & Rewards"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 1 Playtime"
+            }
+          ],
+          "topics": [
+            "Unit 1 Playtime",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Review & Rewards",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Weather",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Review & Rewards"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 2 Weather"
+            }
+          ],
+          "topics": [
+            "Unit 2 Weather",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Review & Rewards",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Seasons",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Review & Rewards"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 3 Seasons"
+            }
+          ],
+          "topics": [
+            "Unit 3 Seasons",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Review & Rewards",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "topics": ["Revision 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Time",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Review & Rewards"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 4 Time"
+            }
+          ],
+          "topics": [
+            "Unit 4 Time",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Review & Rewards",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 My Day",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Review & Rewards"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 5 My Day"
+            }
+          ],
+          "topics": [
+            "Unit 5 My Day",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Review & Rewards",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 My Week",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Review & Rewards"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 6 My Week"
+            }
+          ],
+          "topics": [
+            "Unit 6 My Week",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Review & Rewards",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "topics": ["Revision 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录一 歌谣和歌曲",
+          "topics": ["附录一 歌谣和歌曲"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录二 单元词汇表",
+          "topics": ["附录二 单元词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录三 总词汇表",
+          "topics": ["附录三 总词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "e7fe7400-72c0-4e8c-84f8-aaeeb176a693",
+      "title": "小学英语人教版（一年级起点）（主编：吴欣）五年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（一年级起点）（主编：吴欣）",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/e7fe7400-72c0-4e8c-84f8-aaeeb176a693.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:13.186+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Classmates",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 1 Classmates"
+            }
+          ],
+          "topics": [
+            "Unit 1 Classmates",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Teachers",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 2 Teachers"
+            }
+          ],
+          "topics": [
+            "Unit 2 Teachers",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Animals",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 3 Animals"
+            }
+          ],
+          "topics": [
+            "Unit 3 Animals",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "children": [
+            {
+              "title": "Revision 1 Lesson 1"
+            },
+            {
+              "title": "Lesson 2 Let's Spell"
+            },
+            {
+              "title": "Lesson 3 Story Time"
+            },
+            {
+              "title": "Lesson 4 Fun Time 1"
+            },
+            {
+              "title": "Lesson 5 Fun Time 2"
+            },
+            {
+              "title": "Lesson 6 Grammer"
+            }
+          ],
+          "topics": [
+            "Revision 1",
+            "Revision 1 Lesson 1",
+            "Lesson 2 Let's Spell",
+            "Lesson 3 Story Time",
+            "Lesson 4 Fun Time 1",
+            "Lesson 5 Fun Time 2",
+            "Lesson 6 Grammer"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Shopping Day",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 4 Shopping Day"
+            }
+          ],
+          "topics": [
+            "Unit 4 Shopping Day",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 TV Shows",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 5 TV Show"
+            }
+          ],
+          "topics": [
+            "Unit 5 TV Shows",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time",
+            "Unit 5 TV Show"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Chores",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 6 Chores"
+            }
+          ],
+          "topics": [
+            "Unit 6 Chores",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "children": [
+            {
+              "title": "Lesson 1 Let's Review"
+            },
+            {
+              "title": "Lesson 2 Let's Spell"
+            },
+            {
+              "title": "Lesson 3 Story Time"
+            },
+            {
+              "title": "Lesson 4 Fun Time1"
+            },
+            {
+              "title": "Lesson 5 Fun Time2"
+            },
+            {
+              "title": "Lesson 6 Grammar"
+            }
+          ],
+          "topics": [
+            "Revision 2",
+            "Lesson 1 Let's Review",
+            "Lesson 2 Let's Spell",
+            "Lesson 3 Story Time",
+            "Lesson 4 Fun Time1",
+            "Lesson 5 Fun Time2",
+            "Lesson 6 Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录一 歌曲",
+          "topics": ["附录一 歌曲"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录二 单元词汇表",
+          "topics": ["附录二 单元词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录三 总词汇表",
+          "topics": ["附录三 总词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "2dbab3e2-9c23-4631-ace7-0c4d2d210fa0",
+      "title": "小学英语人教版（一年级起点）（主编：吴欣）五年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（一年级起点）（主编：吴欣）",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2dbab3e2-9c23-4631-ace7-0c4d2d210fa0.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:20.658+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Keeping Healthy",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 1 Keeping Healthy"
+            }
+          ],
+          "topics": [
+            "Unit 1 Keeping Healthy",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Special Days",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 2 Special Days"
+            }
+          ],
+          "topics": [
+            "Unit 2 Special Days",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Making Contact",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 3 Making Contact"
+            }
+          ],
+          "topics": [
+            "Unit 3 Making Contact",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "children": [
+            {
+              "title": "Revision 1 Let's Review"
+            },
+            {
+              "title": "Revision 1 Let's Spell"
+            },
+            {
+              "title": "Revision 1 Story Time"
+            }
+          ],
+          "topics": [
+            "Revision 1",
+            "Revision 1 Let's Review",
+            "Revision 1 Let's Spell",
+            "Revision 1 Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Last Weekend",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 4 Last Weekend"
+            }
+          ],
+          "topics": [
+            "Unit 4 Last Weekend",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Have a Great Trip",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 5 Have a Great Trip"
+            }
+          ],
+          "topics": [
+            "Unit 5 Have a Great Trip",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Growing Up",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 6 Growing Up"
+            }
+          ],
+          "topics": [
+            "Unit 6 Growing Up",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let’s Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "topics": ["Revision 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录一 歌曲",
+          "topics": ["附录一 歌曲"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录二 单元词汇表",
+          "topics": ["附录二 单元词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录三 总词汇表",
+          "topics": ["附录三 总词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "371a91cf-f2dd-4e4d-b5f4-6572001102a1",
+      "title": "小学英语人教版（一年级起点）（主编：吴欣）六年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（一年级起点）（主编：吴欣）",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/371a91cf-f2dd-4e4d-b5f4-6572001102a1.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:35.578+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 In China",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 1 In China"
+            }
+          ],
+          "topics": [
+            "Unit 1 In China",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let's Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Around the world",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 2 Around the World"
+            }
+          ],
+          "topics": [
+            "Unit 2 Around the world",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let's Check",
+            "Story Time",
+            "Unit 2 Around the World"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Animal World",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 3 Animal World"
+            }
+          ],
+          "topics": [
+            "Unit 3 Animal World",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let's Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "children": [
+            {
+              "title": "Let's Review"
+            },
+            {
+              "title": "Let's Spell"
+            },
+            {
+              "title": "Story Time"
+            }
+          ],
+          "topics": ["Revision 1", "Let's Review", "Let's Spell", "Story Time"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Feelings",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 4 Feelings"
+            }
+          ],
+          "topics": [
+            "Unit 4 Feelings",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let's Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Famous People",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 5 Famous People"
+            }
+          ],
+          "topics": [
+            "Unit 5 Famous People",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let's Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Winter Vacation",
+          "children": [
+            {
+              "title": "lesson 1"
+            },
+            {
+              "title": "lesson 2"
+            },
+            {
+              "title": "lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 6 Winter Vacation"
+            }
+          ],
+          "topics": [
+            "Unit 6 Winter Vacation",
+            "lesson 1",
+            "lesson 2",
+            "lesson 3",
+            "Let’s Spell",
+            "Fun Time",
+            "Let's Check",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "children": [
+            {
+              "title": "Let's Review"
+            },
+            {
+              "title": "Let's Spell"
+            },
+            {
+              "title": "Story Time"
+            }
+          ],
+          "topics": ["Revision 2", "Let's Review", "Let's Spell", "Story Time"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录一 歌曲",
+          "topics": ["附录一 歌曲"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录二 单元词汇表",
+          "topics": ["附录二 单元词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录三 总词汇表",
+          "topics": ["附录三 总词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录四 三~五年级Let’s Spell 主要内容",
+          "topics": ["附录四 三~五年级Let’s Spell 主要内容"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "专题课",
+          "children": [
+            {
+              "title": "A Special City-Xi'an"
+            },
+            {
+              "title": "Seven Continents"
+            },
+            {
+              "title": "Interesting Facts of Animals"
+            },
+            {
+              "title": "Ways to Manage Feelings"
+            },
+            {
+              "title": "The Father of China's Space Program"
+            },
+            {
+              "title": "The Vacation Time"
+            }
+          ],
+          "topics": [
+            "专题课",
+            "A Special City-Xi'an",
+            "Seven Continents",
+            "Interesting Facts of Animals",
+            "Ways to Manage Feelings",
+            "The Father of China's Space Program",
+            "The Vacation Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "d8e2c62e-7e48-4ec0-97e3-513665dfea4b",
+      "title": "小学英语人教版（一年级起点）（主编：吴欣）六年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（一年级起点）（主编：吴欣）",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/d8e2c62e-7e48-4ec0-97e3-513665dfea4b.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:01.655+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Visiting Canada",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Project Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 1 Visting Canada"
+            }
+          ],
+          "topics": [
+            "Unit 1 Visiting Canada",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Project Time",
+            "Story Time",
+            "Unit 1 Visting Canada"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 All Around Me",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Project Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 2 All Around Me"
+            }
+          ],
+          "topics": [
+            "Unit 2 All Around Me",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Project Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Daily Life",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Project Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 3 Daily Life"
+            }
+          ],
+          "topics": [
+            "Unit 3 Daily Life",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Project Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Free Time",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Project Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 4 Free Time"
+            }
+          ],
+          "topics": [
+            "Unit 4 Free Time",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Project Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Nature and Culture",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Project Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 5 Nature and Culture"
+            }
+          ],
+          "topics": [
+            "Unit 5 Nature and Culture",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Project Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Summer Vacation",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Project Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 6 Summer Vacation"
+            }
+          ],
+          "topics": [
+            "Unit 6 Summer Vacation",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Project Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录一 单元词汇表",
+          "topics": ["附录一 单元词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录二 总词汇表",
+          "topics": ["附录二 总词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+-r tools/card-scan/requirements.txt

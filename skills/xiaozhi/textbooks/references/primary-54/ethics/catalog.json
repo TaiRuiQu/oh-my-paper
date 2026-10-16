@@ -1,0 +1,149 @@
+{
+  "stage": "小学（五•四学制）",
+  "subject": "道德与法治",
+  "books": [
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c15935fe0107",
+      "title": "小学（五•四学制）道德与法治统编版三年级上册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "三年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c1597f3c0109",
+      "title": "小学（五•四学制）道德与法治统编版三年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "三年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "f3278bce-adab-50a5-8a6e-ab5f67dc3206",
+      "title": "小学（五•四学制）道德与法治统编版二年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "二年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c15a48f5010f",
+      "title": "小学（五•四学制）道德与法治统编版五年级上册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c15a8a430111",
+      "title": "小学（五•四学制）道德与法治统编版五年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c159c079010b",
+      "title": "小学（五•四学制）道德与法治统编版四年级上册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c159f4cb010d",
+      "title": "小学（五•四学制）道德与法治统编版四年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "13249882-bfa7-479b-8fd5-029ba4057af9",
+      "title": "新教材-小学（五•四学制）道德与法治统编版一年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "18274d68-d14e-42f5-9c55-1a0988ee27b4",
+      "title": "新教材-小学（五•四学制）道德与法治统编版一年级下册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "9fbbf6da-ebde-4bc7-9803-58cbec5d48be",
+      "title": "新教材-小学（五•四学制）道德与法治统编版二年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "dc49c2af-fee1-bf03-26e3-71cab92f1856",
+      "title": "小学（五•四学制）道德与法治统编版一年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "2d01e3ba-345a-3060-b6d5-b3d207440dbf",
+      "title": "小学（五•四学制）道德与法治统编版一年级下册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "08c775e6-83eb-7f05-ef45-3a8d03a0ceda",
+      "title": "小学（五•四学制）道德与法治统编版二年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary-54/ethics/units-2.json",
+      "unit_count": 4
+    }
+  ]
+}

@@ -1,0 +1,227 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["**"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref_type != 'tag' }}
+
+jobs:
+  lint:
+    name: Validate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      DATABASE_URL: postgresql://paper:paper@127.0.0.1:5432/paper_ci
+      BETTER_AUTH_URL: http://localhost:3000
+      BETTER_AUTH_SECRET: ci-auth-secret-for-isolated-test-environment-2026
+      PROVIDER_KEY_ENCRYPTION_KEY: ci-provider-secret-for-isolated-test-environment-2026
+      QDRANT_URL: http://127.0.0.1:6333
+      APP_COMMIT_SHA: ${{ github.sha }}
+    services:
+      qdrant:
+        image: qdrant/qdrant:v1.19.2
+        ports: ["6333:6333"]
+      postgres:
+        image: postgres:18.6-bookworm
+        env:
+          POSTGRES_USER: paper
+          POSTGRES_PASSWORD: paper
+          POSTGRES_DB: paper_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U paper -d paper_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24.19.0
+          package-manager-cache: false
+      - name: Set up pnpm
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6
+        with:
+          cache: true
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install scanner runtime
+        run: |
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends bubblewrap util-linux
+          python3 -m venv .venv
+          .venv/bin/pip install -c tools/python-constraints.txt -r tools/card-scan/requirements.txt
+          .venv/bin/pip install -c tools/python-constraints.txt -r tools/sandbox/requirements.txt
+      - name: Install PDF runtime
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends poppler-utils
+      - name: Configure and verify sandbox on ephemeral Ubuntu runner
+        run: |
+          # Ubuntu 24.04 restricts the namespaces Bubblewrap needs for isolation.
+          # This applies only to this disposable runner, never to deployment hosts.
+          if [ -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+          pnpm run test:sandbox
+      - name: Generate Prisma and apply migrations
+        run: |
+          pnpm run db:generate
+          pnpm run db:deploy
+      - name: Format, lint, types and unit tests
+        run: |
+          pnpm run check
+          node --test scripts/cleanup-ghcr.test.mjs scripts/publish-release.test.mjs
+          python3 -m unittest discover -s deploy -p 'test_*.py'
+      - name: Build production web
+        run: pnpm run build
+      - name: Build production AI worker
+        run: pnpm run build:ai-worker
+      - name: AI domain atomicity acceptance
+        run: pnpm run test:ai-domain
+      - name: Durable AI job queue acceptance
+        run: pnpm run test:ai-jobs
+      - name: AI progress SSE and Protobuf acceptance
+        run: pnpm run test:ai-progress
+      - name: Non-AI domain acceptance
+        run: pnpm run test:integration
+      - name: Teaching permissions acceptance
+        run: pnpm run test:permissions
+      - name: Record naming acceptance
+        run: pnpm run test:record-names
+      - name: Question semantic search with real vector database
+        run: pnpm run test:semantic-search
+      - name: Image scanning acceptance
+        run: pnpm run test:scan
+      - name: Scanner bridge protocol tests
+        run: python3 -m unittest discover -s scripts/scanner-bridge -p 'test_*.py'
+      - name: Runtime diagnostics
+        run: pnpm run doctor
+      - name: Independent production Web and AI Worker acceptance
+        run: pnpm run test:production
+
+  docker:
+    name: Docker (${{ matrix.target }})
+    needs: lint
+    # Staging tags are scoped to this workflow run. Only the publish job
+    # advances the deployment entry point after every target has passed.
+    if: (github.ref == 'refs/heads/v2' || github.ref_type == 'tag') && !github.event.deleted
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: web
+            suffix: ""
+          - target: migrate
+            suffix: "-migrate"
+          - target: ai-worker
+            suffix: "-ai-worker"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+      - name: Log in to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Image metadata
+        id: metadata
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
+        with:
+          images: ghcr.io/${{ github.repository }}${{ matrix.suffix }}
+          flavor: latest=false
+          tags: |
+            type=raw,value=build-${{ github.run_id }}
+      - name: Build runtime image for acceptance
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          context: .
+          target: ${{ matrix.target }}
+          platforms: linux/amd64
+          load: true
+          tags: omp-runtime:${{ matrix.target }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          build-args: APP_COMMIT_SHA=${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.target }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.target }}
+      - name: Build migration image for acceptance
+        if: matrix.target != 'migrate'
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          context: .
+          target: migrate
+          platforms: linux/amd64
+          load: true
+          tags: omp-runtime:migrate
+          cache-from: type=gha,scope=migrate
+      - name: Start and verify runtime image
+        if: matrix.target != 'ai-worker'
+        env:
+          EXPECTED_COMMIT_SHA: ${{ github.sha }}
+        run: bash scripts/test-docker-runtime.sh "${{ matrix.target }}"
+      - name: Configure sandbox and verify AI worker runtime image
+        if: matrix.target == 'ai-worker'
+        run: |
+          if [ -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+          bash scripts/test-docker-runtime.sh ai-worker
+      - name: Push tested runtime image
+        env:
+          IMAGE_TAGS: ${{ steps.metadata.outputs.tags }}
+          IMAGE_TARGET: ${{ matrix.target }}
+        run: |
+          while IFS= read -r tag; do
+            [ -n "$tag" ] || continue
+            docker tag "omp-runtime:${IMAGE_TARGET}" "$tag"
+            docker push "$tag"
+          done <<< "$IMAGE_TAGS"
+
+  publish:
+    name: Publish complete release and clean GHCR
+    needs: docker
+    concurrency:
+      group: ghcr-release
+      cancel-in-progress: false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24.19.0
+          package-manager-cache: false
+      - name: Publish digest-pinned release index
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/publish-release.mjs
+      - name: Delete obsolete GHCR versions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER_TYPE: ${{ github.event.repository.owner.type }}
+        run: node scripts/cleanup-ghcr.mjs

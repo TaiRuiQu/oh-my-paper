@@ -1,0 +1,94 @@
+{
+  "stage": "初中",
+  "subject": "生物学",
+  "books": [
+    {
+      "id": "6a404509-2eec-440a-ae80-25f59b53dbba",
+      "title": "新教材-初中生物学人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/biology/units-1.json",
+      "unit_count": 2
+    },
+    {
+      "id": "60f0fa34-623c-4b18-a9f8-0f108e47b5bb",
+      "title": "新教材-初中生物学人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/biology/units-1.json",
+      "unit_count": 2
+    },
+    {
+      "id": "4d74334d-3dee-4be1-8afc-0153761a0eef",
+      "title": "新教材-初中生物学人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/biology/units-1.json",
+      "unit_count": 2
+    },
+    {
+      "id": "869a61da-5f84-4e74-b54b-6b59a66c2650",
+      "title": "新教材-初中生物学人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/biology/units-1.json",
+      "unit_count": 1
+    },
+    {
+      "id": "b74612d1-bfb9-41e3-be12-0cc07afeab45",
+      "title": "初中生物学人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/biology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "e2bd3c55-bb34-4e5c-9830-f82c99f6d4a3",
+      "title": "初中生物学人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/biology/units-1.json",
+      "unit_count": 1
+    },
+    {
+      "id": "f1c8863f-3221-4676-8fd1-f78b2c0e890e",
+      "title": "初中生物学人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/biology/units-1.json",
+      "unit_count": 2
+    },
+    {
+      "id": "61920dca-8e52-4a6d-bb9a-ceee1ffc0778",
+      "title": "初中生物学人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/biology/units-2.json",
+      "unit_count": 4
+    }
+  ]
+}

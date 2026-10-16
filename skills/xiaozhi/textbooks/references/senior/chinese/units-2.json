@@ -1,0 +1,237 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "ad6c02a4-2380-414f-b1c0-59e73c29d309",
+      "title": "高中语文统编版高二选择性必修 中册",
+      "stage": "高中",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修 中册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ad6c02a4-2380-414f-b1c0-59e73c29d309.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:32.315+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "第1课",
+              "children": [
+                {
+                  "title": "社会历史的决定性基础"
+                }
+              ]
+            },
+            {
+              "title": "第2课",
+              "children": [
+                {
+                  "title": "改造我们的学习"
+                },
+                {
+                  "title": "人的正确思想是从哪里来的？"
+                }
+              ]
+            },
+            {
+              "title": "第3课",
+              "children": [
+                {
+                  "title": "实践是检验真理的唯一标准"
+                }
+              ]
+            },
+            {
+              "title": "第4课",
+              "children": [
+                {
+                  "title": "*修辞立其诚"
+                },
+                {
+                  "title": "*怜悯是人的天性"
+                }
+              ]
+            },
+            {
+              "title": "第5课",
+              "children": [
+                {
+                  "title": "人应当坚持正义"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": [
+            "社会历史的决定性基础",
+            "改造我们的学习",
+            "人的正确思想是从哪里来的？",
+            "实践是检验真理的唯一标准",
+            "*修辞立其诚",
+            "*怜悯是人的天性",
+            "人应当坚持正义",
+            "单元研习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "第6课",
+              "children": [
+                {
+                  "title": "记念刘和珍君"
+                },
+                {
+                  "title": "*为了忘却的记念"
+                }
+              ]
+            },
+            {
+              "title": "第7课",
+              "children": [
+                {
+                  "title": "包身工"
+                }
+              ]
+            },
+            {
+              "title": "第8课",
+              "children": [
+                {
+                  "title": "荷花淀"
+                },
+                {
+                  "title": "*小二黑结婚（节选）"
+                },
+                {
+                  "title": "*党费"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": [
+            "记念刘和珍君",
+            "*为了忘却的记念",
+            "包身工",
+            "荷花淀",
+            "*小二黑结婚（节选）",
+            "*党费",
+            "单元研习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "第9课",
+              "children": [
+                {
+                  "title": "屈原列传"
+                }
+              ]
+            },
+            {
+              "title": "第10课",
+              "children": [
+                {
+                  "title": "*苏武传"
+                }
+              ]
+            },
+            {
+              "title": "第11课",
+              "children": [
+                {
+                  "title": "过秦论"
+                },
+                {
+                  "title": "*五代史伶官传序"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": ["屈原列传", "*苏武传", "过秦论", "*五代史伶官传序", "单元研习任务"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "第12课",
+              "children": [
+                {
+                  "title": "玩偶之家（节选）"
+                }
+              ]
+            },
+            {
+              "title": "第13课",
+              "children": [
+                {
+                  "title": "迷娘（之一）"
+                },
+                {
+                  "title": "致大海"
+                },
+                {
+                  "title": "*自己之歌（节选）"
+                },
+                {
+                  "title": "*树和天空"
+                }
+              ]
+            },
+            {
+              "title": "单元研习任务"
+            }
+          ],
+          "topics": [
+            "玩偶之家（节选）",
+            "迷娘（之一）",
+            "致大海",
+            "*自己之歌（节选）",
+            "*树和天空",
+            "单元研习任务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "古诗词诵读",
+          "children": [
+            {
+              "title": "燕歌行并序"
+            },
+            {
+              "title": "李凭箜篌引"
+            },
+            {
+              "title": "锦瑟"
+            },
+            {
+              "title": "书愤"
+            }
+          ],
+          "topics": ["古诗词诵读", "燕歌行并序", "李凭箜篌引", "锦瑟", "书愤"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

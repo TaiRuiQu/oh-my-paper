@@ -1,0 +1,425 @@
+{
+  "note": "人教社官方电子教材平台书目快照，目录未逐册核实；不与课程树按相似题名自动合并，也不计入单元覆盖。",
+  "books": [
+    {
+      "publisher_id": "1437001116191",
+      "title": "普通高中教科书历史必修中外历史纲要上",
+      "subject": "历史",
+      "grade": "必修",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1437001116191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1433001133201",
+      "title": "普通高中教科书思想政治选择性必修3逻辑与思维",
+      "subject": "思想政治",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1433001133201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1433001132201",
+      "title": "普通高中教科书思想政治选择性必修2法律与生活",
+      "subject": "思想政治",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1433001132201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1433001131201",
+      "title": "普通高中教科书思想政治选择性必修1当代国际政治与经济",
+      "subject": "思想政治",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1433001131201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1433001114191",
+      "title": "普通高中教科书思想政治必修4哲学与文化",
+      "subject": "思想政治",
+      "grade": "必修",
+      "volume": "第四册",
+      "source": "https://book.pep.com.cn/1433001114191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1433001113191",
+      "title": "普通高中教科书思想政治必修3政治与法治",
+      "subject": "思想政治",
+      "grade": "必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1433001113191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1433001112211",
+      "title": "普通高中教科书思想政治必修2经济与社会",
+      "subject": "思想政治",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1433001112211/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1433001111201",
+      "title": "普通高中教科书思想政治必修1中国特色社会主义",
+      "subject": "思想政治",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1433001111201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1413001130221",
+      "title": "普通高中教科书俄语选择性必修第四册",
+      "subject": "俄语",
+      "grade": "选择性必修",
+      "volume": "第四册",
+      "source": "https://book.pep.com.cn/1413001130221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1413001129221",
+      "title": "普通高中教科书俄语选择性必修第三册",
+      "subject": "俄语",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1413001129221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1413001128221",
+      "title": "普通高中教科书俄语选择性必修第二册",
+      "subject": "俄语",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1413001128221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1413001127221",
+      "title": "普通高中教科书俄语选择性必修第一册",
+      "subject": "俄语",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1413001127221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1413001123221",
+      "title": "普通高中教科书俄语必修第三册",
+      "subject": "俄语",
+      "grade": "必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1413001123221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1413001122221",
+      "title": "普通高中教科书俄语必修第二册",
+      "subject": "俄语",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1413001122221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1413001121221",
+      "title": "普通高中教科书俄语必修第一册",
+      "subject": "俄语",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1413001121221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1414001128221",
+      "title": "普通高中教科书日语选择性必修第二册",
+      "subject": "日语",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1414001128221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1414001127221",
+      "title": "普通高中教科书日语选择性必修第一册",
+      "subject": "日语",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1414001127221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1414001123221",
+      "title": "普通高中教科书日语必修第三册",
+      "subject": "日语",
+      "grade": "必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1414001123221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1414001122221",
+      "title": "普通高中教科书日语必修第二册",
+      "subject": "日语",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1414001122221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1414001121221",
+      "title": "普通高中教科书日语必修第一册",
+      "subject": "日语",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1414001121221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1412001130201",
+      "title": "普通高中教科书英语选择性必修第四册",
+      "subject": "英语",
+      "grade": "选择性必修",
+      "volume": "第四册",
+      "source": "https://book.pep.com.cn/1412001130201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1412001129201",
+      "title": "普通高中教科书英语选择性必修第三册",
+      "subject": "英语",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1412001129201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1412001128201",
+      "title": "普通高中教科书英语选择性必修第二册",
+      "subject": "英语",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1412001128201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1412001127191",
+      "title": "普通高中教科书英语选择性必修第一册",
+      "subject": "英语",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1412001127191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1412001123191",
+      "title": "普通高中教科书英语必修第三册",
+      "subject": "英语",
+      "grade": "必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1412001123191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1412001122191",
+      "title": "普通高中教科书英语必修第二册",
+      "subject": "英语",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1412001122191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1412001121191",
+      "title": "普通高中教科书英语必修第一册",
+      "subject": "英语",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1412001121191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001129202",
+      "title": "普通高中教科书数学（B版）选择性必修第三册",
+      "subject": "数学",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1421001129202/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001128202",
+      "title": "普通高中教科书数学（B版）选择性必修第二册",
+      "subject": "数学",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1421001128202/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001127202",
+      "title": "普通高中教科书数学（B版）选择性必修第一册",
+      "subject": "数学",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1421001127202/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001137201",
+      "title": "普通高中教科书数学（B版）必修第四册",
+      "subject": "数学",
+      "grade": "必修",
+      "volume": "第四册",
+      "source": "https://book.pep.com.cn/1421001137201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001123201",
+      "title": "普通高中教科书数学（B版）必修第三册",
+      "subject": "数学",
+      "grade": "必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1421001123201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001122201",
+      "title": "普通高中教科书数学（B版）必修第二册",
+      "subject": "数学",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1421001122201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001121201",
+      "title": "普通高中教科书数学（B版）必修第一册",
+      "subject": "数学",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1421001121201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001129201",
+      "title": "普通高中教科书数学选择性必修第三册（A版）",
+      "subject": "数学",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1421001129201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001128201",
+      "title": "普通高中教科书数学选择性必修第二册（A版）",
+      "subject": "数学",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1421001128201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001127201",
+      "title": "普通高中教科书数学选择性必修第一册（A版）",
+      "subject": "数学",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1421001127201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001122191",
+      "title": "普通高中教科书数学必修第二册（A版）",
+      "subject": "数学",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1421001122191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1421001121191",
+      "title": "普通高中教科书数学必修第一册（A版）",
+      "subject": "数学",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1421001121191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1411001125201",
+      "title": "普通高中教科书语文选择性必修中册",
+      "subject": "语文",
+      "grade": "选择性必修",
+      "volume": "中册",
+      "source": "https://book.pep.com.cn/1411001125201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1411001124201",
+      "title": "普通高中教科书语文选择性必修上册",
+      "subject": "语文",
+      "grade": "选择性必修",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1411001124201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1411001117191",
+      "title": "普通高中教科书语文必修上册",
+      "subject": "语文",
+      "grade": "必修",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1411001117191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    }
+  ]
+}

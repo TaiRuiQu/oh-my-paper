@@ -1,0 +1,1086 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "cb26c613-b227-41c1-bd10-1e2022e46387",
+      "title": "新教材-小学英语人教版（PEP）（主编：吴欣）三年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/cb26c613-b227-41c1-bd10-1e2022e46387.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-08-12T15:57:13.918+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Meeting new people",
+          "children": [
+            {
+              "title": "Part A How do we greet new people?"
+            },
+            {
+              "title": "Part B How can we be polite?"
+            },
+            {
+              "title": "Part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 1 Meeting new people",
+            "Part A How do we greet new people?",
+            "Part B How can we be polite?",
+            "Part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Expressing yourself",
+          "children": [
+            {
+              "title": "Part A How do we describe things?"
+            },
+            {
+              "title": "Part B How do we express our feelings?"
+            },
+            {
+              "title": "Part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 2 Expressing yourself",
+            "Part A How do we describe things?",
+            "Part B How do we express our feelings?",
+            "Part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Learning better",
+          "children": [
+            {
+              "title": "Part A What tools help us learn?"
+            },
+            {
+              "title": "Part B How do our senses help us learn?"
+            },
+            {
+              "title": "Part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 3 Learning better",
+            "Part A What tools help us learn?",
+            "Part B How do our senses help us learn?",
+            "Part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Healthy food",
+          "children": [
+            {
+              "title": "Part A What do we eat?"
+            },
+            {
+              "title": "Part B What shall we eat?"
+            },
+            {
+              "title": "Part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 4 Healthy food",
+            "Part A What do we eat?",
+            "Part B What shall we eat?",
+            "Part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Old toys",
+          "children": [
+            {
+              "title": "Part A What kinds of old things do you have?"
+            },
+            {
+              "title": "Part B How can old things be reused?"
+            },
+            {
+              "title": "Part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 5 Old toys",
+            "Part A What kinds of old things do you have?",
+            "Part B How can old things be reused?",
+            "Part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Numbers in life",
+          "children": [
+            {
+              "title": "Part A How do numbers help us count and sort?"
+            },
+            {
+              "title": "Part B How do numbers help us make decisions?"
+            },
+            {
+              "title": "Part C (optional)"
+            },
+            {
+              "title": "Grammar"
+            }
+          ],
+          "topics": [
+            "Unit 6 Numbers in life",
+            "Part A How do numbers help us count and sort?",
+            "Part B How do numbers help us make decisions?",
+            "Part C (optional)",
+            "Grammar"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision Going to a school fair",
+          "topics": ["Revision Going to a school fair"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "0ffbaa49-0a7e-400e-b83d-e8bb49b65187",
+      "title": "新教材-小学英语人教版（PEP）（三年级起点）（主编：吴欣）五年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "新教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/0ffbaa49-0a7e-400e-b83d-e8bb49b65187.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-27T14:56:15.759+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Different friends",
+          "children": [
+            {
+              "title": "Part A How are your friends different?"
+            },
+            {
+              "title": "Part B What can you do?"
+            },
+            {
+              "title": "Part C Project: Make an album of your friends"
+            }
+          ],
+          "topics": [
+            "Unit 1 Different friends",
+            "Part A How are your friends different?",
+            "Part B What can you do?",
+            "Part C Project: Make an album of your friends"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 My feelings",
+          "children": [
+            {
+              "title": "Part A How do we express our feelings?"
+            },
+            {
+              "title": "Part B How can we understand each other better?"
+            },
+            {
+              "title": "Part C Project:Make a feelings book"
+            }
+          ],
+          "topics": [
+            "Unit 2 My feelings",
+            "Part A How do we express our feelings?",
+            "Part B How can we understand each other better?",
+            "Part C Project:Make a feelings book"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Work and play",
+          "children": [
+            {
+              "title": "Part A What do you learn at school?"
+            },
+            {
+              "title": "Part B What do you do at the weekend?"
+            },
+            {
+              "title": "Part C Project: Make a chart about work-play balance"
+            }
+          ],
+          "topics": [
+            "Unit 3 Work and play",
+            "Part A What do you learn at school?",
+            "Part B What do you do at the weekend?",
+            "Part C Project: Make a chart about work-play balance"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Healthy habits",
+          "children": [
+            {
+              "title": "Part A How can we stay healthy?"
+            },
+            {
+              "title": "Part B How can good habits help us?"
+            },
+            {
+              "title": "Part C Project: Make a healthy habits checklist"
+            }
+          ],
+          "topics": [
+            "Unit 4 Healthy habits",
+            "Part A How can we stay healthy?",
+            "Part B How can good habits help us?",
+            "Part C Project: Make a healthy habits checklist"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Food we eat",
+          "children": [
+            {
+              "title": "Part A What do we eat?"
+            },
+            {
+              "title": "Part B Where does our food come from?"
+            },
+            {
+              "title": "Part C Project: Make a presentation about how a plant grows"
+            }
+          ],
+          "topics": [
+            "Unit 5 Food we eat",
+            "Part A What do we eat?",
+            "Part B Where does our food come from?",
+            "Part C Project: Make a presentation about how a plant grows"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Nature and us",
+          "children": [
+            {
+              "title": "Part A What is exciting about nature?"
+            },
+            {
+              "title": "Part B What happens in bad weather?"
+            },
+            {
+              "title": "Part C Project: Write a welcome letter for a nature park"
+            }
+          ],
+          "topics": [
+            "Unit 6 Nature and us",
+            "Part A What is exciting about nature?",
+            "Part B What happens in bad weather?",
+            "Part C Project: Write a welcome letter for a nature park"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision New Year's party",
+          "topics": ["Revision New Year's party"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix l Songs",
+          "topics": ["Appendix l Songs"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 2 Words in each unit",
+          "topics": ["Appendix 2 Words in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 3 Vocabulary",
+          "topics": ["Appendix 3 Vocabulary"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 4 Useful expressions",
+          "topics": ["Appendix 4 Useful expressions"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "291dc803-4454-4374-8f31-29d7755efcd2",
+      "title": "新教材-小学英语人教版（PEP）（三年级起点）（主编：吴欣）六年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/291dc803-4454-4374-8f31-29d7755efcd2.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T09:42:38.914+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Amazing places",
+          "children": [
+            {
+              "title": "Part A What famous places do you know?"
+            },
+            {
+              "title": "Part B What makes a trip special?"
+            },
+            {
+              "title": "Part C Project: Make a holiday scrapbook"
+            }
+          ],
+          "topics": [
+            "Unit 1 Amazing places",
+            "Part A What famous places do you know?",
+            "Part B What makes a trip special?",
+            "Part C Project: Make a holiday scrapbook"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Getting together",
+          "children": [
+            {
+              "title": "Part A How can festivals bring us together?"
+            },
+            {
+              "title": "Part B How can big events bring us together?"
+            },
+            {
+              "title": "Part C Project: Present photos from school events"
+            }
+          ],
+          "topics": [
+            "Unit 2 Getting together",
+            "Part A How can festivals bring us together?",
+            "Part B How can big events bring us together?",
+            "Part C Project: Present photos from school events"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Healthy life",
+          "children": [
+            {
+              "title": "Part A How do we know we are ill?"
+            },
+            {
+              "title": "Part B How can we stay healthy?"
+            },
+            {
+              "title": "Part C Project: Make a healthy lifestyle guide"
+            }
+          ],
+          "topics": [
+            "Unit 3 Healthy life",
+            "Part A How do we know we are ill?",
+            "Part B How can we stay healthy?",
+            "Part C Project: Make a healthy lifestyle guide"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Managing money well",
+          "children": [
+            {
+              "title": "Part A Why do we use money?"
+            },
+            {
+              "title": "Part B How can we use money wisely?"
+            },
+            {
+              "title": "Part C Project: Make a spending plan"
+            }
+          ],
+          "topics": [
+            "Unit 4 Managing money well",
+            "Part A Why do we use money?",
+            "Part B How can we use money wisely?",
+            "Part C Project: Make a spending plan"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Exploring space",
+          "children": [
+            {
+              "title": "Part A What can we see in the sky?"
+            },
+            {
+              "title": "Part B What do we know about Earth and its neighbours?"
+            },
+            {
+              "title": "Part C Project: Share facts about Earth, the Sun and the Moon"
+            }
+          ],
+          "topics": [
+            "Unit 5 Exploring space",
+            "Part A What can we see in the sky?",
+            "Part B What do we know about Earth and its neighbours?",
+            "Part C Project: Share facts about Earth, the Sun and the Moon"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Energy, nature and us",
+          "children": [
+            {
+              "title": "Part A Where do we get energy?"
+            },
+            {
+              "title": "Part B How do we save energy?"
+            },
+            {
+              "title": "Part C Project: Give a presentation about green energy"
+            }
+          ],
+          "topics": [
+            "Unit 6 Energy, nature and us",
+            "Part A Where do we get energy?",
+            "Part B How do we save energy?",
+            "Part C Project: Give a presentation about green energy"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision Learning in museums",
+          "topics": ["Revision Learning in museums"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix l Songs",
+          "topics": ["Appendix l Songs"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 2 Words in each unit",
+          "topics": ["Appendix 2 Words in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 3 Vocabulary",
+          "topics": ["Appendix 3 Vocabulary"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 4 Useful expressions",
+          "topics": ["Appendix 4 Useful expressions"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 5 Irregular verbs",
+          "topics": ["Appendix 5 Irregular verbs"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "94cadb99-b206-4954-8dab-62505dd266ca",
+      "title": "新教材-小学英语人教版（PEP）（主编：吴欣）四年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/94cadb99-b206-4954-8dab-62505dd266ca.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-08-12T15:57:46.103+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Helping at home",
+          "children": [
+            {
+              "title": "Part A How are families different?"
+            },
+            {
+              "title": "Part B How can we help our family?"
+            },
+            {
+              "title": "Part C Project: Make a poster of a happy family"
+            },
+            {
+              "title": "Reading time"
+            }
+          ],
+          "topics": [
+            "Unit 1 Helping at home",
+            "Part A How are families different?",
+            "Part B How can we help our family?",
+            "Part C Project: Make a poster of a happy family",
+            "Reading time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 My friends",
+          "children": [
+            {
+              "title": "Part A Who are your friends?"
+            },
+            {
+              "title": "Part B How do we choose our friends?"
+            },
+            {
+              "title": "Part C Project: Make a book about your friend"
+            },
+            {
+              "title": "Reading time"
+            }
+          ],
+          "topics": [
+            "Unit 2 My friends",
+            "Part A Who are your friends?",
+            "Part B How do we choose our friends?",
+            "Part C Project: Make a book about your friend",
+            "Reading time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Places we live in",
+          "children": [
+            {
+              "title": "Part A What can we see in a community?"
+            },
+            {
+              "title": "Part B What do people do in a community?"
+            },
+            {
+              "title": "Part C Project: Make a dream community mode"
+            },
+            {
+              "title": "Reading time"
+            }
+          ],
+          "topics": [
+            "Unit 3 Places we live in",
+            "Part A What can we see in a community?",
+            "Part B What do people do in a community?",
+            "Part C Project: Make a dream community mode",
+            "Reading time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Helping in the community",
+          "children": [
+            {
+              "title": "Part A What jobs are important in a community?"
+            },
+            {
+              "title": "Part B How can young people help their community?"
+            },
+            {
+              "title": "Part C Project: Make a poster of your school helpers"
+            },
+            {
+              "title": "Reading time"
+            }
+          ],
+          "topics": [
+            "Unit 4 Helping in the community",
+            "Part A What jobs are important in a community?",
+            "Part B How can young people help their community?",
+            "Part C Project: Make a poster of your school helpers",
+            "Reading time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 The weather and us",
+          "children": [
+            {
+              "title": "Part A How can the weather be different?"
+            },
+            {
+              "title": "Part B What do we do in different weather?"
+            },
+            {
+              "title": "Part C Project: Make a bad weather reminder"
+            },
+            {
+              "title": "Reading time"
+            }
+          ],
+          "topics": [
+            "Unit 5 The weather and us",
+            "Part A How can the weather be different?",
+            "Part B What do we do in different weather?",
+            "Part C Project: Make a bad weather reminder",
+            "Reading time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Changing for the seasons",
+          "children": [
+            {
+              "title": "Part A What do we wear in different seasons?"
+            },
+            {
+              "title": "Part B What do we do in different seasons?"
+            },
+            {
+              "title": "Part C Project: Make a travel card"
+            },
+            {
+              "title": "Reading time"
+            }
+          ],
+          "topics": [
+            "Unit 6 Changing for the seasons",
+            "Part A What do we wear in different seasons?",
+            "Part B What do we do in different seasons?",
+            "Part C Project: Make a travel card",
+            "Reading time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision Let's help!",
+          "topics": ["Revision Let's help!"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 1 Songs",
+          "topics": ["Appendix 1 Songs"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 2 Words in each unit",
+          "topics": ["Appendix 2 Words in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 3 Vocabulary",
+          "topics": ["Appendix 3 Vocabulary"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 4 Useful expressions",
+          "topics": ["Appendix 4 Useful expressions"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "4901535c-9ae2-458e-bc0e-e5ed3f7a081d",
+      "title": "新教材-小学英语人教版（PEP）（三年级起点）（主编：吴欣）四年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/4901535c-9ae2-458e-bc0e-e5ed3f7a081d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-02-24T16:58:54.367+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Class rules",
+          "children": [
+            {
+              "title": "Part A What are your class rules?"
+            },
+            {
+              "title": "Part B Why do we follow class rules?"
+            },
+            {
+              "title": "Part C Project: Make signs for class rules"
+            }
+          ],
+          "topics": [
+            "Unit 1 Class rules",
+            "Part A What are your class rules?",
+            "Part B Why do we follow class rules?",
+            "Part C Project: Make signs for class rules"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Family rules",
+          "children": [
+            {
+              "title": "Part A What are your family rules?"
+            },
+            {
+              "title": "Part B How do family rules help us?"
+            },
+            {
+              "title": "Part C Project: Make family rules"
+            }
+          ],
+          "topics": [
+            "Unit 2 Family rules",
+            "Part A What are your family rules?",
+            "Part B How do family rules help us?",
+            "Part C Project: Make family rules"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Time for school",
+          "children": [
+            {
+              "title": "Part A What is your schedule?"
+            },
+            {
+              "title": "Part B How can a good schedule help us?"
+            },
+            {
+              "title": "Part C Project: Make a weekend schedule"
+            }
+          ],
+          "topics": [
+            "Unit 3 Time for school",
+            "Part A What is your schedule?",
+            "Part B How can a good schedule help us?",
+            "Part C Project: Make a weekend schedule"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Going shopping",
+          "children": [
+            {
+              "title": "Part A What do we need to buy?"
+            },
+            {
+              "title": "Part B How do we decide what to buy?"
+            },
+            {
+              "title": "Part C Project: Choose clothes for a singing contest"
+            }
+          ],
+          "topics": [
+            "Unit 4 Going shopping",
+            "Part A What do we need to buy?",
+            "Part B How do we decide what to buy?",
+            "Part C Project: Choose clothes for a singing contest"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Farms and us",
+          "children": [
+            {
+              "title": "Part A What farm animals do you know?"
+            },
+            {
+              "title": "Part B What can we learn on a farm?"
+            },
+            {
+              "title": "Part C Project: Make a \"farm-to-table\" flow chart"
+            }
+          ],
+          "topics": [
+            "Unit 5 Farms and us",
+            "Part A What farm animals do you know?",
+            "Part B What can we learn on a farm?",
+            "Part C Project: Make a \"farm-to-table\" flow chart"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 From farm to table",
+          "children": [
+            {
+              "title": "Part A What can we do on a farm?"
+            },
+            {
+              "title": "Part B How should we eat?"
+            },
+            {
+              "title": "Part C Project: Design a Family Farm Day ad"
+            }
+          ],
+          "topics": [
+            "Unit 6 From farm to table",
+            "Part A What can we do on a farm?",
+            "Part B How should we eat?",
+            "Part C Project: Design a Family Farm Day ad"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision A great weekend plan",
+          "topics": ["Revision A great weekend plan"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix l Songs",
+          "topics": ["Appendix l Songs"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 2 Words in each unit",
+          "topics": ["Appendix 2 Words in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 3 Vocabulary",
+          "topics": ["Appendix 3 Vocabulary"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 4 Useful expressions",
+          "topics": ["Appendix 4 Useful expressions"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 5 Pronunciation",
+          "topics": ["Appendix 5 Pronunciation"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ebe4220f-93eb-45ed-bf5a-f04dd79a01ad",
+      "title": "新教材-小学英语人教版（精通）（主编：苗兴伟）三年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：苗兴伟）",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ebe4220f-93eb-45ed-bf5a-f04dd79a01ad.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-08-12T15:59:21.625+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Greetings",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 1 Greetings",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 School things",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 2 School things",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Toys",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": ["Unit 3 Toys", "Lesson 1", "Lesson 2", "Lesson 3", "Fun time", "Story time"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "children": [
+            {
+              "title": "Review of Units 1-3"
+            }
+          ],
+          "topics": ["Revision 1", "Review of Units 1-3"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Friends",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 4 Friends",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Drinks and fruits",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 5 Drinks and fruits",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Food",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": ["Unit 6 Food", "Lesson 1", "Lesson 2", "Lesson 3", "Fun time", "Story time"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "children": [
+            {
+              "title": "Review of Units 4-6"
+            }
+          ],
+          "topics": ["Revision 2", "Review of Units 4-6"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

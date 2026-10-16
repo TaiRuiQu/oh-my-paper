@@ -1,0 +1,149 @@
+{
+  "stage": "初中（五•四学制）",
+  "subject": "语文",
+  "books": [
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-bb0c05ba025f",
+      "title": "初中（五•四学制）语文统编版九年级上册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-bb0c4b680261",
+      "title": "初中（五•四学制）语文统编版九年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1f2d87d408ed",
+      "title": "初中（五•四学制）语文统编版八年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "30cb27c0-6c4d-456b-8b29-6762fe7ce671",
+      "title": "新教材-初中（五•四学制）语文统编版七年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "dc775de6-ca00-49cf-9940-9ee84add47d7",
+      "title": "新教材-初中（五•四学制）语文统编版七年级下册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "c980881b-0c22-4007-bf9f-748aa1d0f059",
+      "title": "新教材-初中（五•四学制）语文统编版八年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "8307cefd-b34d-49ac-ad85-e2ff17c1c7ca",
+      "title": "新教材-初中（五•四学制）语文统编版六年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-2.json",
+      "unit_count": 7
+    },
+    {
+      "id": "f5fa5387-6c48-462b-9e39-990478083091",
+      "title": "新教材-初中（五•四学制）语文统编版六年级下册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-3.json",
+      "unit_count": 7
+    },
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-bb099c4e0259",
+      "title": "初中（五•四学制）语文统编版七年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-3.json",
+      "unit_count": 6
+    },
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-bb0b58f3025b",
+      "title": "初中（五•四学制）语文统编版七年级下册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-3.json",
+      "unit_count": 6
+    },
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-bb0bb48a025d",
+      "title": "初中（五•四学制）语文统编版八年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-4.json",
+      "unit_count": 6
+    },
+    {
+      "id": "f1bf1bca-7421-e79f-4d90-5dcb60e0cce7",
+      "title": "初中（五•四学制）语文统编版六年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-4.json",
+      "unit_count": 6
+    },
+    {
+      "id": "849d4d12-9155-0b1e-201f-e81c61104eca",
+      "title": "初中（五•四学制）语文统编版六年级下册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "六年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chinese/units-4.json",
+      "unit_count": 6
+    }
+  ]
+}

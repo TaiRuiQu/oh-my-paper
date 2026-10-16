@@ -1,0 +1,61 @@
+{
+  "stage": "高中",
+  "subject": "化学",
+  "books": [
+    {
+      "id": "f3c84ad7-50a6-4488-9b10-239c3806272f",
+      "title": "高中化学人教版选择性必修1 化学反应原理",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修1 化学反应原理",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/chemistry/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "078f7ea9-41f2-44de-a6c9-a3beb5838af4",
+      "title": "高中化学人教版选择性必修3 有机化学基础",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 有机化学基础",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/chemistry/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "76625bf4-a8aa-42de-a626-5c2051e6c774",
+      "title": "高中化学人教版高一必修 第一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/chemistry/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "c1048b60-3971-432e-9ffe-23327fa04366",
+      "title": "高中化学人教版高一必修 第二册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/chemistry/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "614ce40d-3b75-4760-9250-55fdb63875c0",
+      "title": "高中化学人教版高二选择性必修2 物质结构与性质",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修2 物质结构与性质",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/chemistry/units-1.json",
+      "unit_count": 4
+    }
+  ]
+}

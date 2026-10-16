@@ -1,0 +1,907 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "b0eb3867-72ff-482c-b448-86ef0b74715d",
+      "title": "高中历史统编版必修 中外历史纲要（上）",
+      "stage": "高中",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 中外历史纲要（上）",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/b0eb3867-72ff-482c-b448-86ef0b74715d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:34.336+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 从中华文明起源到秦汉统一多民族封建国家的建立与巩固",
+          "children": [
+            {
+              "title": "第1课 中华文明的起源与早期国家"
+            },
+            {
+              "title": "第2课 诸侯纷争与变法运动"
+            },
+            {
+              "title": "第3课 秦统一多民族封建国家的建立"
+            },
+            {
+              "title": "第4课 西汉与东汉——统一多民族封建国家的巩固"
+            }
+          ],
+          "topics": [
+            "从中华文明起源到秦汉统一多民族封建国家的建立与巩固",
+            "中华文明的起源与早期国家",
+            "诸侯纷争与变法运动",
+            "秦统一多民族封建国家的建立",
+            "西汉与东汉——统一多民族封建国家的巩固"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 三国两晋南北朝的民族交融与隋唐统一多民族封建国家的发展",
+          "children": [
+            {
+              "title": "第5课 三国两晋南北朝的政权更迭与民族交融"
+            },
+            {
+              "title": "第6课 从隋唐盛世到五代十国"
+            },
+            {
+              "title": "第7课 隋唐制度的变化与创新"
+            },
+            {
+              "title": "第8课 三国至隋唐的文化"
+            }
+          ],
+          "topics": [
+            "三国两晋南北朝的民族交融与隋唐统一多民族封建国家的发展",
+            "三国两晋南北朝的政权更迭与民族交融",
+            "从隋唐盛世到五代十国",
+            "隋唐制度的变化与创新",
+            "三国至隋唐的文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 辽宋夏金多民族政权的并立与元朝的统一",
+          "children": [
+            {
+              "title": "第9课 两宋的政治和军事"
+            },
+            {
+              "title": "第10课 辽夏金元的统治"
+            },
+            {
+              "title": "第11课 辽宋夏金元的经济、社会与文化",
+              "children": [
+                {
+                  "title": "辽宋夏金元的文化"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "辽宋夏金多民族政权的并立与元朝的统一",
+            "两宋的政治和军事",
+            "辽夏金元的统治",
+            "辽宋夏金元的经济、社会与文化",
+            "辽宋夏金元的文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 明清中国版图的奠定与面临的挑战",
+          "children": [
+            {
+              "title": "第12课 从明朝建立到清军入关"
+            },
+            {
+              "title": "第13课 清朝前中期的鼎盛与危机"
+            },
+            {
+              "title": "第14课 明至清中叶的经济与文化"
+            }
+          ],
+          "topics": [
+            "明清中国版图的奠定与面临的挑战",
+            "从明朝建立到清军入关",
+            "清朝前中期的鼎盛与危机",
+            "明至清中叶的经济与文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 晚清时期的内忧外患与救亡图存",
+          "children": [
+            {
+              "title": "第15课 两次鸦片战争"
+            },
+            {
+              "title": "第16课 国家出路的探索与列强侵略的加剧"
+            },
+            {
+              "title": "第17课 挽救民族危亡的斗争"
+            }
+          ],
+          "topics": [
+            "晚清时期的内忧外患与救亡图存",
+            "两次鸦片战争",
+            "国家出路的探索与列强侵略的加剧",
+            "挽救民族危亡的斗争"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 辛亥革命与中华民国的建立",
+          "children": [
+            {
+              "title": "第18课 辛亥革命"
+            },
+            {
+              "title": "第19课 北洋军阀统治时期的政治、经济与文化"
+            }
+          ],
+          "topics": ["辛亥革命与中华民国的建立", "辛亥革命", "北洋军阀统治时期的政治、经济与文化"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元 中国共产党成立与新民主主义革命兴起",
+          "children": [
+            {
+              "title": "第20课 五四运动与中国共产党的诞生"
+            },
+            {
+              "title": "第21课 南京国民政府的统治和中国共产党开辟革命新道路"
+            }
+          ],
+          "topics": [
+            "中国共产党成立与新民主主义革命兴起",
+            "五四运动与中国共产党的诞生",
+            "南京国民政府的统治和中国共产党开辟革命新道路"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元 中华民族的抗日战争和人民解放战争",
+          "children": [
+            {
+              "title": "第22课 从局部抗战到全国抗战"
+            },
+            {
+              "title": "第23课 全民族浴血奋战与抗日战争的胜利"
+            },
+            {
+              "title": "第24课 人民解放战争"
+            }
+          ],
+          "topics": [
+            "中华民族的抗日战争和人民解放战争",
+            "从局部抗战到全国抗战",
+            "全民族浴血奋战与抗日战争的胜利",
+            "人民解放战争"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第九单元 中华人民共和国成立和社会主义革命与建设",
+          "children": [
+            {
+              "title": "第25课 中华人民共和国成立和向社会主义的过渡"
+            },
+            {
+              "title": "第26课 社会主义建设在探索中曲折发展"
+            }
+          ],
+          "topics": [
+            "中华人民共和国成立和社会主义革命与建设",
+            "中华人民共和国成立和向社会主义的过渡",
+            "社会主义建设在探索中曲折发展"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十单元 改革开放和社会主义现代化建设新时期",
+          "children": [
+            {
+              "title": "第 27 课 中国特色社会主义的开创与发展"
+            },
+            {
+              "title": "第 28 课 改革开放和社会主义现代化建设的巨大成就"
+            }
+          ],
+          "topics": [
+            "改革开放和社会主义现代化建设新时期",
+            "第 27 课 中国特色社会主义的开创与发展",
+            "第 28 课 改革开放和社会主义现代化建设的巨大成就"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十一单元 中国特色社会主义新时代",
+          "children": [
+            {
+              "title": "第29课 中国特色社会主义进入新时代"
+            },
+            {
+              "title": "第30课 新时代中国特色社会主义的伟大成就"
+            },
+            {
+              "title": "活动课 家国情怀与统一多民族国家的演进"
+            }
+          ],
+          "topics": [
+            "中国特色社会主义新时代",
+            "中国特色社会主义进入新时代",
+            "新时代中国特色社会主义的伟大成就",
+            "活动课 家国情怀与统一多民族国家的演进"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "0cd1da98-7b0a-4e95-b4df-0134b2d40e6a",
+      "title": "高中历史统编版必修 中外历史纲要（下）",
+      "stage": "高中",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 中外历史纲要（下）",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/0cd1da98-7b0a-4e95-b4df-0134b2d40e6a.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:26:56.858+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 古代文明的产生与发展",
+          "children": [
+            {
+              "title": "第1课 文明的产生与早期发展"
+            },
+            {
+              "title": "第2课 古代世界的帝国与文明的交流"
+            }
+          ],
+          "topics": ["古代文明的产生与发展", "文明的产生与早期发展", "古代世界的帝国与文明的交流"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 中古时期的世界",
+          "children": [
+            {
+              "title": "第3课 中古时期的欧洲"
+            },
+            {
+              "title": "第4课 中古时期的亚洲"
+            },
+            {
+              "title": "第5课 古代非洲与美洲"
+            }
+          ],
+          "topics": ["中古时期的世界", "中古时期的欧洲", "中古时期的亚洲", "古代非洲与美洲"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 走向整体的世界",
+          "children": [
+            {
+              "title": "第6课 全球航路的开辟"
+            },
+            {
+              "title": "第7课 全球联系的初步建立与世界格局的演变"
+            }
+          ],
+          "topics": ["走向整体的世界", "全球航路的开辟", "全球联系的初步建立与世界格局的演变"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 资本主义制度的确立",
+          "children": [
+            {
+              "title": "第8课 欧洲的思想解放运动"
+            },
+            {
+              "title": "第9课 资产阶级革命与资本主义制度的确立"
+            }
+          ],
+          "topics": [
+            "资本主义制度的确立",
+            "欧洲的思想解放运动",
+            "资产阶级革命与资本主义制度的确立"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 工业革命与马克思主义的诞生",
+          "children": [
+            {
+              "title": "第10课 影响世界的工业革命"
+            },
+            {
+              "title": "第11课 马克思主义的诞生与传播"
+            }
+          ],
+          "topics": ["工业革命与马克思主义的诞生", "影响世界的工业革命", "马克思主义的诞生与传播"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 世界殖民体系与亚非拉民族独立运动",
+          "children": [
+            {
+              "title": "第12课 资本主义世界殖民体系的形成"
+            },
+            {
+              "title": "第13课 亚非拉民族独立运动"
+            }
+          ],
+          "topics": [
+            "世界殖民体系与亚非拉民族独立运动",
+            "资本主义世界殖民体系的形成",
+            "亚非拉民族独立运动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元 两次世界大战、十月革命与国际秩序的演变",
+          "children": [
+            {
+              "title": "第14课 第一次世界大战与战后国际秩序"
+            },
+            {
+              "title": "第15课 十月革命的胜利与苏联的社会主义实践"
+            },
+            {
+              "title": "第16课 亚非拉民族民主运动的高涨"
+            },
+            {
+              "title": "第17课 第二次世界大战与战后国际秩序的形成"
+            }
+          ],
+          "topics": [
+            "两次世界大战、十月革命与国际秩序的演变",
+            "第一次世界大战与战后国际秩序",
+            "十月革命的胜利与苏联的社会主义实践",
+            "亚非拉民族民主运动的高涨",
+            "第二次世界大战与战后国际秩序的形成"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元 20世纪下半叶世界的新变化",
+          "children": [
+            {
+              "title": "第18课 冷战与国际格局的演变"
+            },
+            {
+              "title": "第19课 资本主义国家的新变化"
+            },
+            {
+              "title": "第20课 社会主义国家的发展与变化"
+            },
+            {
+              "title": "第21课 世界殖民体系的瓦解与新兴国家的发展"
+            }
+          ],
+          "topics": [
+            "20世纪下半叶世界的新变化",
+            "冷战与国际格局的演变",
+            "资本主义国家的新变化",
+            "社会主义国家的发展与变化",
+            "世界殖民体系的瓦解与新兴国家的发展"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第九单元 当代世界发展的特点与主要趋势",
+          "children": [
+            {
+              "title": "第22课 世界多极化与经济全球化"
+            },
+            {
+              "title": "第23课 和平发展合作共赢的历史潮流"
+            }
+          ],
+          "topics": [
+            "当代世界发展的特点与主要趋势",
+            "世界多极化与经济全球化",
+            "和平发展合作共赢的历史潮流"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "活动课 放眼世界、推动构建人类命运共同体",
+          "topics": ["活动课 放眼世界、推动构建人类命运共同体"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "##附录 中外历史大事年表",
+          "topics": ["##附录 中外历史大事年表"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0175-cf9e48c2017a",
+      "title": "高中历史统编版选择性必修2 经济与社会生活",
+      "stage": "高中",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2 经济与社会生活",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-759c-c8e1-0175-cf9e48c2017a.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:03.919+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 食物生产与社会生活",
+          "children": [
+            {
+              "title": "第1课 从食物采集到食物生产"
+            },
+            {
+              "title": "第2课 新航路开辟后的食物物种交流"
+            },
+            {
+              "title": "第3课 现代食物的生产、储备与食品安全"
+            }
+          ],
+          "topics": [
+            "食物生产与社会生活",
+            "从食物采集到食物生产",
+            "新航路开辟后的食物物种交流",
+            "现代食物的生产、储备与食品安全"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 生产工具与劳作方式",
+          "children": [
+            {
+              "title": "第4课 古代的生产工具与劳作"
+            },
+            {
+              "title": "第5课 工业革命与工厂制度"
+            },
+            {
+              "title": "第6课 现代科技进步与人类社会发展"
+            }
+          ],
+          "topics": [
+            "生产工具与劳作方式",
+            "古代的生产工具与劳作",
+            "工业革命与工厂制度",
+            "现代科技进步与人类社会发展"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 商业贸易与日常生活",
+          "children": [
+            {
+              "title": "第7课 古代的商业贸易"
+            },
+            {
+              "title": "第8课 世界市场与商业贸易"
+            },
+            {
+              "title": "第9课 20世纪以来人类的经济与生活"
+            }
+          ],
+          "topics": [
+            "商业贸易与日常生活",
+            "古代的商业贸易",
+            "世界市场与商业贸易",
+            "20世纪以来人类的经济与生活"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 村落、城镇与居住环境",
+          "children": [
+            {
+              "title": "第10课 古代的村落、集镇和城市"
+            },
+            {
+              "title": "第11课 近代以来的城市化进程"
+            }
+          ],
+          "topics": ["村落、城镇与居住环境", "古代的村落、集镇和城市", "近代以来的城市化进程"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 交通与社会变迁",
+          "children": [
+            {
+              "title": "第12课 水陆交通的变迁"
+            },
+            {
+              "title": "第13课 现代交通运输的新变化"
+            }
+          ],
+          "topics": ["交通与社会变迁", "水陆交通的变迁", "现代交通运输的新变化"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 医疗与公共卫生",
+          "children": [
+            {
+              "title": "第14课 历史上的疫病与医学成就"
+            },
+            {
+              "title": "第15课 现代医疗卫生体系与社会生活"
+            }
+          ],
+          "topics": ["医疗与公共卫生", "历史上的疫病与医学成就", "现代医疗卫生体系与社会生活"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "活动课",
+          "children": [
+            {
+              "title": "技术进步与社会生活的变化"
+            }
+          ],
+          "topics": ["活动课", "技术进步与社会生活的变化"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0175-cfa2ac3701aa",
+      "title": "高中历史统编版选择性必修3 文化交流与传播",
+      "stage": "高中",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 文化交流与传播",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-759c-c8e1-0175-cfa2ac3701aa.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:04.039+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 源远流长的中华文化",
+          "children": [
+            {
+              "title": "第1课 中华优秀传统文化的内涵与特点"
+            },
+            {
+              "title": "第2课 中华文化的世界意义"
+            }
+          ],
+          "topics": ["源远流长的中华文化", "中华优秀传统文化的内涵与特点", "中华文化的世界意义"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 丰富多样的世界文化",
+          "children": [
+            {
+              "title": "第3课 古代西亚、非洲文化"
+            },
+            {
+              "title": "第4课 欧洲文化的形成"
+            },
+            {
+              "title": "第5课 南亚、东亚与美洲的文化"
+            }
+          ],
+          "topics": [
+            "丰富多样的世界文化",
+            "古代西亚、非洲文化",
+            "欧洲文化的形成",
+            "南亚、东亚与美洲的文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 人口迁徙、文化交融与认同",
+          "children": [
+            {
+              "title": "第6课 古代人类的迁徙和区域文化的形成"
+            },
+            {
+              "title": "第7课 近代殖民活动和人口的跨地域转移"
+            },
+            {
+              "title": "第8课 现代社会的移民和多元文化"
+            }
+          ],
+          "topics": [
+            "人口迁徙、文化交融与认同",
+            "古代人类的迁徙和区域文化的形成",
+            "近代殖民活动和人口的跨地域转移",
+            "现代社会的移民和多元文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 商路、贸易与文化交流",
+          "children": [
+            {
+              "title": "第9课 古代的商路、贸易与文化交流"
+            },
+            {
+              "title": "第10课 近代以来的世界贸易与文化交流的扩展"
+            }
+          ],
+          "topics": [
+            "商路、贸易与文化交流",
+            "古代的商路、贸易与文化交流",
+            "近代以来的世界贸易与文化交流的扩展"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 战争与文化交锋",
+          "children": [
+            {
+              "title": "第11课 古代战争与地域文化的演变"
+            },
+            {
+              "title": "第12课 近代战争与西方文化的扩张"
+            },
+            {
+              "title": "第13课 现代战争与不同文化的碰撞和交流"
+            }
+          ],
+          "topics": [
+            "战争与文化交锋",
+            "古代战争与地域文化的演变",
+            "近代战争与西方文化的扩张",
+            "现代战争与不同文化的碰撞和交流"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 文化的传承与保护",
+          "children": [
+            {
+              "title": "第14课 文化传承的多种载体及其发展"
+            },
+            {
+              "title": "第15课 文化遗产：全人类共同的财富"
+            }
+          ],
+          "topics": [
+            "文化的传承与保护",
+            "文化传承的多种载体及其发展",
+            "文化遗产：全人类共同的财富"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "活动课",
+          "children": [
+            {
+              "title": "信息革命与人类文化共享"
+            }
+          ],
+          "topics": ["活动课", "信息革命与人类文化共享"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "高考复习",
+          "children": [
+            {
+              "title": "历史二轮复习浅说（上）"
+            },
+            {
+              "title": "历史二轮复习浅说（下）"
+            },
+            {
+              "title": "高考历史复习（一）"
+            },
+            {
+              "title": "高考历史复习（二）"
+            },
+            {
+              "title": "高考历史复习（三）"
+            },
+            {
+              "title": "领悟学科核心素养掌握高考答题思路（2）"
+            },
+            {
+              "title": "领悟学科核心素养掌握高考答题思路（3）"
+            },
+            {
+              "title": "领悟学科核心素养掌握高考答题思路（4）"
+            },
+            {
+              "title": "中国古代史重要问题（一）"
+            },
+            {
+              "title": "中国古代史重要问题（二）"
+            },
+            {
+              "title": "中国古代史重要问题（三）"
+            },
+            {
+              "title": "习题背后的秘密"
+            }
+          ],
+          "topics": [
+            "高考复习",
+            "历史二轮复习浅说（上）",
+            "历史二轮复习浅说（下）",
+            "高考历史复习（一）",
+            "高考历史复习（二）",
+            "高考历史复习（三）",
+            "领悟学科核心素养掌握高考答题思路（2）",
+            "领悟学科核心素养掌握高考答题思路（3）",
+            "领悟学科核心素养掌握高考答题思路（4）",
+            "中国古代史重要问题（一）",
+            "中国古代史重要问题（二）",
+            "中国古代史重要问题（三）",
+            "习题背后的秘密"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "5640dc0b-6e9f-4d76-bafc-8b134409a11d",
+      "title": "高中历史统编版高二选择性必修1 国家制度与社会治理",
+      "stage": "高中",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修1 国家制度与社会治理",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/5640dc0b-6e9f-4d76-bafc-8b134409a11d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:57.811+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 政治制度",
+          "children": [
+            {
+              "title": "第1课 中国古代政治制度的形成与发展"
+            },
+            {
+              "title": "第2课 西方国家古代和近代政治制度的演变"
+            },
+            {
+              "title": "第3课 中国近代至当代政治制度的演变"
+            },
+            {
+              "title": "第4课 中国历代变法和改革"
+            }
+          ],
+          "topics": [
+            "政治制度",
+            "中国古代政治制度的形成与发展",
+            "西方国家古代和近代政治制度的演变",
+            "中国近代至当代政治制度的演变",
+            "中国历代变法和改革"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 官员的选拔与管理",
+          "children": [
+            {
+              "title": "第5课 中国古代官员的选拔与管理"
+            },
+            {
+              "title": "第6课 西方的文官制度"
+            },
+            {
+              "title": "第7课 近代以来中国的官员选拔与管理"
+            }
+          ],
+          "topics": [
+            "官员的选拔与管理",
+            "中国古代官员的选拔与管理",
+            "西方的文官制度",
+            "近代以来中国的官员选拔与管理"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 法律与教化",
+          "children": [
+            {
+              "title": "第8课 中国古代的法治与教化"
+            },
+            {
+              "title": "第9课 近代西方的法律与教化"
+            },
+            {
+              "title": "第10课 当代中国的法治与精神文明建设"
+            }
+          ],
+          "topics": [
+            "法律与教化",
+            "中国古代的法治与教化",
+            "近代西方的法律与教化",
+            "当代中国的法治与精神文明建设"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 民族关系与国家关系",
+          "children": [
+            {
+              "title": "第11课 中国古代的民族关系与对外交往"
+            },
+            {
+              "title": "第12课 近代西方民族国家与国际法的发展"
+            },
+            {
+              "title": "第13课 当代中国的民族政策"
+            },
+            {
+              "title": "第14课 当代中国的外交"
+            }
+          ],
+          "topics": [
+            "民族关系与国家关系",
+            "中国古代的民族关系与对外交往",
+            "近代西方民族国家与国际法的发展",
+            "当代中国的民族政策",
+            "当代中国的外交"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 货币与赋税制度",
+          "children": [
+            {
+              "title": "第15课 货币的使用与世界货币体系的形成"
+            },
+            {
+              "title": "第16课 中国赋税制度的演变"
+            }
+          ],
+          "topics": ["货币与赋税制度", "货币的使用与世界货币体系的形成", "中国赋税制度的演变"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 基层治理与社会保障",
+          "children": [
+            {
+              "title": "第17课 中国古代的户籍制度与社会治理"
+            },
+            {
+              "title": "第18课 世界主要国家的基层治理与社会保障"
+            }
+          ],
+          "topics": [
+            "基层治理与社会保障",
+            "中国古代的户籍制度与社会治理",
+            "世界主要国家的基层治理与社会保障"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "活动课",
+          "children": [
+            {
+              "title": "中国历史上的大一统国家治理"
+            }
+          ],
+          "topics": ["活动课", "中国历史上的大一统国家治理"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

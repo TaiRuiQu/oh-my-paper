@@ -1,0 +1,1336 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c15935fe0107",
+      "title": "小学（五•四学制）道德与法治统编版三年级上册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "三年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-6e16-b80f-016e-c15935fe0107.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:56.916+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 快乐学习",
+          "children": [
+            {
+              "title": "1 学习伴我成长"
+            },
+            {
+              "title": "2 我学习，我快乐"
+            },
+            {
+              "title": "3 做学习的主人"
+            }
+          ],
+          "topics": ["快乐学习", "1 学习伴我成长", "2 我学习，我快乐", "3 做学习的主人"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我们的学校",
+          "children": [
+            {
+              "title": "4 说说我们的学校"
+            },
+            {
+              "title": "5 走近我们的老师"
+            },
+            {
+              "title": "6 让我们的学校更美好"
+            }
+          ],
+          "topics": ["我们的学校", "4 说说我们的学校", "5 走近我们的老师", "6 让我们的学校更美好"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 安全护我成长",
+          "children": [
+            {
+              "title": "7 生命最宝贵"
+            },
+            {
+              "title": "8 安全记心上"
+            },
+            {
+              "title": "9 心中的“110”"
+            }
+          ],
+          "topics": ["安全护我成长", "7 生命最宝贵", "8 安全记心上", "9 心中的“110”"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 家是最温暖的地方",
+          "children": [
+            {
+              "title": "10 父母多爱我"
+            },
+            {
+              "title": "11 爸爸妈妈在我心中"
+            },
+            {
+              "title": "12 家庭的记忆"
+            }
+          ],
+          "topics": ["家是最温暖的地方", "10 父母多爱我", "11 爸爸妈妈在我心中", "12 家庭的记忆"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c1597f3c0109",
+      "title": "小学（五•四学制）道德与法治统编版三年级下册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-6e16-b80f-016e-c1597f3c0109.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:57.039+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 我和我的同伴",
+          "children": [
+            {
+              "title": "1 我是独特的"
+            },
+            {
+              "title": "2 不一样的你我他"
+            },
+            {
+              "title": "3 我很诚实"
+            },
+            {
+              "title": "4 同学相伴"
+            }
+          ],
+          "topics": [
+            "我和我的同伴",
+            "1 我是独特的",
+            "2 不一样的你我他",
+            "3 我很诚实",
+            "4 同学相伴"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我在这里长大",
+          "children": [
+            {
+              "title": "5 我的家在这里"
+            },
+            {
+              "title": "6 我家的好邻居"
+            },
+            {
+              "title": "7 请到我的家乡来"
+            }
+          ],
+          "topics": ["我在这里长大", "5 我的家在这里", "6 我家的好邻居", "7 请到我的家乡来"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 我们的公共生活",
+          "children": [
+            {
+              "title": "8 大家的“朋友”"
+            },
+            {
+              "title": "9 生活离不开规则"
+            },
+            {
+              "title": "10 爱心的传递者"
+            }
+          ],
+          "topics": ["我们的公共生活", "8 大家的“朋友”", "9 生活离不开规则", "10 爱心的传递者"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 多样的交通和通信",
+          "children": [
+            {
+              "title": "11 四通八达的交通"
+            },
+            {
+              "title": "12 慧眼看交通"
+            },
+            {
+              "title": "13 万里一线牵"
+            }
+          ],
+          "topics": ["多样的交通和通信", "11 四通八达的交通", "12 慧眼看交通", "13 万里一线牵"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "f3278bce-adab-50a5-8a6e-ab5f67dc3206",
+      "title": "小学（五•四学制）道德与法治统编版二年级下册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "二年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/f3278bce-adab-50a5-8a6e-ab5f67dc3206.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:20.492+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 让我试试看",
+          "children": [
+            {
+              "title": "1 挑战第一次"
+            },
+            {
+              "title": "2 学做“快乐鸟”"
+            },
+            {
+              "title": "3 做个“开心果”"
+            },
+            {
+              "title": "4 试种一粒籽"
+            }
+          ],
+          "topics": [
+            "让我试试看",
+            "1 挑战第一次",
+            "2 学做“快乐鸟”",
+            "3 做个“开心果”",
+            "4 试种一粒籽"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我们好好玩",
+          "children": [
+            {
+              "title": "5 健康游戏我常玩"
+            },
+            {
+              "title": "6 传统游戏我会玩"
+            },
+            {
+              "title": "7 我们有新玩法"
+            },
+            {
+              "title": "8 安全地玩"
+            }
+          ],
+          "topics": [
+            "我们好好玩",
+            "5 健康游戏我常玩",
+            "6 传统游戏我会玩",
+            "7 我们有新玩法",
+            "8 安全地玩"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 绿色小卫士",
+          "children": [
+            {
+              "title": "9 小水滴的诉说"
+            },
+            {
+              "title": "10 清新空气是个宝"
+            },
+            {
+              "title": "11 我是一张纸"
+            },
+            {
+              "title": "12 我的环保小搭档"
+            }
+          ],
+          "topics": [
+            "绿色小卫士",
+            "9 小水滴的诉说",
+            "10 清新空气是个宝",
+            "11 我是一张纸",
+            "12 我的环保小搭档"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 我会努力的",
+          "children": [
+            {
+              "title": "13 我能行"
+            },
+            {
+              "title": "14 学习有方法"
+            },
+            {
+              "title": "15 坚持才会有收获"
+            },
+            {
+              "title": "16 奖励一下自己"
+            }
+          ],
+          "topics": [
+            "我会努力的",
+            "13 我能行",
+            "14 学习有方法",
+            "15 坚持才会有收获",
+            "16 奖励一下自己"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c15a48f5010f",
+      "title": "小学（五•四学制）道德与法治统编版五年级上册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-6e16-b80f-016e-c15a48f5010f.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:57.396+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 感受家乡文化 关心家乡发展",
+          "children": [
+            {
+              "title": "1 我们当地的风俗"
+            },
+            {
+              "title": "2 多姿多彩的民间艺术"
+            },
+            {
+              "title": "3 家乡的喜与忧"
+            }
+          ],
+          "topics": [
+            "感受家乡文化 关心家乡发展",
+            "1 我们当地的风俗",
+            "2 多姿多彩的民间艺术",
+            "3 家乡的喜与忧"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 骄人祖先 灿烂文化",
+          "children": [
+            {
+              "title": "4 美丽文字 民族瑰宝"
+            },
+            {
+              "title": "5 古代科技 耀我中华"
+            },
+            {
+              "title": "6 传统美德 源远流长"
+            }
+          ],
+          "topics": [
+            "骄人祖先 灿烂文化",
+            "4 美丽文字 民族瑰宝",
+            "5 古代科技 耀我中华",
+            "6 传统美德 源远流长"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 百年追梦 复兴中华",
+          "children": [
+            {
+              "title": "7 不甘屈辱 奋勇抗争"
+            },
+            {
+              "title": "8 推翻帝制 民族觉醒"
+            },
+            {
+              "title": "9 中国有了共产党"
+            },
+            {
+              "title": "10 夺取抗日战争和人民解放战争的胜利"
+            },
+            {
+              "title": "11 屹立在世界的东方"
+            },
+            {
+              "title": "12 富起来到强起来"
+            }
+          ],
+          "topics": [
+            "百年追梦 复兴中华",
+            "7 不甘屈辱 奋勇抗争",
+            "8 推翻帝制 民族觉醒",
+            "9 中国有了共产党",
+            "10 夺取抗日战争和人民解放战争的胜利",
+            "11 屹立在世界的东方",
+            "12 富起来到强起来"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 多样文明 丰富多彩",
+          "children": [
+            {
+              "title": "13 探访古代文明"
+            },
+            {
+              "title": "14 多元文化 多样魅力"
+            }
+          ],
+          "topics": ["多样文明 丰富多彩", "13 探访古代文明", "14 多元文化 多样魅力"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 爱护地球 共同责任",
+          "children": [
+            {
+              "title": "15 地球——我们的家园"
+            },
+            {
+              "title": "16 应对自然灾害"
+            }
+          ],
+          "topics": ["爱护地球 共同责任", "15 地球——我们的家园", "16 应对自然灾害"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 人类世界 美好未来",
+          "children": [
+            {
+              "title": "17 科技发展 造福人类"
+            },
+            {
+              "title": "18 日益重要的国际组织"
+            },
+            {
+              "title": "19 我们爱和平"
+            }
+          ],
+          "topics": [
+            "人类世界 美好未来",
+            "17 科技发展 造福人类",
+            "18 日益重要的国际组织",
+            "19 我们爱和平"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c15a8a430111",
+      "title": "小学（五•四学制）道德与法治统编版五年级下册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-6e16-b80f-016e-c15a8a430111.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:57.517+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 公共生活靠大家",
+          "children": [
+            {
+              "title": "1 我们的公共生活"
+            },
+            {
+              "title": "2 建立良好的公共秩序"
+            },
+            {
+              "title": "3 我参与 我奉献"
+            }
+          ],
+          "topics": [
+            "公共生活靠大家",
+            "1 我们的公共生活",
+            "2 建立良好的公共秩序",
+            "3 我参与 我奉献"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我们的守护者",
+          "children": [
+            {
+              "title": "4 感受生活中的法律"
+            },
+            {
+              "title": "5 宪法是根本法"
+            }
+          ],
+          "topics": ["我们的守护者", "4 感受生活中的法律", "5 宪法是根本法"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 我们是公民",
+          "children": [
+            {
+              "title": "6 公民意味着什么"
+            },
+            {
+              "title": "7 公民的基本权利和义务"
+            }
+          ],
+          "topics": ["我们是公民", "6 公民意味着什么", "7 公民的基本权利和义务"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 我们的国家机构",
+          "children": [
+            {
+              "title": "8 国家机构有哪些"
+            },
+            {
+              "title": "9 人大代表为人民"
+            },
+            {
+              "title": "10 权力受到制约和监督"
+            }
+          ],
+          "topics": [
+            "我们的国家机构",
+            "8 国家机构有哪些",
+            "9 人大代表为人民",
+            "10 权力受到制约和监督"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 法律保护我们健康成长",
+          "children": [
+            {
+              "title": "11 我们受特殊保护"
+            },
+            {
+              "title": "12 知法守法 依法维权"
+            }
+          ],
+          "topics": ["法律保护我们健康成长", "11 我们受特殊保护", "12 知法守法 依法维权"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c159c079010b",
+      "title": "小学（五•四学制）道德与法治统编版四年级上册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-6e16-b80f-016e-c159c079010b.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:57.158+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 为父母分担",
+          "children": [
+            {
+              "title": "1 少让父母为我操心"
+            },
+            {
+              "title": "2 这些事我来做"
+            },
+            {
+              "title": "3 我的家庭贡献与责任"
+            }
+          ],
+          "topics": ["为父母分担", "1 少让父母为我操心", "2 这些事我来做", "3 我的家庭贡献与责任"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我们一家人",
+          "children": [
+            {
+              "title": "4 读懂彼此的心"
+            },
+            {
+              "title": "5 让我们的家更美好"
+            },
+            {
+              "title": "6 弘扬优秀家风"
+            }
+          ],
+          "topics": ["我们一家人", "4 读懂彼此的心", "5 让我们的家更美好", "6 弘扬优秀家风"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 与班级共成长",
+          "children": [
+            {
+              "title": "7 我们班四岁了"
+            },
+            {
+              "title": "8 我们的班规我们订"
+            },
+            {
+              "title": "9 我们班 他们班"
+            }
+          ],
+          "topics": ["与班级共成长", "7 我们班四岁了", "8 我们的班规我们订", "9 我们班 他们班"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 我们是班级的主人",
+          "children": [
+            {
+              "title": "10 选举产生班委会"
+            },
+            {
+              "title": "11 协商决定班级事务"
+            }
+          ],
+          "topics": ["我们是班级的主人", "10 选举产生班委会", "11 协商决定班级事务"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 同伴与交往",
+          "children": [
+            {
+              "title": "12 我们的好朋友"
+            },
+            {
+              "title": "13 说话要算数"
+            },
+            {
+              "title": "14 当冲突发生"
+            }
+          ],
+          "topics": ["同伴与交往", "12 我们的好朋友", "13 说话要算数", "14 当冲突发生"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 面对成长中的新问题",
+          "children": [
+            {
+              "title": "15 自主选择课余生活"
+            },
+            {
+              "title": "16 学会沟通交流"
+            },
+            {
+              "title": "17 主动拒绝烟酒与毒品"
+            }
+          ],
+          "topics": [
+            "面对成长中的新问题",
+            "15 自主选择课余生活",
+            "16 学会沟通交流",
+            "17 主动拒绝烟酒与毒品"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-6e16-b80f-016e-c159f4cb010d",
+      "title": "小学（五•四学制）道德与法治统编版四年级下册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-6e16-b80f-016e-c159f4cb010d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:57.275+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 完善自我 健康成长",
+          "children": [
+            {
+              "title": "1 学会尊重"
+            },
+            {
+              "title": "2 学会宽容"
+            },
+            {
+              "title": "3 学会反思"
+            }
+          ],
+          "topics": ["完善自我 健康成长", "1 学会尊重", "2 学会宽容", "3 学会反思"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 美好生活哪里来",
+          "children": [
+            {
+              "title": "4 我们的衣食之源"
+            },
+            {
+              "title": "5 这些东西哪里来"
+            },
+            {
+              "title": "6 生活离不开他们"
+            }
+          ],
+          "topics": ["美好生活哪里来", "4 我们的衣食之源", "5 这些东西哪里来", "6 生活离不开他们"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 信息万花筒",
+          "children": [
+            {
+              "title": "7 健康看电视"
+            },
+            {
+              "title": "8 网络新世界"
+            },
+            {
+              "title": "9 正确认识广告"
+            }
+          ],
+          "topics": ["信息万花筒", "7 健康看电视", "8 网络新世界", "9 正确认识广告"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 做聪明的消费者",
+          "children": [
+            {
+              "title": "10 买东西的学问"
+            },
+            {
+              "title": "11 我想要 我能要"
+            },
+            {
+              "title": "12 有多少浪费本可避免"
+            }
+          ],
+          "topics": [
+            "做聪明的消费者",
+            "10 买东西的学问",
+            "11 我想要 我能要",
+            "12 有多少浪费本可避免"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 让生活多一些绿色",
+          "children": [
+            {
+              "title": "13 我们所了解的环境污染"
+            },
+            {
+              "title": "14 变废为宝有妙招"
+            },
+            {
+              "title": "15 低碳生活每一天"
+            }
+          ],
+          "topics": [
+            "让生活多一些绿色",
+            "13 我们所了解的环境污染",
+            "14 变废为宝有妙招",
+            "15 低碳生活每一天"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 我们的国土 我们的家园",
+          "children": [
+            {
+              "title": "16 我们神圣的国土"
+            },
+            {
+              "title": "17 中华民族一家亲"
+            }
+          ],
+          "topics": ["我们的国土 我们的家园", "16 我们神圣的国土", "17 中华民族一家亲"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "13249882-bfa7-479b-8fd5-029ba4057af9",
+      "title": "新教材-小学（五•四学制）道德与法治统编版一年级上册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/13249882-bfa7-479b-8fd5-029ba4057af9.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-02-19T13:54:29.967+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 我是小学生啦",
+          "children": [
+            {
+              "title": "1 开开心心上学去"
+            },
+            {
+              "title": "2 我向国旗敬个礼"
+            },
+            {
+              "title": "3 这是我们的校园"
+            },
+            {
+              "title": "4 平平安安回家来"
+            }
+          ],
+          "topics": [
+            "我是小学生啦",
+            "1 开开心心上学去",
+            "2 我向国旗敬个礼",
+            "3 这是我们的校园",
+            "4 平平安安回家来"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 过好校园生活",
+          "children": [
+            {
+              "title": "5 老师，您好"
+            },
+            {
+              "title": "6 拉拉手，交朋友"
+            },
+            {
+              "title": "7 上课了，好好学"
+            },
+            {
+              "title": "8 课余生活真丰富"
+            }
+          ],
+          "topics": [
+            "过好校园生活",
+            "5 老师，您好",
+            "6 拉拉手，交朋友",
+            "7 上课了，好好学",
+            "8 课余生活真丰富"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 养成良好习惯",
+          "children": [
+            {
+              "title": "9 作息有规律"
+            },
+            {
+              "title": "10 吃饭有讲究"
+            },
+            {
+              "title": "11 对人有礼貌"
+            },
+            {
+              "title": "12 玩也有学问"
+            }
+          ],
+          "topics": [
+            "养成良好习惯",
+            "9 作息有规律",
+            "10 吃饭有讲究",
+            "11 对人有礼貌",
+            "12 玩也有学问"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 我们讲文明",
+          "children": [
+            {
+              "title": "13 我们小点儿声"
+            },
+            {
+              "title": "14 人人爱护公物"
+            },
+            {
+              "title": "15 我们不乱扔"
+            },
+            {
+              "title": "16 大家排好队"
+            }
+          ],
+          "topics": [
+            "我们讲文明",
+            "13 我们小点儿声",
+            "14 人人爱护公物",
+            "15 我们不乱扔",
+            "16 大家排好队"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "18274d68-d14e-42f5-9c55-1a0988ee27b4",
+      "title": "新教材-小学（五•四学制）道德与法治统编版一年级下册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/18274d68-d14e-42f5-9c55-1a0988ee27b4.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-01-05T15:20:06.043+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 我有新面貌",
+          "children": [
+            {
+              "title": "第1课 有个新目标"
+            },
+            {
+              "title": "第2课 做事要仔细"
+            },
+            {
+              "title": "第3课 错了就要改"
+            },
+            {
+              "title": "第4课 我们有精神"
+            }
+          ],
+          "topics": ["我有新面貌", "有个新目标", "做事要仔细", "错了就要改", "我们有精神"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我们一起长大",
+          "children": [
+            {
+              "title": "第5课 和大家在一起"
+            },
+            {
+              "title": "第6课 请帮我一下"
+            },
+            {
+              "title": "第7课 我们爱分享"
+            },
+            {
+              "title": "第8课 大家来合作"
+            }
+          ],
+          "topics": ["我们一起长大", "和大家在一起", "请帮我一下", "我们爱分享", "大家来合作"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 幸福一家人",
+          "children": [
+            {
+              "title": "第9课 这是我的家"
+            },
+            {
+              "title": "第10课 相亲相爱一家人"
+            },
+            {
+              "title": "第11课 让我自己来整理"
+            },
+            {
+              "title": "第12课 学做家务活"
+            }
+          ],
+          "topics": ["幸福一家人", "这是我的家", "相亲相爱一家人", "让我自己来整理", "学做家务活"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 争做中国好儿童",
+          "children": [
+            {
+              "title": "第13课 快乐儿童节"
+            },
+            {
+              "title": "第14课 光荣的少先队"
+            },
+            {
+              "title": "第15课 戴上红领巾"
+            },
+            {
+              "title": "第16课 学先锋 做先锋"
+            }
+          ],
+          "topics": ["争做中国好儿童", "快乐儿童节", "光荣的少先队", "戴上红领巾", "学先锋 做先锋"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "9fbbf6da-ebde-4bc7-9803-58cbec5d48be",
+      "title": "新教材-小学（五•四学制）道德与法治统编版二年级上册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/9fbbf6da-ebde-4bc7-9803-58cbec5d48be.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-01-05T15:59:21.779+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 过好节假日",
+          "children": [
+            {
+              "title": "第 1 课 假期有收获"
+            },
+            {
+              "title": "第 2 课 教师节快乐"
+            },
+            {
+              "title": "第 3 课 团团圆圆过中秋"
+            },
+            {
+              "title": "第 4 课 欢欢喜喜庆国"
+            }
+          ],
+          "topics": [
+            "过好节假日",
+            "第 1 课 假期有收获",
+            "第 2 课 教师节快乐",
+            "第 3 课 团团圆圆过中秋",
+            "第 4 课 欢欢喜喜庆国"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我爱我们班",
+          "children": [
+            {
+              "title": "第 5 课 这是我们班"
+            },
+            {
+              "title": "第 6 课 班级生活有规则"
+            },
+            {
+              "title": "第 7 课 我是班级值日生"
+            },
+            {
+              "title": "第 8 课 我为班级作贡献"
+            }
+          ],
+          "topics": [
+            "我爱我们班",
+            "第 5 课 这是我们班",
+            "第 6 课 班级生活有规则",
+            "第 7 课 我是班级值日生",
+            "第 8 课 我为班级作贡献"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 我的家乡美",
+          "children": [
+            {
+              "title": "第 9 课 我爱家乡山和水"
+            },
+            {
+              "title": "第 10 课 家乡物产养育我"
+            },
+            {
+              "title": "第 11 课 可亲可敬的家乡人"
+            },
+            {
+              "title": "第 12 课 家乡新变化"
+            }
+          ],
+          "topics": [
+            "我的家乡美",
+            "第 9 课 我爱家乡山和水",
+            "第 10 课 家乡物产养育我",
+            "第 11 课 可亲可敬的家乡人",
+            "第 12 课 家乡新变化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 我爱我们的祖国",
+          "children": [
+            {
+              "title": "第 13 课 美丽中国我们的家"
+            },
+            {
+              "title": "第 14 课 我们都是中国人"
+            },
+            {
+              "title": "第 15 课 红红火火中国年"
+            },
+            {
+              "title": "第 16 课 祖国，我为您自豪"
+            }
+          ],
+          "topics": [
+            "我爱我们的祖国",
+            "第 13 课 美丽中国我们的家",
+            "第 14 课 我们都是中国人",
+            "第 15 课 红红火火中国年",
+            "第 16 课 祖国，我为您自豪"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "dc49c2af-fee1-bf03-26e3-71cab92f1856",
+      "title": "小学（五•四学制）道德与法治统编版一年级上册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/dc49c2af-fee1-bf03-26e3-71cab92f1856.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:03.916+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 我是小学生啦",
+          "children": [
+            {
+              "title": "1 开开心心上学去"
+            },
+            {
+              "title": "2 拉拉手，交朋友"
+            },
+            {
+              "title": "3 我认识您了"
+            },
+            {
+              "title": "4 上学路上"
+            }
+          ],
+          "topics": [
+            "我是小学生啦",
+            "1 开开心心上学去",
+            "2 拉拉手，交朋友",
+            "3 我认识您了",
+            "4 上学路上"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 校园生活真快乐",
+          "children": [
+            {
+              "title": "5 我们的校园"
+            },
+            {
+              "title": "6 校园里的号令"
+            },
+            {
+              "title": "7 课间十分钟"
+            },
+            {
+              "title": "8 上课了"
+            }
+          ],
+          "topics": [
+            "校园生活真快乐",
+            "5 我们的校园",
+            "6 校园里的号令",
+            "7 课间十分钟",
+            "8 上课了"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 家中的安全与健康",
+          "children": [
+            {
+              "title": "9 玩得真开心"
+            },
+            {
+              "title": "10 吃饭有讲究"
+            },
+            {
+              "title": "11 别伤着自己"
+            },
+            {
+              "title": "12 早睡早起"
+            }
+          ],
+          "topics": [
+            "家中的安全与健康",
+            "9 玩得真开心",
+            "10 吃饭有讲究",
+            "11 别伤着自己",
+            "12 早睡早起"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 天气虽冷有温暖",
+          "children": [
+            {
+              "title": "13 美丽的冬天"
+            },
+            {
+              "title": "14 健康过冬天"
+            },
+            {
+              "title": "15 快乐过新年"
+            },
+            {
+              "title": "16 新年的礼物"
+            }
+          ],
+          "topics": [
+            "天气虽冷有温暖",
+            "13 美丽的冬天",
+            "14 健康过冬天",
+            "15 快乐过新年",
+            "16 新年的礼物"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "2d01e3ba-345a-3060-b6d5-b3d207440dbf",
+      "title": "小学（五•四学制）道德与法治统编版一年级下册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2d01e3ba-345a-3060-b6d5-b3d207440dbf.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:20.035+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 我的好习惯",
+          "children": [
+            {
+              "title": "1 我们爱整洁"
+            },
+            {
+              "title": "2 我们有精神"
+            },
+            {
+              "title": "3 我不拖拉"
+            },
+            {
+              "title": "4 不做“小马虎”"
+            }
+          ],
+          "topics": ["我的好习惯", "1 我们爱整洁", "2 我们有精神", "3 我不拖拉", "4 不做“小马虎”"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我和大自然",
+          "children": [
+            {
+              "title": "5 风儿轻轻吹"
+            },
+            {
+              "title": "6 花儿草儿真美丽"
+            },
+            {
+              "title": "7 可爱的动物"
+            },
+            {
+              "title": "8 大自然，谢谢您"
+            }
+          ],
+          "topics": [
+            "我和大自然",
+            "5 风儿轻轻吹",
+            "6 花儿草儿真美丽",
+            "7 可爱的动物",
+            "8 大自然，谢谢您"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 我爱我家",
+          "children": [
+            {
+              "title": "9 我和我的家"
+            },
+            {
+              "title": "10 家人的爱"
+            },
+            {
+              "title": "11 让我自己来整理"
+            },
+            {
+              "title": "12 干点家务活"
+            }
+          ],
+          "topics": [
+            "我爱我家",
+            "9 我和我的家",
+            "10 家人的爱",
+            "11 让我自己来整理",
+            "12 干点家务活"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 我们在一起",
+          "children": [
+            {
+              "title": "13 我想和你们一起玩"
+            },
+            {
+              "title": "14 请帮我一下吧"
+            },
+            {
+              "title": "15 分享真快乐"
+            },
+            {
+              "title": "16 大家一起来合作"
+            },
+            {
+              "title": "17 我们都是少先队员"
+            }
+          ],
+          "topics": [
+            "我们在一起",
+            "13 我想和你们一起玩",
+            "14 请帮我一下吧",
+            "15 分享真快乐",
+            "16 大家一起来合作",
+            "17 我们都是少先队员"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,354 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "37bfa69c-d2af-7624-5861-dd3e9c932630",
+      "title": "初中（五•四学制）化学人教版九年级全一册",
+      "stage": "初中（五•四学制）",
+      "subject": "化学",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/37bfa69c-d2af-7624-5861-dd3e9c932630.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:36.088+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 金属和金属材料",
+          "children": [
+            {
+              "title": "课题1 金属材料"
+            },
+            {
+              "title": "课题2 金属的化学性质"
+            },
+            {
+              "title": "课题3 金属资源的利用和保护"
+            },
+            {
+              "title": "实验活动1 金属的物理性质和某些化学性质"
+            }
+          ],
+          "topics": [
+            "金属和金属材料",
+            "课题1 金属材料",
+            "课题2 金属的化学性质",
+            "课题3 金属资源的利用和保护",
+            "实验活动1 金属的物理性质和某些化学性质"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 溶液",
+          "children": [
+            {
+              "title": "课题1 溶液的形成"
+            },
+            {
+              "title": "课题2 溶解度"
+            },
+            {
+              "title": "课题3 溶液的浓度"
+            },
+            {
+              "title": "实验活动5 一定溶质质量分数的氯化钠溶液的配制"
+            }
+          ],
+          "topics": [
+            "溶液",
+            "课题1 溶液的形成",
+            "课题2 溶解度",
+            "课题3 溶液的浓度",
+            "实验活动5 一定溶质质量分数的氯化钠溶液的配制"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 酸和碱",
+          "children": [
+            {
+              "title": "课题1 常见的酸和碱",
+              "children": [
+                {
+                  "title": "酸、碱与指示剂作用"
+                },
+                {
+                  "title": "常见的酸"
+                },
+                {
+                  "title": "常见的碱"
+                }
+              ]
+            },
+            {
+              "title": "课题2 酸和碱的中和反应"
+            },
+            {
+              "title": "实验活动6 酸、碱的化学性质"
+            },
+            {
+              "title": "实验活动7 溶液酸碱性的检验"
+            }
+          ],
+          "topics": [
+            "酸和碱",
+            "课题1 常见的酸和碱",
+            "酸、碱与指示剂作用",
+            "常见的酸",
+            "常见的碱",
+            "课题2 酸和碱的中和反应",
+            "实验活动6 酸、碱的化学性质",
+            "实验活动7 溶液酸碱性的检验"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 盐 化肥",
+          "children": [
+            {
+              "title": "课题1 生活中常见的盐"
+            },
+            {
+              "title": "课题2 化学肥料"
+            },
+            {
+              "title": "实验活动8 粗盐中难溶性杂质的去除"
+            }
+          ],
+          "topics": [
+            "盐 化肥",
+            "课题1 生活中常见的盐",
+            "课题2 化学肥料",
+            "实验活动8 粗盐中难溶性杂质的去除"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 化学与生活",
+          "children": [
+            {
+              "title": "课题1 人类重要的营养物质"
+            },
+            {
+              "title": "课题2 化学元素与人体健康"
+            },
+            {
+              "title": "课题3 有机合成材料"
+            }
+          ],
+          "topics": [
+            "化学与生活",
+            "课题1 人类重要的营养物质",
+            "课题2 化学元素与人体健康",
+            "课题3 有机合成材料"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "c895d773-83d0-1637-bf0f-637145a99ba8",
+      "title": "初中（五•四学制）化学人教版八年级全一册",
+      "stage": "初中（五•四学制）",
+      "subject": "化学",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/c895d773-83d0-1637-bf0f-637145a99ba8.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:50.811+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "绪言 化学使世界变得更加绚丽多彩",
+          "topics": ["绪言 化学使世界变得更加绚丽多彩"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一单元 走进化学世界",
+          "children": [
+            {
+              "title": "课题1 物质的变化和性质"
+            },
+            {
+              "title": "课题2 化学是一门以实验为基础的科学"
+            },
+            {
+              "title": "课题3 走进化学实验室"
+            }
+          ],
+          "topics": [
+            "走进化学世界",
+            "课题1 物质的变化和性质",
+            "课题2 化学是一门以实验为基础的科学",
+            "课题3 走进化学实验室"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我们周围的空气",
+          "children": [
+            {
+              "title": "课题1 空气"
+            },
+            {
+              "title": "课题2 氧气"
+            },
+            {
+              "title": "课题3 制取氧气"
+            },
+            {
+              "title": "实验活动1 氧气的实验室制取与性质"
+            }
+          ],
+          "topics": [
+            "我们周围的空气",
+            "课题1 空气",
+            "课题2 氧气",
+            "课题3 制取氧气",
+            "实验活动1 氧气的实验室制取与性质"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 物质构成的奥秘",
+          "children": [
+            {
+              "title": "课题1 分子和原子"
+            },
+            {
+              "title": "课题2 原子的结构",
+              "children": [
+                {
+                  "title": "原子的构成"
+                },
+                {
+                  "title": "原子核外电子的排布"
+                },
+                {
+                  "title": "离子及离子的形成"
+                },
+                {
+                  "title": "相对原子质量"
+                }
+              ]
+            },
+            {
+              "title": "课题3 元素"
+            }
+          ],
+          "topics": [
+            "物质构成的奥秘",
+            "课题1 分子和原子",
+            "课题2 原子的结构",
+            "原子的构成",
+            "原子核外电子的排布",
+            "离子及离子的形成",
+            "相对原子质量",
+            "课题3 元素"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 自然界的水",
+          "children": [
+            {
+              "title": "课题1 爱护水资源"
+            },
+            {
+              "title": "课题2 水的净化"
+            },
+            {
+              "title": "课题3 水的组成"
+            },
+            {
+              "title": "课题4 化学式与化合价"
+            }
+          ],
+          "topics": [
+            "自然界的水",
+            "课题1 爱护水资源",
+            "课题2 水的净化",
+            "课题3 水的组成",
+            "课题4 化学式与化合价"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 化学方程式",
+          "children": [
+            {
+              "title": "课题1 质量守恒定律"
+            },
+            {
+              "title": "课题2 如何正确书写化学方程式"
+            },
+            {
+              "title": "课题3 利用化学方程式的简单计算"
+            }
+          ],
+          "topics": [
+            "化学方程式",
+            "课题1 质量守恒定律",
+            "课题2 如何正确书写化学方程式",
+            "课题3 利用化学方程式的简单计算"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 碳和碳的氧化物",
+          "children": [
+            {
+              "title": "课题1 金刚石、石墨和C60"
+            },
+            {
+              "title": "课题2 二氧化碳制取的研究"
+            },
+            {
+              "title": "课题3 二氧化碳和一氧化碳"
+            },
+            {
+              "title": "实验活动2 二氧化碳的实验室制取与性质"
+            }
+          ],
+          "topics": [
+            "碳和碳的氧化物",
+            "课题1 金刚石、石墨和C60",
+            "课题2 二氧化碳制取的研究",
+            "课题3 二氧化碳和一氧化碳",
+            "实验活动2 二氧化碳的实验室制取与性质"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元 燃料及其利用",
+          "children": [
+            {
+              "title": "课题1 燃烧和灭火"
+            },
+            {
+              "title": "课题2 燃料的合理利用与开发"
+            },
+            {
+              "title": "实验活动3 燃烧的条件"
+            }
+          ],
+          "topics": [
+            "燃料及其利用",
+            "课题1 燃烧和灭火",
+            "课题2 燃料的合理利用与开发",
+            "实验活动3 燃烧的条件"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+.workspace {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.stack {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.workspace :global(.p-panel),
+.workspace :global(.p-heading) {
+  margin-bottom: 0;
+}
+.panelBody {
+  padding: 20px 22px;
+}
+.panelBody :global(.p-form),
+.editor :global(.p-form) {
+  padding: 0;
+}
+.navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  border-bottom: 1px solid var(--line, #dce2de);
+  padding-bottom: 12px;
+}
+.navigation a {
+  color: var(--muted, #626e68);
+  padding: 5px 0;
+  text-decoration: none;
+}
+.navigation a:hover {
+  color: var(--accent, #08745f);
+  text-decoration: underline;
+}
+.navigation a[aria-current="page"] {
+  color: var(--accent, #08745f);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 8px;
+}
+.help {
+  max-width: 72ch;
+  color: var(--muted, #626e68);
+}
+.list {
+  display: grid;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 0;
+}
+.list > .row + .row {
+  border-top: 1px solid var(--line, #dce2de);
+}
+.row p {
+  color: var(--muted, #626e68);
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+.editor {
+  border: 1px solid var(--control-line, #bfcac3);
+  background: var(--white, #fff);
+  padding: 20px;
+  border-radius: 3px;
+}
+.editor h3 {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.section {
+  border-top: 1px solid var(--line, #dce2de);
+  padding-top: 14px;
+}
+.section h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.section > .row {
+  align-items: flex-start;
+}
+.section > .row > div {
+  max-width: 72ch;
+}
+.entry {
+  margin: 12px 0;
+  padding: 0 0 16px;
+  border-bottom: 1px solid var(--line, #dce2de);
+}
+.periods {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  border: 1px solid var(--line, #dce2de);
+  padding: 12px;
+  grid-column: 1 / -1;
+}
+.periods legend {
+  font-size: 13px;
+  padding: 0 4px;
+}
+.periods label {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.periods input {
+  width: auto;
+}
+.version {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted, #626e68);
+}
+.tableRegion {
+  overflow: auto;
+  max-width: 100%;
+  border: 1px solid var(--line, #dce2de);
+  margin: 14px 0;
+}
+.tableRegion:focus-visible {
+  outline: 2px solid var(--accent, #08745f);
+  outline-offset: 3px;
+}
+.table {
+  border-collapse: collapse;
+  min-width: 600px;
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+}
+.table th {
+  background: var(--table-header, #eff2f0);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.table th,
+.table td {
+  border-bottom: 1px solid var(--line, #dce2de);
+  padding: 12px;
+  vertical-align: top;
+}
+.table td p {
+  margin: 4px 0 0;
+  max-width: 48ch;
+}
+.table tr:last-child td {
+  border-bottom: 0;
+}
+.scheduleControls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.scheduleControls > label {
+  min-width: 170px;
+}
+.steps {
+  padding-left: 22px;
+  display: grid;
+  gap: 10px;
+}
+.preview {
+  margin: 16px 0;
+}
+.preview summary {
+  cursor: pointer;
+  color: var(--accent, #08745f);
+  padding: 8px 0;
+}
+@media (max-width: 640px) {
+  .panelBody {
+    padding: 14px;
+  }
+  .editor {
+    padding: 14px;
+  }
+  .row {
+    align-items: flex-start;
+  }
+  .row > div {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+  .scheduleControls > label {
+    flex: 1 1 100%;
+  }
+  .scheduleControls > div {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}

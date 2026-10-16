@@ -1,0 +1,72 @@
+{
+  "stage": "高中",
+  "subject": "物理",
+  "books": [
+    {
+      "id": "be6f070a-0e81-11ee-baab-8c409e55d11a",
+      "title": "高中物理人教版选择性必修 第一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/physics/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "dfb166d8-0e81-11ee-baab-8c409e55d11a",
+      "title": "高中物理人教版选择性必修 第三册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第三册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/physics/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "12eed579-1883-4b7c-b543-3bac585a4f16",
+      "title": "高中物理人教版高一必修 第一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/physics/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "699354bf-34e7-43d3-91a9-b14bd86dfddb",
+      "title": "高中物理人教版高一必修 第二册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/physics/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "f85ffb75-546d-4c21-8d60-3e00e861f11f",
+      "title": "高中物理人教版高二必修 第三册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "必修 第三册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/physics/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "78ee810b-401f-4b41-9f9b-904b755901d5",
+      "title": "高中物理人教版高二选择性必修 第二册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修 第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/physics/units-1.json",
+      "unit_count": 6
+    }
+  ]
+}

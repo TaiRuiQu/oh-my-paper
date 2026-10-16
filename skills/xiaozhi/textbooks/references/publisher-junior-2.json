@@ -1,0 +1,205 @@
+{
+  "note": "人教社官方电子教材平台书目快照，目录未逐册核实；不与课程树按相似题名自动合并，也不计入单元覆盖。",
+  "books": [
+    {
+      "publisher_id": "1372001203251",
+      "title": "义务教育教科书体育与健康八年级全一册",
+      "subject": "体育与健康",
+      "grade": "八年级",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1372001203251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1372001103241",
+      "title": "义务教育教科书体育与健康七年级全一册",
+      "subject": "体育与健康",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1372001103241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001301261",
+      "title": "义务教育教科书美术九年级上册",
+      "subject": "美术",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001301261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001201252",
+      "title": "义务教育教科书美术八年级上册",
+      "subject": "美术",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001201252/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001101246",
+      "title": "义务教育教科书美术七年级上册",
+      "subject": "美术",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001101246/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001301262",
+      "title": "义务教育教科书音乐九年级上册（简谱）",
+      "subject": "音乐",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001301262/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001201251",
+      "title": "义务教育教科书 艺术 音乐 八年级 上册（简谱）",
+      "subject": "音乐",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001101248",
+      "title": "义务教育教科书音乐七年级上册（简谱）",
+      "subject": "音乐",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001101248/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1312001303141",
+      "title": "义务教育教科书英语九年级全一册",
+      "subject": "英语",
+      "grade": "九年级",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1312001303141/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1312001201251",
+      "title": "义务教育教科书英语八年级上册",
+      "subject": "英语",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1312001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1312001101241",
+      "title": "义务教育教科书英语七年级上册",
+      "subject": "英语",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1312001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1321001301261",
+      "title": "义务教育教科书数学九年级上册",
+      "subject": "数学",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1321001301261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1321001201251",
+      "title": "义务教育教科书数学八年级上册",
+      "subject": "数学",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1321001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1321001101241",
+      "title": "义务教育教科书数学七年级上册",
+      "subject": "数学",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1321001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1311001301261",
+      "title": "义务教育教科书语文九年级上册",
+      "subject": "语文",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1311001301261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1311001201241",
+      "title": "义务教育教科书语文八年级上册",
+      "subject": "语文",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1311001201241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1311001101241",
+      "title": "义务教育教科书语文七年级上册",
+      "subject": "语文",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1311001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1384001301261",
+      "title": "义务教育教科书道德与法治九年级上册",
+      "subject": "道德与法治",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1384001301261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1384001201251",
+      "title": "义务教育教科书道德与法治八年级上册",
+      "subject": "道德与法治",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1384001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1384001101241",
+      "title": "义务教育教科书道德与法治七年级上册",
+      "subject": "道德与法治",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1384001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    }
+  ]
+}

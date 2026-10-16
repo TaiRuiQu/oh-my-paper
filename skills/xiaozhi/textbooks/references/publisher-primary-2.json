@@ -1,0 +1,465 @@
+{
+  "note": "人教社官方电子教材平台书目快照，目录未逐册核实；不与课程树按相似题名自动合并，也不计入单元覆盖。",
+  "books": [
+    {
+      "publisher_id": "1261001101251",
+      "title": "义务教育教科书 艺术 唱游·音乐 一年级上册（五线谱）",
+      "subject": "音乐",
+      "grade": "一年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001101251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001601263",
+      "title": "义务教育教科书美术六年级上册",
+      "subject": "美术",
+      "grade": "六年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001601263/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001501261",
+      "title": "义务教育教科书美术五年级上册",
+      "subject": "美术",
+      "grade": "五年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001501261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001401261",
+      "title": "义务教育教科书美术四年级上册",
+      "subject": "美术",
+      "grade": "四年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001401261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001301251",
+      "title": "义务教育教科书美术三年级上册",
+      "subject": "美术",
+      "grade": "三年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001301251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001201251",
+      "title": "义务教育教科书 艺术 造型·美术 二年级 上册",
+      "subject": "美术",
+      "grade": "二年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001101246",
+      "title": "义务教育教科书 艺术 造型·美术 一年级 上册",
+      "subject": "美术",
+      "grade": "一年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001101246/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001601261",
+      "title": "义务教育教科书音乐六年级上册（简谱）",
+      "subject": "音乐",
+      "grade": "六年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001601261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001501262",
+      "title": "义务教育教科书音乐五年级上册（简谱）",
+      "subject": "音乐",
+      "grade": "五年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001501262/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001401262",
+      "title": "义务教育教科书音乐四年级上册（简谱）",
+      "subject": "音乐",
+      "grade": "四年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001401262/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001301252",
+      "title": "义务教育教科书音乐三年级上册（简谱）",
+      "subject": "音乐",
+      "grade": "三年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001301252/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001201252",
+      "title": "义务教育教科书 艺术 唱游·音乐 二年级 上册（简谱）",
+      "subject": "音乐",
+      "grade": "二年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001201252/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1261001101241",
+      "title": "义务教育教科书 艺术 唱游·音乐 一年级 上册（简谱）",
+      "subject": "音乐",
+      "grade": "一年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1261001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1244001601261",
+      "title": "义务教育教科书科学六年级上册",
+      "subject": "科学",
+      "grade": "六年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1244001601261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1244001501261",
+      "title": "义务教育教科书科学五年级上册",
+      "subject": "科学",
+      "grade": "五年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1244001501261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1244001401261",
+      "title": "义务教育教科书科学四年级上册",
+      "subject": "科学",
+      "grade": "四年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1244001401261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1244001301251",
+      "title": "义务教育教科书科学三年级上册",
+      "subject": "科学",
+      "grade": "三年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1244001301251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1244001201251",
+      "title": "义务教育教科书科学二年级上册",
+      "subject": "科学",
+      "grade": "二年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1244001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1244001101241",
+      "title": "义务教育教科书科学一年级上册",
+      "subject": "科学",
+      "grade": "一年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1244001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1212001601264",
+      "title": "义务教育教科书 英语 （精通）（三年级起点）六年级上册",
+      "subject": "英语",
+      "grade": "六年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1212001601264/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1212001501264",
+      "title": "义务教育教科书 英语 （精通）（三年级起点）五年级上册",
+      "subject": "英语",
+      "grade": "五年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1212001501264/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1212001401254",
+      "title": "义务教育教科书 英语 （精通）（三年级起点）四年级上册",
+      "subject": "英语",
+      "grade": "四年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1212001401254/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1212001301244",
+      "title": "义务教育教科书 英语 （精通）（三年级起点）三年级上册",
+      "subject": "英语",
+      "grade": "三年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1212001301244/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1212001601265",
+      "title": "义务教育教科书英语（PEP）（三年级起点）六年级上册",
+      "subject": "英语",
+      "grade": "六年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1212001601265/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1212001401255",
+      "title": "义务教育教科书英语（PEP）（三年级起点）四年级上册",
+      "subject": "英语",
+      "grade": "四年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1212001401255/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1212001301245",
+      "title": "义务教育教科书英语（PEP）（三年级起点）三年级上册",
+      "subject": "英语",
+      "grade": "三年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1212001301245/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1221001601261",
+      "title": "义务教育教科书数学六年级上册",
+      "subject": "数学",
+      "grade": "六年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1221001601261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1221001501261",
+      "title": "义务教育教科书数学五年级上册",
+      "subject": "数学",
+      "grade": "五年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1221001501261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1221001401261",
+      "title": "义务教育教科书数学四年级上册",
+      "subject": "数学",
+      "grade": "四年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1221001401261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1221001301251",
+      "title": "义务教育教科书数学三年级上册",
+      "subject": "数学",
+      "grade": "三年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1221001301251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1221001201251",
+      "title": "义务教育教科书数学二年级上册",
+      "subject": "数学",
+      "grade": "二年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1221001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1221001101241",
+      "title": "义务教育教科书数学一年级上册",
+      "subject": "数学",
+      "grade": "一年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1221001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1211001601261",
+      "title": "义务教育教科书语文六年级上册",
+      "subject": "语文",
+      "grade": "六年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1211001601261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1211001501261",
+      "title": "义务教育教科书语文五年级上册",
+      "subject": "语文",
+      "grade": "五年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1211001501261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1211001401261",
+      "title": "义务教育教科书语文四年级上册",
+      "subject": "语文",
+      "grade": "四年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1211001401261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1211001301241",
+      "title": "义务教育教科书语文三年级上册",
+      "subject": "语文",
+      "grade": "三年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1211001301241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1211001201241",
+      "title": "义务教育教科书语文二年级上册",
+      "subject": "语文",
+      "grade": "二年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1211001201241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1211001101241",
+      "title": "义务教育教科书语文一年级上册",
+      "subject": "语文",
+      "grade": "一年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1211001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1291001403221",
+      "title": "习近平新时代中国特色社会主义思想学生读本小学高年级",
+      "subject": "习近平新时代中国特色社会主义思想学生读本",
+      "grade": "五年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1291001403221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1291001103221",
+      "title": "习近平新时代中国特色社会主义思想学生读本小学低年级",
+      "subject": "习近平新时代中国特色社会主义思想学生读本",
+      "grade": "三年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1291001103221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1284001601261",
+      "title": "义务教育教科书道德与法治六年级上册",
+      "subject": "道德与法治",
+      "grade": "六年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1284001601261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1284001501261",
+      "title": "义务教育教科书道德与法治五年级上册",
+      "subject": "道德与法治",
+      "grade": "五年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1284001501261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1284001401261",
+      "title": "义务教育教科书道德与法治四年级上册",
+      "subject": "道德与法治",
+      "grade": "四年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1284001401261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1284001301251",
+      "title": "义务教育教科书道德与法治三年级上册",
+      "subject": "道德与法治",
+      "grade": "三年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1284001301251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1284001201251",
+      "title": "义务教育教科书道德与法治二年级上册",
+      "subject": "道德与法治",
+      "grade": "二年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1284001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1284001101241",
+      "title": "义务教育教科书道德与法治一年级上册",
+      "subject": "道德与法治",
+      "grade": "一年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1284001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    }
+  ]
+}

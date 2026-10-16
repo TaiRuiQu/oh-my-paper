@@ -1,0 +1,147 @@
+.history {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+  border-top: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.heading > div {
+  flex: 1 1 300px;
+  min-width: 0;
+}
+
+.heading h3 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.description {
+  margin-top: 8px;
+  max-width: 72ch;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.version,
+.time {
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.version strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.events {
+  min-width: 0;
+}
+
+.event {
+  display: grid;
+  gap: 12px;
+  padding-block: 20px;
+  border-top: 1px solid var(--line);
+  min-width: 0;
+}
+
+.event:last-child {
+  padding-bottom: 0;
+}
+
+.eventHeading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
+
+.eventHeading h4 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.metadata,
+.comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 24px;
+}
+
+.metadata > div,
+.snapshot {
+  min-width: 0;
+}
+
+.metadata dt {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.metadata dd {
+  margin: 0;
+}
+
+.reason {
+  grid-column: 1 / -1;
+}
+
+.reason dd {
+  white-space: pre-wrap;
+  max-width: 75ch;
+}
+
+.details summary {
+  min-height: 44px;
+  padding-block: 10px;
+  color: var(--accent);
+  cursor: pointer;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.details summary:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.comparison {
+  padding-block: 8px;
+  gap: 20px 24px;
+}
+
+.snapshot h5 {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.snapshot ul {
+  margin-top: 8px;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.snapshot li + li {
+  margin-top: 6px;
+}
+
+@media (max-width: 640px) {
+  .metadata,
+  .comparison {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,494 @@
+{
+  "note": "Registered library routes; app configuration may disable operations. See frontend.md for availability and auth.md for index.",
+  "endpoints": [
+    {
+      "operation": "resetPassword",
+      "path": "/api/auth/reset-password",
+      "methods": ["POST"],
+      "requireHeaders": false,
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "type": "string",
+            "description": "The new password to set"
+          },
+          "token": {
+            "type": "string",
+            "description": "The token to reset the password"
+          }
+        },
+        "required": ["newPassword"]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Reset the password for a user",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "requestPasswordResetCallback",
+      "path": "/api/auth/reset-password/:token",
+      "methods": ["GET"],
+      "requireHeaders": false,
+      "body": null,
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "callbackURL": {
+            "type": "string",
+            "description": "The URL to redirect the user to reset their password"
+          }
+        },
+        "required": ["callbackURL"]
+      },
+      "description": "Redirects the user to the callback URL with the token",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "revokeOtherSessions",
+      "path": "/api/auth/revoke-other-sessions",
+      "methods": ["POST"],
+      "requireHeaders": true,
+      "body": null,
+      "query": null,
+      "description": "Revoke all other sessions for the user except the current one",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "boolean",
+                    "description": "Indicates if all other sessions were revoked successfully"
+                  }
+                },
+                "required": ["status"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "revokeSession",
+      "path": "/api/auth/revoke-session",
+      "methods": ["POST"],
+      "requireHeaders": true,
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "The token to revoke"
+          }
+        },
+        "required": ["token"]
+      },
+      "query": null,
+      "description": "Revoke a single session",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "boolean",
+                    "description": "Indicates if the session was revoked successfully"
+                  }
+                },
+                "required": ["status"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "revokeSessions",
+      "path": "/api/auth/revoke-sessions",
+      "methods": ["POST"],
+      "requireHeaders": true,
+      "body": null,
+      "query": null,
+      "description": "Revoke all sessions for the user",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "boolean",
+                    "description": "Indicates if all sessions were revoked successfully"
+                  }
+                },
+                "required": ["status"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "sendVerificationEmail",
+      "path": "/api/auth/send-verification-email",
+      "methods": ["POST"],
+      "requireHeaders": false,
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+            "description": "The email to send the verification email to"
+          },
+          "callbackURL": {
+            "type": "string",
+            "description": "The URL to use for email verification callback"
+          }
+        },
+        "required": ["email"]
+      },
+      "query": null,
+      "description": "Send a verification email to the user",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "boolean",
+                    "description": "Indicates if the email was sent successfully",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad Request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "Error message",
+                    "example": "Verification email isn't enabled"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "signInEmail",
+      "path": "/api/auth/sign-in/email",
+      "methods": ["POST"],
+      "requireHeaders": false,
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email of the user"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user"
+          },
+          "callbackURL": {
+            "type": "string",
+            "description": "Callback URL to use as a redirect for email verification"
+          },
+          "rememberMe": {
+            "default": true,
+            "type": "boolean",
+            "description": "If this is false, the session will not be remembered. Default is `true`."
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "query": null,
+      "description": "Sign in with email and password",
+      "responses": {
+        "200": {
+          "description": "Success - Returns either session details or redirect URL",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Session response when idToken is provided",
+                "properties": {
+                  "redirect": {
+                    "type": "boolean",
+                    "enum": [false]
+                  },
+                  "token": {
+                    "type": "string",
+                    "description": "Session token"
+                  },
+                  "url": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "user": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/User"
+                  }
+                },
+                "required": ["redirect", "token", "user"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation": "signInSocial",
+      "path": "/api/auth/sign-in/social",
+      "methods": ["POST"],
+      "requireHeaders": false,
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "callbackURL": {
+            "type": "string",
+            "description": "Callback URL to redirect to after the user has signed in"
+          },
+          "newUserCallbackURL": {
+            "type": "string"
+          },
+          "errorCallbackURL": {
+            "type": "string",
+            "description": "Callback URL to redirect to if an error happens"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "apple",
+                  "atlassian",
+                  "cloudflare",
+                  "cognito",
+                  "discord",
+                  "facebook",
+                  "figma",
+                  "github",
+                  "microsoft",
+                  "google",
+                  "huggingface",
+                  "slack",
+                  "spotify",
+                  "twitch",
+                  "twitter",
+                  "dropbox",
+                  "kick",
+                  "linear",
+                  "linkedin",
+                  "gitlab",
+                  "tiktok",
+                  "reddit",
+                  "roblox",
+                  "salesforce",
+                  "vk",
+                  "zoom",
+                  "notion",
+                  "kakao",
+                  "naver",
+                  "line",
+                  "paybin",
+                  "paypal",
+                  "polar",
+                  "railway",
+                  "vercel",
+                  "wechat"
+                ]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "disableRedirect": {
+            "type": "boolean",
+            "description": "Disable automatic redirection to the provider. Useful for handling the redirection yourself"
+          },
+          "idToken": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "ID token from the provider"
+              },
+              "nonce": {
+                "type": "string",
+                "description": "Nonce used to generate the token"
+              },
+              "accessToken": {
+                "type": "string",
+                "description": "Access token from the provider"
+              },
+              "refreshToken": {
+                "type": "string",
+                "description": "Refresh token from the provider"
+              },
+              "expiresAt": {
+                "type": "number",
+                "description": "Expiry date of the token"
+              },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "object",
+                    "properties": {
+                      "firstName": {
+                        "type": "string"
+                      },
+                      "lastName": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "description": "The user object from the provider. Only available for some providers like Apple."
+              }
+            },
+            "required": ["token"]
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of scopes to request from the provider. This will override the default scopes passed."
+          },
+          "requestSignUp": {
+            "type": "boolean",
+            "description": "Explicitly request sign-up. Useful when disableImplicitSignUp is true for this provider"
+          },
+          "loginHint": {
+            "type": "string",
+            "description": "The login hint to use for the authorization code request"
+          },
+          "additionalParams": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Extra query parameters to append to the provider authorization URL (e.g. Cognito identity_provider, Google hd)."
+          },
+          "additionalData": {
+            "description": "Additional data to be passed through the OAuth flow",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": ["provider"]
+      },
+      "query": null,
+      "description": "Sign in with a social provider",
+      "responses": {
+        "200": {
+          "description": "Success - Returns session details (idToken branch) or an authorize URL (redirect branch)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Returns session details when idToken is provided, or an authorize URL otherwise",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  },
+                  "user": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/User"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "redirect": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["redirect"]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

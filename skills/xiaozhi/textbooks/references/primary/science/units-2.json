@@ -1,0 +1,1108 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "e2144701-e508-49c5-8766-bf2c202bcff1",
+      "title": "新教材-小学科学人教版四年级上册",
+      "stage": "小学",
+      "subject": "科学",
+      "version": "人教鄂教版",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/e2144701-e508-49c5-8766-bf2c202bcff1.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T15:54:40.311+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 动植物的繁殖",
+          "children": [
+            {
+              "title": "植物的种子"
+            },
+            {
+              "title": "种子的传播"
+            },
+            {
+              "title": "植物的繁殖"
+            },
+            {
+              "title": "动物的繁殖"
+            },
+            {
+              "title": "单元回顾"
+            }
+          ],
+          "topics": [
+            "动植物的繁殖",
+            "植物的种子",
+            "种子的传播",
+            "植物的繁殖",
+            "动物的繁殖",
+            "单元回顾"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 多样的动物",
+          "children": [
+            {
+              "title": "昆虫"
+            },
+            {
+              "title": "鸟和哺乳动物"
+            },
+            {
+              "title": "动物的分类"
+            },
+            {
+              "title": "我国的珍稀动物"
+            },
+            {
+              "title": "单元回顾"
+            }
+          ],
+          "topics": [
+            "多样的动物",
+            "昆虫",
+            "鸟和哺乳动物",
+            "动物的分类",
+            "我国的珍稀动物",
+            "单元回顾"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 水的变化与分布",
+          "children": [
+            {
+              "title": "蒸发与凝结"
+            },
+            {
+              "title": "水的沸腾"
+            },
+            {
+              "title": "水的结冰"
+            },
+            {
+              "title": "地球上的水资源"
+            },
+            {
+              "title": "单元回顾"
+            }
+          ],
+          "topics": [
+            "水的变化与分布",
+            "蒸发与凝结",
+            "水的沸腾",
+            "水的结冰",
+            "地球上的水资源",
+            "单元回顾"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 声音",
+          "children": [
+            {
+              "title": "声音的产生"
+            },
+            {
+              "title": "声音的传播"
+            },
+            {
+              "title": "声音的变化"
+            },
+            {
+              "title": "噪声与保护听力"
+            },
+            {
+              "title": "单元回顾"
+            }
+          ],
+          "topics": [
+            "声音",
+            "声音的产生",
+            "声音的传播",
+            "声音的变化",
+            "噪声与保护听力",
+            "单元回顾"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 制作简易乐器",
+          "children": [
+            {
+              "title": "认识乐器"
+            },
+            {
+              "title": "设计简易乐器"
+            },
+            {
+              "title": "制作与展示"
+            },
+            {
+              "title": "单元回顾"
+            }
+          ],
+          "topics": ["制作简易乐器", "认识乐器", "设计简易乐器", "制作与展示", "单元回顾"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "d0f11c88-e64b-409e-9393-9e921dabe241",
+      "title": "小学科学人教鄂教版一年级上册",
+      "stage": "小学",
+      "subject": "科学",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/d0f11c88-e64b-409e-9393-9e921dabe241.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:55.663+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 走近科学",
+          "children": [
+            {
+              "title": "1 科学真有趣"
+            },
+            {
+              "title": "2 袋子里面有什么"
+            },
+            {
+              "title": "3 相同和不同"
+            }
+          ],
+          "topics": ["走近科学", "1 科学真有趣", "2 袋子里面有什么", "3 相同和不同"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 家养小动物",
+          "children": [
+            {
+              "title": "4 金鱼"
+            },
+            {
+              "title": "5 猫和兔"
+            },
+            {
+              "title": "6 常见的家养动物"
+            }
+          ],
+          "topics": ["家养小动物", "4 金鱼", "5 猫和兔", "6 常见的家养动物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 家中的物品",
+          "children": [
+            {
+              "title": "7 它们是用什么做的"
+            },
+            {
+              "title": "8 不一样的材料"
+            },
+            {
+              "title": "9 纸制品"
+            }
+          ],
+          "topics": ["家中的物品", "7 它们是用什么做的", "8 不一样的材料", "9 纸制品"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 制作小物品",
+          "children": [
+            {
+              "title": "10 常见的工具"
+            },
+            {
+              "title": "11 制作笔筒"
+            },
+            {
+              "title": "12 展示与改进"
+            }
+          ],
+          "topics": ["制作小物品", "10 常见的工具", "11 制作笔筒", "12 展示与改进"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-622e-5af3-0162-462a82e60464",
+      "title": "小学科学人教鄂教版一年级下册",
+      "stage": "小学",
+      "subject": "科学",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-622e-5af3-0162-462a82e60464.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:55.640+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 校园里的植物",
+          "children": [
+            {
+              "title": "1 各种各样的叶"
+            },
+            {
+              "title": "2 多彩的花"
+            },
+            {
+              "title": "3 观察校园里的植物"
+            }
+          ],
+          "topics": ["校园里的植物", "1 各种各样的叶", "2 多彩的花", "3 观察校园里的植物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 位置和方向",
+          "children": [
+            {
+              "title": "4 前后左右"
+            },
+            {
+              "title": "5 东南西北"
+            },
+            {
+              "title": "6 校园“寻宝”"
+            }
+          ],
+          "topics": ["位置和方向", "4 前后左右", "5 东南西北", "6 校园“寻宝”"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 有趣的磁铁",
+          "children": [
+            {
+              "title": "7 认识磁铁"
+            },
+            {
+              "title": "8 磁铁的磁极"
+            },
+            {
+              "title": "9 磁极间的作用"
+            }
+          ],
+          "topics": ["有趣的磁铁", "7 认识磁铁", "8 磁铁的磁极", "9 磁极间的作用"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 做个指南针",
+          "children": [
+            {
+              "title": "10 认识指南针"
+            },
+            {
+              "title": "11 制作指南针"
+            },
+            {
+              "title": "12 展示与改进指南针"
+            }
+          ],
+          "topics": ["做个指南针", "10 认识指南针", "11 制作指南针", "12 展示与改进指南针"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "e727491e-52c8-4214-a20c-f4c9e7a484ae",
+      "title": "小学科学人教鄂教版三年级上册",
+      "stage": "小学",
+      "subject": "科学",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/e727491e-52c8-4214-a20c-f4c9e7a484ae.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:12.478+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 食物与消化",
+          "children": [
+            {
+              "title": "1 多种多样的食物"
+            },
+            {
+              "title": "2 食物的营养"
+            },
+            {
+              "title": "3 食物的消化"
+            },
+            {
+              "title": "4 饮食与健康"
+            },
+            {
+              "title": "单元回顾"
+            }
+          ],
+          "topics": [
+            "食物与消化",
+            "1 多种多样的食物",
+            "2 食物的营养",
+            "3 食物的消化",
+            "4 饮食与健康",
+            "单元回顾"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 溶解与分离",
+          "children": [
+            {
+              "title": "5 盐和糖的溶解"
+            },
+            {
+              "title": "6 把盐析出来"
+            },
+            {
+              "title": "7 把它们分离"
+            },
+            {
+              "title": "单元回顾"
+            }
+          ],
+          "topics": ["溶解与分离", "5 盐和糖的溶解", "6 把盐析出来", "7 把它们分离", "单元回顾"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 家庭用电",
+          "children": [
+            {
+              "title": "8 手电筒的秘密"
+            },
+            {
+              "title": "9 开关"
+            },
+            {
+              "title": "10 电路出了什么故障"
+            },
+            {
+              "title": "11 电与我们"
+            },
+            {
+              "title": "单元回顾"
+            }
+          ],
+          "topics": [
+            "家庭用电",
+            "8 手电筒的秘密",
+            "9 开关",
+            "10 电路出了什么故障",
+            "11 电与我们",
+            "单元回顾"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 我们的呼吸",
+          "children": [
+            {
+              "title": "12 呼吸与空气"
+            },
+            {
+              "title": "13 呼吸器官"
+            },
+            {
+              "title": "14 保护呼吸器官"
+            },
+            {
+              "title": "单元回顾"
+            }
+          ],
+          "topics": ["我们的呼吸", "12 呼吸与空气", "13 呼吸器官", "14 保护呼吸器官", "单元回顾"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 小小建筑师",
+          "children": [
+            {
+              "title": "15 建筑中的材料"
+            },
+            {
+              "title": "16 建筑中的结构"
+            },
+            {
+              "title": "17 设计制作建筑模型"
+            },
+            {
+              "title": "单元回顾"
+            }
+          ],
+          "topics": [
+            "小小建筑师",
+            "15 建筑中的材料",
+            "16 建筑中的结构",
+            "17 设计制作建筑模型",
+            "单元回顾"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-74dd-6f1a-0175-20d48fd00338",
+      "title": "小学科学人教鄂教版三年级下册",
+      "stage": "小学",
+      "subject": "科学",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-74dd-6f1a-0175-20d48fd00338.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:03.027+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 土壤和岩石",
+          "children": [
+            {
+              "title": "1 土壤里有什么"
+            },
+            {
+              "title": "2 比较不同的土壤"
+            },
+            {
+              "title": "3 岩石与矿物"
+            }
+          ],
+          "topics": ["土壤和岩石", "1 土壤里有什么", "2 比较不同的土壤", "3 岩石与矿物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 种凤仙花",
+          "children": [
+            {
+              "title": "4 播种发芽"
+            },
+            {
+              "title": "5 养护凤仙花"
+            },
+            {
+              "title": "6 根 茎 叶"
+            },
+            {
+              "title": "7 花 果实 种子"
+            },
+            {
+              "title": "8 凤仙花的一生"
+            }
+          ],
+          "topics": [
+            "种凤仙花",
+            "4 播种发芽",
+            "5 养护凤仙花",
+            "6 根 茎 叶",
+            "7 花 果实 种子",
+            "8 凤仙花的一生"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 周围的空气",
+          "children": [
+            {
+              "title": "9 哪里有空气"
+            },
+            {
+              "title": "10 空气有质量吗"
+            },
+            {
+              "title": "11 空气占据空间吗"
+            }
+          ],
+          "topics": ["周围的空气", "9 哪里有空气", "10 空气有质量吗", "11 空气占据空间吗"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 学习用品中的科学",
+          "children": [
+            {
+              "title": "12 笔芯为什么能够伸缩"
+            },
+            {
+              "title": "13 笔杆上橡胶套的作用"
+            },
+            {
+              "title": "14 橡皮泥在水中的沉浮"
+            }
+          ],
+          "topics": [
+            "学习用品中的科学",
+            "12 笔芯为什么能够伸缩",
+            "13 笔杆上橡胶套的作用",
+            "14 橡皮泥在水中的沉浮"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 物体的运动",
+          "children": [
+            {
+              "title": "15 谁在动"
+            },
+            {
+              "title": "16 玩小球"
+            },
+            {
+              "title": "17 赛小车"
+            }
+          ],
+          "topics": ["物体的运动", "15 谁在动", "16 玩小球", "17 赛小车"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 动力小车",
+          "children": [
+            {
+              "title": "18 设计与制作"
+            },
+            {
+              "title": "19 测试与改进"
+            }
+          ],
+          "topics": ["动力小车", "18 设计与制作", "19 测试与改进"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "026cf32a-3d60-403a-a2be-83a30229fb28",
+      "title": "小学科学人教鄂教版二年级上册",
+      "stage": "小学",
+      "subject": "科学",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/026cf32a-3d60-403a-a2be-83a30229fb28.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:26:50.330+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 植物的生活",
+          "children": [
+            {
+              "title": "1 养植物"
+            },
+            {
+              "title": "2 谁的植物长得好"
+            },
+            {
+              "title": "3 我们离不开植物"
+            }
+          ],
+          "topics": ["植物的生活", "1 养植物", "2 谁的植物长得好", "3 我们离不开植物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 水和空气",
+          "children": [
+            {
+              "title": "4 水"
+            },
+            {
+              "title": "5 把它们放进水里"
+            },
+            {
+              "title": "6 空气"
+            }
+          ],
+          "topics": ["水和空气", "4 水", "5 把它们放进水里", "6 空气"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 推和拉",
+          "children": [
+            {
+              "title": "7 拉力"
+            },
+            {
+              "title": "8 推力"
+            },
+            {
+              "title": "9 巧用力"
+            }
+          ],
+          "topics": ["推和拉", "7 拉力", "8 推力", "9 巧用力"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 制作小船",
+          "children": [
+            {
+              "title": "10 认识船"
+            },
+            {
+              "title": "11 设计和制作小船"
+            },
+            {
+              "title": "12 改进小船"
+            }
+          ],
+          "topics": ["制作小船", "10 认识船", "11 设计和制作小船", "12 改进小船"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-6957-ae85-0169-9859da712c01",
+      "title": "小学科学人教鄂教版二年级下册",
+      "stage": "小学",
+      "subject": "科学",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-6957-ae85-0169-9859da712c01.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:56.544+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 了解天气",
+          "children": [
+            {
+              "title": "1 各种各样的天气"
+            },
+            {
+              "title": "2 天气与生活"
+            },
+            {
+              "title": "3 天气早知道"
+            }
+          ],
+          "topics": ["了解天气", "1 各种各样的天气", "2 天气与生活", "3 天气早知道"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 太阳月亮四季",
+          "children": [
+            {
+              "title": "4 太阳升起来了"
+            },
+            {
+              "title": "5 月亮"
+            },
+            {
+              "title": "6 春夏秋冬"
+            }
+          ],
+          "topics": ["太阳月亮四季", "4 太阳升起来了", "5 月亮", "6 春夏秋冬"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 观察小动物",
+          "children": [
+            {
+              "title": "7 蚂蚁"
+            },
+            {
+              "title": "8 蜗牛"
+            },
+            {
+              "title": "9 动物的感知本领"
+            }
+          ],
+          "topics": ["观察小动物", "7 蚂蚁", "8 蜗牛", "9 动物的感知本领"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 从自然世界到人工世界",
+          "children": [
+            {
+              "title": "10 自然世界与人工世界"
+            },
+            {
+              "title": "11 不断发展的人工产品"
+            },
+            {
+              "title": "12 我们的创意"
+            }
+          ],
+          "topics": [
+            "从自然世界到人工世界",
+            "10 自然世界与人工世界",
+            "11 不断发展的人工产品",
+            "12 我们的创意"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "6772ee07-3fec-4d55-8afe-8e9c84a43b29",
+      "title": "小学科学人教鄂教版五年级上册",
+      "stage": "小学",
+      "subject": "科学",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/6772ee07-3fec-4d55-8afe-8e9c84a43b29.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:27.026+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 烧水过程中的热传递",
+          "children": [
+            {
+              "title": "1 壶是怎样传热的"
+            },
+            {
+              "title": "2 水是怎样热起来的"
+            },
+            {
+              "title": "3 炉火周围的热现象"
+            },
+            {
+              "title": "4 保温和散热"
+            }
+          ],
+          "topics": [
+            "烧水过程中的热传递",
+            "1 壶是怎样传热的",
+            "2 水是怎样热起来的",
+            "3 炉火周围的热现象",
+            "4 保温和散热"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 后代与亲代",
+          "children": [
+            {
+              "title": "5 孩子与父母"
+            },
+            {
+              "title": "6 植物的后代与亲代"
+            },
+            {
+              "title": "7 灭绝的远古动物"
+            }
+          ],
+          "topics": ["后代与亲代", "5 孩子与父母", "6 植物的后代与亲代", "7 灭绝的远古动物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 显微镜下的生物世界",
+          "children": [
+            {
+              "title": "8 水中的微小生物"
+            },
+            {
+              "title": "9 显微镜下的细胞"
+            },
+            {
+              "title": "10 多种多样的微生物"
+            },
+            {
+              "title": "11 预防传染病"
+            }
+          ],
+          "topics": [
+            "显微镜下的生物世界",
+            "8 水中的微小生物",
+            "9 显微镜下的细胞",
+            "10 多种多样的微生物",
+            "11 预防传染病"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 光",
+          "children": [
+            {
+              "title": "12 光的传播"
+            },
+            {
+              "title": "13 光的反射"
+            },
+            {
+              "title": "14 彩虹"
+            }
+          ],
+          "topics": ["光", "12 光的传播", "13 光的反射", "14 彩虹"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 太阳能热水器",
+          "children": [
+            {
+              "title": "15 认识太阳能热水器"
+            },
+            {
+              "title": "16 制作简易太阳能热水器"
+            },
+            {
+              "title": "17 改进与交流"
+            }
+          ],
+          "topics": [
+            "太阳能热水器",
+            "15 认识太阳能热水器",
+            "16 制作简易太阳能热水器",
+            "17 改进与交流"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "17fffc4f-472c-4906-8be4-f714d056b695",
+      "title": "小学科学人教鄂教版六年级上册",
+      "stage": "小学",
+      "subject": "科学",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/17fffc4f-472c-4906-8be4-f714d056b695.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:04.976+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 物质的变化",
+          "children": [
+            {
+              "title": "1 生锈与防锈"
+            },
+            {
+              "title": "2 蜡烛的燃烧"
+            },
+            {
+              "title": "3 颜色变化"
+            }
+          ],
+          "topics": ["物质的变化", "1 生锈与防锈", "2 蜡烛的燃烧", "3 颜色变化"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 田野里的生物",
+          "children": [
+            {
+              "title": "4 植物的简单分类"
+            },
+            {
+              "title": "5 植物的光合作用"
+            },
+            {
+              "title": "6 食物链"
+            }
+          ],
+          "topics": ["田野里的生物", "4 植物的简单分类", "5 植物的光合作用", "6 食物链"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 天气的成因",
+          "children": [
+            {
+              "title": "7 水到哪里去了"
+            },
+            {
+              "title": "8 雾和云"
+            },
+            {
+              "title": "9 露和霜"
+            },
+            {
+              "title": "10 雨和雪"
+            },
+            {
+              "title": "11 水在自然界的循环"
+            }
+          ],
+          "topics": [
+            "天气的成因",
+            "7 水到哪里去了",
+            "8 雾和云",
+            "9 露和霜",
+            "10 雨和雪",
+            "11 水在自然界的循环"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 自然资源",
+          "children": [
+            {
+              "title": "12 各种各样的自然资源"
+            },
+            {
+              "title": "13 煤、石油和天然气"
+            },
+            {
+              "title": "14 风能和水能"
+            },
+            {
+              "title": "15 自然资源的开发与保护"
+            }
+          ],
+          "topics": [
+            "自然资源",
+            "12 各种各样的自然资源",
+            "13 煤、石油和天然气",
+            "14 风能和水能",
+            "15 自然资源的开发与保护"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 建造“植物工厂”",
+          "children": [
+            {
+              "title": "16 走进植物工厂"
+            },
+            {
+              "title": "17 设计与建造“植物工厂”"
+            }
+          ],
+          "topics": ["建造“植物工厂”", "16 走进植物工厂", "17 设计与建造“植物工厂”"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "0acae6ec-f1ff-4ec6-8227-5cd903e286bf",
+      "title": "小学科学人教鄂教版四年级上册",
+      "stage": "小学",
+      "subject": "科学",
+      "version": "人教鄂教版",
+      "revision_label": "旧教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/0acae6ec-f1ff-4ec6-8227-5cd903e286bf.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:26:55.724+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 多样的动物",
+          "children": [
+            {
+              "title": "1 鸟和哺乳动物"
+            },
+            {
+              "title": "2 动物的分类"
+            },
+            {
+              "title": "3 我国的珍稀动物"
+            }
+          ],
+          "topics": ["多样的动物", "1 鸟和哺乳动物", "2 动物的分类", "3 我国的珍稀动物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 动植物的繁殖",
+          "children": [
+            {
+              "title": "4 动物的繁殖"
+            },
+            {
+              "title": "5 用种子繁殖"
+            },
+            {
+              "title": "6 不用种子怎样繁殖"
+            }
+          ],
+          "topics": ["动植物的繁殖", "4 动物的繁殖", "5 用种子繁殖", "6 不用种子怎样繁殖"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 加热与冷却",
+          "children": [
+            {
+              "title": "7 水受热遇冷会怎样"
+            },
+            {
+              "title": "8 固体也热胀冷缩吗"
+            },
+            {
+              "title": "9 空气的热胀冷缩"
+            }
+          ],
+          "topics": ["加热与冷却", "7 水受热遇冷会怎样", "8 固体也热胀冷缩吗", "9 空气的热胀冷缩"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 地球上的水",
+          "children": [
+            {
+              "title": "10 水的分布"
+            },
+            {
+              "title": "11 水结冰了"
+            },
+            {
+              "title": "12 水的沸腾"
+            }
+          ],
+          "topics": ["地球上的水", "10 水的分布", "11 水结冰了", "12 水的沸腾"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 声音",
+          "children": [
+            {
+              "title": "13 声音的产生"
+            },
+            {
+              "title": "14 声音的传播"
+            },
+            {
+              "title": "15 声音的变化"
+            }
+          ],
+          "topics": ["声音", "13 声音的产生", "14 声音的传播", "15 声音的变化"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 制作乐器",
+          "children": [
+            {
+              "title": "16 认识与设计乐器"
+            },
+            {
+              "title": "17 制作与演奏"
+            }
+          ],
+          "topics": ["制作乐器", "16 认识与设计乐器", "17 制作与演奏"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

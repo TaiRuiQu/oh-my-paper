@@ -1,0 +1,342 @@
+.workbench {
+  min-width: 0;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  padding: 10px 16px;
+  background: white;
+  border-bottom: 1px solid var(--line);
+  border-radius: 2px 2px 0 0;
+  flex-shrink: 0;
+}
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 180px;
+}
+.identity > svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.identity > div {
+  min-width: 0;
+}
+.identity h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+}
+.status,
+.actions,
+.viewControls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.status {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+.viewControls {
+  padding-right: 12px;
+  border-right: 1px solid var(--line);
+}
+.viewControls [aria-pressed="true"] {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.notice {
+  flex-shrink: 0;
+}
+.notice :global(.p-notice) {
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+}
+.content {
+  min-width: 0;
+  padding: 16px;
+}
+.content > :global(.p-document-preview) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.ribbon {
+  background: white;
+}
+.ribbon :global(.p-document-ribbon) {
+  position: static;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+}
+.withRail {
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - var(--workbench-space, 240px));
+  min-height: 540px;
+}
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  align-items: stretch;
+}
+.withRail .content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.withRail .content > :global(.p-paper-workbench),
+.withRail .content > :global(.p-workbook-workbench) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  align-items: stretch;
+}
+.withRail .content > :global(.p-paper-workbench) > div,
+.withRail .content > :global(.p-workbook-workbench) > div {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  flex: 1;
+}
+.withRail .content :global(.p-document-area) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.withRail .content :global(.p-document-scroll) {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+  background: var(--canvas);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 28px;
+}
+.withRail .content :global(.p-document-status) {
+  flex-shrink: 0;
+  border-radius: 0;
+}
+.rail {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-left: 1px solid var(--line);
+  background: white;
+}
+.railTitle {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 16px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.railScroll {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.railSettings > h3 {
+  font-size: 13px;
+  background: var(--section-fill);
+  padding: 7px 14px;
+}
+.withRail .ribbon :global(.p-document-ribbon) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 14px;
+  border: 0;
+}
+.withRail .ribbon :global(.p-field) {
+  max-width: none;
+  width: 100%;
+  min-width: 0;
+}
+.withRail .ribbon :global(.p-field input),
+.withRail .ribbon :global(.p-field select) {
+  width: 100%;
+}
+.railActions {
+  padding: 12px;
+  background: white;
+  border-top: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.railActions > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.railActions > div > button {
+  flex: 1;
+}
+.rail :global(.p-paper-bank),
+.rail :global(.p-paper-outline) {
+  display: block;
+  position: static;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+}
+.rail :global(.p-paper-bank h2),
+.rail :global(.p-paper-outline h2) {
+  background: var(--section-fill);
+  padding: 7px 14px;
+  font-size: 13px;
+  border: 0;
+}
+.rail :global(.p-mobile-document-tools) {
+  display: grid;
+  padding: 14px;
+  border: 0;
+  margin: 0;
+}
+.rail :global(.p-mobile-document-tools .p-field) {
+  padding: 0;
+}
+.rail :global(.p-mobile-document-tools > p) {
+  display: none;
+}
+.rail :global(.p-form-grid) {
+  gap: 10px;
+}
+.withRail[data-properties="false"] .body {
+  grid-template-columns: minmax(0, 1fr);
+}
+.withRail[data-properties="false"] .rail {
+  display: none;
+}
+.fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+.fullscreen .header {
+  border-radius: 0;
+}
+.fullscreen > .content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.fullscreen .ribbon {
+  flex-shrink: 0;
+  max-height: 25dvh;
+  overflow: auto;
+}
+.fullscreen.withRail .ribbon {
+  max-height: none;
+  overflow: visible;
+}
+/* Per-question settings live in the making panel, outside the paper content. */
+:is(.withRail, .fullscreen) :global(.p-document-edit-tools),
+:is(.withRail, .fullscreen) :global(.p-workbook-controls),
+:is(.withRail, .fullscreen) :global(.p-pagination-control) {
+  display: none;
+}
+@media (max-width: 1000px) {
+  .body {
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+}
+@media (max-width: 760px) {
+  .outlineToggle {
+    display: none;
+  }
+  .header {
+    gap: 12px;
+    padding: 12px;
+  }
+  .actions {
+    width: 100%;
+    gap: 8px;
+  }
+  .viewControls {
+    border: 0;
+    padding: 0;
+  }
+  .content {
+    padding: 8px;
+  }
+  .withRail {
+    height: auto;
+    min-height: 0;
+  }
+  .body {
+    display: block;
+  }
+  .withRail .content {
+    min-height: 420px;
+  }
+  .withRail .content :global(.p-document-scroll) {
+    min-height: 400px;
+    max-height: 75dvh;
+    padding: 14px;
+  }
+  .rail {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .railScroll {
+    overflow: visible;
+  }
+  .railActions {
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+  }
+  .fullscreen.withRail {
+    height: 100dvh;
+  }
+  .fullscreen.withRail .body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .fullscreen.withRail .content {
+    min-height: 65dvh;
+  }
+}

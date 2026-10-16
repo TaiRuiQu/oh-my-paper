@@ -1,0 +1,8 @@
+[Unit]
+Description=OhMyPaper automatic update (pull images and roll containers)
+
+[Service]
+Type=oneshot
+# 部署目录不同时，同步修改这里的路径与 WorkingDirectory。
+WorkingDirectory=/opt/oh-my-paper
+ExecStart=/opt/oh-my-paper/deploy/update.sh

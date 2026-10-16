@@ -1,0 +1,61 @@
+{
+  "stage": "高中",
+  "subject": "地理",
+  "books": [
+    {
+      "id": "a2ad5d87-4cdc-47ef-ade4-81ae5d589bec",
+      "title": "高中地理人教版选择性必修1 自然地理基础",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修1 自然地理基础",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/geography/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-15b1690c0481",
+      "title": "高中地理人教版选择性必修2 区域发展",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2 区域发展",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/geography/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-15b1a1870483",
+      "title": "高中地理人教版选择性必修3 资源、环境与国家安全",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 资源、环境与国家安全",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/geography/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "1dd2eefb-e7b6-4ef0-ac84-dc4b2e48dcc2",
+      "title": "高中地理人教版高一必修 第一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/geography/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "00500324-9635-443b-8021-1d92f27075ab",
+      "title": "高中地理人教版高一必修 第二册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/geography/units-1.json",
+      "unit_count": 6
+    }
+  ]
+}

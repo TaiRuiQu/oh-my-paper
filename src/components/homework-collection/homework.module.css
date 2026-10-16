@@ -1,0 +1,205 @@
+.workspace,
+.stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  min-width: 0;
+}
+.workspace > *,
+.stack > *,
+.body,
+.body > *,
+.workspace details,
+.workspace :global(.p-panel),
+.workspace :global(.p-form),
+.workspace :global(.p-form-grid),
+.workspace :global(.p-heading) > div {
+  min-width: 0;
+  max-width: 100%;
+}
+.workspace :global(.p-panel),
+.workspace :global(.p-heading) {
+  margin-bottom: 0;
+}
+.body {
+  padding: 20px 22px;
+}
+.body :global(.p-form) {
+  padding: 0;
+}
+.workspace :global(input),
+.workspace :global(textarea),
+.workspace :global(select) {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.workspace p,
+.workspace h1,
+.workspace h2,
+.workspace h3,
+.workspace summary,
+.workspace :global(.markdown-content) {
+  overflow-wrap: anywhere;
+}
+.workspace :global(.katex-display),
+.workspace :global(pre) {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.row {
+  padding: 14px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.row + .row,
+.question + .question {
+  border-top: 1px solid var(--line);
+}
+.row p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+.row > div {
+  min-width: 0;
+}
+.question {
+  padding: 18px 0;
+  min-width: 0;
+}
+.question h3 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+.part {
+  padding: 12px 0 0;
+}
+.part h4 {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+.images {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+.imageChoice {
+  display: grid;
+  gap: 8px;
+  width: min(220px, 100%);
+  margin: 0;
+  border: 1px solid var(--line);
+  padding: 10px;
+}
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 260px;
+  object-fit: contain;
+}
+.imageChoice label {
+  display: flex;
+  gap: 8px;
+  align-items: start;
+}
+.section {
+  border-top: 1px solid var(--line);
+  margin-top: 18px;
+  padding-top: 18px;
+}
+.help,
+.metadata {
+  color: var(--muted);
+  font-size: 13px;
+  max-width: 72ch;
+}
+.metadata {
+  display: flex;
+  gap: 8px 18px;
+  flex-wrap: wrap;
+  font-variant-numeric: tabular-nums;
+}
+.tableRegion {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  margin: 14px 0;
+}
+.tableRegion:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+.table th {
+  background: var(--table-header, #eff2f0);
+  white-space: nowrap;
+}
+.table th,
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.table small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.history {
+  padding-left: 22px;
+}
+.history li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.history p {
+  margin: 6px 0;
+}
+.answer {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.toolbar {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+@media (max-width: 640px) {
+  .body {
+    padding: 14px;
+  }
+  .row > div {
+    flex: 1 1 100%;
+  }
+  .toolbar > label {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+}
+
+.formFields {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+.formFields > * {
+  min-width: 0;
+  max-width: 100%;
+}

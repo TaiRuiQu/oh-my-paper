@@ -1,0 +1,105 @@
+{
+  "stage": "初中（五•四学制）",
+  "subject": "历史",
+  "books": [
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-ba77ead3010a",
+      "title": "初中（五•四学制）历史统编版世界历史第一册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "世界历史",
+      "volume": "第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/history/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "c2c91a90-cbbe-3034-8e69-914458ae5822",
+      "title": "初中（五•四学制）历史统编版世界历史第二册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "世界历史",
+      "volume": "第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/history/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-ba72f59700d0",
+      "title": "初中（五•四学制）历史统编版中国历史第四册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "中国历史",
+      "volume": "第四册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/history/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "821f8365-ccd6-4429-a1a8-6518df08b020",
+      "title": "新教材-初中（五•四学制）历史统编版中国历史第一册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "中国历史",
+      "volume": "第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/history/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "ad23f0cf-35b2-40d6-8c93-31f653af0746",
+      "title": "新教材-初中（五•四学制）历史统编版中国历史第三册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "中国历史",
+      "volume": "第三册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/history/units-1.json",
+      "unit_count": 9
+    },
+    {
+      "id": "01a4f129-e2e2-40e8-8480-5bbb1844b139",
+      "title": "新教材-初中（五•四学制）历史统编版中国历史第二册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "中国历史",
+      "volume": "第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/history/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "322db15a-be50-335f-8d18-51f1bb8685c1",
+      "title": "初中（五•四学制）历史统编版中国历史第一册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "中国历史",
+      "volume": "第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/history/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "d908a3dc-7b64-80a6-428f-5b7b9501a343",
+      "title": "初中（五•四学制）历史统编版中国历史第三册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "中国历史",
+      "volume": "第三册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/history/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "f0272232-7567-3238-374b-e121fb9e216a",
+      "title": "初中（五•四学制）历史统编版中国历史第二册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "中国历史",
+      "volume": "第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/history/units-2.json",
+      "unit_count": 3
+    }
+  ]
+}

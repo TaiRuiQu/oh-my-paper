@@ -1,0 +1,1406 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "8ae7e58b-6a16-77ff-016a-2a06068303f7",
+      "title": "初中（五•四学制）道德与法治统编版七年级全一册",
+      "stage": "初中（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "七年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-6a16-77ff-016a-2a06068303f7.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:56.660+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 青春时光",
+          "children": [
+            {
+              "title": "第一课 青春的邀约",
+              "children": [
+                {
+                  "title": "悄悄变化的我"
+                },
+                {
+                  "title": "成长的不仅仅是身体"
+                }
+              ]
+            },
+            {
+              "title": "第二课 青春的心弦",
+              "children": [
+                {
+                  "title": "男生女生"
+                },
+                {
+                  "title": "青春萌动"
+                }
+              ]
+            },
+            {
+              "title": "第三课 青春的证明",
+              "children": [
+                {
+                  "title": "青春飞扬"
+                },
+                {
+                  "title": "青春有格"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "青春时光",
+            "青春的邀约",
+            "悄悄变化的我",
+            "成长的不仅仅是身体",
+            "青春的心弦",
+            "男生女生",
+            "青春萌动",
+            "青春的证明",
+            "青春飞扬",
+            "青春有格"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 做情绪情感的主人",
+          "children": [
+            {
+              "title": "第四课 揭开情绪的面纱",
+              "children": [
+                {
+                  "title": "青春的情绪"
+                },
+                {
+                  "title": "情绪的管理"
+                }
+              ]
+            },
+            {
+              "title": "第五课 品出情感的韵味",
+              "children": [
+                {
+                  "title": "我们的情感世界"
+                },
+                {
+                  "title": "在品味情感中成长"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "做情绪情感的主人",
+            "揭开情绪的面纱",
+            "青春的情绪",
+            "情绪的管理",
+            "品出情感的韵味",
+            "我们的情感世界",
+            "在品味情感中成长"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 在集体中成长",
+          "children": [
+            {
+              "title": "第六课 “我”和“我们”",
+              "children": [
+                {
+                  "title": "集体生活邀请我"
+                },
+                {
+                  "title": "集体生活成就我"
+                }
+              ]
+            },
+            {
+              "title": "第七课 共奏和谐乐章",
+              "children": [
+                {
+                  "title": "单音与和声"
+                },
+                {
+                  "title": "节奏与旋律"
+                }
+              ]
+            },
+            {
+              "title": "第八课 美好集体有我在",
+              "children": [
+                {
+                  "title": "憧憬美好集体"
+                },
+                {
+                  "title": "我与集体共成长"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "在集体中成长",
+            "“我”和“我们”",
+            "集体生活邀请我",
+            "集体生活成就我",
+            "共奏和谐乐章",
+            "单音与和声",
+            "节奏与旋律",
+            "美好集体有我在",
+            "憧憬美好集体",
+            "我与集体共成长"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 走进法治天地",
+          "children": [
+            {
+              "title": "第九课 法律在我们身边",
+              "children": [
+                {
+                  "title": "生活需要法律"
+                },
+                {
+                  "title": "法律保障生活"
+                }
+              ]
+            },
+            {
+              "title": "第十课 法律伴我们成长",
+              "children": [
+                {
+                  "title": "法律为我们护航"
+                },
+                {
+                  "title": "我们与法律同行"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "走进法治天地",
+            "法律在我们身边",
+            "生活需要法律",
+            "法律保障生活",
+            "法律伴我们成长",
+            "法律为我们护航",
+            "我们与法律同行"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-ba45799a004a",
+      "title": "初中（五•四学制）道德与法治统编版九年级上册",
+      "stage": "初中（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58c-6e16-b92e-016e-ba45799a004a.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:06.935+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 富强与创新",
+          "children": [
+            {
+              "title": "第一课 踏上强国之路",
+              "children": [
+                {
+                  "title": "坚持改革开放"
+                },
+                {
+                  "title": "走向共同富裕"
+                }
+              ]
+            },
+            {
+              "title": "第二课 创新驱动发展",
+              "children": [
+                {
+                  "title": "创新改变生活"
+                },
+                {
+                  "title": "创新永无止境"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "富强与创新",
+            "踏上强国之路",
+            "坚持改革开放",
+            "走向共同富裕",
+            "创新驱动发展",
+            "创新改变生活",
+            "创新永无止境"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 民主与法治",
+          "children": [
+            {
+              "title": "第三课 追求民主价值",
+              "children": [
+                {
+                  "title": "生活在新型民主国家"
+                },
+                {
+                  "title": "参与民主生活"
+                }
+              ]
+            },
+            {
+              "title": "第四课 建设法治中国",
+              "children": [
+                {
+                  "title": "夯实法治基础"
+                },
+                {
+                  "title": "凝聚法治共识"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "民主与法治",
+            "追求民主价值",
+            "生活在新型民主国家",
+            "参与民主生活",
+            "建设法治中国",
+            "夯实法治基础",
+            "凝聚法治共识"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 文明与家园",
+          "children": [
+            {
+              "title": "第五课 守望精神家园",
+              "children": [
+                {
+                  "title": "延续文化血脉"
+                },
+                {
+                  "title": "凝聚价值追求"
+                }
+              ]
+            },
+            {
+              "title": "第六课 建设美丽中国",
+              "children": [
+                {
+                  "title": "正视发展挑战"
+                },
+                {
+                  "title": "共筑生命家园"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "文明与家园",
+            "守望精神家园",
+            "延续文化血脉",
+            "凝聚价值追求",
+            "建设美丽中国",
+            "正视发展挑战",
+            "共筑生命家园"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 和谐与梦想",
+          "children": [
+            {
+              "title": "第七课 中华一家亲",
+              "children": [
+                {
+                  "title": "促进民族团结"
+                },
+                {
+                  "title": "维护祖国统一"
+                }
+              ]
+            },
+            {
+              "title": "第八课 中国人 中国梦",
+              "children": [
+                {
+                  "title": "我们的梦想"
+                },
+                {
+                  "title": "共圆中国梦"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "和谐与梦想",
+            "中华一家亲",
+            "促进民族团结",
+            "维护祖国统一",
+            "中国人 中国梦",
+            "我们的梦想",
+            "共圆中国梦"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1effe4b8080c",
+      "title": "初中（五•四学制）道德与法治统编版九年级下册",
+      "stage": "初中（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-77b3-bac9-0178-1effe4b8080c.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:05.657+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 我们共同的世界",
+          "children": [
+            {
+              "title": "第一课 同住地球村",
+              "children": [
+                {
+                  "title": "开放互动的世界"
+                },
+                {
+                  "title": "复杂多变的关系"
+                }
+              ]
+            },
+            {
+              "title": "第二课 构建人类命运共同体",
+              "children": [
+                {
+                  "title": "推动和平与发展"
+                },
+                {
+                  "title": "谋求互利共赢"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "我们共同的世界",
+            "同住地球村",
+            "开放互动的世界",
+            "复杂多变的关系",
+            "构建人类命运共同体",
+            "推动和平与发展",
+            "谋求互利共赢"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 世界舞台上的中国",
+          "children": [
+            {
+              "title": "第三课 与世界紧相连",
+              "children": [
+                {
+                  "title": "中国担当"
+                },
+                {
+                  "title": "与世界深度互动"
+                }
+              ]
+            },
+            {
+              "title": "第四课 与世界共发展",
+              "children": [
+                {
+                  "title": "中国的机遇与挑战"
+                },
+                {
+                  "title": "携手促发展"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "世界舞台上的中国",
+            "与世界紧相连",
+            "中国担当",
+            "与世界深度互动",
+            "与世界共发展",
+            "中国的机遇与挑战",
+            "携手促发展"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 走向未来的少年",
+          "children": [
+            {
+              "title": "第五课 少年的担当",
+              "children": [
+                {
+                  "title": "走向世界大舞台"
+                },
+                {
+                  "title": "少年当自强"
+                }
+              ]
+            },
+            {
+              "title": "第六课 我的毕业季",
+              "children": [
+                {
+                  "title": "学无止境"
+                },
+                {
+                  "title": "多彩的职业"
+                }
+              ]
+            },
+            {
+              "title": "第七课 从这里出发",
+              "children": [
+                {
+                  "title": "回望成长"
+                },
+                {
+                  "title": "走向未来"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "走向未来的少年",
+            "少年的担当",
+            "走向世界大舞台",
+            "少年当自强",
+            "我的毕业季",
+            "学无止境",
+            "多彩的职业",
+            "从这里出发",
+            "回望成长",
+            "走向未来"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "2f710599-a9ff-fb2b-66f0-e36915995060",
+      "title": "初中（五•四学制）道德与法治统编版八年级下册",
+      "stage": "初中（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2f710599-a9ff-fb2b-66f0-e36915995060.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:22.405+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 坚持宪法至上",
+          "children": [
+            {
+              "title": "第一课 维护宪法权威",
+              "children": [
+                {
+                  "title": "党的主张和人民意志的统一"
+                },
+                {
+                  "title": "治国安邦的总章程"
+                }
+              ]
+            },
+            {
+              "title": "第二课 保障宪法实施",
+              "children": [
+                {
+                  "title": "坚持依宪治国"
+                },
+                {
+                  "title": "加强宪法监督"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "坚持宪法至上",
+            "维护宪法权威",
+            "党的主张和人民意志的统一",
+            "治国安邦的总章程",
+            "保障宪法实施",
+            "坚持依宪治国",
+            "加强宪法监督"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 理解权利义务",
+          "children": [
+            {
+              "title": "第三课 公民权利",
+              "children": [
+                {
+                  "title": "公民基本权利"
+                },
+                {
+                  "title": "依法行使权利"
+                }
+              ]
+            },
+            {
+              "title": "第四课 公民义务",
+              "children": [
+                {
+                  "title": "公民基本义务"
+                },
+                {
+                  "title": "依法履行义务"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "理解权利义务",
+            "公民权利",
+            "公民基本权利",
+            "依法行使权利",
+            "公民义务",
+            "公民基本义务",
+            "依法履行义务"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 人民当家作主",
+          "children": [
+            {
+              "title": "第五课 我国基本制度",
+              "children": [
+                {
+                  "title": "根本政治制度"
+                },
+                {
+                  "title": "基本政治制度"
+                },
+                {
+                  "title": "基本经济制度"
+                }
+              ]
+            },
+            {
+              "title": "第六课 我国国家机构",
+              "children": [
+                {
+                  "title": "国家权力机关"
+                },
+                {
+                  "title": "中华人民共和国主席"
+                },
+                {
+                  "title": "国家行政机关"
+                },
+                {
+                  "title": "国家监察机关"
+                },
+                {
+                  "title": "国家司法机关"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "人民当家作主",
+            "我国基本制度",
+            "根本政治制度",
+            "基本政治制度",
+            "基本经济制度",
+            "我国国家机构",
+            "国家权力机关",
+            "中华人民共和国主席",
+            "国家行政机关",
+            "国家监察机关",
+            "国家司法机关"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 崇尚法治精神",
+          "children": [
+            {
+              "title": "第七课 尊重自由平等",
+              "children": [
+                {
+                  "title": "自由平等的真谛"
+                },
+                {
+                  "title": "自由平等的追求"
+                }
+              ]
+            },
+            {
+              "title": "第八课 维护公平正义",
+              "children": [
+                {
+                  "title": "公平正义的价值"
+                },
+                {
+                  "title": "公平正义的守护"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "崇尚法治精神",
+            "尊重自由平等",
+            "自由平等的真谛",
+            "自由平等的追求",
+            "维护公平正义",
+            "公平正义的价值",
+            "公平正义的守护"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ccb2fc2b-2c6b-4f1e-b112-0ce9e55575f3",
+      "title": "新教材-初中（五•四学制）道德与法治统编版八年级上册",
+      "stage": "初中（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ccb2fc2b-2c6b-4f1e-b112-0ce9e55575f3.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-01-05T16:58:02.751+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 走进社会生活",
+          "children": [
+            {
+              "title": "第一课 丰富的社会生活",
+              "children": [
+                {
+                  "title": "认识社会生活"
+                },
+                {
+                  "title": "我们都是社会的一员"
+                }
+              ]
+            },
+            {
+              "title": "第二课 在社会中健康成长",
+              "children": [
+                {
+                  "title": "人的社会化"
+                },
+                {
+                  "title": "养成亲社会行为"
+                }
+              ]
+            },
+            {
+              "title": "第三课 共建网络美好家园",
+              "children": [
+                {
+                  "title": "网络改变世界"
+                },
+                {
+                  "title": "营造清朗空间"
+                }
+              ]
+            },
+            {
+              "title": "单元思考与行动"
+            }
+          ],
+          "topics": [
+            "走进社会生活",
+            "丰富的社会生活",
+            "认识社会生活",
+            "我们都是社会的一员",
+            "在社会中健康成长",
+            "人的社会化",
+            "养成亲社会行为",
+            "共建网络美好家园",
+            "网络改变世界",
+            "营造清朗空间",
+            "单元思考与行动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 维护社会秩序",
+          "children": [
+            {
+              "title": "第四课 遵守社会规则",
+              "children": [
+                {
+                  "title": "维护秩序靠规则"
+                },
+                {
+                  "title": "遵守规则"
+                }
+              ]
+            },
+            {
+              "title": "第五课 社会生活讲道德",
+              "children": [
+                {
+                  "title": "文明有礼"
+                },
+                {
+                  "title": "诚实守信"
+                },
+                {
+                  "title": "友善待人"
+                }
+              ]
+            },
+            {
+              "title": "第六课 提升法治素养",
+              "children": [
+                {
+                  "title": "树立法治观念"
+                },
+                {
+                  "title": "学会依法办事"
+                }
+              ]
+            },
+            {
+              "title": "单元思考与行动"
+            }
+          ],
+          "topics": [
+            "维护社会秩序",
+            "遵守社会规则",
+            "维护秩序靠规则",
+            "遵守规则",
+            "社会生活讲道德",
+            "文明有礼",
+            "诚实守信",
+            "友善待人",
+            "提升法治素养",
+            "树立法治观念",
+            "学会依法办事",
+            "单元思考与行动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 勇担社会责任",
+          "children": [
+            {
+              "title": "第七课 追求自由平等",
+              "children": [
+                {
+                  "title": "珍视自由"
+                },
+                {
+                  "title": "践行平等"
+                }
+              ]
+            },
+            {
+              "title": "第八课 维护公平正义",
+              "children": [
+                {
+                  "title": "坚守公平"
+                },
+                {
+                  "title": "守护正义"
+                }
+              ]
+            },
+            {
+              "title": "第九课 积极奉献社会",
+              "children": [
+                {
+                  "title": "社会责任我担当"
+                },
+                {
+                  "title": "奉献社会我践行"
+                }
+              ]
+            },
+            {
+              "title": "单元思考与行动"
+            }
+          ],
+          "topics": [
+            "勇担社会责任",
+            "追求自由平等",
+            "珍视自由",
+            "践行平等",
+            "维护公平正义",
+            "坚守公平",
+            "守护正义",
+            "积极奉献社会",
+            "社会责任我担当",
+            "奉献社会我践行",
+            "单元思考与行动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 维护国家利益",
+          "children": [
+            {
+              "title": "第十课 国家利益至上",
+              "children": [
+                {
+                  "title": "国家利益高于一切"
+                },
+                {
+                  "title": "捍卫国家利益"
+                }
+              ]
+            },
+            {
+              "title": "第十一课 军强才能国安",
+              "children": [
+                {
+                  "title": "党和人民信赖的英雄军队"
+                },
+                {
+                  "title": "全面推进国防和军队现代化"
+                }
+              ]
+            },
+            {
+              "title": "第十二课 树立总体国家安全观",
+              "children": [
+                {
+                  "title": "认识国家安全"
+                },
+                {
+                  "title": "维护国家安全"
+                }
+              ]
+            },
+            {
+              "title": "单元思考与行动"
+            }
+          ],
+          "topics": [
+            "维护国家利益",
+            "国家利益至上",
+            "国家利益高于一切",
+            "捍卫国家利益",
+            "军强才能国安",
+            "党和人民信赖的英雄军队",
+            "全面推进国防和军队现代化",
+            "树立总体国家安全观",
+            "认识国家安全",
+            "维护国家安全",
+            "单元思考与行动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "53446947-807d-4095-b75e-f0f226813e3e",
+      "title": "新教材-初中（五•四学制）道德与法治统编版六年级上册",
+      "stage": "初中（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/53446947-807d-4095-b75e-f0f226813e3e.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-01-05T16:56:19.648+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 完善自我",
+          "children": [
+            {
+              "title": "第 1 课 开启初中生活",
+              "children": [
+                {
+                  "title": "奏响中学序曲"
+                },
+                {
+                  "title": "规划初中生活"
+                }
+              ]
+            },
+            {
+              "title": "第 2 课 诚信自爱",
+              "children": [
+                {
+                  "title": "诚信是金"
+                },
+                {
+                  "title": "学会自爱"
+                }
+              ]
+            },
+            {
+              "title": "第 3 课 宽容友善",
+              "children": [
+                {
+                  "title": "宽容待人"
+                },
+                {
+                  "title": "友善相待"
+                }
+              ]
+            },
+            {
+              "title": "第 4 课 善于反思",
+              "children": [
+                {
+                  "title": "生活离不开反思"
+                },
+                {
+                  "title": "养成反思好习惯"
+                }
+              ]
+            },
+            {
+              "title": "第 5 课 懂得自律",
+              "children": [
+                {
+                  "title": "自律成就精彩人生"
+                },
+                {
+                  "title": "自律从小事做起"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "完善自我",
+            "第 1 课 开启初中生活",
+            "奏响中学序曲",
+            "规划初中生活",
+            "第 2 课 诚信自爱",
+            "诚信是金",
+            "学会自爱",
+            "第 3 课 宽容友善",
+            "宽容待人",
+            "友善相待",
+            "第 4 课 善于反思",
+            "生活离不开反思",
+            "养成反思好习惯",
+            "第 5 课 懂得自律",
+            "自律成就精彩人生",
+            "自律从小事做起"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 生命至上",
+          "children": [
+            {
+              "title": "第 6 课 拒绝烟酒与毒品",
+              "children": [
+                {
+                  "title": "远离烟酒"
+                },
+                {
+                  "title": "拒绝毒品"
+                }
+              ]
+            },
+            {
+              "title": "第 7 课 预防欺凌与侵害",
+              "children": [
+                {
+                  "title": "向欺凌说“不”"
+                },
+                {
+                  "title": "远离侵害 保护自己"
+                }
+              ]
+            },
+            {
+              "title": "第 8 课 面对突发公共卫生事件",
+              "children": [
+                {
+                  "title": "科学防控 保护生命"
+                },
+                {
+                  "title": "上下同心 同舟共济"
+                }
+              ]
+            },
+            {
+              "title": "第 9 课 应对自然灾害",
+              "children": [
+                {
+                  "title": "防灾减灾 自护自救"
+                },
+                {
+                  "title": "一方有难 八方支援"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "生命至上",
+            "第 6 课 拒绝烟酒与毒品",
+            "远离烟酒",
+            "拒绝毒品",
+            "第 7 课 预防欺凌与侵害",
+            "向欺凌说“不”",
+            "远离侵害 保护自己",
+            "第 8 课 面对突发公共卫生事件",
+            "科学防控 保护生命",
+            "上下同心 同舟共济",
+            "第 9 课 应对自然灾害",
+            "防灾减灾 自护自救",
+            "一方有难 八方支援"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 让世界更美好",
+          "children": [
+            {
+              "title": "第 10 课 促进世界和平与发展",
+              "children": [
+                {
+                  "title": "和平与发展是人类的共同愿望"
+                },
+                {
+                  "title": "中国为和平与发展作贡献"
+                }
+              ]
+            },
+            {
+              "title": "第 11 课 深化文明交流与互鉴",
+              "children": [
+                {
+                  "title": "多彩的世界文化"
+                },
+                {
+                  "title": "尊重文化多样性"
+                },
+                {
+                  "title": "促进交流互鉴"
+                }
+              ]
+            },
+            {
+              "title": "第 12 课 携手共创美好未来",
+              "children": [
+                {
+                  "title": "我们共有一个家园"
+                },
+                {
+                  "title": "构建人类命运共同体"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "让世界更美好",
+            "第 10 课 促进世界和平与发展",
+            "和平与发展是人类的共同愿望",
+            "中国为和平与发展作贡献",
+            "第 11 课 深化文明交流与互鉴",
+            "多彩的世界文化",
+            "尊重文化多样性",
+            "促进交流互鉴",
+            "第 12 课 携手共创美好未来",
+            "我们共有一个家园",
+            "构建人类命运共同体"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "思考与行动",
+          "topics": ["思考与行动"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "4cf7653e-a425-4cca-bfe0-bcfbec8e0c83",
+      "title": "新教材-初中（五•四学制）道德与法治统编版六年级全一册",
+      "stage": "初中（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/4cf7653e-a425-4cca-bfe0-bcfbec8e0c83.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-02-19T15:08:53.273+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 少年有梦",
+          "children": [
+            {
+              "title": "第一课 开启初中生活",
+              "children": [
+                {
+                  "title": "奏响中学序曲"
+                },
+                {
+                  "title": "规划初中生活"
+                }
+              ]
+            },
+            {
+              "title": "第二课 正确认识自我",
+              "children": [
+                {
+                  "title": "认识自己"
+                },
+                {
+                  "title": "做更好的自己"
+                }
+              ]
+            },
+            {
+              "title": "第三课 梦想始于当下",
+              "children": [
+                {
+                  "title": "做有梦想的少年"
+                },
+                {
+                  "title": "学习成就梦想"
+                }
+              ]
+            },
+            {
+              "title": "单元思考与行动"
+            }
+          ],
+          "topics": [
+            "少年有梦",
+            "开启初中生活",
+            "奏响中学序曲",
+            "规划初中生活",
+            "正确认识自我",
+            "认识自己",
+            "做更好的自己",
+            "梦想始于当下",
+            "做有梦想的少年",
+            "学习成就梦想",
+            "单元思考与行动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 成长的时空",
+          "children": [
+            {
+              "title": "第四课 幸福和睦的家庭",
+              "children": [
+                {
+                  "title": "家的意味"
+                },
+                {
+                  "title": "让家更美好"
+                }
+              ]
+            },
+            {
+              "title": "第五课 和谐的师生关系",
+              "children": [
+                {
+                  "title": "走近老师"
+                },
+                {
+                  "title": "珍惜师生情谊"
+                }
+              ]
+            },
+            {
+              "title": "第六课 友谊之树常青",
+              "children": [
+                {
+                  "title": "友谊的真谛"
+                },
+                {
+                  "title": "交友的智慧"
+                }
+              ]
+            },
+            {
+              "title": "第七课 在集体中成长",
+              "children": [
+                {
+                  "title": "集体生活成就我"
+                },
+                {
+                  "title": "共建美好集体"
+                }
+              ]
+            },
+            {
+              "title": "单元思考与行动"
+            }
+          ],
+          "topics": [
+            "成长的时空",
+            "幸福和睦的家庭",
+            "家的意味",
+            "让家更美好",
+            "和谐的师生关系",
+            "走近老师",
+            "珍惜师生情谊",
+            "友谊之树常青",
+            "友谊的真谛",
+            "交友的智慧",
+            "在集体中成长",
+            "集体生活成就我",
+            "共建美好集体",
+            "单元思考与行动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 珍爱我们的生命",
+          "children": [
+            {
+              "title": "第八课 生命可贵",
+              "children": [
+                {
+                  "title": "认识生命"
+                },
+                {
+                  "title": "敬畏生命"
+                }
+              ]
+            },
+            {
+              "title": "第九课 守护生命安全",
+              "children": [
+                {
+                  "title": "增强安全意识"
+                },
+                {
+                  "title": "提高防护能力"
+                }
+              ]
+            },
+            {
+              "title": "第十课 保持身心健康",
+              "children": [
+                {
+                  "title": "爱护身体"
+                },
+                {
+                  "title": "滋养心灵"
+                }
+              ]
+            },
+            {
+              "title": "单元思考与行动"
+            }
+          ],
+          "topics": [
+            "珍爱我们的生命",
+            "生命可贵",
+            "认识生命",
+            "敬畏生命",
+            "守护生命安全",
+            "增强安全意识",
+            "提高防护能力",
+            "保持身心健康",
+            "爱护身体",
+            "滋养心灵",
+            "单元思考与行动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 追求美好人生",
+          "children": [
+            {
+              "title": "第十一课 确立人生目标",
+              "children": [
+                {
+                  "title": "探问人生目标"
+                },
+                {
+                  "title": "树立正确的人生目标"
+                }
+              ]
+            },
+            {
+              "title": "第十二课 端正人生态度",
+              "children": [
+                {
+                  "title": "拥有积极的人生态度"
+                },
+                {
+                  "title": "正确对待顺境和逆境"
+                }
+              ]
+            },
+            {
+              "title": "第十三课 实现人生价值",
+              "children": [
+                {
+                  "title": "在劳动中创造人生价值"
+                },
+                {
+                  "title": "在奉献中成就精彩人生"
+                }
+              ]
+            },
+            {
+              "title": "单元思考与行动"
+            }
+          ],
+          "topics": [
+            "追求美好人生",
+            "确立人生目标",
+            "探问人生目标",
+            "树立正确的人生目标",
+            "端正人生态度",
+            "拥有积极的人生态度",
+            "正确对待顺境和逆境",
+            "实现人生价值",
+            "在劳动中创造人生价值",
+            "在奉献中成就精彩人生",
+            "单元思考与行动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

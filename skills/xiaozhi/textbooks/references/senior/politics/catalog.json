@@ -1,0 +1,127 @@
+{
+  "stage": "高中",
+  "subject": "思想政治",
+  "books": [
+    {
+      "id": "0785f71b-5288-46d5-bd64-daefb9bc6bf0",
+      "title": "高中思想政治人教版高三高三下",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高三",
+      "volume": "高三下",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-1.json",
+      "unit_count": 1
+    },
+    {
+      "id": "9b84c919-48b7-4de1-95c4-090fb0385f73",
+      "title": "高中思想政治人教版高二必修一",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "必修一",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "78b05af5-4355-4e55-8eb0-9288e99ab4c1",
+      "title": "高中思想政治人教版高二必修三",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "必修三",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "64b6cf54-d18a-4093-ae01-0fa74fa7944c",
+      "title": "高中思想政治人教版高二必修二",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "必修二",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0175-de7400ff0342",
+      "title": "高中思想政治统编版选择性必修1 当代国际政治与经济",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修1 当代国际政治与经济",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0175-de81ffda038f",
+      "title": "高中思想政治统编版选择性必修2 法律与生活",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2 法律与生活",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0175-deaa5f1d03e4",
+      "title": "高中思想政治统编版选择性必修3 逻辑与思维",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 逻辑与思维",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "9df510c1-5ebd-4439-b20c-6a187c7509cf",
+      "title": "高中思想政治统编版高一必修1 中国特色社会主义",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修1 中国特色社会主义",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "85a853ff-1ada-421f-9add-7ff884634022",
+      "title": "高中思想政治统编版高一必修2 经济与社会",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修2 经济与社会",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-1.json",
+      "unit_count": 3
+    },
+    {
+      "id": "ecb42439-2f43-4774-987d-e915e11df322",
+      "title": "高中思想政治统编版高一必修3 政治与法治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修3 政治与法治",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-2.json",
+      "unit_count": 3
+    },
+    {
+      "id": "2e047722-7734-4890-afd7-37e9aa1ad2d8",
+      "title": "高中思想政治统编版高二必修4 哲学与文化",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "必修4 哲学与文化",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/politics/units-2.json",
+      "unit_count": 3
+    }
+  ]
+}

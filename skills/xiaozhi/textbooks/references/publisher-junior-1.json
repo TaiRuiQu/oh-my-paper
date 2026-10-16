@@ -1,0 +1,655 @@
+{
+  "note": "人教社官方电子教材平台书目快照，目录未逐册核实；不与课程树按相似题名自动合并，也不计入单元覆盖。",
+  "books": [
+    {
+      "publisher_id": "1313001301261",
+      "title": "义务教育教科书 俄语 九年级 上册",
+      "subject": "俄语",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1313001301261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1312001301261",
+      "title": "义务教育教科书 英语 九年级 上册",
+      "subject": "英语",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1312001301261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1313001202251",
+      "title": "义务教育教科书 俄语 八年级 下册",
+      "subject": "俄语",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1313001202251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001302251",
+      "title": "义务教育教科书艺术影视（含数字媒体艺术） 九年级下册",
+      "subject": "影视",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001302251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001302256",
+      "title": "义务教育教科书 戏剧 九年级下册",
+      "subject": "戏剧",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001302256/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001302252",
+      "title": "义务教育教科书 舞蹈 九年级下册",
+      "subject": "舞蹈",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001302252/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1313001203221",
+      "title": "义务教育教科书 俄语 八年级 上册",
+      "subject": "俄语",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1313001203221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001301252",
+      "title": "义务教育教科书 艺术 影视（含数字媒体艺术） 九年级 上册",
+      "subject": "影视",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001301252/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001301256",
+      "title": "义务教育教科书 戏剧 九年级上册",
+      "subject": "戏剧",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001301256/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001301251",
+      "title": "义务教育教科书 舞蹈 九年级上册",
+      "subject": "舞蹈",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001301251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001202241",
+      "title": "义务教育教科书 舞蹈 八年级下册",
+      "subject": "舞蹈",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001202241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001202247",
+      "title": "义务教育教科书 戏剧 八年级下册",
+      "subject": "戏剧",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001202247/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001202248",
+      "title": "义务教育教科书 影视 八年级下册",
+      "subject": "影视",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001202248/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1313001102241",
+      "title": "义务教育教科书俄语七年级下册",
+      "subject": "俄语",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1313001102241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001201248",
+      "title": "义务教育教科书 艺术 影视（含数字媒体艺术） 八年级 上册",
+      "subject": "影视",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001201248/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001201247",
+      "title": "义务教育教科书 戏剧 八年级上册",
+      "subject": "戏剧",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001201247/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001201246",
+      "title": "义务教育教科书 舞蹈 八年级上册",
+      "subject": "舞蹈",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001201246/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1311001302181",
+      "title": "义务教育教科书 语文 九年级下册",
+      "subject": "语文",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1311001302181/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1311001202251",
+      "title": "义务教育教科书 语文 八年级下册",
+      "subject": "语文",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1311001202251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1311001102241",
+      "title": "义务教育教科书 语文 七年级下册",
+      "subject": "语文",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1311001102241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1312001202251",
+      "title": "义务教育教科书 英语 八年级下册",
+      "subject": "英语",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1312001202251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1312001102241",
+      "title": "义务教育教科书 英语 七年级下册",
+      "subject": "英语",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1312001102241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1362001302142",
+      "title": "义务教育教科书 音乐 九年级下册（五线谱）",
+      "subject": "音乐",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1362001302142/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001202256",
+      "title": "义务教育教科书 艺术 音乐 八年级 下册（五线谱）",
+      "subject": "音乐",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001202256/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001102246",
+      "title": "义务教育教科书 音乐 七年级下册（五线谱）",
+      "subject": "音乐",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001102246/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1362001302141",
+      "title": "义务教育教科书 音乐 九年级下册（简谱）",
+      "subject": "音乐",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1362001302141/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001202252",
+      "title": "义务教育教科书 艺术 音乐 八年级 下册（简谱）",
+      "subject": "音乐",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001202252/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001102242",
+      "title": "义务教育教科书 音乐 七年级下册（简谱）",
+      "subject": "音乐",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001102242/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1341001202241",
+      "title": "义务教育教科书 物理 八年级下册",
+      "subject": "物理",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1341001202241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1321001302141",
+      "title": "义务教育教科书 数学 九年级下册",
+      "subject": "数学",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1321001302141/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1321001202251",
+      "title": "义务教育教科书 数学 八年级下册",
+      "subject": "数学",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1321001202251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1321001102241",
+      "title": "义务教育教科书 数学 七年级下册",
+      "subject": "数学",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1321001102241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1343001202251",
+      "title": "义务教育教科书 生物学 八年级下册",
+      "subject": "生物学",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1343001202251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1343001102241",
+      "title": "义务教育教科书 生物学 七年级下册",
+      "subject": "生物学",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1343001102241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1363001302141",
+      "title": "义务教育教科书 美术 九年级下册",
+      "subject": "美术",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1363001302141/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001202251",
+      "title": "义务教育教科书 美术 八年级下册",
+      "subject": "美术",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001202251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001102241",
+      "title": "义务教育教科书 艺术 美术 七年级 下册",
+      "subject": "美术",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1361001102241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1342001302241",
+      "title": "义务教育教科书 化学 九年级下册",
+      "subject": "化学",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1342001302241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1384001302181",
+      "title": "义务教育教科书 道德与法治 九年级下册",
+      "subject": "道德与法治",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1384001302181/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1384001202251",
+      "title": "义务教育教科书 道德与法治 八年级下册",
+      "subject": "道德与法治",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1384001202251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1384001102241",
+      "title": "义务教育教科书 道德与法治 七年级下册",
+      "subject": "道德与法治",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1384001102241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1337001302181",
+      "title": "义务教育教科书 世界历史 九年级下册",
+      "subject": "历史",
+      "grade": "九年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1337001302181/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1337001202251",
+      "title": "义务教育教科书 中国历史 八年级下册",
+      "subject": "历史",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1337001202251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1337001102241",
+      "title": "义务教育教科书 中国历史 七年级下册",
+      "subject": "历史",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1337001102241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1338001202251",
+      "title": "义务教育教科书 地理 八年级下册",
+      "subject": "地理",
+      "grade": "八年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1338001202251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1338001102241",
+      "title": "义务教育教科书 地理 七年级下册",
+      "subject": "地理",
+      "grade": "七年级",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1338001102241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001301263",
+      "title": "义务教育教科书音乐九年级上册（五线谱）",
+      "subject": "音乐",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001301263/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001201256",
+      "title": "义务教育教科书音乐八年级上册（五线谱）",
+      "subject": "音乐",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001201256/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1361001101249",
+      "title": "义务教育教科书 艺术 音乐 七年级 上册（五线谱）",
+      "subject": "音乐",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1361001101249/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1338001201251",
+      "title": "义务教育教科书地理八年级上册",
+      "subject": "地理",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1338001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1338001101241",
+      "title": "义务教育教科书地理七年级上册",
+      "subject": "地理",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1338001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1337001301261",
+      "title": "义务教育教科书 世界历史 九年级 上册",
+      "subject": "历史",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1337001301261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1337001201251",
+      "title": "义务教育教科书中国历史八年级上册",
+      "subject": "历史",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1337001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1337001101241",
+      "title": "义务教育教科书 中国历史 七年级 上册",
+      "subject": "历史",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1337001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1343001201251",
+      "title": "义务教育教科书生物学八年级上册",
+      "subject": "生物学",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1343001201251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1343001101241",
+      "title": "义务教育教科书生物学七年级上册",
+      "subject": "生物学",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1343001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1342001301241",
+      "title": "义务教育教科书 化学 九年级 上册",
+      "subject": "化学",
+      "grade": "九年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1342001301241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1341001303251",
+      "title": "义务教育教科书物理九年级全一册",
+      "subject": "物理",
+      "grade": "九年级",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1341001303251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1341001201241",
+      "title": "义务教育教科书物理八年级上册",
+      "subject": "物理",
+      "grade": "八年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1341001201241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1313001303221",
+      "title": "义务教育教科书俄语九年级全一册",
+      "subject": "俄语",
+      "grade": "九年级",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1313001303221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1313001101241",
+      "title": "义务教育教科书俄语七年级上册",
+      "subject": "俄语",
+      "grade": "七年级",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1313001101241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1314001303261",
+      "title": "义务教育教科书日语九年级全一册",
+      "subject": "日语",
+      "grade": "九年级",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1314001303261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1314001203251",
+      "title": "义务教育教科书日语八年级全一册",
+      "subject": "日语",
+      "grade": "八年级",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1314001203251/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1314001103241",
+      "title": "义务教育教科书日语七年级全一册",
+      "subject": "日语",
+      "grade": "七年级",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1314001103241/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1372001303261",
+      "title": "义务教育教科书体育与健康九年级全一册",
+      "subject": "体育与健康",
+      "grade": "九年级",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1372001303261/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    }
+  ]
+}

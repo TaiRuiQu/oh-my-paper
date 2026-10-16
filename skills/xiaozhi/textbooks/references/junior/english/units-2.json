@@ -1,0 +1,1139 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "362cc792-7fbb-42f1-808a-9cca686bcc5a",
+      "title": "新教材-初中英语人教版八年级上册",
+      "stage": "初中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/362cc792-7fbb-42f1-808a-9cca686bcc5a.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-07-29T15:23:54.227+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Happy Holiday",
+          "children": [
+            {
+              "title": "Section A How do people spend their holidays ?"
+            },
+            {
+              "title": "Section B What can we learn from holiday experiences?"
+            },
+            {
+              "title": "Project Make a holiday to-do list"
+            }
+          ],
+          "topics": [
+            "Unit 1 Happy Holiday",
+            "Section A How do people spend their holidays ?",
+            "Section B What can we learn from holiday experiences?",
+            "Project Make a holiday to-do list"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Home Sweet Home",
+          "children": [
+            {
+              "title": "Section A What can you do for your home?"
+            },
+            {
+              "title": "Section B How do you feel at home?"
+            },
+            {
+              "title": "Project Find out who does the most chores at home"
+            }
+          ],
+          "topics": [
+            "Unit 2 Home Sweet Home",
+            "Section A What can you do for your home?",
+            "Section B How do you feel at home?",
+            "Project Find out who does the most chores at home"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Same or Different？",
+          "children": [
+            {
+              "title": "Section A How are we different from each other?"
+            },
+            {
+              "title": "Section B How do we understand differences?"
+            },
+            {
+              "title": "Project See who changed the most"
+            }
+          ],
+          "topics": [
+            "Unit 3 Same or Different？",
+            "Section A How are we different from each other?",
+            "Section B How do we understand differences?",
+            "Project See who changed the most"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Amazing Plants and Animals",
+          "children": [
+            {
+              "title": "Section A What can plants and animals do?"
+            },
+            {
+              "title": "Section B How are plants and animals connected with us?"
+            },
+            {
+              "title": "Project Make a poster about a plant or an animal"
+            }
+          ],
+          "topics": [
+            "Unit 4 Amazing Plants and Animals",
+            "Section A What can plants and animals do?",
+            "Section B How are plants and animals connected with us?",
+            "Project Make a poster about a plant or an animal"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 What a Delicious Meal！",
+          "children": [
+            {
+              "title": "Section A How do we make food?"
+            },
+            {
+              "title": "Section B What does cooking give us?"
+            },
+            {
+              "title": "Project Create a recipe for a tasty dish"
+            }
+          ],
+          "topics": [
+            "Unit 5 What a Delicious Meal！",
+            "Section A How do we make food?",
+            "Section B What does cooking give us?",
+            "Project Create a recipe for a tasty dish"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Plan for Yourself",
+          "children": [
+            {
+              "title": "Section A When do we make plans?"
+            },
+            {
+              "title": "Section B How can we make good plans?"
+            },
+            {
+              "title": "Project Make plans for solving problems"
+            }
+          ],
+          "topics": [
+            "Unit 6 Plan for Yourself",
+            "Section A When do we make plans?",
+            "Section B How can we make good plans?",
+            "Project Make plans for solving problems"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 7 When Tomorrow Comes",
+          "children": [
+            {
+              "title": "Section A What are your predictions about the future?"
+            },
+            {
+              "title": "Section B How can we prepare for the future?"
+            },
+            {
+              "title": "Project Create a picture about the future"
+            }
+          ],
+          "topics": [
+            "Unit 7 When Tomorrow Comes",
+            "Section A What are your predictions about the future?",
+            "Section B How can we prepare for the future?",
+            "Project Create a picture about the future"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 8 Let's Communicate!",
+          "children": [
+            {
+              "title": "Section A How do we communicate?"
+            },
+            {
+              "title": "Section B How can we communicate better?"
+            },
+            {
+              "title": "Project Tell a chain story"
+            }
+          ],
+          "topics": [
+            "Unit 8 Let's Communicate!",
+            "Section A How do we communicate?",
+            "Section B How can we communicate better?",
+            "Project Tell a chain story"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "62e99b8e-395f-4977-ba8a-17b5818bc464",
+      "title": "新教材-初中英语人教版八年级下册",
+      "stage": "初中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/62e99b8e-395f-4977-ba8a-17b5818bc464.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-02-24T17:02:26.845+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Time to Relax",
+          "children": [
+            {
+              "title": "Section A How do you spend your free time?"
+            },
+            {
+              "title": "Section B How can a hobby improve your life?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 1 Time to Relax",
+            "Section A How do you spend your free time?",
+            "Section B How can a hobby improve your life?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Stay Healthy",
+          "children": [
+            {
+              "title": "Section A What should we do when we don't feel well?"
+            },
+            {
+              "title": "Section B How should we stay safe?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 2 Stay Healthy",
+            "Section A What should we do when we don't feel well?",
+            "Section B How should we stay safe?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Growing Up",
+          "children": [
+            {
+              "title": "Section A What makes you upset?"
+            },
+            {
+              "title": "Section B How can we stay positive?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 3 Growing Up",
+            "Section A What makes you upset?",
+            "Section B How can we stay positive?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 The Wonders of Nature",
+          "children": [
+            {
+              "title": "Section A What is amazing about nature?"
+            },
+            {
+              "title": "Section B Why do we explore nature?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 4 The Wonders of Nature",
+            "Section A What is amazing about nature?",
+            "Section B Why do we explore nature?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Nature's Temper",
+          "children": [
+            {
+              "title": "Section A What happens during a natural disaster?"
+            },
+            {
+              "title": "Section B What can we do to prepare for the worst?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 5 Nature's Temper",
+            "Section A What happens during a natural disaster?",
+            "Section B What can we do to prepare for the worst?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Crossing Cultures",
+          "children": [
+            {
+              "title": "Section A How different are our cultures?"
+            },
+            {
+              "title": "Section B How do we show respect to other cultures?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 6 Crossing Cultures",
+            "Section A How different are our cultures?",
+            "Section B How do we show respect to other cultures?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 7 A Good Read",
+          "children": [
+            {
+              "title": "Section A What great books have you read?"
+            },
+            {
+              "title": "Section B What can we learn from great books?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 7 A Good Read",
+            "Section A What great books have you read?",
+            "Section B What can we learn from great books?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 8 Making a Difference",
+          "children": [
+            {
+              "title": "Section A What can we do to help?"
+            },
+            {
+              "title": "Section B How does helping others make a difference?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 8 Making a Difference",
+            "Section A What can we do to help?",
+            "Section B How does helping others make a difference?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8153c612-7847-40f1-b7d6-5ee49b99ca62",
+      "title": "初中英语人教版七年级上册",
+      "stage": "初中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8153c612-7847-40f1-b7d6-5ee49b99ca62.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:47.752+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Starter Units",
+          "children": [
+            {
+              "title": "1 Good morning!",
+              "children": [
+                {
+                  "title": "1a—2e"
+                },
+                {
+                  "title": "3a—3d"
+                },
+                {
+                  "title": "4a—4d"
+                }
+              ]
+            },
+            {
+              "title": "2 What's this in English?",
+              "children": [
+                {
+                  "title": "1a—2e"
+                },
+                {
+                  "title": "3a—3e"
+                },
+                {
+                  "title": "4a—4d"
+                }
+              ]
+            },
+            {
+              "title": "3 What color is it?",
+              "children": [
+                {
+                  "title": "1a—2e"
+                },
+                {
+                  "title": "3a—3d"
+                },
+                {
+                  "title": "4a—4d"
+                }
+              ]
+            },
+            {
+              "title": "Starter Units",
+              "children": [
+                {
+                  "title": "小初衔接--初中英语怎么学？"
+                },
+                {
+                  "title": "字母A-H的正确书写以及相关音标"
+                },
+                {
+                  "title": "字母I-R的正确书写以及相关音标"
+                },
+                {
+                  "title": "字母S-Z的正确书写以及相关音标"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "Starter Units",
+            "1 Good morning!",
+            "1a—2e",
+            "3a—3d",
+            "4a—4d",
+            "2 What's this in English?",
+            "3a—3e",
+            "3 What color is it?",
+            "小初衔接--初中英语怎么学？",
+            "字母A-H的正确书写以及相关音标",
+            "字母I-R的正确书写以及相关音标",
+            "字母S-Z的正确书写以及相关音标"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 1 My name's Gina.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1f"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            },
+            {
+              "title": "Unit1 My name is Gina"
+            }
+          ],
+          "topics": [
+            "Unit 1 My name's Gina.",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1f",
+            "Section B 2a—3b Self check",
+            "Unit1 My name is Gina"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 This is my sister.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—3b Self-check"
+            },
+            {
+              "title": "Unit 2 This is my sister"
+            }
+          ],
+          "topics": [
+            "Unit 2 This is my sister.",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1d",
+            "Section B 2a—3b Self-check",
+            "Unit 2 This is my sister"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Is this your pencil?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            },
+            {
+              "title": "Unit 3 Is this your pencil"
+            }
+          ],
+          "topics": [
+            "Unit 3 Is this your pencil?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a—3b Self check",
+            "Unit 3 Is this your pencil"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Where's my schoolbag?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            },
+            {
+              "title": "Unit 4 Where's my schoolbag?"
+            }
+          ],
+          "topics": [
+            "Unit 4 Where's my schoolbag?",
+            "Section A 1a—2d",
+            "Section A Grammar focus3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "期中复习",
+          "children": [
+            {
+              "title": "期中复习指导1--情境下的词汇运用"
+            },
+            {
+              "title": "期中复习指导2--情境中的语法运用"
+            },
+            {
+              "title": "期中复习指导3--理解性能力的提升"
+            }
+          ],
+          "topics": [
+            "期中复习",
+            "期中复习指导1--情境下的词汇运用",
+            "期中复习指导2--情境中的语法运用",
+            "期中复习指导3--理解性能力的提升"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Do you have a soccer ball?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—3c Self check"
+            },
+            {
+              "title": "Unit 5 Do you have a soccer ball?"
+            }
+          ],
+          "topics": [
+            "Unit 5 Do you have a soccer ball?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1d",
+            "Section B 2a—3c Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Do you like bananas?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            },
+            {
+              "title": "Unit 6 Do you like bananas?"
+            }
+          ],
+          "topics": [
+            "Unit 6 Do you like bananas?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 7 How much are these socks?",
+          "children": [
+            {
+              "title": "Section A 1a—2e"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            },
+            {
+              "title": "Unit 7 How much are the socks?"
+            }
+          ],
+          "topics": [
+            "Unit 7 How much are these socks?",
+            "Section A 1a—2e",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a—3b Self check",
+            "Unit 7 How much are the socks?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 8 When is your birthday?",
+          "children": [
+            {
+              "title": "Section A 1a—2e"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            },
+            {
+              "title": "Unit 8 When is your birthday?"
+            }
+          ],
+          "topics": [
+            "Unit 8 When is your birthday?",
+            "Section A 1a—2e",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1d",
+            "Section B 2a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 9 My favorite subject is science.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—3c Self check"
+            },
+            {
+              "title": "Unit 9 My favorite subject is science"
+            }
+          ],
+          "topics": [
+            "Unit 9 My favorite subject is science.",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1d",
+            "Section B 2a—3c Self check",
+            "Unit 9 My favorite subject is science"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "期末复习",
+          "children": [
+            {
+              "title": "期末复习指导1--情境中的词汇运用"
+            },
+            {
+              "title": "期末复习指导2--情境中的语法运用"
+            },
+            {
+              "title": "期末复习指导3--理解性能力的提升"
+            }
+          ],
+          "topics": [
+            "期末复习",
+            "期末复习指导1--情境中的词汇运用",
+            "期末复习指导2--情境中的语法运用",
+            "期末复习指导3--理解性能力的提升"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "48345a04-f9d9-4340-88ae-e32a56f7348e",
+      "title": "初中英语人教版七年级下册",
+      "stage": "初中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/48345a04-f9d9-4340-88ae-e32a56f7348e.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:46.719+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Can you play the guitar?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1f"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 1 Can you play the guitar?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1f",
+            "Section B 2a—2c",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 What time do you go to school?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 2 What time do you go to school?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a—2c",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 How do you get to school?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 2e—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 3 How do you get to school?",
+            "Section A 1a—2d",
+            "Section A 2e—3c",
+            "Section B 1a—1e",
+            "Section B 2a—2c",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Don’t eat in class.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3c Self check"
+            }
+          ],
+          "topics": [
+            "Unit 4 Don’t eat in class.",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1d",
+            "Section B 2a—2c",
+            "Section B 3a—3c Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Why do you like pandas?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 5 Why do you like pandas?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1d",
+            "Section B 2a—2c",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 I’m watching TV.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 6 I’m watching TV.",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a—2c",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 7 It’s raining!",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3b"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3c Self check"
+            }
+          ],
+          "topics": [
+            "Unit 7 It’s raining!",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3b",
+            "Section B 1a—1e",
+            "Section B 2a—2c",
+            "Section B 3a—3c Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 8 Is there a post office near here?",
+          "children": [
+            {
+              "title": "Section A 1a—2c"
+            },
+            {
+              "title": "Section A 2d—3c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 8 Is there a post office near here?",
+            "Section A 1a—2c",
+            "Section A 2d—3c",
+            "Section B 1a—1d",
+            "Section B 2a—2c",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 9 What does he look like?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3d"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 9 What does he look like?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3d",
+            "Section B 1a—1e",
+            "Section B 2a—2c",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 10 I’d like some noodles.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3c Self check"
+            }
+          ],
+          "topics": [
+            "Unit 10 I’d like some noodles.",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1d",
+            "Section B 2a—2c",
+            "Section B 3a—3c Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 11 How was your school trip?",
+          "children": [
+            {
+              "title": "Section A 1a—2c"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3b"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3c Self check"
+            }
+          ],
+          "topics": [
+            "Unit 11 How was your school trip?",
+            "Section A 1a—2c",
+            "Section A Grammar focus 3a—3b",
+            "Section B 1a—1d",
+            "Section B 2a—2c",
+            "Section B 3a—3c Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 12 What did you do last weekend?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A Grammar focus 3a—3c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2c"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            }
+          ],
+          "topics": [
+            "Unit 12 What did you do last weekend?",
+            "Section A 1a—2d",
+            "Section A Grammar focus 3a—3c",
+            "Section B 1a—1e",
+            "Section B 2a—2c",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

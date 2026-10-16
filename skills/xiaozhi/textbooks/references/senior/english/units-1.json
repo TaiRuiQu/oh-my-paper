@@ -1,0 +1,1065 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "2ffd7e2f-d83f-45b6-9a85-f6c655861f04",
+      "title": "高中英语人教版选择性必修 第三册",
+      "stage": "高中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第三册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2ffd7e2f-d83f-45b6-9a85-f6c655861f04.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:23.808+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "UNIT 1 ART",
+          "children": [
+            {
+              "title": "1.Opening Page & Reading and Thinking"
+            },
+            {
+              "title": "2.Learning About Language (1): Vocabulary"
+            },
+            {
+              "title": "3.Learning About Language (2): Structures"
+            },
+            {
+              "title": "4.Using Language(1): Listening and Speaking"
+            },
+            {
+              "title": "5.Using Language(2): Reading and Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.＊Project"
+            },
+            {
+              "title": "8.＊Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 1 ART",
+            "1.Opening Page & Reading and Thinking",
+            "2.Learning About Language (1): Vocabulary",
+            "3.Learning About Language (2): Structures",
+            "4.Using Language(1): Listening and Speaking",
+            "5.Using Language(2): Reading and Writing",
+            "6.Assessing Your Progress",
+            "7.＊Project",
+            "8.＊Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 2 HEALTHY LIFESTYLE",
+          "children": [
+            {
+              "title": "1.Opening Page & Reading and Thinking"
+            },
+            {
+              "title": "2.Learning About Language (1): Vocabulary"
+            },
+            {
+              "title": "3.Learning About Language (2): Structures"
+            },
+            {
+              "title": "4.Using Language(1): Listening and Speaking"
+            },
+            {
+              "title": "5.Using Language(2): Reading and Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.＊Project"
+            },
+            {
+              "title": "8.＊Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 2 HEALTHY LIFESTYLE",
+            "1.Opening Page & Reading and Thinking",
+            "2.Learning About Language (1): Vocabulary",
+            "3.Learning About Language (2): Structures",
+            "4.Using Language(1): Listening and Speaking",
+            "5.Using Language(2): Reading and Writing",
+            "6.Assessing Your Progress",
+            "7.＊Project",
+            "8.＊Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 3 ENVIRONMENTAL PROTECTION",
+          "children": [
+            {
+              "title": "1.Opening Page & Reading and Thinking"
+            },
+            {
+              "title": "2.Learning About Language (1): Vocabulary"
+            },
+            {
+              "title": "3.Learning About Language (2): Structures"
+            },
+            {
+              "title": "4.Using Language(1): Listening and Speaking"
+            },
+            {
+              "title": "5.Using Language(2): Reading and Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.＊Project"
+            },
+            {
+              "title": "8.＊Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 3 ENVIRONMENTAL PROTECTION",
+            "1.Opening Page & Reading and Thinking",
+            "2.Learning About Language (1): Vocabulary",
+            "3.Learning About Language (2): Structures",
+            "4.Using Language(1): Listening and Speaking",
+            "5.Using Language(2): Reading and Writing",
+            "6.Assessing Your Progress",
+            "7.＊Project",
+            "8.＊Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 4 ADVERSITY AND COURAGE",
+          "children": [
+            {
+              "title": "1.Opening Page & Reading and Thinking"
+            },
+            {
+              "title": "2.Learning About Language (1): Vocabulary"
+            },
+            {
+              "title": "3.Learning About Language (2): Structures"
+            },
+            {
+              "title": "4.Using Language(1): Listening and Speaking"
+            },
+            {
+              "title": "5.Using Language(2): Reading and Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.＊Project"
+            },
+            {
+              "title": "8.＊Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 4 ADVERSITY AND COURAGE",
+            "1.Opening Page & Reading and Thinking",
+            "2.Learning About Language (1): Vocabulary",
+            "3.Learning About Language (2): Structures",
+            "4.Using Language(1): Listening and Speaking",
+            "5.Using Language(2): Reading and Writing",
+            "6.Assessing Your Progress",
+            "7.＊Project",
+            "8.＊Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 5 POEMS",
+          "children": [
+            {
+              "title": "1.Opening Page & Reading and Thinking"
+            },
+            {
+              "title": "2.Learning About Language (1): Vocabulary"
+            },
+            {
+              "title": "3.Learning About Language (2): Structures"
+            },
+            {
+              "title": "4.Using Language(1): Listening and Speaking"
+            },
+            {
+              "title": "5.Using Language(2): Reading and Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.＊Project"
+            },
+            {
+              "title": "8.＊Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 5 POEMS",
+            "1.Opening Page & Reading and Thinking",
+            "2.Learning About Language (1): Vocabulary",
+            "3.Learning About Language (2): Structures",
+            "4.Using Language(1): Listening and Speaking",
+            "5.Using Language(2): Reading and Writing",
+            "6.Assessing Your Progress",
+            "7.＊Project",
+            "8.＊Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "其他",
+          "children": [
+            {
+              "title": "Unit 1 Art"
+            },
+            {
+              "title": "Unit 2 Poems"
+            },
+            {
+              "title": "Unit 3 A healthy life"
+            },
+            {
+              "title": "Unit 4 Global warming"
+            }
+          ],
+          "topics": [
+            "其他",
+            "Unit 1 Art",
+            "Unit 2 Poems",
+            "Unit 3 A healthy life",
+            "Unit 4 Global warming"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "4ebdf6c8-4c90-4537-88ea-3902a6676598",
+      "title": "高中英语人教版选择性必修 第四册",
+      "stage": "高中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第四册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/4ebdf6c8-4c90-4537-88ea-3902a6676598.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-10-24T14:25:43.669+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "UNIT 1 SCIENCE FICTION",
+          "children": [
+            {
+              "title": "1.Opening Page & Reading and Thinking"
+            },
+            {
+              "title": "2.Learning About Language (1): Vocabulary"
+            },
+            {
+              "title": "3.Learning About Language (2): Structures"
+            },
+            {
+              "title": "4.Using Language(1): Listening and Speaking"
+            },
+            {
+              "title": "5.Using Language(2): Reading and Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.*Project"
+            },
+            {
+              "title": "8.*Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 1 SCIENCE FICTION",
+            "1.Opening Page & Reading and Thinking",
+            "2.Learning About Language (1): Vocabulary",
+            "3.Learning About Language (2): Structures",
+            "4.Using Language(1): Listening and Speaking",
+            "5.Using Language(2): Reading and Writing",
+            "6.Assessing Your Progress",
+            "7.*Project",
+            "8.*Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 2 ICONIC ATTRACTIONS",
+          "children": [
+            {
+              "title": "1.Opening Page & Reading and Thinking"
+            },
+            {
+              "title": "2.Learning About Language (1): Vocabulary"
+            },
+            {
+              "title": "3.Learning About Language (2): Structures"
+            },
+            {
+              "title": "4.Using Language(1): Listening and Speaking"
+            },
+            {
+              "title": "5.Using Language(2): Reading and Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.*Project"
+            },
+            {
+              "title": "8.*Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 2 ICONIC ATTRACTIONS",
+            "1.Opening Page & Reading and Thinking",
+            "2.Learning About Language (1): Vocabulary",
+            "3.Learning About Language (2): Structures",
+            "4.Using Language(1): Listening and Speaking",
+            "5.Using Language(2): Reading and Writing",
+            "6.Assessing Your Progress",
+            "7.*Project",
+            "8.*Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 3 SEA EXPLORATION",
+          "children": [
+            {
+              "title": "1.Opening Page & Reading and Thinking"
+            },
+            {
+              "title": "2.Learning About Language (1): Vocabulary"
+            },
+            {
+              "title": "3.Learning About Language (2): Structures"
+            },
+            {
+              "title": "4.Using Language(1): Listening and Speaking"
+            },
+            {
+              "title": "5.Using Language(2): Reading and Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.*Project"
+            },
+            {
+              "title": "8.*Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 3 SEA EXPLORATION",
+            "1.Opening Page & Reading and Thinking",
+            "2.Learning About Language (1): Vocabulary",
+            "3.Learning About Language (2): Structures",
+            "4.Using Language(1): Listening and Speaking",
+            "5.Using Language(2): Reading and Writing",
+            "6.Assessing Your Progress",
+            "7.*Project",
+            "8.*Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 4 SHARING",
+          "children": [
+            {
+              "title": "1.Opening Page & Reading and Thinking"
+            },
+            {
+              "title": "2.Learning About Language (1): Vocabulary"
+            },
+            {
+              "title": "3.Learning About Language (2): Structures"
+            },
+            {
+              "title": "4.Using Language(1): Listening and Speaking"
+            },
+            {
+              "title": "5.Using Language(2): Reading and Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.*Project"
+            },
+            {
+              "title": "8.*Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 4 SHARING",
+            "1.Opening Page & Reading and Thinking",
+            "2.Learning About Language (1): Vocabulary",
+            "3.Learning About Language (2): Structures",
+            "4.Using Language(1): Listening and Speaking",
+            "5.Using Language(2): Reading and Writing",
+            "6.Assessing Your Progress",
+            "7.*Project",
+            "8.*Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 5 LAUNCHING YOUR CAREER",
+          "children": [
+            {
+              "title": "1.Opening Page & Reading and Thinking"
+            },
+            {
+              "title": "2.Learning About Language (1): Vocabulary"
+            },
+            {
+              "title": "3.Learning About Language (2): Structures"
+            },
+            {
+              "title": "4.Using Language(1): Listening and Speaking"
+            },
+            {
+              "title": "5.Using Language(2): Reading and Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.*Project"
+            },
+            {
+              "title": "8.*Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 5 LAUNCHING YOUR CAREER",
+            "1.Opening Page & Reading and Thinking",
+            "2.Learning About Language (1): Vocabulary",
+            "3.Learning About Language (2): Structures",
+            "4.Using Language(1): Listening and Speaking",
+            "5.Using Language(2): Reading and Writing",
+            "6.Assessing Your Progress",
+            "7.*Project",
+            "8.*Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "高考英语复习",
+          "children": [
+            {
+              "title": "概述+完形填空解题策略"
+            },
+            {
+              "title": "阅读理解解题策略"
+            },
+            {
+              "title": "七选五解题策略"
+            },
+            {
+              "title": "写作解题策略—提高篇"
+            },
+            {
+              "title": "写作解题策略—基础篇"
+            },
+            {
+              "title": "高考英语复习（一）"
+            },
+            {
+              "title": "高考英语复习（二）"
+            },
+            {
+              "title": "高考英语复习（三）"
+            },
+            {
+              "title": "高考英语复习（四）"
+            },
+            {
+              "title": "高考英语复习（五）"
+            },
+            {
+              "title": "高考英语复习（六）"
+            },
+            {
+              "title": "厘清六大关系科学复习迎考"
+            },
+            {
+              "title": "科学安排考试时间答题顺序总体备考策略"
+            },
+            {
+              "title": "逆向思维看完形填空语篇填空和短文改错"
+            },
+            {
+              "title": "书面表达高分策略"
+            },
+            {
+              "title": "几招修改作文方法助你提高作文成绩"
+            },
+            {
+              "title": "系统复习句法提高表达能力"
+            },
+            {
+              "title": "运用范畴理论提高理解能力——基于说明文阅读"
+            }
+          ],
+          "topics": [
+            "高考英语复习",
+            "概述+完形填空解题策略",
+            "阅读理解解题策略",
+            "七选五解题策略",
+            "写作解题策略—提高篇",
+            "写作解题策略—基础篇",
+            "高考英语复习（一）",
+            "高考英语复习（二）",
+            "高考英语复习（三）",
+            "高考英语复习（四）",
+            "高考英语复习（五）",
+            "高考英语复习（六）",
+            "厘清六大关系科学复习迎考",
+            "科学安排考试时间答题顺序总体备考策略",
+            "逆向思维看完形填空语篇填空和短文改错",
+            "书面表达高分策略",
+            "几招修改作文方法助你提高作文成绩",
+            "系统复习句法提高表达能力",
+            "运用范畴理论提高理解能力——基于说明文阅读"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "其他",
+          "children": [
+            {
+              "title": "Unit 2 Robots"
+            },
+            {
+              "title": "Unit 3 Under the sea"
+            },
+            {
+              "title": "Unit 4 Sharing"
+            }
+          ],
+          "topics": ["其他", "Unit 2 Robots", "Unit 3 Under the sea", "Unit 4 Sharing"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "9b661b42-54bc-48c5-9b03-21a03c78176f",
+      "title": "高中英语人教版高一必修 第一册",
+      "stage": "高中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/9b661b42-54bc-48c5-9b03-21a03c78176f.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:20.901+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "WELCOME UNIT",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Listening and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Building Up Your Vocabulary"
+            }
+          ],
+          "topics": [
+            "WELCOME UNIT",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Listening and Talking",
+            "5.Reading for Writing",
+            "6.Building Up Your Vocabulary"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 1 TEENAGE LIFE",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Listening and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.*Project"
+            },
+            {
+              "title": "8.*Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 1 TEENAGE LIFE",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Listening and Talking",
+            "5.Reading for Writing",
+            "6.Assessing Your Progress",
+            "7.*Project",
+            "8.*Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 2 TRAVELLING AROUND",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Listening and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.*Project"
+            },
+            {
+              "title": "8.*Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 2 TRAVELLING AROUND",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Listening and Talking",
+            "5.Reading for Writing",
+            "6.Assessing Your Progress",
+            "7.*Project",
+            "8.*Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 3 SPORTS AND FITNESS",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Listening and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.*Project"
+            },
+            {
+              "title": "8.*Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 3 SPORTS AND FITNESS",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Listening and Talking",
+            "5.Reading for Writing",
+            "6.Assessing Your Progress",
+            "7.*Project",
+            "8.*Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 4 NATURAL DISASTERS",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Listening and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.*Project"
+            },
+            {
+              "title": "8.*Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 4 NATURAL DISASTERS",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Listening and Talking",
+            "5.Reading for Writing",
+            "6.Assessing Your Progress",
+            "7.*Project",
+            "8.*Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 5 LANGUAGES AROUND THE WORLD",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Listening and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.*Project"
+            },
+            {
+              "title": "8.*Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 5 LANGUAGES AROUND THE WORLD",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Listening and Talking",
+            "5.Reading for Writing",
+            "6.Assessing Your Progress",
+            "7.*Project",
+            "8.*Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "其他",
+          "children": [
+            {
+              "title": "Unit 5 Travelling abroad"
+            },
+            {
+              "title": "Unit 5 The power of nature"
+            }
+          ],
+          "topics": ["其他", "Unit 5 Travelling abroad", "Unit 5 The power of nature"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "75399b4d-e3e1-4dfa-8f53-39abb8fb0a7a",
+      "title": "高中英语人教版高一必修 第三册",
+      "stage": "高中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 第三册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/75399b4d-e3e1-4dfa-8f53-39abb8fb0a7a.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:38.517+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "UNIT 1 FESTIVALS AND CELEBRATIONS",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Listening and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.＊Project"
+            },
+            {
+              "title": "8.＊Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 1 FESTIVALS AND CELEBRATIONS",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Listening and Talking",
+            "5.Reading for Writing",
+            "6.Assessing Your Progress",
+            "7.＊Project",
+            "8.＊Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 2 MORALS AND VIRTUES",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Listening and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.＊Project"
+            },
+            {
+              "title": "8.＊Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 2 MORALS AND VIRTUES",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Listening and Talking",
+            "5.Reading for Writing",
+            "6.Assessing Your Progress",
+            "7.＊Project",
+            "8.＊Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 3 DIVERSE CULTURES",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Listening and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.＊Project"
+            },
+            {
+              "title": "8.＊Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 3 DIVERSE CULTURES",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Listening and Talking",
+            "5.Reading for Writing",
+            "6.Assessing Your Progress",
+            "7.＊Project",
+            "8.＊Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 4 SPACE EXPLORATION",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Listening and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.＊Project"
+            },
+            {
+              "title": "8.＊Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 4 SPACE EXPLORATION",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Listening and Talking",
+            "5.Reading for Writing",
+            "6.Assessing Your Progress",
+            "7.＊Project",
+            "8.＊Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "UNIT 5 THE VALUE OF MONEY",
+          "children": [
+            {
+              "title": "1.Opening Page & Listening and Speaking（Pronunciation)"
+            },
+            {
+              "title": "2.Reading and Thinking"
+            },
+            {
+              "title": "3.Discovering Useful Structures"
+            },
+            {
+              "title": "4.Viewing and Talking"
+            },
+            {
+              "title": "5.Reading for Writing"
+            },
+            {
+              "title": "6.Assessing Your Progress"
+            },
+            {
+              "title": "7.＊Project"
+            },
+            {
+              "title": "8.＊Video Time"
+            }
+          ],
+          "topics": [
+            "UNIT 5 THE VALUE OF MONEY",
+            "1.Opening Page & Listening and Speaking（Pronunciation)",
+            "2.Reading and Thinking",
+            "3.Discovering Useful Structures",
+            "4.Viewing and Talking",
+            "5.Reading for Writing",
+            "6.Assessing Your Progress",
+            "7.＊Project",
+            "8.＊Video Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

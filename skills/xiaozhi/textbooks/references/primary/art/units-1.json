@@ -1,0 +1,1165 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "d8672d52-569b-6dd3-05f8-21eaecfbdeff",
+      "title": "小学美术人教版五年级下册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/d8672d52-569b-6dd3-05f8-21eaecfbdeff.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:00.958+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 形的魅力",
+          "topics": ["形的魅力"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 形体的组合",
+          "topics": ["形体的组合"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 抽象的雕塑",
+          "topics": ["抽象的雕塑"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 学构图",
+          "topics": ["学构图"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 静物写生",
+          "topics": ["静物写生"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 喜怒哀乐",
+          "topics": ["喜怒哀乐"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 夸张的脸",
+          "topics": ["夸张的脸"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 神奇的肥皂粉",
+          "topics": ["神奇的肥皂粉"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 写意蔬果",
+          "topics": ["写意蔬果"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 写意动物",
+          "topics": ["写意动物"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 学画松树",
+          "topics": ["学画松树"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 十二生肖",
+          "topics": ["十二生肖"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 风筝的魅力",
+          "topics": ["风筝的魅力"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 微观世界",
+          "topics": ["微观世界"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 会亮的玩具",
+          "topics": ["会亮的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 小布偶",
+          "topics": ["小布偶"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 电脑美术——对称图形",
+          "topics": ["电脑美术——对称图形"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 旅游节",
+          "topics": ["旅游节"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第19课 舞台上的布景",
+          "topics": ["舞台上的布景"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第20课 珍爱国宝——古代的青铜艺术",
+          "topics": ["珍爱国宝——古代的青铜艺术"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "fa635bd1-d75d-7994-4483-a587df6ff673",
+      "title": "小学美术人教版六年级下册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/fa635bd1-d75d-7994-4483-a587df6ff673.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:26.315+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 明暗与立体",
+          "topics": ["明暗与立体"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 寻找美的踪迹",
+          "topics": ["寻找美的踪迹"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 记录色彩",
+          "topics": ["记录色彩"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 雕与刻的乐趣",
+          "topics": ["雕与刻的乐趣"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 浮雕",
+          "topics": ["浮雕"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 扇面画",
+          "topics": ["扇面画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 工笔花卉",
+          "topics": ["工笔花卉"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 我设计的服装",
+          "topics": ["我设计的服装"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 图文并茂",
+          "topics": ["图文并茂"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 宇宙之旅",
+          "topics": ["宇宙之旅"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 奥运精神",
+          "topics": ["奥运精神"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 二十年后的学校",
+          "topics": ["二十年后的学校"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 毕业啦",
+          "topics": ["毕业啦"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 电脑美术──电子报",
+          "topics": ["电脑美术──电子报"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 我国古代建筑艺术",
+          "topics": ["我国古代建筑艺术"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8c944335-a7b8-63c6-3d2d-db6d7ebf9286",
+      "title": "小学美术人教版四年级下册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8c944335-a7b8-63c6-3d2d-db6d7ebf9286.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:09.082+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第1课 聚聚散散",
+          "topics": ["聚聚散散"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第2课 点的魅力",
+          "topics": ["点的魅力"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第3课 “五谷”作画",
+          "topics": ["“五谷”作画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第4课 主体与背景",
+          "topics": ["主体与背景"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第5课 色彩的明与暗",
+          "topics": ["色彩的明与暗"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第6课 色彩的渐变",
+          "topics": ["色彩的渐变"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第7课 色彩的情感",
+          "topics": ["色彩的情感"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第8课 我画的动漫形象",
+          "topics": ["我画的动漫形象"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第9课 对称的美",
+          "topics": ["对称的美"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第10课 那一刻的我",
+          "topics": ["那一刻的我"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第11课 走进春天",
+          "topics": ["走进春天"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第12课 平凡的美",
+          "topics": ["平凡的美"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第13课 吹塑纸版画",
+          "topics": ["吹塑纸版画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第14课 藏书票",
+          "topics": ["藏书票"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第15课 设计文化衫",
+          "topics": ["设计文化衫"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第16课 千姿百态的帽子",
+          "topics": ["千姿百态的帽子"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第17课 会游的玩具",
+          "topics": ["会游的玩具"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第18课 电脑美术──“笔刷”画画",
+          "topics": ["电脑美术──“笔刷”画画"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第19课 光的魅力",
+          "topics": ["光的魅力"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第20课 珍爱国宝──秦始皇陵及秦兵马俑",
+          "topics": ["珍爱国宝──秦始皇陵及秦兵马俑"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "b5a5dc76-87b6-44ae-857e-d2c9f0118ca5",
+      "title": "新教材-小学艺术·美术人教版一年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/b5a5dc76-87b6-44ae-857e-d2c9f0118ca5.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:18:48.183+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 龙的传人",
+          "children": [
+            {
+              "title": "第1课 我的名字"
+            },
+            {
+              "title": "第2课 生肖大家庭"
+            },
+            {
+              "title": "第3课 龙的故事"
+            },
+            {
+              "title": "第4课 灵动的龙"
+            },
+            {
+              "title": "第5课 中秋月儿圆"
+            }
+          ],
+          "topics": ["龙的传人", "我的名字", "生肖大家庭", "龙的故事", "灵动的龙", "中秋月儿圆"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 奉献最美",
+          "children": [
+            {
+              "title": "第1课 落叶去哪儿了"
+            },
+            {
+              "title": "第2课 勤劳的蚕宝宝"
+            },
+            {
+              "title": "第3课 寸草心"
+            }
+          ],
+          "topics": ["奉献最美", "落叶去哪儿了", "勤劳的蚕宝宝", "寸草心"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 成长足迹",
+          "children": [
+            {
+              "title": "第1课 新龟兔赛跑"
+            },
+            {
+              "title": "第2课 蜗牛的坚持"
+            },
+            {
+              "title": "第3课 看我七十二变"
+            }
+          ],
+          "topics": ["成长足迹", "新龟兔赛跑", "蜗牛的坚持", "看我七十二变"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 我的祖国",
+          "children": [
+            {
+              "title": "第1课 红星闪闪"
+            },
+            {
+              "title": "第2课 时光记忆"
+            },
+            {
+              "title": "第3课 山河新貌"
+            },
+            {
+              "title": "第4课 星辰大海"
+            }
+          ],
+          "topics": ["我的祖国", "红星闪闪", "时光记忆", "山河新貌", "星辰大海"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "6c1e32a7-6649-4d88-9819-1fcf9ebd793e",
+      "title": "新教材-小学·艺术·美术人教版一年级下册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/6c1e32a7-6649-4d88-9819-1fcf9ebd793e.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:19:28.954+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 大地母亲",
+          "children": [
+            {
+              "title": "第 1 课 春天在哪里"
+            },
+            {
+              "title": "第 2 课 春天的使者"
+            },
+            {
+              "title": "第 3 课 大地的肌理"
+            },
+            {
+              "title": "第 4 课 自然的馈赠"
+            }
+          ],
+          "topics": [
+            "大地母亲",
+            "第 1 课 春天在哪里",
+            "第 2 课 春天的使者",
+            "第 3 课 大地的肌理",
+            "第 4 课 自然的馈赠"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 时空印迹",
+          "children": [
+            {
+              "title": "第 1 课 远古的信息"
+            },
+            {
+              "title": "第 2 课 前人的巧思"
+            },
+            {
+              "title": "第 3 课 文物修复师"
+            },
+            {
+              "title": "第 4 课 丝路的故事"
+            }
+          ],
+          "topics": [
+            "时空印迹",
+            "第 1 课 远古的信息",
+            "第 2 课 前人的巧思",
+            "第 3 课 文物修复师",
+            "第 4 课 丝路的故事"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 身边的人",
+          "children": [
+            {
+              "title": "第 1 课 致敬平凡"
+            },
+            {
+              "title": "第 2 课 守护生命"
+            },
+            {
+              "title": "第 3 课 创造奇迹"
+            }
+          ],
+          "topics": ["身边的人", "第 1 课 致敬平凡", "第 2 课 守护生命", "第 3 课 创造奇迹"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 家的故事",
+          "children": [
+            {
+              "title": "第 1 课 走进旧时光"
+            },
+            {
+              "title": "第 2 课 难忘的童年"
+            },
+            {
+              "title": "第 3 课 家乡变化大"
+            }
+          ],
+          "topics": ["家的故事", "第 1 课 走进旧时光", "第 2 课 难忘的童年", "第 3 课 家乡变化大"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "cb68058a-adb5-48be-8025-68498a08bae4",
+      "title": "新教材-小学艺术·美术人教版三年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/cb68058a-adb5-48be-8025-68498a08bae4.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:24:29.533+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 童年生活—美术作品欣赏",
+          "children": [
+            {
+              "title": "第 1 课 童年艺趣"
+            },
+            {
+              "title": "第 2 课 童真时光"
+            },
+            {
+              "title": "第 3 课 定格纯真"
+            }
+          ],
+          "topics": [
+            "童年生活—美术作品欣赏",
+            "第 1 课 童年艺趣",
+            "第 2 课 童真时光",
+            "第 3 课 定格纯真"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我和家人—学画人物画",
+          "children": [
+            {
+              "title": "第 1 课 表情变变变"
+            },
+            {
+              "title": "第 2 课 其乐融融"
+            },
+            {
+              "title": "第 3 课 幸福一家亲"
+            }
+          ],
+          "topics": [
+            "我和家人—学画人物画",
+            "第 1 课 表情变变变",
+            "第 2 课 其乐融融",
+            "第 3 课 幸福一家亲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 爱集体 爱劳动—传承中华美德",
+          "children": [
+            {
+              "title": "第 1 课 班级的姓氏"
+            },
+            {
+              "title": "第 2 课 我们爱劳动"
+            },
+            {
+              "title": "第 3 课 劳作之美"
+            }
+          ],
+          "topics": [
+            "爱集体 爱劳动—传承中华美德",
+            "第 1 课 班级的姓氏",
+            "第 2 课 我们爱劳动",
+            "第 3 课 劳作之美"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 走进儿童剧—表演儿童剧",
+          "children": [
+            {
+              "title": "第 1 课 我们的舞台"
+            },
+            {
+              "title": "第 2 课 走进儿童剧"
+            }
+          ],
+          "topics": ["走进儿童剧—表演儿童剧", "第 1 课 我们的舞台", "第 2 课 走进儿童剧"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "e67f6580-a675-4aab-8872-b2193e4cb0d3",
+      "title": "新教材-小学艺术·美术人教版三年级下册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/e67f6580-a675-4aab-8872-b2193e4cb0d3.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:24:44.580+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 陶器世界——彩陶艺术欣赏",
+          "children": [
+            {
+              "title": "第1课 水火土的猜想"
+            },
+            {
+              "title": "第2课 陶器上的纹样"
+            },
+            {
+              "title": "第3课 母亲河的彩陶"
+            }
+          ],
+          "topics": ["陶器世界——彩陶艺术欣赏", "水火土的猜想", "陶器上的纹样", "母亲河的彩陶"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 继往开来——学习制陶工艺",
+          "children": [
+            {
+              "title": "第1课 永恒的记忆"
+            },
+            {
+              "title": "第2课 红色的烙印"
+            },
+            {
+              "title": "第3课 胜利的号角"
+            }
+          ],
+          "topics": ["继往开来——学习制陶工艺", "永恒的记忆", "红色的烙印", "胜利的号角"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 童年趣事一一表现人物动态",
+          "children": [
+            {
+              "title": "第1课 皮影的生命力"
+            },
+            {
+              "title": "第2课 印痕里的时光"
+            },
+            {
+              "title": "第3课 我运动我快乐"
+            }
+          ],
+          "topics": ["童年趣事一一表现人物动态", "皮影的生命力", "印痕里的时光", "我运动我快乐"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 饮食健康一一将数据可视化",
+          "children": [
+            {
+              "title": "第1课 健康数据图像化"
+            },
+            {
+              "title": "第2课 食物成分形象化"
+            },
+            {
+              "title": "第3课 营养搭配可视化"
+            }
+          ],
+          "topics": [
+            "饮食健康一一将数据可视化",
+            "健康数据图像化",
+            "食物成分形象化",
+            "营养搭配可视化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "f7429b40-5a5a-45ac-b25a-ee19fe861de7",
+      "title": "新教材-小学艺术·美术人教版二年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/f7429b40-5a5a-45ac-b25a-ee19fe861de7.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:23:13.781+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 身边的自然",
+          "children": [
+            {
+              "title": "第 1 课 树叶的“血管”"
+            },
+            {
+              "title": "第 2 课 拼摆的乐趣"
+            },
+            {
+              "title": "第 3 课 与风做朋友"
+            },
+            {
+              "title": "第 4 课 吹皱的水波"
+            }
+          ],
+          "topics": [
+            "身边的自然",
+            "第 1 课 树叶的“血管”",
+            "第 2 课 拼摆的乐趣",
+            "第 3 课 与风做朋友",
+            "第 4 课 吹皱的水波"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 爱我家园",
+          "children": [
+            {
+              "title": "第 1 课 多样的窗"
+            },
+            {
+              "title": "第 2 课 独特的建筑"
+            },
+            {
+              "title": "第 3 课 校园小导游"
+            },
+            {
+              "title": "第 4 课 回家路上"
+            }
+          ],
+          "topics": [
+            "爱我家园",
+            "第 1 课 多样的窗",
+            "第 2 课 独特的建筑",
+            "第 3 课 校园小导游",
+            "第 4 课 回家路上"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 我是小工匠",
+          "children": [
+            {
+              "title": "第 1 课 有序地缠绕"
+            },
+            {
+              "title": "第 2 课 声音的秘密"
+            },
+            {
+              "title": "第 3 课 玩具的巧思"
+            },
+            {
+              "title": "第 4 课 稳稳当当"
+            }
+          ],
+          "topics": [
+            "我是小工匠",
+            "第 1 课 有序地缠绕",
+            "第 2 课 声音的秘密",
+            "第 3 课 玩具的巧思",
+            "第 4 课 稳稳当当"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 寻找年味儿",
+          "children": [
+            {
+              "title": "第 1 课 指尖撕撕乐"
+            },
+            {
+              "title": "第 2 课 窗头春意浓"
+            },
+            {
+              "title": "第 3 课 福叠绵绵意"
+            },
+            {
+              "title": "第 4 课 福气满满"
+            }
+          ],
+          "topics": [
+            "寻找年味儿",
+            "第 1 课 指尖撕撕乐",
+            "第 2 课 窗头春意浓",
+            "第 3 课 福叠绵绵意",
+            "第 4 课 福气满满"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "fea369ef-da9e-4260-8cba-10046a1a697e",
+      "title": "新教材-小学艺术·美术人教版二年级下册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/fea369ef-da9e-4260-8cba-10046a1a697e.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:24:09.046+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 我们的游戏",
+          "children": [
+            {
+              "title": "第1课 孩童时光"
+            },
+            {
+              "title": "第2课 玩转季节色"
+            },
+            {
+              "title": "第3课 指尖植物园"
+            },
+            {
+              "title": "第4课 纸偶奇遇记"
+            }
+          ],
+          "topics": ["我们的游戏", "孩童时光", "玩转季节色", "指尖植物园", "纸偶奇遇记"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元人类的朋友",
+          "children": [
+            {
+              "title": "第1课 天然的形态"
+            },
+            {
+              "title": "第2课 丰富的肌理"
+            },
+            {
+              "title": "第3课 斑斓的色彩"
+            },
+            {
+              "title": "第4课 不息的生命"
+            }
+          ],
+          "topics": ["人类的朋友", "天然的形态", "丰富的肌理", "斑斓的色彩", "不息的生命"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 我们的约定",
+          "children": [
+            {
+              "title": "第1课 我的小承诺"
+            },
+            {
+              "title": "第2课 我们是朋友"
+            },
+            {
+              "title": "第3课 大海的约定"
+            },
+            {
+              "title": "第4课 我们在一起"
+            }
+          ],
+          "topics": ["我们的约定", "我的小承诺", "我们是朋友", "大海的约定", "我们在一起"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 长大以后",
+          "children": [
+            {
+              "title": "第1课 观察小能手"
+            },
+            {
+              "title": "第2课 百变制作家"
+            },
+            {
+              "title": "第3课 设计小名师"
+            },
+            {
+              "title": "第4课 伙伴同成长"
+            }
+          ],
+          "topics": ["长大以后", "观察小能手", "百变制作家", "设计小名师", "伙伴同成长"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "73b16e5b-da17-419c-88e4-15824649e62d",
+      "title": "新教材-小学艺术·美术人教版五年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/73b16e5b-da17-419c-88e4-15824649e62d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:26:47.110+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 汉字传情——书法篆刻赏析",
+          "children": [
+            {
+              "title": "第1课 汉字的魅力"
+            },
+            {
+              "title": "第2课 金石方寸间"
+            },
+            {
+              "title": "第3课 云中锦书来"
+            }
+          ],
+          "topics": ["汉字传情——书法篆刻赏析", "汉字的魅力", "金石方寸间", "云中锦书来"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 书画同源——书画艺术初探",
+          "children": [
+            {
+              "title": "第1课 传情达意的汉字"
+            },
+            {
+              "title": "第2课 方寸之间有天地"
+            },
+            {
+              "title": "第3课 托物言志水墨画"
+            }
+          ],
+          "topics": [
+            "书画同源——书画艺术初探",
+            "传情达意的汉字",
+            "方寸之间有天地",
+            "托物言志水墨画"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 畅游书海——体验书籍设计",
+          "children": [
+            {
+              "title": "第1课 书籍印刷与设计"
+            },
+            {
+              "title": "第2课 学习制作连环画"
+            },
+            {
+              "title": "第3课 学习制作立体书"
+            }
+          ],
+          "topics": [
+            "畅游书海——体验书籍设计",
+            "书籍印刷与设计",
+            "学习制作连环画",
+            "学习制作立体书"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 数字时代——探索数字媒体艺术",
+          "children": [
+            {
+              "title": "第1课 数字表情"
+            },
+            {
+              "title": "第2课 数字美术"
+            }
+          ],
+          "topics": ["数字时代——探索数字媒体艺术", "数字表情", "数字美术"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "2c0bc2e8-8712-4c35-96da-dbb59dc45a69",
+      "title": "新教材-小学艺术·美术人教版六年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2c0bc2e8-8712-4c35-96da-dbb59dc45a69.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:28:05.605+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 艺术殿堂——博物馆之旅",
+          "children": [
+            {
+              "title": "第1课 走进博物馆"
+            },
+            {
+              "title": "第2课 偶然的发现"
+            },
+            {
+              "title": "第3课 丝路开繁花"
+            }
+          ],
+          "topics": ["艺术殿堂——博物馆之旅", "走进博物馆", "偶然的发现", "丝路开繁花"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 校园文化——美化与改造",
+          "children": [
+            {
+              "title": "第1课 徽章设计"
+            },
+            {
+              "title": "第2课 形象设计"
+            },
+            {
+              "title": "第3课 环境改造"
+            }
+          ],
+          "topics": ["校园文化——美化与改造", "徽章设计", "形象设计", "环境改造"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 和而不同——山水画与风景画",
+          "children": [
+            {
+              "title": "第1课 理想的胜境"
+            },
+            {
+              "title": "第2课 独特的景色"
+            },
+            {
+              "title": "第3课 流动的色彩"
+            }
+          ],
+          "topics": ["和而不同——山水画与风景画", "理想的胜境", "独特的景色", "流动的色彩"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 记录生活——微电影摄制",
+          "children": [
+            {
+              "title": "第1课 影片筹拍"
+            },
+            {
+              "title": "第2课 拍摄剪辑"
+            }
+          ],
+          "topics": ["记录生活——微电影摄制", "影片筹拍", "拍摄剪辑"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "bc05f92d-f3a5-4256-83af-506d6a5b343c",
+      "title": "新教材-小学艺术·美术人教版四年级上册",
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/bc05f92d-f3a5-4256-83af-506d6a5b343c.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:26:05.274+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 中华瑰宝——古代青铜艺术",
+          "children": [
+            {
+              "title": "第1课 初识青铜器"
+            },
+            {
+              "title": "第2课 三星堆遐想"
+            },
+            {
+              "title": "第3课 青铜蕴巧思"
+            }
+          ],
+          "topics": ["中华瑰宝——古代青铜艺术", "初识青铜器", "三星堆遐想", "青铜蕴巧思"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 动物伙伴——水墨动物画",
+          "children": [
+            {
+              "title": "第1课 群鱼戏清波"
+            },
+            {
+              "title": "第2课 处处闻啼鸟"
+            },
+            {
+              "title": "第3课 小犬喜人归"
+            }
+          ],
+          "topics": ["动物伙伴——水墨动物画", "群鱼戏清波", "处处闻啼鸟", "小犬喜人归"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 时空旅行——交通工具设计",
+          "children": [
+            {
+              "title": "第1课 创意自行车"
+            },
+            {
+              "title": "第2课 未来交通"
+            },
+            {
+              "title": "第3课 星际旅行"
+            }
+          ],
+          "topics": ["时空旅行——交通工具设计", "创意自行车", "未来交通", "星际旅行"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 物尽其用——废旧物变艺术",
+          "children": [
+            {
+              "title": "第1课 旧物变新颜"
+            },
+            {
+              "title": "第2课 环保小精灵"
+            }
+          ],
+          "topics": ["物尽其用——废旧物变艺术", "旧物变新颜", "环保小精灵"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

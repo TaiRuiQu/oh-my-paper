@@ -1,0 +1,1237 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "57e82dcb-941b-4edb-86d0-073d9ab2b035",
+      "title": "初中英语人教版九年级全一册",
+      "stage": "初中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/57e82dcb-941b-4edb-86d0-073d9ab2b035.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:58.561+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 How can we become good learners?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3b"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            },
+            {
+              "title": "Unit 1 How can we become good learners？"
+            }
+          ],
+          "topics": [
+            "Unit 1 How can we become good learners?",
+            "Section A 1a—2d",
+            "Section A 3a—3b",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—3b Self check",
+            "Unit 1 How can we become good learners？"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 I think that mooncakes are delicious!",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            },
+            {
+              "title": "Unit 2 I think that mooncakes are delicious."
+            }
+          ],
+          "topics": [
+            "Unit 2 I think that mooncakes are delicious!",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—3b Self check",
+            "Unit 2 I think that mooncakes are delicious."
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Could you please tell me where the restrooms are?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3b"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—3b Self check"
+            },
+            {
+              "title": "Unit 3 Could you please tell me where the restrooms are?"
+            }
+          ],
+          "topics": [
+            "Unit 3 Could you please tell me where the restrooms are?",
+            "Section A 1a—2d",
+            "Section A 3a—3b",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 I used to be afraid of the dark.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2f"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 4 I used to be afraid of the dark."
+            }
+          ],
+          "topics": [
+            "Unit 4 I used to be afraid of the dark.",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—2f",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 What are the shirts made of?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 5 What are the shirts made of？"
+            }
+          ],
+          "topics": [
+            "Unit 5 What are the shirts made of?",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check",
+            "Unit 5 What are the shirts made of？"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 When was it invented?",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 6 When was it invented?"
+            }
+          ],
+          "topics": [
+            "Unit 6 When was it invented?",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 7 Teenagers should be allowed to choose their own clothes.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 7 Teenagers should be allowed to choose their own clothes."
+            }
+          ],
+          "topics": [
+            "Unit 7 Teenagers should be allowed to choose their own clothes.",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 8 It must belong to Carla.",
+          "children": [
+            {
+              "title": "Section A 1a—1c"
+            },
+            {
+              "title": "Section A 2a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 8 It must belong to Carla."
+            }
+          ],
+          "topics": [
+            "Unit 8 It must belong to Carla.",
+            "Section A 1a—1c",
+            "Section A 2a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 9 I like music that I can dance to.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 9 I like music that I can dance to."
+            }
+          ],
+          "topics": [
+            "Unit 9 I like music that I can dance to.",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 10 You are supposed to shake hands.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1d"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 10 You're supposed to shake hands."
+            }
+          ],
+          "topics": [
+            "Unit 10 You are supposed to shake hands.",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1d",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check",
+            "Unit 10 You're supposed to shake hands."
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 11 Sad movies made me cry.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4b"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 11 Sad movies make me cry."
+            }
+          ],
+          "topics": [
+            "Unit 11 Sad movies made me cry.",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4b",
+            "Section B 1a—1e",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check",
+            "Unit 11 Sad movies make me cry."
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 12 Life is full of the unexpected.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 12 Life is full of the unexpected."
+            }
+          ],
+          "topics": [
+            "Unit 12 Life is full of the unexpected.",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 13 We're trying to save the earth!",
+          "children": [
+            {
+              "title": "Section A 1a—1c"
+            },
+            {
+              "title": "Section A 2a—2d"
+            },
+            {
+              "title": "Section A 3a—3b"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4c"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 13 We're trying to save the earth."
+            }
+          ],
+          "topics": [
+            "Unit 13 We're trying to save the earth!",
+            "Section A 1a—1c",
+            "Section A 2a—2d",
+            "Section A 3a—3b",
+            "Section A Grammar focus 4a—4c",
+            "Section B 1a—1e",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check",
+            "Unit 13 We're trying to save the earth."
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 14 I remember meeting all of you in Grade 7.",
+          "children": [
+            {
+              "title": "Section A 1a—2d"
+            },
+            {
+              "title": "Section A 3a—3c"
+            },
+            {
+              "title": "Section A Grammar focus 4a—4b"
+            },
+            {
+              "title": "Section B 1a—1e"
+            },
+            {
+              "title": "Section B 2a—2e"
+            },
+            {
+              "title": "Section B 3a—3b Self check"
+            },
+            {
+              "title": "Unit 14 I remember meeting all of you in Grade 7."
+            }
+          ],
+          "topics": [
+            "Unit 14 I remember meeting all of you in Grade 7.",
+            "Section A 1a—2d",
+            "Section A 3a—3c",
+            "Section A Grammar focus 4a—4b",
+            "Section B 1a—1e",
+            "Section B 2a—2e",
+            "Section B 3a—3b Self check"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "中考复习",
+          "children": [
+            {
+              "title": "词汇复习",
+              "children": [
+                {
+                  "title": "词汇复习1"
+                },
+                {
+                  "title": "词汇复习2"
+                }
+              ]
+            },
+            {
+              "title": "听力口语技巧",
+              "children": [
+                {
+                  "title": "听力口语技巧1"
+                },
+                {
+                  "title": "听力口语技巧2"
+                }
+              ]
+            },
+            {
+              "title": "时态专题",
+              "children": [
+                {
+                  "title": "时态专题1：一般现在时"
+                },
+                {
+                  "title": "时态专题2：现在进行时&过去进行时"
+                },
+                {
+                  "title": "时态专题3：一般过去时"
+                },
+                {
+                  "title": "时态专题4：一般将来时&过去将来时"
+                },
+                {
+                  "title": "时态专题5：现在完成时&过去完成时"
+                },
+                {
+                  "title": "不定式"
+                },
+                {
+                  "title": "宾语从句"
+                },
+                {
+                  "title": "状语从句"
+                },
+                {
+                  "title": "定语从句"
+                }
+              ]
+            },
+            {
+              "title": "简单句句式复习",
+              "children": [
+                {
+                  "title": "简单句句式复习"
+                }
+              ]
+            },
+            {
+              "title": "记叙文阅读与指导",
+              "children": [
+                {
+                  "title": "记叙文阅读与指导"
+                }
+              ]
+            },
+            {
+              "title": "论说文阅读与指导",
+              "children": [
+                {
+                  "title": "论说文阅读与指导"
+                }
+              ]
+            },
+            {
+              "title": "中考英语复习",
+              "children": [
+                {
+                  "title": "英语语法单项选择通关"
+                },
+                {
+                  "title": "完形填空解题技巧"
+                },
+                {
+                  "title": "阅读理解策略"
+                },
+                {
+                  "title": "（英语）写作高分指导"
+                },
+                {
+                  "title": "阅读策略指导"
+                },
+                {
+                  "title": "写作技巧--词汇表达提升"
+                },
+                {
+                  "title": "写作技巧-句型储备"
+                },
+                {
+                  "title": "非故事类阅读提分技巧"
+                },
+                {
+                  "title": "中考英语复习（一）"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "中考复习",
+            "词汇复习",
+            "词汇复习1",
+            "词汇复习2",
+            "听力口语技巧",
+            "听力口语技巧1",
+            "听力口语技巧2",
+            "时态专题",
+            "时态专题1：一般现在时",
+            "时态专题2：现在进行时&过去进行时",
+            "时态专题3：一般过去时",
+            "时态专题4：一般将来时&过去将来时",
+            "时态专题5：现在完成时&过去完成时",
+            "不定式",
+            "宾语从句",
+            "状语从句",
+            "定语从句",
+            "简单句句式复习",
+            "记叙文阅读与指导",
+            "论说文阅读与指导",
+            "中考英语复习",
+            "英语语法单项选择通关",
+            "完形填空解题技巧",
+            "阅读理解策略",
+            "（英语）写作高分指导",
+            "阅读策略指导",
+            "写作技巧--词汇表达提升",
+            "写作技巧-句型储备",
+            "非故事类阅读提分技巧",
+            "中考英语复习（一）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "64d17a31-923e-400c-8207-53bc0346e6f0",
+      "title": "新教材-初中英语人教版七年级上册",
+      "stage": "初中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/64d17a31-923e-400c-8207-53bc0346e6f0.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-08-13T22:56:34.420+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Starter Unit 1 Hello!",
+          "children": [
+            {
+              "title": "Section A How do you greet people?"
+            },
+            {
+              "title": "Section B How do you start a conversation?"
+            }
+          ],
+          "topics": [
+            "Starter Unit 1 Hello!",
+            "Section A How do you greet people?",
+            "Section B How do you start a conversation?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Starter Unit 2 Keep Tidy!",
+          "children": [
+            {
+              "title": "Section A What do you have?"
+            },
+            {
+              "title": "Section B Where do you put your things?"
+            }
+          ],
+          "topics": [
+            "Starter Unit 2 Keep Tidy!",
+            "Section A What do you have?",
+            "Section B Where do you put your things?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Starter Unit 3 Welcome!",
+          "children": [
+            {
+              "title": "Section A What is fun in a yard?"
+            },
+            {
+              "title": "Section B What is fun on a farm?"
+            }
+          ],
+          "topics": [
+            "Starter Unit 3 Welcome!",
+            "Section A What is fun in a yard?",
+            "Section B What is fun on a farm?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 1 You and Me",
+          "children": [
+            {
+              "title": "Section A How do we get to know each other?"
+            },
+            {
+              "title": "Section B What do we need to know about a new friend?"
+            }
+          ],
+          "topics": [
+            "Unit 1 You and Me",
+            "Section A How do we get to know each other?",
+            "Section B What do we need to know about a new friend?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 We're Family!",
+          "children": [
+            {
+              "title": "Section A What is your family like?"
+            },
+            {
+              "title": "Section B What do you like about your family?"
+            }
+          ],
+          "topics": [
+            "Unit 2 We're Family!",
+            "Section A What is your family like?",
+            "Section B What do you like about your family?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 My School",
+          "children": [
+            {
+              "title": "Section A What is your school like?"
+            },
+            {
+              "title": "Section B What fun things do you do at school?"
+            }
+          ],
+          "topics": [
+            "Unit 3 My School",
+            "Section A What is your school like?",
+            "Section B What fun things do you do at school?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 My Favourite Subject",
+          "children": [
+            {
+              "title": "Section A Why do you like this subject?"
+            },
+            {
+              "title": "Section B What can you learn from different subjects?"
+            }
+          ],
+          "topics": [
+            "Unit 4 My Favourite Subject",
+            "Section A Why do you like this subject?",
+            "Section B What can you learn from different subjects?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Fun Clubs",
+          "children": [
+            {
+              "title": "Section A How do you choose a school club?"
+            },
+            {
+              "title": "Section B What can you learn in a school club?"
+            }
+          ],
+          "topics": [
+            "Unit 5 Fun Clubs",
+            "Section A How do you choose a school club?",
+            "Section B What can you learn in a school club?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 A Day in the Life",
+          "children": [
+            {
+              "title": "Section A How do you spend your school day?"
+            },
+            {
+              "title": "Section B How different are people's daily routines?"
+            }
+          ],
+          "topics": [
+            "Unit 6 A Day in the Life",
+            "Section A How do you spend your school day?",
+            "Section B How different are people's daily routines?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 7 Happy Birthday!",
+          "children": [
+            {
+              "title": "Section A How do we celebrate birthdays?"
+            },
+            {
+              "title": "Section B How do you make your birthday meaningful?"
+            }
+          ],
+          "topics": [
+            "Unit 7 Happy Birthday!",
+            "Section A How do we celebrate birthdays?",
+            "Section B How do you make your birthday meaningful?"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "2d2e7f0e-11a7-4cde-b106-98cb10119081",
+      "title": "新教材-初中英语人教版七年级下册",
+      "stage": "初中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2d2e7f0e-11a7-4cde-b106-98cb10119081.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-01-26T10:31:38.812+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Animal Friends",
+          "children": [
+            {
+              "title": "Section A Why do you like animals?"
+            },
+            {
+              "title": "Section B How are animals part of our lives?"
+            },
+            {
+              "title": "Project Design a zoo"
+            }
+          ],
+          "topics": [
+            "Unit 1 Animal Friends",
+            "Section A Why do you like animals?",
+            "Section B How are animals part of our lives?",
+            "Project Design a zoo"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 No Rules, No Order",
+          "children": [
+            {
+              "title": "Section A What rules do we follow?"
+            },
+            {
+              "title": "Section B How can rules help us?"
+            },
+            {
+              "title": "Project Make class rules"
+            }
+          ],
+          "topics": [
+            "Unit 2 No Rules, No Order",
+            "Section A What rules do we follow?",
+            "Section B How can rules help us?",
+            "Project Make class rules"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Keep Fit",
+          "children": [
+            {
+              "title": "Section A How often do you do sport or exercise?"
+            },
+            {
+              "title": "Section B How is exercise good for us?"
+            },
+            {
+              "title": "Project Compare exercise habits"
+            }
+          ],
+          "topics": [
+            "Unit 3 Keep Fit",
+            "Section A How often do you do sport or exercise?",
+            "Section B How is exercise good for us?",
+            "Project Compare exercise habits"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Eat Well",
+          "children": [
+            {
+              "title": "Section A What do we like to eat?"
+            },
+            {
+              "title": "Section B How do we make healthy eating choices?"
+            },
+            {
+              "title": "Project Create a restaurant menu"
+            }
+          ],
+          "topics": [
+            "Unit 4 Eat Well",
+            "Section A What do we like to eat?",
+            "Section B How do we make healthy eating choices?",
+            "Project Create a restaurant menu"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Here and Now",
+          "children": [
+            {
+              "title": "Section A What are you doing right now?"
+            },
+            {
+              "title": "Section B How do we share our lives with others?"
+            },
+            {
+              "title": "Project Draw a group of flats"
+            }
+          ],
+          "topics": [
+            "Unit 5 Here and Now",
+            "Section A What are you doing right now?",
+            "Section B How do we share our lives with others?",
+            "Project Draw a group of flats"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 A Rain or Shine",
+          "children": [
+            {
+              "title": "Section A What’s the weather like?"
+            },
+            {
+              "title": "Section B How do we feel about the weather?"
+            },
+            {
+              "title": "Project Give a live weather report"
+            }
+          ],
+          "topics": [
+            "Unit 6 A Rain or Shine",
+            "Section A What’s the weather like?",
+            "Section B How do we feel about the weather?",
+            "Project Give a live weather report"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 7 A Day to Remember",
+          "children": [
+            {
+              "title": "Section A What was your special day like?"
+            },
+            {
+              "title": "Section B What did you learn on that special day?"
+            },
+            {
+              "title": "Project Write a chain story about a memorable day"
+            }
+          ],
+          "topics": [
+            "Unit 7 A Day to Remember",
+            "Section A What was your special day like?",
+            "Section B What did you learn on that special day?",
+            "Project Write a chain story about a memorable day"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 8 Once upon a Time",
+          "children": [
+            {
+              "title": "Section A What are your favourite stories?"
+            },
+            {
+              "title": "Section B What can stories teach us?"
+            },
+            {
+              "title": "Project Create and perform a short play"
+            }
+          ],
+          "topics": [
+            "Unit 8 Once upon a Time",
+            "Section A What are your favourite stories?",
+            "Section B What can stories teach us?",
+            "Project Create and perform a short play"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "4ebc4ee9-5149-44c6-8dc0-d6b56128fc6e",
+      "title": "新教材-初中英语人教版九年级上册",
+      "stage": "初中",
+      "subject": "英语",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/4ebc4ee9-5149-44c6-8dc0-d6b56128fc6e.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-27T15:27:25.624+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 The Changing World",
+          "children": [
+            {
+              "title": "Section A What changes have taken place around you?"
+            },
+            {
+              "title": "Section B How do changes influence us?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 1 The Changing World",
+            "Section A What changes have taken place around you?",
+            "Section B How do changes influence us?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Inspiring People",
+          "children": [
+            {
+              "title": "Section A Who do we admire?"
+            },
+            {
+              "title": "Section B What makes people admirable?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 2 Inspiring People",
+            "Section A Who do we admire?",
+            "Section B What makes people admirable?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Smart Learning",
+          "children": [
+            {
+              "title": "Section A How do we learn?"
+            },
+            {
+              "title": "Section B How can we get better at tearning?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 3 Smart Learning",
+            "Section A How do we learn?",
+            "Section B How can we get better at tearning?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Our Memory",
+          "children": [
+            {
+              "title": "Section A What do we remember?"
+            },
+            {
+              "title": "Section B How can we improve our memory?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 4 Our Memory",
+            "Section A What do we remember?",
+            "Section B How can we improve our memory?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Power of Ideas",
+          "children": [
+            {
+              "title": "Section A What changes can inventions bring to our lives?"
+            },
+            {
+              "title": "Section B How do we turn ideas into reality?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 5 Power of Ideas",
+            "Section A What changes can inventions bring to our lives?",
+            "Section B How do we turn ideas into reality?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Beyond Earth",
+          "children": [
+            {
+              "title": "Section A Why do we explore space?"
+            },
+            {
+              "title": "Section B How far can we go into space?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 6 Beyond Earth",
+            "Section A Why do we explore space?",
+            "Section B How far can we go into space?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 7 Feel the Rhythm",
+          "children": [
+            {
+              "title": "Section A What do you like about music?"
+            },
+            {
+              "title": "Section B What is the power of music?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 7 Feel the Rhythm",
+            "Section A What do you like about music?",
+            "Section B What is the power of music?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 8 More than aGame",
+          "children": [
+            {
+              "title": "Section A Why do we like sports events?"
+            },
+            {
+              "title": "Section B How does sport bring us together?"
+            },
+            {
+              "title": "*Project"
+            }
+          ],
+          "topics": [
+            "Unit 8 More than aGame",
+            "Section A Why do we like sports events?",
+            "Section B How does sport bring us together?",
+            "*Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "stage": "高中",
+  "subject": "艺术",
+  "books": [
+    {
+      "id": "daff30a0-aa8c-3778-84aa-638f10d9e7ad",
+      "title": "高中艺术人教版必修1 艺术与生活",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修1 艺术与生活",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "5f959116-57b1-303f-ac1d-4d9009fa94ea",
+      "title": "高中艺术人教版必修2 艺术与文化（上册）",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修2 艺术与文化（上册）",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "1aabb959-9322-319c-a40c-a3f774943797",
+      "title": "高中艺术人教版必修2 艺术与文化（下册）",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修2 艺术与文化（下册）",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "195c438f-6bbc-3649-a747-be6138510144",
+      "title": "高中艺术人教版必修3 艺术与科学",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修3 艺术与科学",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "a7331480-d310-3f1e-af23-871e7732b305",
+      "title": "高中艺术人教版选择性必修1 美术创意实践",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修1 美术创意实践",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "13fd289a-f23e-31ff-beec-9939f114bc0d",
+      "title": "高中艺术人教版选择性必修2 音乐情境表演",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2 音乐情境表演",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "6941d8e5-b8de-355c-b148-a22e0b1ab2a3",
+      "title": "高中艺术人教版选择性必修3 舞蹈创编与表演",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 舞蹈创编与表演",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "a8c69f0e-498b-3e96-af74-ee4a7819e47b",
+      "title": "高中艺术人教版选择性必修4 戏剧创编与表演",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修4 戏剧创编与表演",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "e8ca557a-1ca1-38dc-9c0f-114ebd516550",
+      "title": "高中艺术人教版选择性必修5 影视与数字媒体艺术实践",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修5 影视与数字媒体艺术实践",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/arts/units-1.json",
+      "unit_count": 4
+    }
+  ]
+}

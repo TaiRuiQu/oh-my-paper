@@ -1,0 +1,61 @@
+{
+  "stage": "高中",
+  "subject": "语文",
+  "books": [
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1548699901fb",
+      "title": "高中语文统编版选择性必修 下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/chinese/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "5f325e4e-50ac-4bf0-948d-00e1adf9b69d",
+      "title": "高中语文统编版高一必修 上册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/chinese/units-1.json",
+      "unit_count": 11
+    },
+    {
+      "id": "5ab21a30-f60a-42ce-a813-90b2f73966cf",
+      "title": "高中语文统编版高一必修 下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修 下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/chinese/units-1.json",
+      "unit_count": 9
+    },
+    {
+      "id": "fcd20fd4-1ab9-4783-bbf1-7ef3cc06bf0a",
+      "title": "高中语文统编版高二选择性必修 上册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修 上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/chinese/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "ad6c02a4-2380-414f-b1c0-59e73c29d309",
+      "title": "高中语文统编版高二选择性必修 中册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修 中册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/chinese/units-2.json",
+      "unit_count": 5
+    }
+  ]
+}

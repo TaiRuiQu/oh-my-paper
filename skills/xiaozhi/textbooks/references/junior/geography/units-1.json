@@ -1,0 +1,1013 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "98cb9cc4-4806-4ee5-882c-129f43285bf3",
+      "title": "新教材-初中地理人教版七年级上册",
+      "stage": "初中",
+      "subject": "地理",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/98cb9cc4-4806-4ee5-882c-129f43285bf3.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-08-13T22:23:34.283+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一章 地球",
+          "children": [
+            {
+              "title": "第一节 地球的宇宙环境"
+            },
+            {
+              "title": "第二节 地球与地球仪"
+            },
+            {
+              "title": "第三节 地球的运动"
+            }
+          ],
+          "topics": ["地球", "地球的宇宙环境", "地球与地球仪", "地球的运动"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 地图",
+          "children": [
+            {
+              "title": "第一节 地图的阅读"
+            },
+            {
+              "title": "第二节 地形图的判读"
+            },
+            {
+              "title": "第三节 地图的选择和应用"
+            }
+          ],
+          "topics": ["地图", "地图的阅读", "地形图的判读", "地图的选择和应用"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "【跨学科主题学习】美化校园",
+          "topics": ["【跨学科主题学习】美化校园"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 陆地和海洋",
+          "children": [
+            {
+              "title": "第一节 大洲和大洋"
+            },
+            {
+              "title": "第二节 世界的地形"
+            },
+            {
+              "title": "第三节 海陆的变迁"
+            }
+          ],
+          "topics": ["陆地和海洋", "大洲和大洋", "世界的地形", "海陆的变迁"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 天气与气候",
+          "children": [
+            {
+              "title": "第一节 多变的天气"
+            },
+            {
+              "title": "第二节 气温的变化与分布"
+            },
+            {
+              "title": "第三节 降水的变化与分布"
+            },
+            {
+              "title": "第四节 世界的气候"
+            }
+          ],
+          "topics": [
+            "天气与气候",
+            "多变的天气",
+            "气温的变化与分布",
+            "降水的变化与分布",
+            "世界的气候"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五章 居民与文化",
+          "children": [
+            {
+              "title": "第一节 人口与人种"
+            },
+            {
+              "title": "第二节 城镇与乡村"
+            },
+            {
+              "title": "第三节 多样的文化"
+            }
+          ],
+          "topics": ["居民与文化", "人口与人种", "城镇与乡村", "多样的文化"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六章 发展与合作",
+          "topics": ["发展与合作"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "【跨学科主题学习】探索外来食料作物传播史",
+          "topics": ["【跨学科主题学习】探索外来食料作物传播史"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "49ded37e-2914-47be-9dee-93bf492e66c5",
+      "title": "新教材-初中地理人教版七年级下册",
+      "stage": "初中",
+      "subject": "地理",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/49ded37e-2914-47be-9dee-93bf492e66c5.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-01-26T09:59:44.796+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第七章 我们生活的大洲——亚洲",
+          "children": [
+            {
+              "title": "第一节 自然环境"
+            },
+            {
+              "title": "第二节 人文环境"
+            }
+          ],
+          "topics": ["我们生活的大洲——亚洲", "自然环境", "人文环境"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八章 我们邻近的地区和国家",
+          "children": [
+            {
+              "title": "第一节 日本"
+            },
+            {
+              "title": "第二节 东南亚"
+            },
+            {
+              "title": "第三节 印度"
+            },
+            {
+              "title": "第四节 俄罗斯"
+            }
+          ],
+          "topics": ["我们邻近的地区和国家", "日本", "东南亚", "印度", "俄罗斯"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第九章 东半球其他的地区和国家",
+          "children": [
+            {
+              "title": "第一节 西亚"
+            },
+            {
+              "title": "第二节 欧洲西部"
+            },
+            {
+              "title": "第三节 撒哈拉以南非洲"
+            },
+            {
+              "title": "第四节 澳大利亚"
+            }
+          ],
+          "topics": ["东半球其他的地区和国家", "西亚", "欧洲西部", "撒哈拉以南非洲", "澳大利亚"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十章 西半球的国家",
+          "children": [
+            {
+              "title": "第一节 美国"
+            },
+            {
+              "title": "第二节 巴西"
+            }
+          ],
+          "topics": ["西半球的国家", "美国", "巴西"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十一章 极地地区",
+          "topics": ["极地地区"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ca93ec1e-9d0d-4df7-8da0-eaa8e1cbf7e3",
+      "title": "新教材-初中地理人教版八年级上册",
+      "stage": "初中",
+      "subject": "地理",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ca93ec1e-9d0d-4df7-8da0-eaa8e1cbf7e3.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-07-29T15:44:28.174+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一章 从世界看中国",
+          "children": [
+            {
+              "title": "第一节 疆域"
+            },
+            {
+              "title": "第二节 人口"
+            },
+            {
+              "title": "第三节 民族"
+            }
+          ],
+          "topics": ["从世界看中国", "疆域", "人口", "民族"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 中国的自然环境",
+          "children": [
+            {
+              "title": "第一节 地形"
+            },
+            {
+              "title": "第二节 气候"
+            },
+            {
+              "title": "第三节 河流与湖泊"
+            }
+          ],
+          "topics": ["中国的自然环境", "地形", "气候", "河流与湖泊"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "【跨学科主题学习】探究“束水攻沙”原理",
+          "topics": ["【跨学科主题学习】探究“束水攻沙”原理"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 中国的自然资源",
+          "children": [
+            {
+              "title": "第一节 土地资源"
+            },
+            {
+              "title": "第二节 水资源"
+            },
+            {
+              "title": "第三节 矿产资源"
+            },
+            {
+              "title": "第四节 海洋资源"
+            }
+          ],
+          "topics": ["中国的自然资源", "土地资源", "水资源", "矿产资源", "海洋资源"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "【跨学科主题学习】认识我国的“世界灌溉工程遗产”",
+          "topics": ["【跨学科主题学习】认识我国的“世界灌溉工程遗产”"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 中国的经济发展",
+          "children": [
+            {
+              "title": "第一节 农业"
+            },
+            {
+              "title": "第二节 工业"
+            },
+            {
+              "title": "第三节 交通运输"
+            }
+          ],
+          "topics": ["中国的经济发展", "农业", "工业", "交通运输"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五章 建设美丽中国",
+          "children": [
+            {
+              "title": "第一节 自然灾害与防灾减灾"
+            },
+            {
+              "title": "第二节 环境保护与发展"
+            }
+          ],
+          "topics": ["建设美丽中国", "自然灾害与防灾减灾", "环境保护与发展"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "a63434a7-b64b-4d7e-bc5d-4ace542f4fa9",
+      "title": "新教材-初中地理人教版八年级下册",
+      "stage": "初中",
+      "subject": "地理",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/a63434a7-b64b-4d7e-bc5d-4ace542f4fa9.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-03-03T10:29:59.213+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第六章 中国的地理差异",
+          "topics": ["中国的地理差异"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "【跨学科主题学习】了解二十四节气",
+          "topics": ["【跨学科主题学习】了解二十四节气"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七章 北方地区",
+          "children": [
+            {
+              "title": "第一节 自然特征与农业"
+            },
+            {
+              "title": "第二节 “白山黑水”——东北三省"
+            },
+            {
+              "title": "第三节 世界最大的黄土堆积区——黄土高原"
+            },
+            {
+              "title": "第四节 祖国的首都——北京"
+            }
+          ],
+          "topics": [
+            "北方地区",
+            "自然特征与农业",
+            "“白山黑水”——东北三省",
+            "世界最大的黄土堆积区——黄土高原",
+            "祖国的首都——北京"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八章 南方地区",
+          "children": [
+            {
+              "title": "第一节 自然特征与农业"
+            },
+            {
+              "title": "第二节 “鱼米之乡”——长江三角洲地区"
+            },
+            {
+              "title": "第三节 特别行政区——香港和澳门"
+            },
+            {
+              "title": "第四节 祖国的神圣领土——台湾省"
+            }
+          ],
+          "topics": [
+            "南方地区",
+            "自然特征与农业",
+            "“鱼米之乡”——长江三角洲地区",
+            "特别行政区——香港和澳门",
+            "祖国的神圣领土——台湾省"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "【跨学科主题学习】认识地名的由来和演变",
+          "topics": ["【跨学科主题学习】认识地名的由来和演变"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第九章 西北地区",
+          "children": [
+            {
+              "title": "第一节 自然特征与农业"
+            },
+            {
+              "title": "第二节 干旱的宝地——塔里木盆地"
+            }
+          ],
+          "topics": ["西北地区", "自然特征与农业", "干旱的宝地——塔里木盆地"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十章 青藏地区",
+          "children": [
+            {
+              "title": "第一节 自然特征与农业"
+            },
+            {
+              "title": "第二节 “中华水塔”——三江源地区"
+            }
+          ],
+          "topics": ["青藏地区", "自然特征与农业", "“中华水塔”——三江源地区"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十一章 奋进中的中国",
+          "topics": ["奋进中的中国"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "34202692-5a42-4f5f-8579-29c01cfc128c",
+      "title": "初中地理人教版七年级上册",
+      "stage": "初中",
+      "subject": "地理",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/34202692-5a42-4f5f-8579-29c01cfc128c.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:26.571+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "绪言 与同学们谈地理",
+          "topics": ["绪言 与同学们谈地理"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一章 地球和地图",
+          "children": [
+            {
+              "title": "第一节 地球和地球仪"
+            },
+            {
+              "title": "第二节 地球的运动"
+            },
+            {
+              "title": "第三节 地图的阅读"
+            },
+            {
+              "title": "第四节 地形图的判读"
+            }
+          ],
+          "topics": ["地球和地图", "地球和地球仪", "地球的运动", "地图的阅读", "地形图的判读"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 陆地和海洋",
+          "children": [
+            {
+              "title": "第一节 大洲和大洋"
+            },
+            {
+              "title": "第二节 海陆的变迁"
+            }
+          ],
+          "topics": ["陆地和海洋", "大洲和大洋", "海陆的变迁"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 天气与气候",
+          "children": [
+            {
+              "title": "第一节 多变的天气"
+            },
+            {
+              "title": "第二节 气温的变化与分布"
+            },
+            {
+              "title": "第三节 降水的变化与分布"
+            },
+            {
+              "title": "第四节 世界的气候"
+            }
+          ],
+          "topics": [
+            "天气与气候",
+            "多变的天气",
+            "气温的变化与分布",
+            "降水的变化与分布",
+            "世界的气候"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 居民与聚落",
+          "children": [
+            {
+              "title": "第一节 人口与人种"
+            },
+            {
+              "title": "第二节 世界的语言和宗教"
+            },
+            {
+              "title": "第三节 人类的聚居地──聚落"
+            }
+          ],
+          "topics": ["居民与聚落", "人口与人种", "世界的语言和宗教", "人类的聚居地──聚落"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五章 发展与合作",
+          "topics": ["发展与合作"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "9c97fc56-5037-415b-af33-32d11c96ba69",
+      "title": "初中地理人教版七年级下册",
+      "stage": "初中",
+      "subject": "地理",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/9c97fc56-5037-415b-af33-32d11c96ba69.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:22.483+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第六章 我们生活的大洲──亚洲",
+          "children": [
+            {
+              "title": "第一节 位置和范围"
+            },
+            {
+              "title": "第二节 自然环境"
+            }
+          ],
+          "topics": ["我们生活的大洲──亚洲", "位置和范围", "自然环境"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七章 我们邻近的地区和国家",
+          "children": [
+            {
+              "title": "第一节 日本"
+            },
+            {
+              "title": "第二节 东南亚"
+            },
+            {
+              "title": "第三节 印度"
+            },
+            {
+              "title": "第四节 俄罗斯"
+            }
+          ],
+          "topics": ["我们邻近的地区和国家", "日本", "东南亚", "印度", "俄罗斯"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八章 东半球其他的地区和国家",
+          "children": [
+            {
+              "title": "第一节 中东"
+            },
+            {
+              "title": "第二节 欧洲西部"
+            },
+            {
+              "title": "第三节 撒哈拉以南非洲"
+            },
+            {
+              "title": "第四节 澳大利亚"
+            }
+          ],
+          "topics": ["东半球其他的地区和国家", "中东", "欧洲西部", "撒哈拉以南非洲", "澳大利亚"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第九章 西半球的国家",
+          "children": [
+            {
+              "title": "第一节 美国"
+            },
+            {
+              "title": "第二节 巴西"
+            }
+          ],
+          "topics": ["西半球的国家", "美国", "巴西"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十章 极地地区",
+          "topics": ["极地地区"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "分区复习",
+          "children": [
+            {
+              "title": "世界地理分区复习（自然部分）"
+            },
+            {
+              "title": "世界地理分区复习（人文部分）"
+            }
+          ],
+          "topics": ["分区复习", "世界地理分区复习（自然部分）", "世界地理分区复习（人文部分）"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "a4b7729b-88ea-48a6-8cb4-c0d929aee809",
+      "title": "初中地理人教版八年级上册",
+      "stage": "初中",
+      "subject": "地理",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/a4b7729b-88ea-48a6-8cb4-c0d929aee809.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:27.337+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一章 从世界看中国",
+          "children": [
+            {
+              "title": "第一节 疆域"
+            },
+            {
+              "title": "第二节 人口"
+            },
+            {
+              "title": "第三节 民族"
+            }
+          ],
+          "topics": ["从世界看中国", "疆域", "人口", "民族"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 中国的自然环境",
+          "children": [
+            {
+              "title": "第一节 地形和地势"
+            },
+            {
+              "title": "第二节 气候"
+            },
+            {
+              "title": "第三节 河流"
+            },
+            {
+              "title": "第四节 自然灾害"
+            }
+          ],
+          "topics": ["中国的自然环境", "地形和地势", "气候", "河流", "自然灾害"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 中国的自然资源",
+          "children": [
+            {
+              "title": "第一节 自然资源的基本特征"
+            },
+            {
+              "title": "第二节 土地资源"
+            },
+            {
+              "title": "第三节 水资源"
+            }
+          ],
+          "topics": ["中国的自然资源", "自然资源的基本特征", "土地资源", "水资源"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 中国的经济发展",
+          "children": [
+            {
+              "title": "第一节 交通运输"
+            },
+            {
+              "title": "第二节 农业"
+            },
+            {
+              "title": "第三节 工业"
+            }
+          ],
+          "topics": ["中国的经济发展", "交通运输", "农业", "工业"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "fbb61052-55ef-4533-945c-354510bdffdd",
+      "title": "初中地理人教版八年级下册",
+      "stage": "初中",
+      "subject": "地理",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/fbb61052-55ef-4533-945c-354510bdffdd.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:27.139+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第五章 中国的地理差异",
+          "topics": ["中国的地理差异"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六章 北方地区",
+          "children": [
+            {
+              "title": "第一节 自然特征与农业"
+            },
+            {
+              "title": "第二节 “白山黑水”──东北三省"
+            },
+            {
+              "title": "第三节 世界最大的黄土堆积区──黄土高原"
+            },
+            {
+              "title": "第四节 祖国的首都──北京"
+            }
+          ],
+          "topics": [
+            "北方地区",
+            "自然特征与农业",
+            "“白山黑水”──东北三省",
+            "世界最大的黄土堆积区──黄土高原",
+            "祖国的首都──北京"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七章 南方地区",
+          "children": [
+            {
+              "title": "第一节 自然特征与农业"
+            },
+            {
+              "title": "第二节 “鱼米之乡”──长江三角洲地区"
+            },
+            {
+              "title": "第三节 “东方明珠”──香港和澳门"
+            },
+            {
+              "title": "第四节 祖国的神圣领土──台湾省"
+            }
+          ],
+          "topics": [
+            "南方地区",
+            "自然特征与农业",
+            "“鱼米之乡”──长江三角洲地区",
+            "“东方明珠”──香港和澳门",
+            "祖国的神圣领土──台湾省"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八章 西北地区",
+          "children": [
+            {
+              "title": "第一节 自然特征与农业"
+            },
+            {
+              "title": "第二节 干旱的宝地──塔里木盆地"
+            }
+          ],
+          "topics": ["西北地区", "自然特征与农业", "干旱的宝地──塔里木盆地"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第九章 青藏地区",
+          "children": [
+            {
+              "title": "第一节 自然特征与农业"
+            },
+            {
+              "title": "第二节 高原湿地──三江源地区"
+            }
+          ],
+          "topics": ["青藏地区", "自然特征与农业", "高原湿地──三江源地区"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十章 中国在世界中",
+          "topics": ["中国在世界中"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "中考复习",
+          "children": [
+            {
+              "title": "认识区域位置"
+            },
+            {
+              "title": "中国地理",
+              "children": [
+                {
+                  "title": "北方地区（中国地理）"
+                },
+                {
+                  "title": "南方地区（中国地理）"
+                },
+                {
+                  "title": "地图的阅读"
+                },
+                {
+                  "title": "地形图的判读"
+                },
+                {
+                  "title": "秦岭—淮河一线地理位置与地理意义"
+                },
+                {
+                  "title": "交通运输"
+                },
+                {
+                  "title": "西北地区（中国地理）"
+                },
+                {
+                  "title": "区域地理要素及其联系"
+                }
+              ]
+            },
+            {
+              "title": "中国的气候"
+            },
+            {
+              "title": "人口专题"
+            },
+            {
+              "title": "农业专题",
+              "children": [
+                {
+                  "title": "农业概况"
+                },
+                {
+                  "title": "中国农业生产"
+                },
+                {
+                  "title": "世界农业分布"
+                },
+                {
+                  "title": "青藏地区的自然特征与农业"
+                }
+              ]
+            },
+            {
+              "title": "地球运动"
+            },
+            {
+              "title": "工业专题",
+              "children": [
+                {
+                  "title": "中国的工业分布"
+                },
+                {
+                  "title": "世界的工业分布"
+                }
+              ]
+            },
+            {
+              "title": "气候专题",
+              "children": [
+                {
+                  "title": "气温和降水的变化与分布"
+                },
+                {
+                  "title": "世界的气候"
+                },
+                {
+                  "title": "气候和人类活动的关系"
+                }
+              ]
+            },
+            {
+              "title": "河流专题",
+              "children": [
+                {
+                  "title": "河流的概况"
+                },
+                {
+                  "title": "长江与黄河"
+                }
+              ]
+            },
+            {
+              "title": "自然专题",
+              "children": [
+                {
+                  "title": "自然灾害专题"
+                },
+                {
+                  "title": "自然资源"
+                }
+              ]
+            },
+            {
+              "title": "中国地势地形",
+              "children": [
+                {
+                  "title": "中国的地形"
+                },
+                {
+                  "title": "中国的地势"
+                }
+              ]
+            },
+            {
+              "title": "大洲概况",
+              "children": [
+                {
+                  "title": "大洲位置分析——以亚洲为例"
+                },
+                {
+                  "title": "大洲自然地理要素分析——以亚洲为例"
+                },
+                {
+                  "title": "地区分析——以东南亚为例"
+                }
+              ]
+            },
+            {
+              "title": "中考串讲",
+              "children": [
+                {
+                  "title": "中考地理知识要点串讲"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "中考复习",
+            "认识区域位置",
+            "中国地理",
+            "北方地区（中国地理）",
+            "南方地区（中国地理）",
+            "地图的阅读",
+            "地形图的判读",
+            "秦岭—淮河一线地理位置与地理意义",
+            "交通运输",
+            "西北地区（中国地理）",
+            "区域地理要素及其联系",
+            "中国的气候",
+            "人口专题",
+            "农业专题",
+            "农业概况",
+            "中国农业生产",
+            "世界农业分布",
+            "青藏地区的自然特征与农业",
+            "地球运动",
+            "工业专题",
+            "中国的工业分布",
+            "世界的工业分布",
+            "气候专题",
+            "气温和降水的变化与分布",
+            "世界的气候",
+            "气候和人类活动的关系",
+            "河流专题",
+            "河流的概况",
+            "长江与黄河",
+            "自然专题",
+            "自然灾害专题",
+            "自然资源",
+            "中国地势地形",
+            "中国的地形",
+            "中国的地势",
+            "大洲概况",
+            "大洲位置分析——以亚洲为例",
+            "大洲自然地理要素分析——以亚洲为例",
+            "地区分析——以东南亚为例",
+            "中考串讲",
+            "中考地理知识要点串讲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1274 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "44da418d-5d84-9a9d-9090-cbb7b1ea790e",
+      "title": "小学英语人教版（精通）三年级起点（主编：郝建平）五年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（精通）（主编：郝建平）",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/44da418d-5d84-9a9d-9090-cbb7b1ea790e.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:44.790+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 We have new friends.",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Lesson 4"
+            },
+            {
+              "title": "Lesson 5"
+            },
+            {
+              "title": "Lesson 6"
+            }
+          ],
+          "topics": [
+            "Unit 1 We have new friends.",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Lesson 4",
+            "Lesson 5",
+            "Lesson 6"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 She looks cute.",
+          "children": [
+            {
+              "title": "Lesson 7"
+            },
+            {
+              "title": "Lesson 8"
+            },
+            {
+              "title": "Lesson 9"
+            },
+            {
+              "title": "Lesson 10"
+            },
+            {
+              "title": "Lesson 11"
+            },
+            {
+              "title": "Lesson 12"
+            }
+          ],
+          "topics": [
+            "Unit 2 She looks cute.",
+            "Lesson 7",
+            "Lesson 8",
+            "Lesson 9",
+            "Lesson 10",
+            "Lesson 11",
+            "Lesson 12"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 My father is a writer.",
+          "children": [
+            {
+              "title": "Lesson 13"
+            },
+            {
+              "title": "Lesson 14"
+            },
+            {
+              "title": "Lesson 15"
+            },
+            {
+              "title": "Lesson 16"
+            },
+            {
+              "title": "Lesson 17"
+            },
+            {
+              "title": "Lesson 18"
+            }
+          ],
+          "topics": [
+            "Unit 3 My father is a writer.",
+            "Lesson 13",
+            "Lesson 14",
+            "Lesson 15",
+            "Lesson 16",
+            "Lesson 17",
+            "Lesson 18"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 1",
+          "children": [
+            {
+              "title": "Fun time 1 Recycle 1"
+            },
+            {
+              "title": "Fun time 1 Recycle 2"
+            },
+            {
+              "title": "Fun time 1 Fun Reading"
+            }
+          ],
+          "topics": [
+            "Fun Time 1",
+            "Fun time 1 Recycle 1",
+            "Fun time 1 Recycle 2",
+            "Fun time 1 Fun Reading"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Where do you work?",
+          "children": [
+            {
+              "title": "Lesson 19"
+            },
+            {
+              "title": "Lesson 20"
+            },
+            {
+              "title": "Lesson 21"
+            },
+            {
+              "title": "Lesson 22"
+            },
+            {
+              "title": "Lesson 23"
+            },
+            {
+              "title": "Lesson 24"
+            }
+          ],
+          "topics": [
+            "Unit 4 Where do you work?",
+            "Lesson 19",
+            "Lesson 20",
+            "Lesson 21",
+            "Lesson 22",
+            "Lesson 23",
+            "Lesson 24"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Is this your schoolbag?",
+          "children": [
+            {
+              "title": "Lesson 25"
+            },
+            {
+              "title": "Lesson 26"
+            },
+            {
+              "title": "Lesson 27"
+            },
+            {
+              "title": "Lesson 28"
+            },
+            {
+              "title": "Lesson 29"
+            },
+            {
+              "title": "Lesson 30"
+            }
+          ],
+          "topics": [
+            "Unit 5 Is this your schoolbag?",
+            "Lesson 25",
+            "Lesson 26",
+            "Lesson 27",
+            "Lesson 28",
+            "Lesson 29",
+            "Lesson 30"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 It's a grapefruit.",
+          "children": [
+            {
+              "title": "Lesson 31"
+            },
+            {
+              "title": "Lesson 32"
+            },
+            {
+              "title": "Lesson 33"
+            },
+            {
+              "title": "Lesson 34"
+            },
+            {
+              "title": "Lesson 35"
+            },
+            {
+              "title": "Lesson 36"
+            }
+          ],
+          "topics": [
+            "Unit 6 It's a grapefruit.",
+            "Lesson 31",
+            "Lesson 32",
+            "Lesson 33",
+            "Lesson 34",
+            "Lesson 35",
+            "Lesson 36"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 2",
+          "children": [
+            {
+              "title": "Fun time 2 Recycle 1"
+            },
+            {
+              "title": "Fun time 2 Recycle 2"
+            },
+            {
+              "title": "Fun time 2 Fun Reading"
+            }
+          ],
+          "topics": [
+            "Fun Time 2",
+            "Fun time 2 Recycle 1",
+            "Fun time 2 Recycle 2",
+            "Fun time 2 Fun Reading"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "0e7fb1c6-242a-c8d9-26da-598169553bbd",
+      "title": "小学英语人教版（精通）三年级起点（主编：郝建平）五年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（精通）（主编：郝建平）",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/0e7fb1c6-242a-c8d9-26da-598169553bbd.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:26:58.152+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Welcome to our school!",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Lesson 4"
+            },
+            {
+              "title": "Lesson 5"
+            },
+            {
+              "title": "Lesson 6"
+            }
+          ],
+          "topics": [
+            "Unit 1 Welcome to our school!",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Lesson 4",
+            "Lesson 5",
+            "Lesson 6"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Can I help you?",
+          "children": [
+            {
+              "title": "Lesson 7"
+            },
+            {
+              "title": "Lesson 8"
+            },
+            {
+              "title": "Lesson 9"
+            },
+            {
+              "title": "Lesson 10"
+            },
+            {
+              "title": "Lesson 11"
+            },
+            {
+              "title": "Lesson 12"
+            }
+          ],
+          "topics": [
+            "Unit 2 Can I help you?",
+            "Lesson 7",
+            "Lesson 8",
+            "Lesson 9",
+            "Lesson 10",
+            "Lesson 11",
+            "Lesson 12"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 We should obey the rules.",
+          "children": [
+            {
+              "title": "Lesson 13"
+            },
+            {
+              "title": "Lesson 14"
+            },
+            {
+              "title": "Lesson 15"
+            },
+            {
+              "title": "Lesson 16"
+            },
+            {
+              "title": "Lesson 17"
+            },
+            {
+              "title": "Lesson 18"
+            }
+          ],
+          "topics": [
+            "Unit 3 We should obey the rules.",
+            "Lesson 13",
+            "Lesson 14",
+            "Lesson 15",
+            "Lesson 16",
+            "Lesson 17",
+            "Lesson 18"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun time 1",
+          "children": [
+            {
+              "title": "Fun time 1 Recycle 1"
+            },
+            {
+              "title": "Fun time 1 Recycle 2"
+            },
+            {
+              "title": "Fun time 1 Fun Reading"
+            }
+          ],
+          "topics": [
+            "Fun time 1",
+            "Fun time 1 Recycle 1",
+            "Fun time 1 Recycle 2",
+            "Fun time 1 Fun Reading"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 What's wrong with you?",
+          "children": [
+            {
+              "title": "Lesson 19"
+            },
+            {
+              "title": "Lesson 20"
+            },
+            {
+              "title": "Lesson 21"
+            },
+            {
+              "title": "Lesson 22"
+            },
+            {
+              "title": "Lesson 23"
+            },
+            {
+              "title": "Lesson 24"
+            }
+          ],
+          "topics": [
+            "Unit 4 What's wrong with you?",
+            "Lesson 19",
+            "Lesson 20",
+            "Lesson 21",
+            "Lesson 22",
+            "Lesson 23",
+            "Lesson 24"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 I'm cleaning my room.",
+          "children": [
+            {
+              "title": "Lesson 25"
+            },
+            {
+              "title": "Lesson 26"
+            },
+            {
+              "title": "Lesson 27"
+            },
+            {
+              "title": "Lesson 28"
+            },
+            {
+              "title": "Lesson 29"
+            },
+            {
+              "title": "Lesson 30"
+            }
+          ],
+          "topics": [
+            "Unit 5 I'm cleaning my room.",
+            "Lesson 25",
+            "Lesson 26",
+            "Lesson 27",
+            "Lesson 28",
+            "Lesson 29",
+            "Lesson 30"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 We are watching the games.",
+          "children": [
+            {
+              "title": "Lesson 31"
+            },
+            {
+              "title": "Lesson 32"
+            },
+            {
+              "title": "Lesson 33"
+            },
+            {
+              "title": "Lesson 34"
+            },
+            {
+              "title": "Lesson 35"
+            },
+            {
+              "title": "Lesson 36"
+            }
+          ],
+          "topics": [
+            "Unit 6 We are watching the games.",
+            "Lesson 31",
+            "Lesson 32",
+            "Lesson 33",
+            "Lesson 34",
+            "Lesson 35",
+            "Lesson 36"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun time 2",
+          "children": [
+            {
+              "title": "Fun time 2 Recycle 1"
+            },
+            {
+              "title": "Fun time 2 Recycle 2"
+            },
+            {
+              "title": "Fun time 2 Fun Reading"
+            }
+          ],
+          "topics": [
+            "Fun time 2",
+            "Fun time 2 Recycle 1",
+            "Fun time 2 Recycle 2",
+            "Fun time 2 Fun Reading"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "4a0caeb0-f541-7081-04a9-5966ccbd94a3",
+      "title": "小学英语人教版（精通）三年级起点（主编：郝建平）六年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（精通）（主编：郝建平）",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/4a0caeb0-f541-7081-04a9-5966ccbd94a3.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:48.613+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 I go to school at 8:00.",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Lesson 4"
+            },
+            {
+              "title": "Lesson 5"
+            },
+            {
+              "title": "Lesson 6"
+            }
+          ],
+          "topics": [
+            "Unit 1 I go to school at 8:00.",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Lesson 4",
+            "Lesson 5",
+            "Lesson 6"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 What's your hobby?",
+          "children": [
+            {
+              "title": "Lesson 7"
+            },
+            {
+              "title": "Lesson 8"
+            },
+            {
+              "title": "Lesson 9"
+            },
+            {
+              "title": "Lesson 10"
+            },
+            {
+              "title": "Lesson 11"
+            },
+            {
+              "title": "Lesson 12"
+            }
+          ],
+          "topics": [
+            "Unit 2 What's your hobby?",
+            "Lesson 7",
+            "Lesson 8",
+            "Lesson 9",
+            "Lesson 10",
+            "Lesson 11",
+            "Lesson 12"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Would you like to come to my birthday party?",
+          "children": [
+            {
+              "title": "Lesson 13"
+            },
+            {
+              "title": "Lesson 14"
+            },
+            {
+              "title": "Lesson 15"
+            },
+            {
+              "title": "Lesson 16"
+            },
+            {
+              "title": "Lesson 17"
+            },
+            {
+              "title": "Lesson 18"
+            }
+          ],
+          "topics": [
+            "Unit 3 Would you like to come to my birthday party?",
+            "Lesson 13",
+            "Lesson 14",
+            "Lesson 15",
+            "Lesson 16",
+            "Lesson 17",
+            "Lesson 18"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 1",
+          "children": [
+            {
+              "title": "Fun time 1 Recycle 1"
+            },
+            {
+              "title": "Fun time 1 Recycle 2"
+            },
+            {
+              "title": "Fun time1 Fun Reading"
+            }
+          ],
+          "topics": [
+            "Fun Time 1",
+            "Fun time 1 Recycle 1",
+            "Fun time 1 Recycle 2",
+            "Fun time1 Fun Reading"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 January is the first month.",
+          "children": [
+            {
+              "title": "Lesson 19"
+            },
+            {
+              "title": "Lesson 20"
+            },
+            {
+              "title": "Lesson 21"
+            },
+            {
+              "title": "Lesson 22"
+            },
+            {
+              "title": "Lesson 23"
+            },
+            {
+              "title": "Lesson 24"
+            }
+          ],
+          "topics": [
+            "Unit 4 January is the first month.",
+            "Lesson 19",
+            "Lesson 20",
+            "Lesson 21",
+            "Lesson 22",
+            "Lesson 23",
+            "Lesson 24"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 July is the seventh month.",
+          "children": [
+            {
+              "title": "Lesson 25"
+            },
+            {
+              "title": "Lesson 26"
+            },
+            {
+              "title": "Lesson 27"
+            },
+            {
+              "title": "Lesson 28"
+            },
+            {
+              "title": "Lesson 29"
+            },
+            {
+              "title": "Lesson 30"
+            }
+          ],
+          "topics": [
+            "Unit 5 July is the seventh month.",
+            "Lesson 25",
+            "Lesson 26",
+            "Lesson 27",
+            "Lesson 28",
+            "Lesson 29",
+            "Lesson 30"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 There are four seasons in a year.",
+          "children": [
+            {
+              "title": "Lesson 31"
+            },
+            {
+              "title": "Lesson 32"
+            },
+            {
+              "title": "Lesson 33"
+            },
+            {
+              "title": "Lesson 34"
+            },
+            {
+              "title": "Lesson 35"
+            },
+            {
+              "title": "Lesson 36"
+            }
+          ],
+          "topics": [
+            "Unit 6 There are four seasons in a year.",
+            "Lesson 31",
+            "Lesson 32",
+            "Lesson 33",
+            "Lesson 34",
+            "Lesson 35",
+            "Lesson 36"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 2",
+          "children": [
+            {
+              "title": "Fun time 1 Recycle 1"
+            },
+            {
+              "title": "Fun time 1 Recycle 2"
+            },
+            {
+              "title": "Fun Time Fun Reading"
+            }
+          ],
+          "topics": [
+            "Fun Time 2",
+            "Fun time 1 Recycle 1",
+            "Fun time 1 Recycle 2",
+            "Fun Time Fun Reading"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "66c72d68-4daf-9d6d-b6d3-06c3ffb3c7c2",
+      "title": "小学英语人教版（精通）三年级起点（主编：郝建平）六年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（精通）（主编：郝建平）",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/66c72d68-4daf-9d6d-b6d3-06c3ffb3c7c2.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:26.363+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 I went to Sanya for my holidays.",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Lesson 4"
+            },
+            {
+              "title": "Lesson 5"
+            },
+            {
+              "title": "Lesson 6"
+            }
+          ],
+          "topics": [
+            "Unit 1 I went to Sanya for my holidays.",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Lesson 4",
+            "Lesson 5",
+            "Lesson 6"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 There is a park near my home.",
+          "children": [
+            {
+              "title": "Lesson 7"
+            },
+            {
+              "title": "Lesson 8"
+            },
+            {
+              "title": "Lesson 9"
+            },
+            {
+              "title": "Lesson 10"
+            },
+            {
+              "title": "Lesson 11"
+            },
+            {
+              "title": "Lesson 12"
+            }
+          ],
+          "topics": [
+            "Unit 2 There is a park near my home.",
+            "Lesson 7",
+            "Lesson 8",
+            "Lesson 9",
+            "Lesson 10",
+            "Lesson 11",
+            "Lesson 12"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 We are going to travel.",
+          "children": [
+            {
+              "title": "Lesson 13"
+            },
+            {
+              "title": "Lesson 14"
+            },
+            {
+              "title": "Lesson 15"
+            },
+            {
+              "title": "Lesson 16"
+            },
+            {
+              "title": "Lesson 17"
+            },
+            {
+              "title": "Lesson 18"
+            }
+          ],
+          "topics": [
+            "Unit 3 We are going to travel.",
+            "Lesson 13",
+            "Lesson 14",
+            "Lesson 15",
+            "Lesson 16",
+            "Lesson 17",
+            "Lesson 18"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun time",
+          "children": [
+            {
+              "title": "Fun time 1 Recycle 1"
+            },
+            {
+              "title": "Fun time 1 Recycle 2"
+            },
+            {
+              "title": "Fun time 1 Fun Reading"
+            }
+          ],
+          "topics": [
+            "Fun time",
+            "Fun time 1 Recycle 1",
+            "Fun time 1 Recycle 2",
+            "Fun time 1 Fun Reading"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 General Revision 1",
+          "children": [
+            {
+              "title": "Task 1-2"
+            },
+            {
+              "title": "Task 3-4"
+            },
+            {
+              "title": "Task 5-6"
+            },
+            {
+              "title": "Task 7-8"
+            },
+            {
+              "title": "Task 9-10"
+            },
+            {
+              "title": "Task 11-12"
+            }
+          ],
+          "topics": [
+            "Unit 4 General Revision 1",
+            "Task 1-2",
+            "Task 3-4",
+            "Task 5-6",
+            "Task 7-8",
+            "Task 9-10",
+            "Task 11-12"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 General Revision 2",
+          "children": [
+            {
+              "title": "Task 1-2"
+            },
+            {
+              "title": "Task 3-4"
+            },
+            {
+              "title": "Task 5-6"
+            },
+            {
+              "title": "Task 7-8"
+            },
+            {
+              "title": "Task 9-10"
+            },
+            {
+              "title": "Task 11-12"
+            }
+          ],
+          "topics": [
+            "Unit 5 General Revision 2",
+            "Task 1-2",
+            "Task 3-4",
+            "Task 5-6",
+            "Task 7-8",
+            "Task 9-10",
+            "Task 11-12"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 General Revision 3",
+          "children": [
+            {
+              "title": "Task 1-2"
+            },
+            {
+              "title": "Task 3-4"
+            },
+            {
+              "title": "Task 5-6"
+            },
+            {
+              "title": "Task 7-8"
+            },
+            {
+              "title": "Task 9-10"
+            },
+            {
+              "title": "Task 11"
+            }
+          ],
+          "topics": [
+            "Unit 6 General Revision 3",
+            "Task 1-2",
+            "Task 3-4",
+            "Task 5-6",
+            "Task 7-8",
+            "Task 9-10",
+            "Task 11"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "b5018cd6-3354-c0eb-784e-b573954ec15b",
+      "title": "小学英语人教版（精通）三年级起点（主编：郝建平）四年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（精通）（主编：郝建平）",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/b5018cd6-3354-c0eb-784e-b573954ec15b.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:36.416+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 This is my new friend.",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Lesson 4"
+            },
+            {
+              "title": "Lesson 5"
+            },
+            {
+              "title": "Lesson 6"
+            }
+          ],
+          "topics": [
+            "Unit 1 This is my new friend.",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Lesson 4",
+            "Lesson 5",
+            "Lesson 6"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 What's your number?",
+          "children": [
+            {
+              "title": "Lesson 7"
+            },
+            {
+              "title": "Lesson 8"
+            },
+            {
+              "title": "Lesson 9"
+            },
+            {
+              "title": "Lesson 10"
+            },
+            {
+              "title": "Lesson 11"
+            },
+            {
+              "title": "Lesson 12"
+            }
+          ],
+          "topics": [
+            "Unit 2 What's your number?",
+            "Lesson 7",
+            "Lesson 8",
+            "Lesson 9",
+            "Lesson 10",
+            "Lesson 11",
+            "Lesson 12"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 It's a pineapple.",
+          "children": [
+            {
+              "title": "Lesson 13"
+            },
+            {
+              "title": "Lesson 14"
+            },
+            {
+              "title": "Lesson 15"
+            },
+            {
+              "title": "Lesson 16"
+            },
+            {
+              "title": "Lesson 17"
+            },
+            {
+              "title": "Lesson 18"
+            }
+          ],
+          "topics": [
+            "Unit 3 It's a pineapple.",
+            "Lesson 13",
+            "Lesson 14",
+            "Lesson 15",
+            "Lesson 16",
+            "Lesson 17",
+            "Lesson 18"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 1",
+          "children": [
+            {
+              "title": "Fun time 1 Recycle 1"
+            },
+            {
+              "title": "Fun time 1 Recycle 2"
+            },
+            {
+              "title": "Fun time 1 Project"
+            }
+          ],
+          "topics": [
+            "Fun Time 1",
+            "Fun time 1 Recycle 1",
+            "Fun time 1 Recycle 2",
+            "Fun time 1 Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 How's the weather today?",
+          "children": [
+            {
+              "title": "Lesson 19"
+            },
+            {
+              "title": "Lesson 20"
+            },
+            {
+              "title": "Lesson 21"
+            },
+            {
+              "title": "Lesson 22"
+            },
+            {
+              "title": "Lesson 23"
+            },
+            {
+              "title": "Lesson 24"
+            }
+          ],
+          "topics": [
+            "Unit 4 How's the weather today?",
+            "Lesson 19",
+            "Lesson 20",
+            "Lesson 21",
+            "Lesson 22",
+            "Lesson 23",
+            "Lesson 24"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 I like those shoes.",
+          "children": [
+            {
+              "title": "Lesson 25"
+            },
+            {
+              "title": "Lesson 26"
+            },
+            {
+              "title": "Lesson 27"
+            },
+            {
+              "title": "Lesson 28"
+            },
+            {
+              "title": "Lesson 29"
+            },
+            {
+              "title": "Lesson 30"
+            }
+          ],
+          "topics": [
+            "Unit 5 I like those shoes.",
+            "Lesson 25",
+            "Lesson 26",
+            "Lesson 27",
+            "Lesson 28",
+            "Lesson 29",
+            "Lesson 30"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 I'm tall.",
+          "children": [
+            {
+              "title": "Lesson 31"
+            },
+            {
+              "title": "Lesson 32"
+            },
+            {
+              "title": "Lesson 33"
+            },
+            {
+              "title": "Lesson 34"
+            },
+            {
+              "title": "Lesson 35"
+            },
+            {
+              "title": "Lesson 36"
+            }
+          ],
+          "topics": [
+            "Unit 6 I'm tall.",
+            "Lesson 31",
+            "Lesson 32",
+            "Lesson 33",
+            "Lesson 34",
+            "Lesson 35",
+            "Lesson 36"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 2",
+          "children": [
+            {
+              "title": "Fun time 2 Recycle 1"
+            },
+            {
+              "title": "Fun time 2 Recycle 2"
+            },
+            {
+              "title": "Fun time 2 Project"
+            }
+          ],
+          "topics": [
+            "Fun Time 2",
+            "Fun time 2 Recycle 1",
+            "Fun time 2 Recycle 2",
+            "Fun time 2 Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

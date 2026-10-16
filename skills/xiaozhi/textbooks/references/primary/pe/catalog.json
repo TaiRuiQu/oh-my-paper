@@ -1,0 +1,193 @@
+{
+  "stage": "小学",
+  "subject": "体育与健康",
+  "books": [
+    {
+      "id": "6b30c550-ded6-410c-a82f-77da482af7d6",
+      "title": "小学体育与健康人教版一年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "一年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "96297c58-094b-45c8-b4da-4034ee696824",
+      "title": "小学体育与健康人教版一至二年级水平一",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "一至二年级",
+      "volume": "水平一",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-1.json",
+      "unit_count": 10
+    },
+    {
+      "id": "5a14e478-d125-400d-a642-7571b84ab0c6",
+      "title": "小学体育与健康人教版三年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "三年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "663a3c02-94b9-466b-b4df-79a10867e198",
+      "title": "小学体育与健康人教版三至四年级水平二",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "三至四年级",
+      "volume": "水平二",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-2.json",
+      "unit_count": 7
+    },
+    {
+      "id": "09e2896f-216e-4b2e-9d80-17d7b266417a",
+      "title": "小学体育与健康人教版二年级上册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "二年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-2.json",
+      "unit_count": 17
+    },
+    {
+      "id": "db23a3cd-821a-47f2-b7f8-c8df461f49ff",
+      "title": "小学体育与健康人教版二年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "二年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-2.json",
+      "unit_count": 16
+    },
+    {
+      "id": "4e2e7220-0b85-4e23-830c-25ab06eb8985",
+      "title": "小学体育与健康人教版五年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-3.json",
+      "unit_count": 7
+    },
+    {
+      "id": "4d7873cf-f690-43d2-ac87-e3d21369fd46",
+      "title": "小学体育与健康人教版五至六年级水平三",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "五至六年级",
+      "volume": "水平三",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-3.json",
+      "unit_count": 7
+    },
+    {
+      "id": "e52b76c5-946e-4e2d-b899-6a55db4f0c90",
+      "title": "小学体育与健康人教版六年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-3.json",
+      "unit_count": 1
+    },
+    {
+      "id": "7cf092e3-b213-4def-a4cc-69c4b51e354d",
+      "title": "小学体育与健康人教版四年级上册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-3.json",
+      "unit_count": 5
+    },
+    {
+      "id": "81022050-5ef5-47ac-acdc-187cdc9bb8c7",
+      "title": "小学体育与健康人教版四年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-3.json",
+      "unit_count": 5
+    },
+    {
+      "id": "20e0654d-1510-4fed-a58e-f2a324be709d",
+      "title": "新教材-小学体育与健康人教版一年级全一册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-4.json",
+      "unit_count": 4
+    },
+    {
+      "id": "90245be8-ad9b-48cc-8e4b-da028a6ecad5",
+      "title": "新教材-小学体育与健康人教版三年级全一册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-4.json",
+      "unit_count": 4
+    },
+    {
+      "id": "2b89e623-3e08-4a5f-969f-4998b490c8f6",
+      "title": "新教材-小学体育与健康人教版二年级全一册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-4.json",
+      "unit_count": 4
+    },
+    {
+      "id": "94b8b87c-35ae-4132-8a4c-71fcde718184",
+      "title": "新教材-义务教育教科书•体育与健康_五年级_全一册_人民教育出版社",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "五年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-4.json",
+      "unit_count": 4
+    },
+    {
+      "id": "610576b2-e176-47ac-9459-5269f404c994",
+      "title": "新教材-义务教育教科书•体育与健康_六年级_全一册_人民教育出版社",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-4.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ea1ea6be-ebd4-4713-850c-6d82dc0b5a0f",
+      "title": "新教材-义务教育教科书•体育与健康_四年级_全一册_人民教育出版社",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/primary/pe/units-4.json",
+      "unit_count": 4
+    }
+  ]
+}

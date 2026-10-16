@@ -1,0 +1,50 @@
+{
+  "stage": "初中",
+  "subject": "化学",
+  "books": [
+    {
+      "id": "9e0891e5-3e37-427b-9862-5d8956150f21",
+      "title": "新教材-初中化学人教版九年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chemistry/units-1.json",
+      "unit_count": 18
+    },
+    {
+      "id": "a58cd255-03b0-4b0b-88e5-2c0bedc3beda",
+      "title": "新教材-初中化学人教版九年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chemistry/units-1.json",
+      "unit_count": 12
+    },
+    {
+      "id": "1304566d-68d0-43fa-ad50-7be785632038",
+      "title": "初中化学人教版九年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chemistry/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "b02a45bb-2056-413d-adbf-a63e404be5fb",
+      "title": "初中化学人教版九年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "九年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chemistry/units-1.json",
+      "unit_count": 7
+    }
+  ]
+}

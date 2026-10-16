@@ -1,0 +1,3 @@
+ALTER TABLE "exam_tasks" ADD COLUMN "deletedAt" TIMESTAMP(3);
+ALTER TABLE "exams" ADD COLUMN "revision" INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE "exam_agent_tasks" ADD COLUMN "examRevision" INTEGER NOT NULL DEFAULT 0;

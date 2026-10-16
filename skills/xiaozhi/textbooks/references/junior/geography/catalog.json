@@ -1,0 +1,94 @@
+{
+  "stage": "初中",
+  "subject": "地理",
+  "books": [
+    {
+      "id": "98cb9cc4-4806-4ee5-882c-129f43285bf3",
+      "title": "新教材-初中地理人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/geography/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "49ded37e-2914-47be-9dee-93bf492e66c5",
+      "title": "新教材-初中地理人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/geography/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "ca93ec1e-9d0d-4df7-8da0-eaa8e1cbf7e3",
+      "title": "新教材-初中地理人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/geography/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "a63434a7-b64b-4d7e-bc5d-4ace542f4fa9",
+      "title": "新教材-初中地理人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/geography/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "34202692-5a42-4f5f-8579-29c01cfc128c",
+      "title": "初中地理人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/geography/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "9c97fc56-5037-415b-af33-32d11c96ba69",
+      "title": "初中地理人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/geography/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "a4b7729b-88ea-48a6-8cb4-c0d929aee809",
+      "title": "初中地理人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/geography/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "fbb61052-55ef-4533-945c-354510bdffdd",
+      "title": "初中地理人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/geography/units-1.json",
+      "unit_count": 7
+    }
+  ]
+}

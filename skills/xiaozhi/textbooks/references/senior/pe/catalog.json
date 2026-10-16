@@ -1,0 +1,17 @@
+{
+  "stage": "高中",
+  "subject": "体育与健康",
+  "books": [
+    {
+      "id": "cd5b8173-914b-40fd-b48c-d2bf77c00c4a",
+      "title": "高中体育与健康人教版必修 全一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/pe/units-1.json",
+      "unit_count": 13
+    }
+  ]
+}

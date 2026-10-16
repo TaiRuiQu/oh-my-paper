@@ -1,0 +1,138 @@
+{
+  "stage": "初中",
+  "subject": "艺术·舞蹈/影视/戏剧",
+  "books": [
+    {
+      "id": "c44ca7be-01e1-4619-8938-fc9c7877e60a",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版九年级影视上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "影视上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ffaed2dc-97fc-4172-9a84-6bf2a151d187",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版九年级影视下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "影视下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "1210f33f-165a-4e1f-9c63-a0e0b015f6a5",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版九年级戏剧上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "戏剧上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "ddf11153-dea3-4320-8e3f-0b7096a194cb",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版九年级戏剧下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "戏剧下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "44392065-7826-42ab-88e5-0f520c2eb37f",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版九年级舞蹈上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "舞蹈上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "56461635-6209-478c-9ff2-8a68a00c3d60",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版九年级舞蹈下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "舞蹈下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "6f99d269-b314-42d4-bf23-966d5eedc386",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版八年级影视上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "影视上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "f283dca0-ff85-47c1-9562-2a9a9b4afdf8",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版八年级影视下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "影视下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "a6c6b291-2236-41e3-8710-93f885d4ff05",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版八年级戏剧上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "戏剧上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "c204b986-e710-49ad-9813-0ecdc3e7fe67",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版八年级戏剧下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "戏剧下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "e986bdeb-8e36-478f-8405-cddd4b8bed6f",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版八年级舞蹈上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "舞蹈上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "869bc3e8-1409-4093-8dc0-35e0068508b0",
+      "title": "新教材-初中艺术·舞蹈/影视/戏剧人教版八年级舞蹈下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "舞蹈下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/performing-arts/units-1.json",
+      "unit_count": 5
+    }
+  ]
+}

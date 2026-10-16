@@ -1,0 +1,1427 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "6cf7fb4b-70f7-4b5c-891e-70fd11ef4537",
+      "title": "小学英语人教版（一年级起点）（主编：吴欣）四年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（一年级起点）（主编：吴欣）",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/6cf7fb4b-70f7-4b5c-891e-70fd11ef4537.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:32.010+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Sports and Games",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 1 Sports and Games"
+            }
+          ],
+          "topics": [
+            "Unit 1 Sports and Games",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Let’s Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 On the Weekend",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 2 On the Weekend"
+            }
+          ],
+          "topics": [
+            "Unit 2 On the Weekend",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Let’s Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Transportation",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 3 Transportation"
+            }
+          ],
+          "topics": [
+            "Unit 3 Transportation",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Let’s Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "children": [
+            {
+              "title": "Lesson 1 My Leisure Time on the Weekend"
+            },
+            {
+              "title": "Lesson 2 A Letter from a Sports Fan"
+            },
+            {
+              "title": "Lesson 3 Getting Close to Sports"
+            },
+            {
+              "title": "Let's Spell-Bossy R"
+            }
+          ],
+          "topics": [
+            "Revision 1",
+            "Lesson 1 My Leisure Time on the Weekend",
+            "Lesson 2 A Letter from a Sports Fan",
+            "Lesson 3 Getting Close to Sports",
+            "Let's Spell-Bossy R"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Asking for Help",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 4 Asking for Help"
+            }
+          ],
+          "topics": [
+            "Unit 4 Asking for Help",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Let’s Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Safety",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 5 Safety"
+            }
+          ],
+          "topics": [
+            "Unit 5 Safety",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Let’s Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Jobs",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let’s Spell"
+            },
+            {
+              "title": "Let’s Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 6 Jobs"
+            }
+          ],
+          "topics": [
+            "Unit 6 Jobs",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let’s Spell",
+            "Let’s Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            }
+          ],
+          "topics": ["Revision 2", "Lesson 1", "Lesson 2", "Lesson 3"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录一 歌曲",
+          "topics": ["附录一 歌曲"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录二 自我评价表",
+          "topics": ["附录二 自我评价表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录三 单元词汇表",
+          "topics": ["附录三 单元词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录四 总词汇表",
+          "topics": ["附录四 总词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录五 三年级Let’s Spell主要内容",
+          "topics": ["附录五 三年级Let’s Spell主要内容"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "专题一：玩转绘本",
+          "children": [
+            {
+              "title": "Lesson 1 The Cars and Trucks Book"
+            },
+            {
+              "title": "Lesson 2 Todd Parr and His Books"
+            },
+            {
+              "title": "Lesson 3 Let's make a book."
+            }
+          ],
+          "topics": [
+            "专题一：玩转绘本",
+            "Lesson 1 The Cars and Trucks Book",
+            "Lesson 2 Todd Parr and His Books",
+            "Lesson 3 Let's make a book."
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "98eb897d-bf26-4485-92bc-029da36cd18d",
+      "title": "小学英语人教版（一年级起点）（主编：吴欣）四年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（一年级起点）（主编：吴欣）",
+      "revision_label": "平台未标新旧",
+      "grade": "四年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/98eb897d-bf26-4485-92bc-029da36cd18d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:18.416+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 My neighbourhood",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let's Spell"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 1 My Neighbourhood"
+            }
+          ],
+          "topics": [
+            "Unit 1 My neighbourhood",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let's Spell",
+            "Let's Check",
+            "Fun Time",
+            "Story Time",
+            "Unit 1 My Neighbourhood"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Cities",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let's Spell"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 2 Cities"
+            }
+          ],
+          "topics": [
+            "Unit 2 Cities",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let's Spell",
+            "Let's Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Travel Plans",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let's Spell"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 3 Travel Plans"
+            }
+          ],
+          "topics": [
+            "Unit 3 Travel Plans",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let's Spell",
+            "Let's Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "topics": ["Revision 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Hobbies",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let's Spell"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 4 Hobbies"
+            }
+          ],
+          "topics": [
+            "Unit 4 Hobbies",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let's Spell",
+            "Let's Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Free Time",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let's Spell"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 5 Free Time"
+            }
+          ],
+          "topics": [
+            "Unit 5 Free Time",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let's Spell",
+            "Let's Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Countries",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Let's Spell"
+            },
+            {
+              "title": "Let's Check"
+            },
+            {
+              "title": "Fun Time"
+            },
+            {
+              "title": "Story Time"
+            },
+            {
+              "title": "Unit 6 Countries"
+            }
+          ],
+          "topics": [
+            "Unit 6 Countries",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Let's Spell",
+            "Let's Check",
+            "Fun Time",
+            "Story Time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "topics": ["Revision 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录一 歌曲",
+          "topics": ["附录一 歌曲"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录二 自我评价表",
+          "topics": ["附录二 自我评价表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录三 单元词汇表",
+          "topics": ["附录三 单元词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录四 总词汇表",
+          "topics": ["附录四 总词汇表"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "f76bb763-3652-46b0-8674-0d4e529ecc55",
+      "title": "小学英语人教版（PEP）（三年级起点）（主编：吴欣）五年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "平台未标新旧",
+      "grade": "五年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/f76bb763-3652-46b0-8674-0d4e529ecc55.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:23.609+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 My day",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 1 My day", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 My favourite season",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 2 My favourite season", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 My school calendar",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 3 My school calendar", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 1",
+          "topics": ["Recycle 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 When is the art show?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 4 When is the art show?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Whose dog is it?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 5 Whose dog is it?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Work quietly!",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 6 Work quietly!", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 2",
+          "topics": ["Recycle 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "其他",
+          "children": [
+            {
+              "title": "Unit 4 When is Easter?",
+              "children": [
+                {
+                  "title": "A"
+                },
+                {
+                  "title": "B"
+                },
+                {
+                  "title": "C"
+                }
+              ]
+            }
+          ],
+          "topics": ["其他", "Unit 4 When is Easter?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "638a0cc9-69a5-4369-8472-69148c719583",
+      "title": "小学英语人教版（PEP）（三年级起点）（主编：吴欣）六年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/638a0cc9-69a5-4369-8472-69148c719583.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:23.648+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 How tall are you?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 1 How tall are you?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Last weekend",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 2 Last weekend", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Where did you go?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 3 Where did you go?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Then and now",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 4 Then and now", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle Mike's happy days",
+          "children": [
+            {
+              "title": "Day1 & Day2"
+            },
+            {
+              "title": "Day3 & Day4"
+            },
+            {
+              "title": "Day5 & Day6"
+            },
+            {
+              "title": "Day7 & Day8"
+            },
+            {
+              "title": "Story"
+            }
+          ],
+          "topics": [
+            "Recycle Mike's happy days",
+            "Day1 & Day2",
+            "Day3 & Day4",
+            "Day5 & Day6",
+            "Day7 & Day8",
+            "Story"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision",
+          "children": [
+            {
+              "title": "Revision 1"
+            },
+            {
+              "title": "Revision 2"
+            },
+            {
+              "title": "Revision 3"
+            }
+          ],
+          "topics": ["Revision", "Revision 1", "Revision 2", "Revision 3"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "caa00dba-86b5-a12f-cccc-8e023e6c02a3",
+      "title": "小学英语人教版（精通）三年级起点（主编：郝建平）三年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（精通）（主编：郝建平）",
+      "revision_label": "平台未标新旧",
+      "grade": "三年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/caa00dba-86b5-a12f-cccc-8e023e6c02a3.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:51.918+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Hello! I'm Monkey.",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Lesson 4"
+            },
+            {
+              "title": "Lesson 5"
+            },
+            {
+              "title": "Lesson 6"
+            }
+          ],
+          "topics": [
+            "Unit 1 Hello! I'm Monkey.",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Lesson 4",
+            "Lesson 5",
+            "Lesson 6"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 This is my pencil.",
+          "children": [
+            {
+              "title": "Lesson 7"
+            },
+            {
+              "title": "Lesson 8"
+            },
+            {
+              "title": "Lesson 9"
+            },
+            {
+              "title": "Lesson 10"
+            },
+            {
+              "title": "Lesson 11"
+            },
+            {
+              "title": "Lesson 12"
+            }
+          ],
+          "topics": [
+            "Unit 2 This is my pencil.",
+            "Lesson 7",
+            "Lesson 8",
+            "Lesson 9",
+            "Lesson 10",
+            "Lesson 11",
+            "Lesson 12"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Look at my nose.",
+          "children": [
+            {
+              "title": "Lesson 13"
+            },
+            {
+              "title": "Lesson 14"
+            },
+            {
+              "title": "Lesson 15"
+            },
+            {
+              "title": "Lesson 16"
+            },
+            {
+              "title": "Lesson 17"
+            },
+            {
+              "title": "Lesson 18"
+            }
+          ],
+          "topics": [
+            "Unit 3 Look at my nose.",
+            "Lesson 13",
+            "Lesson 14",
+            "Lesson 15",
+            "Lesson 16",
+            "Lesson 17",
+            "Lesson 18"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 1",
+          "children": [
+            {
+              "title": "Fun time 1 Recycle 1"
+            },
+            {
+              "title": "Fun time 1 Recycle 2"
+            },
+            {
+              "title": "Fun time 1 Project"
+            }
+          ],
+          "topics": [
+            "Fun Time 1",
+            "Fun time 1 Recycle 1",
+            "Fun time 1 Recycle 2",
+            "Fun time 1 Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 I have a ball.",
+          "children": [
+            {
+              "title": "Lesson 19"
+            },
+            {
+              "title": "Lesson 20"
+            },
+            {
+              "title": "Lesson 21"
+            },
+            {
+              "title": "Lesson 22"
+            },
+            {
+              "title": "Lesson 23"
+            },
+            {
+              "title": "Lesson 24"
+            }
+          ],
+          "topics": [
+            "Unit 4 I have a ball.",
+            "Lesson 19",
+            "Lesson 20",
+            "Lesson 21",
+            "Lesson 22",
+            "Lesson 23",
+            "Lesson 24"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 What colour is it?",
+          "children": [
+            {
+              "title": "Lesson 25"
+            },
+            {
+              "title": "Lesson 26"
+            },
+            {
+              "title": "Lesson 27"
+            },
+            {
+              "title": "Lesson 28"
+            },
+            {
+              "title": "Lesson 29"
+            },
+            {
+              "title": "Lesson 30"
+            }
+          ],
+          "topics": [
+            "Unit 5 What colour is it?",
+            "Lesson 25",
+            "Lesson 26",
+            "Lesson 27",
+            "Lesson 28",
+            "Lesson 29",
+            "Lesson 30"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 I like hamburgers.",
+          "children": [
+            {
+              "title": "Lesson 31"
+            },
+            {
+              "title": "Lesson 32"
+            },
+            {
+              "title": "Lesson 33"
+            },
+            {
+              "title": "Lesson 34"
+            },
+            {
+              "title": "Lesson 35"
+            },
+            {
+              "title": "Lesson 36"
+            }
+          ],
+          "topics": [
+            "Unit 6 I like hamburgers.",
+            "Lesson 31",
+            "Lesson 32",
+            "Lesson 33",
+            "Lesson 34",
+            "Lesson 35",
+            "Lesson 36"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 2",
+          "children": [
+            {
+              "title": "Fun time 2 Recycle 1"
+            },
+            {
+              "title": "Fun time 2 Recycle 2"
+            },
+            {
+              "title": "Fun time 2 Project"
+            }
+          ],
+          "topics": [
+            "Fun Time 2",
+            "Fun time 2 Recycle 1",
+            "Fun time 2 Recycle 2",
+            "Fun time 2 Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "c876ecfb-d605-99dc-553b-2726cb162562",
+      "title": "小学英语人教版（精通）三年级起点（主编：郝建平）三年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（精通）（主编：郝建平）",
+      "revision_label": "平台未标新旧",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/c876ecfb-d605-99dc-553b-2726cb162562.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:50.221+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Let's go to school.",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Lesson 4"
+            },
+            {
+              "title": "Lesson 5"
+            },
+            {
+              "title": "Lesson 6"
+            }
+          ],
+          "topics": [
+            "Unit 1 Let's go to school.",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Lesson 4",
+            "Lesson 5",
+            "Lesson 6"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 I'm in Class One,Grade Three.",
+          "children": [
+            {
+              "title": "Lesson 7"
+            },
+            {
+              "title": "Lesson 8"
+            },
+            {
+              "title": "Lesson 9"
+            },
+            {
+              "title": "Lesson 10"
+            },
+            {
+              "title": "Lesson 11"
+            },
+            {
+              "title": "Lesson 12"
+            }
+          ],
+          "topics": [
+            "Unit 2 I'm in Class One,Grade Three.",
+            "Lesson 7",
+            "Lesson 8",
+            "Lesson 9",
+            "Lesson 10",
+            "Lesson 11",
+            "Lesson 12"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 This is my father.",
+          "children": [
+            {
+              "title": "Lesson 13"
+            },
+            {
+              "title": "Lesson 14"
+            },
+            {
+              "title": "Lesson 15"
+            },
+            {
+              "title": "Lesson 16"
+            },
+            {
+              "title": "Lesson 17"
+            },
+            {
+              "title": "Lesson 18"
+            }
+          ],
+          "topics": [
+            "Unit 3 This is my father.",
+            "Lesson 13",
+            "Lesson 14",
+            "Lesson 15",
+            "Lesson 16",
+            "Lesson 17",
+            "Lesson 18"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 1",
+          "children": [
+            {
+              "title": "Fun time 1 Recycle 1"
+            },
+            {
+              "title": "Fun time 1 Recycle 2"
+            },
+            {
+              "title": "Fun time 1 Project"
+            }
+          ],
+          "topics": [
+            "Fun Time 1",
+            "Fun time 1 Recycle 1",
+            "Fun time 1 Recycle 2",
+            "Fun time 1 Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Do you like candy?",
+          "children": [
+            {
+              "title": "Lesson 19"
+            },
+            {
+              "title": "Lesson 20"
+            },
+            {
+              "title": "Lesson 21"
+            },
+            {
+              "title": "Lesson 22"
+            },
+            {
+              "title": "Lesson 23"
+            },
+            {
+              "title": "Lesson 24"
+            }
+          ],
+          "topics": [
+            "Unit 4 Do you like candy?",
+            "Lesson 19",
+            "Lesson 20",
+            "Lesson 21",
+            "Lesson 22",
+            "Lesson 23",
+            "Lesson 24"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 It's a parrot.",
+          "children": [
+            {
+              "title": "Lesson 25"
+            },
+            {
+              "title": "Lesson 26"
+            },
+            {
+              "title": "Lesson 27"
+            },
+            {
+              "title": "Lesson 28"
+            },
+            {
+              "title": "Lesson 29"
+            },
+            {
+              "title": "Lesson 30"
+            }
+          ],
+          "topics": [
+            "Unit 5 It's a parrot.",
+            "Lesson 25",
+            "Lesson 26",
+            "Lesson 27",
+            "Lesson 28",
+            "Lesson 29",
+            "Lesson 30"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Is this your skirt?",
+          "children": [
+            {
+              "title": "Lesson 31"
+            },
+            {
+              "title": "Lesson 32"
+            },
+            {
+              "title": "Lesson 33"
+            },
+            {
+              "title": "Lesson 34"
+            },
+            {
+              "title": "Lesson 35"
+            },
+            {
+              "title": "Lesson 36"
+            }
+          ],
+          "topics": [
+            "Unit 6 Is this your skirt?",
+            "Lesson 31",
+            "Lesson 32",
+            "Lesson 33",
+            "Lesson 34",
+            "Lesson 35",
+            "Lesson 36"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Fun Time 2",
+          "children": [
+            {
+              "title": "Fun time 2 Recycle 1"
+            },
+            {
+              "title": "Fun time 2 Recycle 2"
+            },
+            {
+              "title": "Fun time 2 Project"
+            }
+          ],
+          "topics": [
+            "Fun Time 2",
+            "Fun time 2 Recycle 1",
+            "Fun time 2 Recycle 2",
+            "Fun time 2 Project"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

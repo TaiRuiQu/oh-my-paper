@@ -1,0 +1,17 @@
+# Linux/Python 3.11 dependency snapshot; see legal/python-packages.json.
+pillow==12.3.0
+opencv-python-headless==5.0.0.93
+numpy==2.3.5
+zxing-cpp==3.0.0
+scipy==1.16.3
+sympy==1.14.0
+mpmath==1.3.0
+reportlab==5.0.1
+pdfplumber==0.11.10
+pypdf==6.20.1
+pdfminer.six==20260107
+charset-normalizer==3.5.2
+pypdfium2==5.14.0
+cryptography==50.0.2
+cffi==2.1.1
+pycparser==3.11

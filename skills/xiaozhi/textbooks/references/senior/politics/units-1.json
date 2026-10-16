@@ -1,0 +1,1369 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "0785f71b-5288-46d5-bd64-daefb9bc6bf0",
+      "title": "高中思想政治人教版高三高三下",
+      "stage": "高中",
+      "subject": "思想政治",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高三",
+      "volume": "高三下",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/0785f71b-5288-46d5-bd64-daefb9bc6bf0.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:26:53.419+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "高考复习",
+          "children": [
+            {
+              "title": "高中政治备考及复习建议（上）"
+            },
+            {
+              "title": "高中政治备考及复习建议（下）"
+            },
+            {
+              "title": "时事政治热点问题分析（上）"
+            },
+            {
+              "title": "时事政治热点问题分析（下）"
+            },
+            {
+              "title": "高考政治解题方法及应考策略（上）"
+            },
+            {
+              "title": "高考政治解题方法及应考策略（下）"
+            },
+            {
+              "title": "《政治生活》知识整合及复习策略"
+            },
+            {
+              "title": "《生活与哲学》知识整合及复习策略"
+            },
+            {
+              "title": "《文化生活》知识整合及复习策略"
+            },
+            {
+              "title": "高考开放性试题分析及对策（上）"
+            },
+            {
+              "title": "高考开放性试题分析及对策（下）"
+            }
+          ],
+          "topics": [
+            "高考复习",
+            "高中政治备考及复习建议（上）",
+            "高中政治备考及复习建议（下）",
+            "时事政治热点问题分析（上）",
+            "时事政治热点问题分析（下）",
+            "高考政治解题方法及应考策略（上）",
+            "高考政治解题方法及应考策略（下）",
+            "《政治生活》知识整合及复习策略",
+            "《生活与哲学》知识整合及复习策略",
+            "《文化生活》知识整合及复习策略",
+            "高考开放性试题分析及对策（上）",
+            "高考开放性试题分析及对策（下）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "9b84c919-48b7-4de1-95c4-090fb0385f73",
+      "title": "高中思想政治人教版高二必修一",
+      "stage": "高中",
+      "subject": "思想政治",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "必修一",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/9b84c919-48b7-4de1-95c4-090fb0385f73.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:21.299+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 生活与消费",
+          "children": [
+            {
+              "title": "神奇的货币"
+            },
+            {
+              "title": "货币部分学案指导"
+            },
+            {
+              "title": "多变的价格"
+            },
+            {
+              "title": "价格部分学案指导"
+            },
+            {
+              "title": "多彩的消费"
+            },
+            {
+              "title": "消费部分学案指导"
+            }
+          ],
+          "topics": [
+            "生活与消费",
+            "神奇的货币",
+            "货币部分学案指导",
+            "多变的价格",
+            "价格部分学案指导",
+            "多彩的消费",
+            "消费部分学案指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 生产、劳动与经营",
+          "children": [
+            {
+              "title": "生产与经济制度"
+            },
+            {
+              "title": "生产与经济制度部分学案指导"
+            },
+            {
+              "title": "企业与劳动者"
+            },
+            {
+              "title": "企业与劳动者部分学案指导"
+            },
+            {
+              "title": "投资理财的选择"
+            },
+            {
+              "title": "投资理财的选择部分学案指导"
+            }
+          ],
+          "topics": [
+            "生产、劳动与经营",
+            "生产与经济制度",
+            "生产与经济制度部分学案指导",
+            "企业与劳动者",
+            "企业与劳动者部分学案指导",
+            "投资理财的选择",
+            "投资理财的选择部分学案指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 收入与分配",
+          "children": [
+            {
+              "title": "财政与税收学案指导"
+            },
+            {
+              "title": "个人收入的分配"
+            },
+            {
+              "title": "个人收入的分配学案指导"
+            },
+            {
+              "title": "财政与税收"
+            }
+          ],
+          "topics": [
+            "收入与分配",
+            "财政与税收学案指导",
+            "个人收入的分配",
+            "个人收入的分配学案指导",
+            "财政与税收"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 发展社会主义市场经济",
+          "children": [
+            {
+              "title": "走进社会主义市场经济"
+            },
+            {
+              "title": "社会主义市场经济学案指导"
+            },
+            {
+              "title": "新发展理念和中国特色社会主义新时代的经济建设"
+            },
+            {
+              "title": "新发展理念和经济建设学案指导"
+            },
+            {
+              "title": "经济全球化与对外开放"
+            },
+            {
+              "title": "经济全球化与对外开放学案指导"
+            }
+          ],
+          "topics": [
+            "发展社会主义市场经济",
+            "走进社会主义市场经济",
+            "社会主义市场经济学案指导",
+            "新发展理念和中国特色社会主义新时代的经济建设",
+            "新发展理念和经济建设学案指导",
+            "经济全球化与对外开放",
+            "经济全球化与对外开放学案指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "78b05af5-4355-4e55-8eb0-9288e99ab4c1",
+      "title": "高中思想政治人教版高二必修三",
+      "stage": "高中",
+      "subject": "思想政治",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "必修三",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/78b05af5-4355-4e55-8eb0-9288e99ab4c1.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:41.688+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 文化与生活",
+          "children": [
+            {
+              "title": "文化的内涵和作用"
+            },
+            {
+              "title": "文化的内涵和作用学案指导"
+            }
+          ],
+          "topics": ["文化与生活", "文化的内涵和作用", "文化的内涵和作用学案指导"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 文化传承与创新",
+          "children": [
+            {
+              "title": "文化的继承性与文化发展"
+            },
+            {
+              "title": "文化的继承性与文化发展学案指导"
+            },
+            {
+              "title": "文化的多样性与文化传播"
+            },
+            {
+              "title": "文化的多样性与文化传播学案指导"
+            },
+            {
+              "title": "文化创新"
+            },
+            {
+              "title": "文化创新学案指导"
+            }
+          ],
+          "topics": [
+            "文化传承与创新",
+            "文化的继承性与文化发展",
+            "文化的继承性与文化发展学案指导",
+            "文化的多样性与文化传播",
+            "文化的多样性与文化传播学案指导",
+            "文化创新",
+            "文化创新学案指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 中华文化与民族精神",
+          "children": [
+            {
+              "title": "我们的中华文化"
+            },
+            {
+              "title": "我们的中华文化学案指导"
+            },
+            {
+              "title": "我们的民族精神"
+            },
+            {
+              "title": "我们的民族精神学案指导"
+            }
+          ],
+          "topics": [
+            "中华文化与民族精神",
+            "我们的中华文化",
+            "我们的中华文化学案指导",
+            "我们的民族精神",
+            "我们的民族精神学案指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 发展中国特色社会主义文化",
+          "children": [
+            {
+              "title": "走进文化生活学案指导"
+            },
+            {
+              "title": "走进文化生活"
+            },
+            {
+              "title": "坚持中国特色社会主义文化发展道路"
+            },
+            {
+              "title": "坚持中国特色社会主义文化发展道路学案指导"
+            },
+            {
+              "title": "培养担当民族复兴大任的时代新人"
+            },
+            {
+              "title": "培养担当民族复兴大任的时代新人学案指导"
+            }
+          ],
+          "topics": [
+            "发展中国特色社会主义文化",
+            "走进文化生活学案指导",
+            "走进文化生活",
+            "坚持中国特色社会主义文化发展道路",
+            "坚持中国特色社会主义文化发展道路学案指导",
+            "培养担当民族复兴大任的时代新人",
+            "培养担当民族复兴大任的时代新人学案指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "64b6cf54-d18a-4093-ae01-0fa74fa7944c",
+      "title": "高中思想政治人教版高二必修二",
+      "stage": "高中",
+      "subject": "思想政治",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "必修二",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/64b6cf54-d18a-4093-ae01-0fa74fa7944c.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:24.717+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 公民的政治生活",
+          "children": [
+            {
+              "title": "生活在人民当家作主的国家"
+            },
+            {
+              "title": "生活在人民当家作主的国家学案指导"
+            },
+            {
+              "title": "我国公民的政治参与"
+            },
+            {
+              "title": "我国公民的政治参与学案指导"
+            }
+          ],
+          "topics": [
+            "公民的政治生活",
+            "生活在人民当家作主的国家",
+            "生活在人民当家作主的国家学案指导",
+            "我国公民的政治参与",
+            "我国公民的政治参与学案指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 为人民服务的政府",
+          "children": [
+            {
+              "title": "我国政府是人民的政府"
+            },
+            {
+              "title": "我国政府是人民的政府学案指导"
+            },
+            {
+              "title": "我国政府受人民的监督"
+            },
+            {
+              "title": "我国政府受人民的监督学案指导"
+            }
+          ],
+          "topics": [
+            "为人民服务的政府",
+            "我国政府是人民的政府",
+            "我国政府是人民的政府学案指导",
+            "我国政府受人民的监督",
+            "我国政府受人民的监督学案指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 发展社会主义民主政治",
+          "children": [
+            {
+              "title": "中国特色社会主义最本质的特征"
+            },
+            {
+              "title": "中国特色社会主义最本质的特征学案指导"
+            },
+            {
+              "title": "我国的人民代表大会制度"
+            },
+            {
+              "title": "我国的人民代表大会制度学案指导"
+            },
+            {
+              "title": "中国共产党领导的多党合作和政治协商制度"
+            },
+            {
+              "title": "中国共产党领导的多党合作和政治协商制度学案指导"
+            },
+            {
+              "title": "民族区域自治制度和宗教工作基本方针"
+            },
+            {
+              "title": "民族区域自治制度和宗教工作基本方针学案指导"
+            }
+          ],
+          "topics": [
+            "发展社会主义民主政治",
+            "中国特色社会主义最本质的特征",
+            "中国特色社会主义最本质的特征学案指导",
+            "我国的人民代表大会制度",
+            "我国的人民代表大会制度学案指导",
+            "中国共产党领导的多党合作和政治协商制度",
+            "中国共产党领导的多党合作和政治协商制度学案指导",
+            "民族区域自治制度和宗教工作基本方针",
+            "民族区域自治制度和宗教工作基本方针学案指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 当代国际社会",
+          "children": [
+            {
+              "title": "走近国际社会"
+            },
+            {
+              "title": "走近国际社会学案指导"
+            },
+            {
+              "title": "维护世界和平促进共同发展"
+            },
+            {
+              "title": "维护世界和平促进共同发展学案指导"
+            }
+          ],
+          "topics": [
+            "当代国际社会",
+            "走近国际社会",
+            "走近国际社会学案指导",
+            "维护世界和平促进共同发展",
+            "维护世界和平促进共同发展学案指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0175-de7400ff0342",
+      "title": "高中思想政治统编版选择性必修1 当代国际政治与经济",
+      "stage": "高中",
+      "subject": "思想政治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修1 当代国际政治与经济",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-759c-c8e1-0175-de7400ff0342.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:04.306+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 各具特色的国家",
+          "children": [
+            {
+              "title": "第一课 国体与政体",
+              "children": [
+                {
+                  "title": "国家是什么"
+                },
+                {
+                  "title": "国家的政权组织形式"
+                },
+                {
+                  "title": "政党和利益集团"
+                }
+              ]
+            },
+            {
+              "title": "第二课 国家的结构形式",
+              "children": [
+                {
+                  "title": "主权统一与政权分层"
+                },
+                {
+                  "title": "单一制和复合制"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 国家安全与核心利益"
+            }
+          ],
+          "topics": [
+            "各具特色的国家",
+            "国体与政体",
+            "国家是什么",
+            "国家的政权组织形式",
+            "政党和利益集团",
+            "国家的结构形式",
+            "主权统一与政权分层",
+            "单一制和复合制",
+            "综合探究 国家安全与核心利益"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 世界多极化",
+          "children": [
+            {
+              "title": "第三课 多极化趋势",
+              "children": [
+                {
+                  "title": "世界多极化的发展"
+                },
+                {
+                  "title": "国际关系"
+                }
+              ]
+            },
+            {
+              "title": "第四课 和平与发展",
+              "children": [
+                {
+                  "title": "时代的主题"
+                },
+                {
+                  "title": "挑战与应对"
+                }
+              ]
+            },
+            {
+              "title": "第五课 中国的外交",
+              "children": [
+                {
+                  "title": "中国外交政策的形成与发展"
+                },
+                {
+                  "title": "构建人类命运共同体"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 贡献中国智慧"
+            }
+          ],
+          "topics": [
+            "世界多极化",
+            "多极化趋势",
+            "世界多极化的发展",
+            "国际关系",
+            "和平与发展",
+            "时代的主题",
+            "挑战与应对",
+            "中国的外交",
+            "中国外交政策的形成与发展",
+            "构建人类命运共同体",
+            "综合探究 贡献中国智慧"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 经济全球化",
+          "children": [
+            {
+              "title": "第六课 走进经济全球化",
+              "children": [
+                {
+                  "title": "认识经济全球化"
+                },
+                {
+                  "title": "日益开放的世界经济"
+                }
+              ]
+            },
+            {
+              "title": "第七课 经济全球化与中国",
+              "children": [
+                {
+                  "title": "开放是当代中国的鲜明标识"
+                },
+                {
+                  "title": "做全球发展的贡献者"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 发展更高层次开放型经济 完善全球治理"
+            }
+          ],
+          "topics": [
+            "经济全球化",
+            "走进经济全球化",
+            "认识经济全球化",
+            "日益开放的世界经济",
+            "经济全球化与中国",
+            "开放是当代中国的鲜明标识",
+            "做全球发展的贡献者",
+            "综合探究 发展更高层次开放型经济 完善全球治理"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 国际组织",
+          "children": [
+            {
+              "title": "第八课 主要的国际组织",
+              "children": [
+                {
+                  "title": "日益重要的国际组织"
+                },
+                {
+                  "title": "联合国"
+                },
+                {
+                  "title": "区域性国际组织"
+                }
+              ]
+            },
+            {
+              "title": "第九课 中国与国际组织",
+              "children": [
+                {
+                  "title": "中国与联合国"
+                },
+                {
+                  "title": "中国与新兴国际组织"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 国际视野及国际人才"
+            }
+          ],
+          "topics": [
+            "国际组织",
+            "主要的国际组织",
+            "日益重要的国际组织",
+            "联合国",
+            "区域性国际组织",
+            "中国与国际组织",
+            "中国与联合国",
+            "中国与新兴国际组织",
+            "综合探究 国际视野及国际人才"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0175-de81ffda038f",
+      "title": "高中思想政治统编版选择性必修2 法律与生活",
+      "stage": "高中",
+      "subject": "思想政治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2 法律与生活",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-759c-c8e1-0175-de81ffda038f.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:04.432+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 民事权利与义务",
+          "children": [
+            {
+              "title": "第一课 在生活中学民法用民法",
+              "children": [
+                {
+                  "title": "认真对待民事权利与义务"
+                },
+                {
+                  "title": "积极维护人身权利"
+                }
+              ]
+            },
+            {
+              "title": "第二课 依法有效保护财产权",
+              "children": [
+                {
+                  "title": "保障各类物权"
+                },
+                {
+                  "title": "尊重知识产权"
+                }
+              ]
+            },
+            {
+              "title": "第三课 订约履约 诚信为本",
+              "children": [
+                {
+                  "title": "订立合同学问大"
+                },
+                {
+                  "title": "有约必守 违约有责"
+                }
+              ]
+            },
+            {
+              "title": "第四课 侵权责任与权利界限",
+              "children": [
+                {
+                  "title": "权利保障 于法有据"
+                },
+                {
+                  "title": "权利行使 注意界限"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 财产制度助力经济社会发展"
+            }
+          ],
+          "topics": [
+            "民事权利与义务",
+            "在生活中学民法用民法",
+            "认真对待民事权利与义务",
+            "积极维护人身权利",
+            "依法有效保护财产权",
+            "保障各类物权",
+            "尊重知识产权",
+            "订约履约 诚信为本",
+            "订立合同学问大",
+            "有约必守 违约有责",
+            "侵权责任与权利界限",
+            "权利保障 于法有据",
+            "权利行使 注意界限",
+            "综合探究 财产制度助力经济社会发展"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 家庭与婚姻",
+          "children": [
+            {
+              "title": "第五课 在和睦家庭中成长",
+              "children": [
+                {
+                  "title": "家和万事兴"
+                },
+                {
+                  "title": "薪火相传有继承"
+                }
+              ]
+            },
+            {
+              "title": "第六课 珍惜婚姻关系",
+              "children": [
+                {
+                  "title": "法律保护下的婚姻"
+                },
+                {
+                  "title": "夫妻地位平等"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 家庭生活 法律守护"
+            }
+          ],
+          "topics": [
+            "家庭与婚姻",
+            "在和睦家庭中成长",
+            "家和万事兴",
+            "薪火相传有继承",
+            "珍惜婚姻关系",
+            "法律保护下的婚姻",
+            "夫妻地位平等",
+            "综合探究 家庭生活 法律守护"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 就业与创业",
+          "children": [
+            {
+              "title": "第七课 做个明白的劳动者",
+              "children": [
+                {
+                  "title": "立足职场有法宝"
+                },
+                {
+                  "title": "心中有数上职场"
+                }
+              ]
+            },
+            {
+              "title": "第八课 自主创业与诚信经营",
+              "children": [
+                {
+                  "title": "自主创业 公平竞争"
+                },
+                {
+                  "title": "诚信经营 依法纳税"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 企业创办之旅"
+            }
+          ],
+          "topics": [
+            "就业与创业",
+            "做个明白的劳动者",
+            "立足职场有法宝",
+            "心中有数上职场",
+            "自主创业与诚信经营",
+            "自主创业 公平竞争",
+            "诚信经营 依法纳税",
+            "综合探究 企业创办之旅"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 社会争议解决",
+          "children": [
+            {
+              "title": "第九课 纠纷的多元解决方式",
+              "children": [
+                {
+                  "title": "认识调解与仲裁"
+                },
+                {
+                  "title": "解析三大诉讼"
+                }
+              ]
+            },
+            {
+              "title": "第十课 诉讼实现公平正义",
+              "children": [
+                {
+                  "title": "正确行使诉讼权利"
+                },
+                {
+                  "title": "严格遵守诉讼程序"
+                },
+                {
+                  "title": "依法收集运用证据"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 感受司法公正"
+            }
+          ],
+          "topics": [
+            "社会争议解决",
+            "纠纷的多元解决方式",
+            "认识调解与仲裁",
+            "解析三大诉讼",
+            "诉讼实现公平正义",
+            "正确行使诉讼权利",
+            "严格遵守诉讼程序",
+            "依法收集运用证据",
+            "综合探究 感受司法公正"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0175-deaa5f1d03e4",
+      "title": "高中思想政治统编版选择性必修3 逻辑与思维",
+      "stage": "高中",
+      "subject": "思想政治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 逻辑与思维",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58b-759c-c8e1-0175-deaa5f1d03e4.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:04.550+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 树立科学思维观念",
+          "children": [
+            {
+              "title": "第一课 走进思维世界",
+              "children": [
+                {
+                  "title": "思维的含义与特征"
+                },
+                {
+                  "title": "思维形态及其特征"
+                }
+              ]
+            },
+            {
+              "title": "第二课 把握逻辑要义",
+              "children": [
+                {
+                  "title": "“逻辑”的多种含义"
+                },
+                {
+                  "title": "逻辑思维的基本要求"
+                }
+              ]
+            },
+            {
+              "title": "第三课 领会科学思维",
+              "children": [
+                {
+                  "title": "科学思维的含义与特征"
+                },
+                {
+                  "title": "学习科学思维的意义"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 学会科学思维 提升思维品质"
+            }
+          ],
+          "topics": [
+            "树立科学思维观念",
+            "走进思维世界",
+            "思维的含义与特征",
+            "思维形态及其特征",
+            "把握逻辑要义",
+            "“逻辑”的多种含义",
+            "逻辑思维的基本要求",
+            "领会科学思维",
+            "科学思维的含义与特征",
+            "学习科学思维的意义",
+            "综合探究 学会科学思维 提升思维品质"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 遵循逻辑思维规则",
+          "children": [
+            {
+              "title": "第四课 准确把握概念",
+              "children": [
+                {
+                  "title": "概念的概述"
+                },
+                {
+                  "title": "明确概念的方法"
+                }
+              ]
+            },
+            {
+              "title": "第五课 正确运用判断",
+              "children": [
+                {
+                  "title": "判断的概述"
+                },
+                {
+                  "title": "正确运用简单判断"
+                },
+                {
+                  "title": "正确运用复合判断"
+                }
+              ]
+            },
+            {
+              "title": "第六课 掌握演绎推理方法",
+              "children": [
+                {
+                  "title": "推理与演绎推理概述"
+                },
+                {
+                  "title": "简单判断的演绎推理方法"
+                },
+                {
+                  "title": "复合判断的演绎推理方法"
+                }
+              ]
+            },
+            {
+              "title": "第七课 学会归纳与类比推理",
+              "children": [
+                {
+                  "title": "归纳推理及其方法"
+                },
+                {
+                  "title": "类比推理及其方法"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 把握逻辑规则 纠正逻辑错误"
+            }
+          ],
+          "topics": [
+            "遵循逻辑思维规则",
+            "准确把握概念",
+            "概念的概述",
+            "明确概念的方法",
+            "正确运用判断",
+            "判断的概述",
+            "正确运用简单判断",
+            "正确运用复合判断",
+            "掌握演绎推理方法",
+            "推理与演绎推理概述",
+            "简单判断的演绎推理方法",
+            "复合判断的演绎推理方法",
+            "学会归纳与类比推理",
+            "归纳推理及其方法",
+            "类比推理及其方法",
+            "综合探究 把握逻辑规则 纠正逻辑错误"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 运用辩证思维方法",
+          "children": [
+            {
+              "title": "第八课 把握辩证分合",
+              "children": [
+                {
+                  "title": "辩证思维的含义与特征"
+                },
+                {
+                  "title": "分析与综合及其辩证关系"
+                }
+              ]
+            },
+            {
+              "title": "第九课 理解质量互变",
+              "children": [
+                {
+                  "title": "认识质量互变规律"
+                },
+                {
+                  "title": "把握适度原则"
+                }
+              ]
+            },
+            {
+              "title": "第十课 推动认识发展",
+              "children": [
+                {
+                  "title": "不作简单肯定或否定"
+                },
+                {
+                  "title": "体会认识发展的历程"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 领悟辩证精髓 处理复杂问题"
+            }
+          ],
+          "topics": [
+            "运用辩证思维方法",
+            "把握辩证分合",
+            "辩证思维的含义与特征",
+            "分析与综合及其辩证关系",
+            "理解质量互变",
+            "认识质量互变规律",
+            "把握适度原则",
+            "推动认识发展",
+            "不作简单肯定或否定",
+            "体会认识发展的历程",
+            "综合探究 领悟辩证精髓 处理复杂问题"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 提高创新思维能力",
+          "children": [
+            {
+              "title": "第十一课 创新思维要善于联想",
+              "children": [
+                {
+                  "title": "创新思维的含义与特征"
+                },
+                {
+                  "title": "联想思维的含义与方法"
+                }
+              ]
+            },
+            {
+              "title": "第十二课 创新思维要多路探索",
+              "children": [
+                {
+                  "title": "发散思维与聚合思维的方法"
+                },
+                {
+                  "title": "逆向思维的含义与作用"
+                }
+              ]
+            },
+            {
+              "title": "第十三课 创新思维要力求超前",
+              "children": [
+                {
+                  "title": "超前思维的含义与特征"
+                },
+                {
+                  "title": "超前思维的方法与意义"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 结合社会实践 勇于开拓创新"
+            }
+          ],
+          "topics": [
+            "提高创新思维能力",
+            "创新思维要善于联想",
+            "创新思维的含义与特征",
+            "联想思维的含义与方法",
+            "创新思维要多路探索",
+            "发散思维与聚合思维的方法",
+            "逆向思维的含义与作用",
+            "创新思维要力求超前",
+            "超前思维的含义与特征",
+            "超前思维的方法与意义",
+            "综合探究 结合社会实践 勇于开拓创新"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "9df510c1-5ebd-4439-b20c-6a187c7509cf",
+      "title": "高中思想政治统编版高一必修1 中国特色社会主义",
+      "stage": "高中",
+      "subject": "思想政治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修1 中国特色社会主义",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/9df510c1-5ebd-4439-b20c-6a187c7509cf.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:23.543+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一课 社会主义从空想到科学、从理论到实践的发展",
+          "children": [
+            {
+              "title": "原始社会的解体和阶级社会的演进"
+            },
+            {
+              "title": "科学社会主义的理论与实践"
+            }
+          ],
+          "topics": [
+            "社会主义从空想到科学、从理论到实践的发展",
+            "原始社会的解体和阶级社会的演进",
+            "科学社会主义的理论与实践"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二课 只有社会主义才能救中国",
+          "children": [
+            {
+              "title": "新民主主义革命的胜利"
+            },
+            {
+              "title": "社会主义制度在中国的确立"
+            }
+          ],
+          "topics": ["只有社会主义才能救中国", "新民主主义革命的胜利", "社会主义制度在中国的确立"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三课 只有中国特色社会主义才能发展中国",
+          "children": [
+            {
+              "title": "伟大的改革开放"
+            },
+            {
+              "title": "中国特色社会主义的创立、发展和完善"
+            }
+          ],
+          "topics": [
+            "只有中国特色社会主义才能发展中国",
+            "伟大的改革开放",
+            "中国特色社会主义的创立、发展和完善"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四课 只有坚持和发展中国特色社会主义才能实现中华民族伟大复兴",
+          "children": [
+            {
+              "title": "中国特色社会主义进入新时代"
+            },
+            {
+              "title": "实现中华民族伟大复兴的中国梦"
+            },
+            {
+              "title": "习近平新时代中国特色社会主义思想"
+            }
+          ],
+          "topics": [
+            "只有坚持和发展中国特色社会主义才能实现中华民族伟大复兴",
+            "中国特色社会主义进入新时代",
+            "实现中华民族伟大复兴的中国梦",
+            "习近平新时代中国特色社会主义思想"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "综合探究一 回看走过的路 比较别人的路 远眺前行的路",
+          "topics": ["综合探究一 回看走过的路 比较别人的路 远眺前行的路"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "综合探究二 方向决定道路 道路决定命运",
+          "topics": ["综合探究二 方向决定道路 道路决定命运"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "85a853ff-1ada-421f-9add-7ff884634022",
+      "title": "高中思想政治统编版高一必修2 经济与社会",
+      "stage": "高中",
+      "subject": "思想政治",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修2 经济与社会",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/85a853ff-1ada-421f-9add-7ff884634022.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:51.120+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 生产资料所有制与经济体制",
+          "children": [
+            {
+              "title": "第一课 我国的生产资料所有制",
+              "children": [
+                {
+                  "title": "公有制为主体 多种所有制经济共同发展"
+                },
+                {
+                  "title": "坚持“两个毫不动摇”"
+                }
+              ]
+            },
+            {
+              "title": "第二课 我国的社会主义市场经济体制",
+              "children": [
+                {
+                  "title": "充分发挥市场在资源配置中的决定性作用"
+                },
+                {
+                  "title": "更好发挥政府作用"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "生产资料所有制与经济体制",
+            "我国的生产资料所有制",
+            "公有制为主体 多种所有制经济共同发展",
+            "坚持“两个毫不动摇”",
+            "我国的社会主义市场经济体制",
+            "充分发挥市场在资源配置中的决定性作用",
+            "更好发挥政府作用"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 经济发展与社会进步",
+          "children": [
+            {
+              "title": "第三课 我国的经济发展",
+              "children": [
+                {
+                  "title": "贯彻新发展理念"
+                },
+                {
+                  "title": "推动高质量发展"
+                }
+              ]
+            },
+            {
+              "title": "第四课 我国的个人收入分配与社会保障",
+              "children": [
+                {
+                  "title": "我国的个人收入分配"
+                },
+                {
+                  "title": "我国的社会保障"
+                }
+              ]
+            },
+            {
+              "title": "综合探究 践行社会责任 促进社会进步"
+            }
+          ],
+          "topics": [
+            "经济发展与社会进步",
+            "我国的经济发展",
+            "贯彻新发展理念",
+            "推动高质量发展",
+            "我国的个人收入分配与社会保障",
+            "我国的个人收入分配",
+            "我国的社会保障",
+            "综合探究 践行社会责任 促进社会进步"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "其他",
+          "children": [
+            {
+              "title": "使市场在资源配置中起决定性作用"
+            },
+            {
+              "title": "坚持新发展理念"
+            },
+            {
+              "title": "建设现代化经济体系"
+            },
+            {
+              "title": "综合探究 加快完善社会主义市场经济体制"
+            }
+          ],
+          "topics": [
+            "其他",
+            "使市场在资源配置中起决定性作用",
+            "坚持新发展理念",
+            "建设现代化经济体系",
+            "综合探究 加快完善社会主义市场经济体制"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

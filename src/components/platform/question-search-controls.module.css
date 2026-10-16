@@ -1,0 +1,25 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+.filters > select {
+  flex: 0 1 180px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.query {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.query > textarea {
+  flex: 1;
+  min-width: 0;
+}

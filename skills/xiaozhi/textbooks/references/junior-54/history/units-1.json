@@ -1,0 +1,1325 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-ba77ead3010a",
+      "title": "初中（五•四学制）历史统编版世界历史第一册",
+      "stage": "初中（五•四学制）",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "世界历史",
+      "volume": "第一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58c-6e16-b92e-016e-ba77ead3010a.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:07.184+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 古代亚非文明",
+          "children": [
+            {
+              "title": "第1课 古代埃及"
+            },
+            {
+              "title": "第2课 古代两河流域"
+            },
+            {
+              "title": "第3课 古代印度"
+            }
+          ],
+          "topics": ["古代亚非文明", "古代埃及", "古代两河流域", "古代印度"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 古代欧洲文明",
+          "children": [
+            {
+              "title": "第4课 希腊城邦和亚历山大帝国"
+            },
+            {
+              "title": "第5课 罗马城邦和罗马帝国"
+            },
+            {
+              "title": "第6课 希腊罗马古典文化"
+            }
+          ],
+          "topics": [
+            "古代欧洲文明",
+            "希腊城邦和亚历山大帝国",
+            "罗马城邦和罗马帝国",
+            "希腊罗马古典文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 封建时代的欧洲",
+          "children": [
+            {
+              "title": "第7课 基督教的兴起和法兰克王国"
+            },
+            {
+              "title": "第8课 西欧庄园"
+            },
+            {
+              "title": "第9课 中世纪城市和大学的兴起"
+            },
+            {
+              "title": "第10课 拜占庭帝国和《查士丁尼法典》"
+            }
+          ],
+          "topics": [
+            "封建时代的欧洲",
+            "基督教的兴起和法兰克王国",
+            "西欧庄园",
+            "中世纪城市和大学的兴起",
+            "拜占庭帝国和《查士丁尼法典》"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 封建时代的亚洲国家",
+          "children": [
+            {
+              "title": "第11课 古代日本"
+            },
+            {
+              "title": "第12课 阿拉伯帝国"
+            }
+          ],
+          "topics": ["封建时代的亚洲国家", "古代日本", "阿拉伯帝国"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 走向近代",
+          "children": [
+            {
+              "title": "第13课 西欧经济和社会的发展"
+            },
+            {
+              "title": "第14课 文艺复兴运动"
+            },
+            {
+              "title": "第15课 探寻新航路"
+            },
+            {
+              "title": "第16课 早期殖民掠夺"
+            }
+          ],
+          "topics": [
+            "走向近代",
+            "西欧经济和社会的发展",
+            "文艺复兴运动",
+            "探寻新航路",
+            "早期殖民掠夺"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 资本主义制度的初步确立",
+          "children": [
+            {
+              "title": "第17课 君主立宪制的英国"
+            },
+            {
+              "title": "第18课 美国的独立"
+            },
+            {
+              "title": "第19课 法国大革命和拿破仑帝国"
+            }
+          ],
+          "topics": [
+            "资本主义制度的初步确立",
+            "君主立宪制的英国",
+            "美国的独立",
+            "法国大革命和拿破仑帝国"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元 工业革命和国际共产主义运动的兴起",
+          "children": [
+            {
+              "title": "第20课 第一次工业革命"
+            },
+            {
+              "title": "第21课 马克思主义的诞生和国际共产主义运动的兴起"
+            },
+            {
+              "title": "第22课 活动课：唱响《国际歌》"
+            }
+          ],
+          "topics": [
+            "工业革命和国际共产主义运动的兴起",
+            "第一次工业革命",
+            "马克思主义的诞生和国际共产主义运动的兴起",
+            "活动课：唱响《国际歌》"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "c2c91a90-cbbe-3034-8e69-914458ae5822",
+      "title": "初中（五•四学制）历史统编版世界历史第二册",
+      "stage": "初中（五•四学制）",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "世界历史",
+      "volume": "第二册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/c2c91a90-cbbe-3034-8e69-914458ae5822.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:45.568+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 殖民地人民的反抗与资本主义制度的扩展",
+          "children": [
+            {
+              "title": "第1课 殖民地人民的反抗斗争"
+            },
+            {
+              "title": "第2课 俄国的改革"
+            },
+            {
+              "title": "第3课 美国内战"
+            },
+            {
+              "title": "第4课 日本明治维新"
+            }
+          ],
+          "topics": [
+            "殖民地人民的反抗与资本主义制度的扩展",
+            "殖民地人民的反抗斗争",
+            "俄国的改革",
+            "美国内战",
+            "日本明治维新"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 第二次工业革命和近代科学文化",
+          "children": [
+            {
+              "title": "第5课 第二次工业革命"
+            },
+            {
+              "title": "第6课 工业化国家的社会变化"
+            },
+            {
+              "title": "第7课 近代科学与文化"
+            }
+          ],
+          "topics": [
+            "第二次工业革命和近代科学文化",
+            "第二次工业革命",
+            "工业化国家的社会变化",
+            "近代科学与文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 第一次世界大战和战后初期的世界",
+          "children": [
+            {
+              "title": "第8课 第一次世界大战"
+            },
+            {
+              "title": "第9课 列宁与十月革命"
+            },
+            {
+              "title": "第10课 《凡尔赛条约》和《九国公约》"
+            },
+            {
+              "title": "第11课 苏联的社会主义建设"
+            },
+            {
+              "title": "第12课 亚非拉民族民主运动的高涨"
+            }
+          ],
+          "topics": [
+            "第一次世界大战和战后初期的世界",
+            "第一次世界大战",
+            "列宁与十月革命",
+            "《凡尔赛条约》和《九国公约》",
+            "苏联的社会主义建设",
+            "亚非拉民族民主运动的高涨"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 经济大危机和第二次世界大战",
+          "children": [
+            {
+              "title": "第13课 罗斯福新政"
+            },
+            {
+              "title": "第14课 法西斯国家的侵略扩张"
+            },
+            {
+              "title": "第15课 第二次世界大战"
+            }
+          ],
+          "topics": [
+            "经济大危机和第二次世界大战",
+            "罗斯福新政",
+            "法西斯国家的侵略扩张",
+            "第二次世界大战"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 二战后的世界变化",
+          "children": [
+            {
+              "title": "第16课 冷战"
+            },
+            {
+              "title": "第17课 二战后资本主义的新变化"
+            },
+            {
+              "title": "第18课 社会主义的发展与挫折"
+            },
+            {
+              "title": "第19课 亚非拉国家的新发展"
+            }
+          ],
+          "topics": [
+            "二战后的世界变化",
+            "冷战",
+            "二战后资本主义的新变化",
+            "社会主义的发展与挫折",
+            "亚非拉国家的新发展"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 走向和平发展的世界",
+          "children": [
+            {
+              "title": "第20课 联合国与世界贸易组织"
+            },
+            {
+              "title": "第21课 冷战后的世界格局"
+            },
+            {
+              "title": "第22课 不断发展的现代社会"
+            },
+            {
+              "title": "第23课 活动课：时事溯源"
+            }
+          ],
+          "topics": [
+            "走向和平发展的世界",
+            "联合国与世界贸易组织",
+            "冷战后的世界格局",
+            "不断发展的现代社会",
+            "活动课：时事溯源"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-ba72f59700d0",
+      "title": "初中（五•四学制）历史统编版中国历史第四册",
+      "stage": "初中（五•四学制）",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "中国历史",
+      "volume": "第四册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58c-6e16-b92e-016e-ba72f59700d0.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:07.055+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 中华人民共和国的成立和巩固",
+          "children": [
+            {
+              "title": "第1课 中华人民共和国成立"
+            },
+            {
+              "title": "第2课 抗美援朝"
+            },
+            {
+              "title": "第3课 土地改革"
+            }
+          ],
+          "topics": ["中华人民共和国的成立和巩固", "中华人民共和国成立", "抗美援朝", "土地改革"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 社会主义制度的建立与社会主义建设的探索",
+          "children": [
+            {
+              "title": "第4课 工业化的起步和人民代表大会制度的确立"
+            },
+            {
+              "title": "第5课 三大改造"
+            },
+            {
+              "title": "第6课 艰辛探索与建设成就"
+            }
+          ],
+          "topics": [
+            "社会主义制度的建立与社会主义建设的探索",
+            "工业化的起步和人民代表大会制度的确立",
+            "三大改造",
+            "艰辛探索与建设成就"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 中国特色社会主义道路",
+          "children": [
+            {
+              "title": "第7课 伟大的历史转折"
+            },
+            {
+              "title": "第8课 经济体制改革"
+            },
+            {
+              "title": "第9课 对外开放"
+            },
+            {
+              "title": "第10课 建设中国特色社会主义"
+            },
+            {
+              "title": "第11课 为实现中国梦而努力奋斗"
+            }
+          ],
+          "topics": [
+            "中国特色社会主义道路",
+            "伟大的历史转折",
+            "经济体制改革",
+            "对外开放",
+            "建设中国特色社会主义",
+            "为实现中国梦而努力奋斗"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 民族团结与祖国统一",
+          "children": [
+            {
+              "title": "第12课 民族大团结"
+            },
+            {
+              "title": "第13课 香港和澳门回归祖国"
+            },
+            {
+              "title": "第14课 海峡两岸的交往"
+            }
+          ],
+          "topics": ["民族团结与祖国统一", "民族大团结", "香港和澳门回归祖国", "海峡两岸的交往"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 国防建设与外交成就",
+          "children": [
+            {
+              "title": "第15课 钢铁长城"
+            },
+            {
+              "title": "第16课 独立自主的和平外交"
+            },
+            {
+              "title": "第17课 外交事业的发展"
+            }
+          ],
+          "topics": ["国防建设与外交成就", "钢铁长城", "独立自主的和平外交", "外交事业的发展"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 科技文化与社会生活",
+          "children": [
+            {
+              "title": "第18课 科技文化成就"
+            },
+            {
+              "title": "第19课 社会生活的变迁"
+            },
+            {
+              "title": "第20课 活动课：生活环境的巨大变化"
+            }
+          ],
+          "topics": [
+            "科技文化与社会生活",
+            "科技文化成就",
+            "社会生活的变迁",
+            "活动课：生活环境的巨大变化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "821f8365-ccd6-4429-a1a8-6518df08b020",
+      "title": "新教材-初中（五•四学制）历史统编版中国历史第一册",
+      "stage": "初中（五•四学制）",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "中国历史",
+      "volume": "第一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/821f8365-ccd6-4429-a1a8-6518df08b020.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-02-19T14:13:21.000+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 史前时期：原始社会与中华文明的起源",
+          "children": [
+            {
+              "title": "第1课 远古时期的人类活动"
+            },
+            {
+              "title": "第2 课 原始农业与史前社会"
+            },
+            {
+              "title": "第3课 中华文明的起源"
+            },
+            {
+              "title": "第一单元复习"
+            }
+          ],
+          "topics": [
+            "史前时期：原始社会与中华文明的起源",
+            "远古时期的人类活动",
+            "第2 课 原始农业与史前社会",
+            "中华文明的起源",
+            "复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 夏商周时期：奴隶制王朝的更替和向封建社会的过渡",
+          "children": [
+            {
+              "title": "第4课 夏商西周王朝的更替"
+            },
+            {
+              "title": "第5课 动荡变化中的春秋时期"
+            },
+            {
+              "title": "第6课 战国时期的社会变革"
+            },
+            {
+              "title": "第7课 百家争鸣"
+            },
+            {
+              "title": "第8课 夏商周时期的科技与文化"
+            },
+            {
+              "title": "第二单元复习"
+            }
+          ],
+          "topics": [
+            "夏商周时期：奴隶制王朝的更替和向封建社会的过渡",
+            "夏商西周王朝的更替",
+            "动荡变化中的春秋时期",
+            "战国时期的社会变革",
+            "百家争鸣",
+            "夏商周时期的科技与文化",
+            "复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 秦汉时期：统一多民族封建国家的建立和巩固",
+          "children": [
+            {
+              "title": "第9课 秦统一中国"
+            },
+            {
+              "title": "第10课 秦末农民大起义"
+            },
+            {
+              "title": "第11课 西汉建立和“文景之治”"
+            },
+            {
+              "title": "第12课 大一统王朝的巩固"
+            },
+            {
+              "title": "第13课 东汉的兴衰"
+            },
+            {
+              "title": "第14课 丝绸之路的开通与经营西域"
+            },
+            {
+              "title": "第15课 秦汉时期的科技与文化"
+            },
+            {
+              "title": "第三单元复习"
+            }
+          ],
+          "topics": [
+            "秦汉时期：统一多民族封建国家的建立和巩固",
+            "秦统一中国",
+            "秦末农民大起义",
+            "西汉建立和“文景之治”",
+            "大一统王朝的巩固",
+            "东汉的兴衰",
+            "丝绸之路的开通与经营西域",
+            "秦汉时期的科技与文化",
+            "复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 三国两晋南北朝时期：政权分立与民族交融",
+          "children": [
+            {
+              "title": "第16课 三国鼎立"
+            },
+            {
+              "title": "第17课 西晋的短暂统一和北方各族的内迁"
+            },
+            {
+              "title": "第18课 东晋南朝政治和江南地区开发"
+            },
+            {
+              "title": "第19课 北朝政治和北方民族大交融"
+            },
+            {
+              "title": "第20课 三国两晋南北朝时期的科技与文化"
+            },
+            {
+              "title": "第四单元复习"
+            }
+          ],
+          "topics": [
+            "三国两晋南北朝时期：政权分立与民族交融",
+            "三国鼎立",
+            "西晋的短暂统一和北方各族的内迁",
+            "东晋南朝政治和江南地区开发",
+            "北朝政治和北方民族大交融",
+            "三国两晋南北朝时期的科技与文化",
+            "复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "活动课",
+          "children": [
+            {
+              "title": "第21课 活动课 从考古发现看中华文明的起源"
+            }
+          ],
+          "topics": ["活动课", "活动课 从考古发现看中华文明的起源"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "中国历史（第一册）总复习",
+          "children": [
+            {
+              "title": "中国历史（第一册）总复习"
+            }
+          ],
+          "topics": ["中国历史（第一册）总复习"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ad23f0cf-35b2-40d6-8c93-31f653af0746",
+      "title": "新教材-初中（五•四学制）历史统编版中国历史第三册",
+      "stage": "初中（五•四学制）",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "中国历史",
+      "volume": "第三册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ad23f0cf-35b2-40d6-8c93-31f653af0746.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-01-05T17:26:19.131+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 中国开始沦为半殖民地半封建社会",
+          "children": [
+            {
+              "title": "第1课 鸦片战争"
+            },
+            {
+              "title": "第2课 第二次鸦片战争"
+            },
+            {
+              "title": "第3课 太平天国运动"
+            }
+          ],
+          "topics": [
+            "中国开始沦为半殖民地半封建社会",
+            "鸦片战争",
+            "第二次鸦片战争",
+            "太平天国运动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 早期现代化的初步探索和民族危机加剧",
+          "children": [
+            {
+              "title": "第4课 洋务运动和边疆危机"
+            },
+            {
+              "title": "第5课 甲午中日战争与列强瓜分中国狂潮"
+            },
+            {
+              "title": "第6课 戊戌变法"
+            },
+            {
+              "title": "第7课 义和团运动和八国联军侵华"
+            }
+          ],
+          "topics": [
+            "早期现代化的初步探索和民族危机加剧",
+            "洋务运动和边疆危机",
+            "甲午中日战争与列强瓜分中国狂潮",
+            "戊戌变法",
+            "义和团运动和八国联军侵华"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 资产阶级民主革命与中华民国的建立",
+          "children": [
+            {
+              "title": "第8课 中国同盟会"
+            },
+            {
+              "title": "第9课 辛亥革命"
+            },
+            {
+              "title": "第10课 帝制复辟与军阀割据"
+            }
+          ],
+          "topics": [
+            "资产阶级民主革命与中华民国的建立",
+            "中国同盟会",
+            "辛亥革命",
+            "帝制复辟与军阀割据"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 新民主主义革命的兴起",
+          "children": [
+            {
+              "title": "第11课 五四运动"
+            },
+            {
+              "title": "第12课 中国共产党诞生"
+            }
+          ],
+          "topics": ["新民主主义革命的兴起", "五四运动", "中国共产党诞生"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 从国共合作到农村革命根据地的建立",
+          "children": [
+            {
+              "title": "第13课 国共合作与北伐战争"
+            },
+            {
+              "title": "第14课 毛泽东开辟井冈山道路"
+            },
+            {
+              "title": "第15课 中国工农红军长征与遵义会议"
+            }
+          ],
+          "topics": [
+            "从国共合作到农村革命根据地的建立",
+            "国共合作与北伐战争",
+            "毛泽东开辟井冈山道路",
+            "中国工农红军长征与遵义会议"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 中华民族的抗日战争",
+          "children": [
+            {
+              "title": "第16课 从九一八事变到西安事变"
+            },
+            {
+              "title": "第17课 七七事变与全民族抗战"
+            },
+            {
+              "title": "第18课 全民族抗战中的正面战场和敌后战场"
+            },
+            {
+              "title": "第19课 抗日战争的胜利"
+            }
+          ],
+          "topics": [
+            "中华民族的抗日战争",
+            "从九一八事变到西安事变",
+            "七七事变与全民族抗战",
+            "全民族抗战中的正面战场和敌后战场",
+            "抗日战争的胜利"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元 人民解放战争",
+          "children": [
+            {
+              "title": "第20课 国民党挑起内战"
+            },
+            {
+              "title": "第21课 人民解放战争的胜利"
+            },
+            {
+              "title": "第 22 课 活动课 探寻红色文化的历史基因."
+            }
+          ],
+          "topics": [
+            "人民解放战争",
+            "国民党挑起内战",
+            "人民解放战争的胜利",
+            "第 22 课 活动课 探寻红色文化的历史基因."
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "学史方法",
+          "children": [
+            {
+              "title": "（一）如何评价历史人物"
+            },
+            {
+              "title": "（二）如何从历史图像中获取信息"
+            },
+            {
+              "title": "（三）如何从重大历史题材影视剧中获取信息"
+            }
+          ],
+          "topics": [
+            "学史方法",
+            "（一）如何评价历史人物",
+            "（二）如何从历史图像中获取信息",
+            "（三）如何从重大历史题材影视剧中获取信息"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录",
+          "children": [
+            {
+              "title": "中国近现代史大事年表（上）"
+            }
+          ],
+          "topics": ["附录", "中国近现代史大事年表（上）"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "01a4f129-e2e2-40e8-8480-5bbb1844b139",
+      "title": "新教材-初中（五•四学制）历史统编版中国历史第二册",
+      "stage": "初中（五•四学制）",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "中国历史",
+      "volume": "第二册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/01a4f129-e2e2-40e8-8480-5bbb1844b139.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-01-05T17:10:18.347+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 隋唐时期：繁荣与开放的时代",
+          "children": [
+            {
+              "title": "第1课 隋朝统一与灭亡"
+            },
+            {
+              "title": "第2课 唐朝建立与“贞观之治”"
+            },
+            {
+              "title": "第3课 开元盛世"
+            },
+            {
+              "title": "第4课 安史之乱与唐朝衰亡"
+            },
+            {
+              "title": "第5课 隋唐时期的民族交往与交融"
+            },
+            {
+              "title": "第6课 隋唐时期的中外文化交流"
+            },
+            {
+              "title": "第7课 隋唐时期的科技与文化"
+            }
+          ],
+          "topics": [
+            "隋唐时期：繁荣与开放的时代",
+            "隋朝统一与灭亡",
+            "唐朝建立与“贞观之治”",
+            "开元盛世",
+            "安史之乱与唐朝衰亡",
+            "隋唐时期的民族交往与交融",
+            "隋唐时期的中外文化交流",
+            "隋唐时期的科技与文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 辽宋夏金元时期：民族关系发展和社会变化",
+          "children": [
+            {
+              "title": "第8课 北宋的政治"
+            },
+            {
+              "title": "第9课 辽 、西夏与北宋并立"
+            },
+            {
+              "title": "第10课 金与南宋对峙"
+            },
+            {
+              "title": "第11课 元朝的建立与统一"
+            },
+            {
+              "title": "第12课 辽宋夏金元时期经济的繁荣"
+            },
+            {
+              "title": "第13课 辽宋夏金元时期的对外交流"
+            },
+            {
+              "title": "第14课 辽宋夏金元时期的科技与文化"
+            }
+          ],
+          "topics": [
+            "辽宋夏金元时期：民族关系发展和社会变化",
+            "北宋的政治",
+            "辽 、西夏与北宋并立",
+            "金与南宋对峙",
+            "元朝的建立与统一",
+            "辽宋夏金元时期经济的繁荣",
+            "辽宋夏金元时期的对外交流",
+            "辽宋夏金元时期的科技与文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 明清时期（至鸦片战争前）：统一多民族封建国家的巩固与发展",
+          "children": [
+            {
+              "title": "第15课 明朝的统治"
+            },
+            {
+              "title": "第16课 明朝的对外关系"
+            },
+            {
+              "title": "第17课 明朝的灭亡和清朝的建立"
+            },
+            {
+              "title": "第18课 清朝的边疆治理"
+            },
+            {
+              "title": "第19课 清朝君主专制的强化"
+            },
+            {
+              "title": "第20课 明清时期社会经济的发展"
+            },
+            {
+              "title": "第21课 明清时期的科技与文化"
+            },
+            {
+              "title": "第22课 活动课 我国传统节日的起源与传承"
+            }
+          ],
+          "topics": [
+            "明清时期（至鸦片战争前）：统一多民族封建国家的巩固与发展",
+            "明朝的统治",
+            "明朝的对外关系",
+            "明朝的灭亡和清朝的建立",
+            "清朝的边疆治理",
+            "清朝君主专制的强化",
+            "明清时期社会经济的发展",
+            "明清时期的科技与文化",
+            "活动课 我国传统节日的起源与传承"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "学史方法",
+          "children": [
+            {
+              "title": "（一）如何读懂文献史料"
+            },
+            {
+              "title": "（二）如何把握史事要素"
+            }
+          ],
+          "topics": ["学史方法", "（一）如何读懂文献史料", "（二）如何把握史事要素"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录",
+          "children": [
+            {
+              "title": "中国古代史大事年表（下）"
+            }
+          ],
+          "topics": ["附录", "中国古代史大事年表（下）"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "322db15a-be50-335f-8d18-51f1bb8685c1",
+      "title": "初中（五•四学制）历史统编版中国历史第一册",
+      "stage": "初中（五•四学制）",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "中国历史",
+      "volume": "第一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/322db15a-be50-335f-8d18-51f1bb8685c1.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:25.103+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 史前时期：中国境内早期人类文明的起源",
+          "children": [
+            {
+              "title": "第1课 中国早期人类的代表——北京人"
+            },
+            {
+              "title": "第2课 原始农耕生活"
+            },
+            {
+              "title": "第3课 远古的传说"
+            }
+          ],
+          "topics": [
+            "史前时期：中国境内早期人类文明的起源",
+            "中国早期人类的代表——北京人",
+            "原始农耕生活",
+            "远古的传说"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 夏商周时期：早期国家与社会变革",
+          "children": [
+            {
+              "title": "第4课 夏商周的更替"
+            },
+            {
+              "title": "第5课 青铜器与甲骨文"
+            },
+            {
+              "title": "第6课 动荡的春秋时期"
+            },
+            {
+              "title": "第7课 战国时期的社会变化"
+            },
+            {
+              "title": "第8课 百家争鸣"
+            }
+          ],
+          "topics": [
+            "夏商周时期：早期国家与社会变革",
+            "夏商周的更替",
+            "青铜器与甲骨文",
+            "动荡的春秋时期",
+            "战国时期的社会变化",
+            "百家争鸣"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 秦汉时期：统一多民族国家的建立和巩固",
+          "children": [
+            {
+              "title": "第9课 秦统一中国"
+            },
+            {
+              "title": "第10课 秦末农民大起义"
+            },
+            {
+              "title": "第11课 西汉建立和“文景之治”"
+            },
+            {
+              "title": "第12课 汉武帝巩固大一统王朝"
+            },
+            {
+              "title": "第13课 东汉的兴衰"
+            },
+            {
+              "title": "第14课 沟通中外文明的“丝绸之路”"
+            },
+            {
+              "title": "第15课 两汉的科技和文化"
+            }
+          ],
+          "topics": [
+            "秦汉时期：统一多民族国家的建立和巩固",
+            "秦统一中国",
+            "秦末农民大起义",
+            "西汉建立和“文景之治”",
+            "汉武帝巩固大一统王朝",
+            "东汉的兴衰",
+            "沟通中外文明的“丝绸之路”",
+            "两汉的科技和文化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 三国两晋南北朝时期：政权分立与民族交融",
+          "children": [
+            {
+              "title": "第16课 三国鼎力"
+            },
+            {
+              "title": "第17课 西晋的短暂统一和北方各族的内迁"
+            },
+            {
+              "title": "第18课 东晋南朝时期江南地区的开发"
+            },
+            {
+              "title": "第19课 北魏政治和北方民族大交融"
+            },
+            {
+              "title": "第20课 魏晋南北朝的科技与文化"
+            },
+            {
+              "title": "第21课 活动课：让我们共同来感受历史"
+            }
+          ],
+          "topics": [
+            "三国两晋南北朝时期：政权分立与民族交融",
+            "三国鼎力",
+            "西晋的短暂统一和北方各族的内迁",
+            "东晋南朝时期江南地区的开发",
+            "北魏政治和北方民族大交融",
+            "魏晋南北朝的科技与文化",
+            "活动课：让我们共同来感受历史"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "附录",
+          "children": [
+            {
+              "title": "中国古代史大事年表（上）"
+            }
+          ],
+          "topics": ["附录", "中国古代史大事年表（上）"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "d908a3dc-7b64-80a6-428f-5b7b9501a343",
+      "title": "初中（五•四学制）历史统编版中国历史第三册",
+      "stage": "初中（五•四学制）",
+      "subject": "历史",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "中国历史",
+      "volume": "第三册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/d908a3dc-7b64-80a6-428f-5b7b9501a343.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:01.890+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 中国开始沦为半殖民地半封建社会",
+          "children": [
+            {
+              "title": "第1课 鸦片战争"
+            },
+            {
+              "title": "第2课 第二次鸦片战争"
+            },
+            {
+              "title": "第3课 太平天国运动"
+            }
+          ],
+          "topics": [
+            "中国开始沦为半殖民地半封建社会",
+            "鸦片战争",
+            "第二次鸦片战争",
+            "太平天国运动"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 近代化的早期探索与民族危机的加剧",
+          "children": [
+            {
+              "title": "第4课 洋务运动"
+            },
+            {
+              "title": "第5课 甲午中日战争与列强瓜分中国狂潮"
+            },
+            {
+              "title": "第6课 戊戌变法"
+            },
+            {
+              "title": "第7课 八国联军侵华与《辛丑条约》签订"
+            }
+          ],
+          "topics": [
+            "近代化的早期探索与民族危机的加剧",
+            "洋务运动",
+            "甲午中日战争与列强瓜分中国狂潮",
+            "戊戌变法",
+            "八国联军侵华与《辛丑条约》签订"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 资产阶级民主革命与中华民国的建立",
+          "children": [
+            {
+              "title": "第8课 革命先行者孙中山"
+            },
+            {
+              "title": "第9课 辛亥革命"
+            },
+            {
+              "title": "第10 课 中华民国的创建"
+            },
+            {
+              "title": "第11课 北洋政府的统冶与军阀割据"
+            }
+          ],
+          "topics": [
+            "资产阶级民主革命与中华民国的建立",
+            "革命先行者孙中山",
+            "辛亥革命",
+            "第10 课 中华民国的创建",
+            "北洋政府的统冶与军阀割据"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 新民主主义命的开始",
+          "children": [
+            {
+              "title": "第12课 新文化运动"
+            },
+            {
+              "title": "第13课 五四运动"
+            },
+            {
+              "title": "第14课 中国共产党诞生"
+            }
+          ],
+          "topics": ["新民主主义命的开始", "新文化运动", "五四运动", "中国共产党诞生"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 从国共合作到国共对立",
+          "children": [
+            {
+              "title": "第15课 北伐战争"
+            },
+            {
+              "title": "第16课 毛主席开辟井冈山道路"
+            },
+            {
+              "title": "第17课 中国工农红军长征"
+            }
+          ],
+          "topics": [
+            "从国共合作到国共对立",
+            "北伐战争",
+            "毛主席开辟井冈山道路",
+            "中国工农红军长征"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 中华民族的抗日战争",
+          "children": [
+            {
+              "title": "第18课 从九一八事变到西安事变"
+            },
+            {
+              "title": "第19课 七七事变与全民族抗战"
+            },
+            {
+              "title": "第20课 正面战场的抗战"
+            },
+            {
+              "title": "第21课 敌后战场的抗战"
+            },
+            {
+              "title": "第22课 抗日战争的胜利"
+            }
+          ],
+          "topics": [
+            "中华民族的抗日战争",
+            "从九一八事变到西安事变",
+            "七七事变与全民族抗战",
+            "正面战场的抗战",
+            "敌后战场的抗战",
+            "抗日战争的胜利"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元 人民解放战争",
+          "children": [
+            {
+              "title": "第23课 内战爆发"
+            },
+            {
+              "title": "第24 人民解放战争的胜利"
+            }
+          ],
+          "topics": ["人民解放战争", "内战爆发", "第24 人民解放战争的胜利"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元 近代经济、社会生活与教育文化事业的发展",
+          "children": [
+            {
+              "title": "第25课 经济和社会生活的变化"
+            },
+            {
+              "title": "第26课 教育文化事业的发展"
+            },
+            {
+              "title": "第27课 活动课：考察近代历史遗迹"
+            }
+          ],
+          "topics": [
+            "近代经济、社会生活与教育文化事业的发展",
+            "经济和社会生活的变化",
+            "教育文化事业的发展",
+            "活动课：考察近代历史遗迹"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

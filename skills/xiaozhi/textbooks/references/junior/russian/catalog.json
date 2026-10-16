@@ -1,0 +1,39 @@
+{
+  "stage": "初中",
+  "subject": "俄语",
+  "books": [
+    {
+      "id": "c9daceed-c876-4e77-8ff2-97ca7ca114be",
+      "title": "新教材-初中俄语人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/russian/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "7868340c-dbf1-440a-8aa6-a7326f1d25af",
+      "title": "新教材-初中俄语人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/russian/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "a2ff49b0-e3bb-4fba-b605-3b854783ac8e",
+      "title": "新教材-初中俄语人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/russian/units-1.json",
+      "unit_count": 7
+    }
+  ]
+}

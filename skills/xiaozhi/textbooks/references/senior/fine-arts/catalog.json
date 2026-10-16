@@ -1,0 +1,83 @@
+{
+  "stage": "高中",
+  "subject": "美术",
+  "books": [
+    {
+      "id": "8bff1029-5533-4ee8-8fcf-c8cfb39af358",
+      "title": "高中美术人教版必修 美术鉴赏",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 美术鉴赏",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/fine-arts/units-1.json",
+      "unit_count": 3
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fda36790a51",
+      "title": "高中美术人教版选择性必修1 绘画",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修1 绘画",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/fine-arts/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fda65880a53",
+      "title": "高中美术人教版选择性必修2 中国书画",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2 中国书画",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/fine-arts/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fda8cda0a55",
+      "title": "高中美术人教版选择性必修3 雕塑",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 雕塑",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/fine-arts/units-1.json",
+      "unit_count": 3
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fdab5e00a57",
+      "title": "高中美术人教版选择性必修4 设计",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修4 设计",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/fine-arts/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fdadd1f0a59",
+      "title": "高中美术人教版选择性必修5 工艺",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修5 工艺",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/fine-arts/units-1.json",
+      "unit_count": 19
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1fdb04ca0a5b",
+      "title": "高中美术人教版选择性必修6 现代媒体艺术",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修6 现代媒体艺术",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/fine-arts/units-1.json",
+      "unit_count": 5
+    }
+  ]
+}

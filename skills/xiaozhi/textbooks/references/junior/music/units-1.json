@@ -1,0 +1,1412 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "4ce02aa0-d54c-547f-9593-2da3d752e652",
+      "title": "初中音乐人教版九年级下册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/4ce02aa0-d54c-547f-9593-2da3d752e652.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:49.756+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 百卉含英",
+          "children": [
+            {
+              "title": "唱歌 茉莉花"
+            },
+            {
+              "title": "欣赏 花之圆舞曲 玫瑰三愿"
+            },
+            {
+              "title": "选听 梅花引"
+            },
+            {
+              "title": "竖笛演奏 送我一支玫瑰花"
+            }
+          ],
+          "topics": [
+            "百卉含英",
+            "唱歌 茉莉花",
+            "欣赏 花之圆舞曲 玫瑰三愿",
+            "选听 梅花引",
+            "竖笛演奏 送我一支玫瑰花"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 梨园风采（二）",
+          "children": [
+            {
+              "title": "学唱戏曲 夫妻双双把家还"
+            },
+            {
+              "title": "欣赏 谁说女子不如男 天上掉下个林妹妹 巧儿我自幼儿许配赵家"
+            },
+            {
+              "title": "选听 秦腔牌子曲"
+            }
+          ],
+          "topics": [
+            "梨园风采（二）",
+            "学唱戏曲 夫妻双双把家还",
+            "欣赏 谁说女子不如男 天上掉下个林妹妹 巧儿我自幼儿许配赵家",
+            "选听 秦腔牌子曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 西乐撷英（三）",
+          "children": [
+            {
+              "title": "唱歌 绿袖子"
+            },
+            {
+              "title": "欣赏 如歌的行板 在中亚西亚草原上"
+            },
+            {
+              "title": "选听 匈牙利狂想曲第二号 鲁斯兰与柳德米拉序曲"
+            }
+          ],
+          "topics": [
+            "西乐撷英（三）",
+            "唱歌 绿袖子",
+            "欣赏 如歌的行板 在中亚西亚草原上",
+            "选听 匈牙利狂想曲第二号 鲁斯兰与柳德米拉序曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 欧美流行风",
+          "children": [
+            {
+              "title": "唱歌 斯卡伯勒集市"
+            },
+            {
+              "title": "欣赏 温柔地爱 拯救地球 加州旅馆 昨日"
+            },
+            {
+              "title": "选听 玫瑰人生 我将永远爱你 生命之杯"
+            }
+          ],
+          "topics": [
+            "欧美流行风",
+            "唱歌 斯卡伯勒集市",
+            "欣赏 温柔地爱 拯救地球 加州旅馆 昨日",
+            "选听 玫瑰人生 我将永远爱你 生命之杯"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 乘着歌声的翅膀",
+          "children": [
+            {
+              "title": "唱歌 乘着歌声的翅膀"
+            },
+            {
+              "title": "欣赏 回声 轻骑兵序曲"
+            },
+            {
+              "title": "选听 即兴幻想曲 母女夜话"
+            },
+            {
+              "title": "竖笛演奏 乘着歌声的翅膀"
+            },
+            {
+              "title": "选唱 同一首歌"
+            },
+            {
+              "title": "选听 母女夜话"
+            }
+          ],
+          "topics": [
+            "乘着歌声的翅膀",
+            "唱歌 乘着歌声的翅膀",
+            "欣赏 回声 轻骑兵序曲",
+            "选听 即兴幻想曲 母女夜话",
+            "竖笛演奏 乘着歌声的翅膀",
+            "选唱 同一首歌",
+            "选听 母女夜话"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 放飞梦想",
+          "children": [
+            {
+              "title": "配乐朗诵 长大后我成了你"
+            },
+            {
+              "title": "竖笛演奏 友谊地久天长"
+            },
+            {
+              "title": "选唱 隐形的翅膀 飞得更高 我相信"
+            },
+            {
+              "title": "活动 秀出我自己"
+            }
+          ],
+          "topics": [
+            "放飞梦想",
+            "配乐朗诵 长大后我成了你",
+            "竖笛演奏 友谊地久天长",
+            "选唱 隐形的翅膀 飞得更高 我相信",
+            "活动 秀出我自己"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "a03d16ff-2595-2970-cf3a-aee8512f25fe",
+      "title": "初中音乐人教版（五线谱）七年级上册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/a03d16ff-2595-2970-cf3a-aee8512f25fe.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:24.383+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 中学时代",
+          "children": [
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "蓓蕾之歌"
+                }
+              ]
+            },
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "中学时代"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "飞来的花瓣"
+                }
+              ]
+            },
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "校园的早晨"
+                }
+              ]
+            },
+            {
+              "title": "演奏",
+              "children": [
+                {
+                  "title": "学吹竖笛"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "中学时代",
+            "欣赏",
+            "蓓蕾之歌",
+            "唱歌",
+            "飞来的花瓣",
+            "校园的早晨",
+            "演奏",
+            "学吹竖笛"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 祖国颂歌",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "歌唱祖国"
+                }
+              ]
+            },
+            {
+              "title": "听乐赏画",
+              "children": [
+                {
+                  "title": "红旗颂"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "神圣的战争"
+                },
+                {
+                  "title": "伏尔塔瓦河"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "在灿烂的阳光下"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "祖国颂歌",
+            "唱歌",
+            "歌唱祖国",
+            "听乐赏画",
+            "红旗颂",
+            "欣赏",
+            "神圣的战争",
+            "伏尔塔瓦河",
+            "选听",
+            "在灿烂的阳光下"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 金色的秋天",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "西风的话"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "秋"
+                },
+                {
+                  "title": "丰收锣鼓"
+                }
+              ]
+            },
+            {
+              "title": "演奏",
+              "children": [
+                {
+                  "title": "学吹竖笛"
+                }
+              ]
+            },
+            {
+              "title": "编创"
+            }
+          ],
+          "topics": [
+            "金色的秋天",
+            "唱歌",
+            "西风的话",
+            "欣赏",
+            "秋",
+            "丰收锣鼓",
+            "演奏",
+            "学吹竖笛",
+            "编创"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 神州音韵（一）",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "黄河船夫曲"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "月牙儿五更"
+                },
+                {
+                  "title": "乌苏里船歌"
+                },
+                {
+                  "title": "包楞调"
+                },
+                {
+                  "title": "走绛州"
+                },
+                {
+                  "title": "孟姜女哭长城"
+                }
+              ]
+            },
+            {
+              "title": "编创"
+            },
+            {
+              "title": "学唱京剧",
+              "children": [
+                {
+                  "title": "猛听得金鼓响"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "神州音韵（一）",
+            "唱歌",
+            "黄河船夫曲",
+            "欣赏",
+            "月牙儿五更",
+            "乌苏里船歌",
+            "包楞调",
+            "走绛州",
+            "孟姜女哭长城",
+            "编创",
+            "学唱京剧",
+            "猛听得金鼓响"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 环球之旅（一）——亚洲之声",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "樱花"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "甘美兰"
+                },
+                {
+                  "title": "蜡烛舞"
+                },
+                {
+                  "title": "短颈乌德"
+                },
+                {
+                  "title": "曼德"
+                },
+                {
+                  "title": "阿里郎"
+                }
+              ]
+            },
+            {
+              "title": "演奏",
+              "children": [
+                {
+                  "title": "学吹竖笛"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "环球之旅（一）——亚洲之声",
+            "唱歌",
+            "樱花",
+            "欣赏",
+            "甘美兰",
+            "蜡烛舞",
+            "短颈乌德",
+            "曼德",
+            "阿里郎",
+            "演奏",
+            "学吹竖笛"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 管弦和鸣",
+          "children": [
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "青少年管弦乐队指南"
+                },
+                {
+                  "title": "查尔达什舞曲"
+                },
+                {
+                  "title": "梦幻曲"
+                },
+                {
+                  "title": "大进行曲"
+                },
+                {
+                  "title": "小步舞曲"
+                },
+                {
+                  "title": "鼓手的战争"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "管弦和鸣",
+            "欣赏",
+            "青少年管弦乐队指南",
+            "查尔达什舞曲",
+            "梦幻曲",
+            "大进行曲",
+            "小步舞曲",
+            "鼓手的战争"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "dc3cb74f-793c-2517-f43f-6f50b78ab419",
+      "title": "初中音乐人教版（五线谱）七年级下册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "七年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/dc3cb74f-793c-2517-f43f-6f50b78ab419.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:03.793+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 春之声",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "渴望春天"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "春节序曲"
+                }
+              ]
+            },
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "春游"
+                }
+              ]
+            },
+            {
+              "title": "听乐赏画",
+              "children": [
+                {
+                  "title": "春之声"
+                },
+                {
+                  "title": "春天来了"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "新疆之春"
+                }
+              ]
+            },
+            {
+              "title": "编创"
+            }
+          ],
+          "topics": [
+            "春之声",
+            "唱歌",
+            "渴望春天",
+            "欣赏",
+            "春节序曲",
+            "春游",
+            "听乐赏画",
+            "春天来了",
+            "选听",
+            "新疆之春",
+            "编创"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 飞翔的翅膀",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "小鸟，小鸟"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "百鸟朝凤"
+                },
+                {
+                  "title": "天鹅"
+                },
+                {
+                  "title": "蜜蜂过江"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "蝴蝶"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "飞翔的翅膀",
+            "唱歌",
+            "小鸟，小鸟",
+            "欣赏",
+            "百鸟朝凤",
+            "天鹅",
+            "蜜蜂过江",
+            "选听",
+            "蝴蝶"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 八音之乐",
+          "children": [
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "春江花月夜"
+                },
+                {
+                  "title": "二泉映月"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "小放驴"
+                },
+                {
+                  "title": "行街"
+                }
+              ]
+            },
+            {
+              "title": "演奏",
+              "children": [
+                {
+                  "title": "打击乐合奏"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "八音之乐",
+            "欣赏",
+            "春江花月夜",
+            "二泉映月",
+            "选听",
+            "小放驴",
+            "行街",
+            "演奏",
+            "打击乐合奏"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 神州音韵（二）",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "凤阳花鼓"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "赛龙夺锦"
+                },
+                {
+                  "title": "姑苏行"
+                },
+                {
+                  "title": "斑鸠调"
+                }
+              ]
+            },
+            {
+              "title": "编创"
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "幸福歌"
+                },
+                {
+                  "title": "洞庭鱼米乡"
+                },
+                {
+                  "title": "赤兔嘶风"
+                },
+                {
+                  "title": "将军得胜令"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "神州音韵（二）",
+            "唱歌",
+            "凤阳花鼓",
+            "欣赏",
+            "赛龙夺锦",
+            "姑苏行",
+            "斑鸠调",
+            "编创",
+            "选听",
+            "幸福歌",
+            "洞庭鱼米乡",
+            "赤兔嘶风",
+            "将军得胜令"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 环球之旅（二）——欧洲与大洋洲",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "桑塔·露琪亚"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "劳特布鲁嫩的约德尔"
+                },
+                {
+                  "title": "优雅"
+                },
+                {
+                  "title": "弗拉门戈"
+                },
+                {
+                  "title": "卡林卡"
+                },
+                {
+                  "title": "拉卡拉卡"
+                },
+                {
+                  "title": "哈卡·马努马努"
+                }
+              ]
+            },
+            {
+              "title": "选唱",
+              "children": [
+                {
+                  "title": "剪羊毛"
+                }
+              ]
+            },
+            {
+              "title": "演奏",
+              "children": [
+                {
+                  "title": "学吹竖笛"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "环球之旅（二）——欧洲与大洋洲",
+            "唱歌",
+            "桑塔·露琪亚",
+            "欣赏",
+            "劳特布鲁嫩的约德尔",
+            "优雅",
+            "弗拉门戈",
+            "卡林卡",
+            "拉卡拉卡",
+            "哈卡·马努马努",
+            "选唱",
+            "剪羊毛",
+            "演奏",
+            "学吹竖笛"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 荧屏之歌",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "音乐之声"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "你是这样的人"
+                },
+                {
+                  "title": "日出"
+                },
+                {
+                  "title": "《辛德勒名单》主题音乐"
+                }
+              ]
+            },
+            {
+              "title": "选唱",
+              "children": [
+                {
+                  "title": "月亮河"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "悍牛与牧童"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "心依恋"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "荧屏之歌",
+            "唱歌",
+            "音乐之声",
+            "欣赏",
+            "你是这样的人",
+            "日出",
+            "《辛德勒名单》主题音乐",
+            "选唱",
+            "月亮河",
+            "悍牛与牧童",
+            "选听",
+            "心依恋"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "36288018-49f8-b679-0149-f9cc3bbc0422",
+      "title": "初中音乐人教版（五线谱）九年级上册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/36288018-49f8-b679-0149-f9cc3bbc0422.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-07-01T18:39:40.615+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 光辉的历程",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "游击队歌"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "保卫黄河"
+                }
+              ]
+            },
+            {
+              "title": "选唱",
+              "children": [
+                {
+                  "title": "中国军魂"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "四渡赤水出奇兵"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "中国人民解放军军歌"
+                },
+                {
+                  "title": "走向复兴"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "光辉的历程",
+            "唱歌",
+            "游击队歌",
+            "欣赏",
+            "保卫黄河",
+            "选唱",
+            "中国军魂",
+            "四渡赤水出奇兵",
+            "选听",
+            "中国人民解放军军歌",
+            "走向复兴"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 音乐故事（二）",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "鳟鱼"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "大海与辛巴达的船"
+                },
+                {
+                  "title": "小巫师"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "索尔维格之歌"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "音乐故事（二）",
+            "唱歌",
+            "鳟鱼",
+            "欣赏",
+            "大海与辛巴达的船",
+            "小巫师",
+            "选听",
+            "索尔维格之歌"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 曲苑天地",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "前门情思——大碗茶"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "重整河山待后生"
+                },
+                {
+                  "title": "蝶恋花·答李淑一"
+                },
+                {
+                  "title": "布谷鸟儿咕咕叫"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "有话好好说"
+                },
+                {
+                  "title": "武松打虎"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "曲苑天地",
+            "唱歌",
+            "前门情思——大碗茶",
+            "欣赏",
+            "重整河山待后生",
+            "蝶恋花·答李淑一",
+            "布谷鸟儿咕咕叫",
+            "选听",
+            "有话好好说",
+            "武松打虎"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 西乐撷英（二）",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "摇篮曲"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "c小调练习曲"
+                },
+                {
+                  "title": "流浪者之歌"
+                },
+                {
+                  "title": "地狱中的奥菲欧序曲（片段）"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "飞翔的女武神"
+                }
+              ]
+            },
+            {
+              "title": "竖笛演奏",
+              "children": [
+                {
+                  "title": "进行曲"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "西乐撷英（二）",
+            "唱歌",
+            "摇篮曲",
+            "欣赏",
+            "c小调练习曲",
+            "流浪者之歌",
+            "地狱中的奥菲欧序曲（片段）",
+            "选听",
+            "飞翔的女武神",
+            "竖笛演奏",
+            "进行曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 舞剧音乐",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "大红枣儿甜又香"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "窗花舞"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "场景"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "拿波利舞曲"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "快乐的女战士"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "水草舞"
+                },
+                {
+                  "title": "莫高绘画的舞蹈"
+                }
+              ]
+            },
+            {
+              "title": "竖笛演奏",
+              "children": [
+                {
+                  "title": "丝路花雨（片段）"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "舞剧音乐",
+            "唱歌",
+            "大红枣儿甜又香",
+            "选听",
+            "窗花舞",
+            "欣赏",
+            "场景",
+            "拿波利舞曲",
+            "快乐的女战士",
+            "水草舞",
+            "莫高绘画的舞蹈",
+            "竖笛演奏",
+            "丝路花雨（片段）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 中国流行风",
+          "children": [
+            {
+              "title": "唱歌",
+              "children": [
+                {
+                  "title": "让世界充满爱"
+                }
+              ]
+            },
+            {
+              "title": "欣赏",
+              "children": [
+                {
+                  "title": "黄土高坡"
+                },
+                {
+                  "title": "青藏高原"
+                },
+                {
+                  "title": "弯弯的月亮"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "故乡的云"
+                }
+              ]
+            },
+            {
+              "title": "选唱",
+              "children": [
+                {
+                  "title": "乡间的小路"
+                }
+              ]
+            },
+            {
+              "title": "选听",
+              "children": [
+                {
+                  "title": "光辉岁月"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "中国流行风",
+            "唱歌",
+            "让世界充满爱",
+            "欣赏",
+            "黄土高坡",
+            "青藏高原",
+            "弯弯的月亮",
+            "选听",
+            "故乡的云",
+            "选唱",
+            "乡间的小路",
+            "光辉岁月"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ff808081-549f-28cb-0154-9fdd2af40391",
+      "title": "初中音乐人教版（五线谱）九年级下册",
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ff808081-549f-28cb-0154-9fdd2af40391.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2023-07-01T18:40:00.711+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 百卉含英",
+          "children": [
+            {
+              "title": "唱歌 茉莉花"
+            },
+            {
+              "title": "欣赏 花之圆舞曲 玫瑰三愿"
+            },
+            {
+              "title": "选听 梅花引"
+            },
+            {
+              "title": "竖笛演奏 送我一支玫瑰花"
+            }
+          ],
+          "topics": [
+            "百卉含英",
+            "唱歌 茉莉花",
+            "欣赏 花之圆舞曲 玫瑰三愿",
+            "选听 梅花引",
+            "竖笛演奏 送我一支玫瑰花"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 梨园风采（二）",
+          "children": [
+            {
+              "title": "学唱戏曲 夫妻双双把家还"
+            },
+            {
+              "title": "欣赏 谁说女子不如男 天上掉下个林妹妹 巧儿我自幼儿许配赵家"
+            },
+            {
+              "title": "选听 秦腔牌子曲"
+            }
+          ],
+          "topics": [
+            "梨园风采（二）",
+            "学唱戏曲 夫妻双双把家还",
+            "欣赏 谁说女子不如男 天上掉下个林妹妹 巧儿我自幼儿许配赵家",
+            "选听 秦腔牌子曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 西乐撷英（三）",
+          "children": [
+            {
+              "title": "唱歌 绿袖子"
+            },
+            {
+              "title": "欣赏 如歌的行板 在中亚西亚草原上"
+            },
+            {
+              "title": "选听 匈牙利狂想曲第二号 鲁斯兰与柳德米拉序曲"
+            }
+          ],
+          "topics": [
+            "西乐撷英（三）",
+            "唱歌 绿袖子",
+            "欣赏 如歌的行板 在中亚西亚草原上",
+            "选听 匈牙利狂想曲第二号 鲁斯兰与柳德米拉序曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 欧美流行风",
+          "children": [
+            {
+              "title": "唱歌 斯卡伯勒集市"
+            },
+            {
+              "title": "欣赏 温柔地爱 拯救地球 加州旅馆 昨日"
+            },
+            {
+              "title": "选听 玫瑰人生 我将永远爱你 生命之杯"
+            }
+          ],
+          "topics": [
+            "欧美流行风",
+            "唱歌 斯卡伯勒集市",
+            "欣赏 温柔地爱 拯救地球 加州旅馆 昨日",
+            "选听 玫瑰人生 我将永远爱你 生命之杯"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 乘着歌声的翅膀",
+          "children": [
+            {
+              "title": "唱歌 乘着歌声的翅膀"
+            },
+            {
+              "title": "欣赏 回声 轻骑兵序曲"
+            },
+            {
+              "title": "选听 即兴幻想曲 母女夜话"
+            },
+            {
+              "title": "竖笛演奏 乘着歌声的翅膀"
+            },
+            {
+              "title": "选唱 同一首歌"
+            },
+            {
+              "title": "选听 母女夜话"
+            }
+          ],
+          "topics": [
+            "乘着歌声的翅膀",
+            "唱歌 乘着歌声的翅膀",
+            "欣赏 回声 轻骑兵序曲",
+            "选听 即兴幻想曲 母女夜话",
+            "竖笛演奏 乘着歌声的翅膀",
+            "选唱 同一首歌",
+            "选听 母女夜话"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 放飞梦想",
+          "children": [
+            {
+              "title": "配乐朗诵 长大后我成了你"
+            },
+            {
+              "title": "竖笛演奏 友谊地久天长"
+            },
+            {
+              "title": "选唱 隐形的翅膀 飞得更高 我相信"
+            },
+            {
+              "title": "活动 秀出我自己"
+            }
+          ],
+          "topics": [
+            "放飞梦想",
+            "配乐朗诵 长大后我成了你",
+            "竖笛演奏 友谊地久天长",
+            "选唱 隐形的翅膀 飞得更高 我相信",
+            "活动 秀出我自己"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

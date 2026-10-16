@@ -1,0 +1,7 @@
+# Keep source fingerprints, skill frontmatter and scripts consistent across OSes.
+* text=auto eol=lf
+*.mp4 binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.pdf binary

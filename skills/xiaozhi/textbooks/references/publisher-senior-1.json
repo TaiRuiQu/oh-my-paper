@@ -1,0 +1,655 @@
+{
+  "note": "人教社官方电子教材平台书目快照，目录未逐册核实；不与课程树按相似题名自动合并，也不计入单元覆盖。",
+  "books": [
+    {
+      "publisher_id": "1454001139236",
+      "title": "普通高中教科书 通用技术 选择性必修  服装及其设计",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001139236/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1411001126201",
+      "title": "普通高中教科书语文选择性必修下册",
+      "subject": "语文",
+      "grade": "选择性必修",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1411001126201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1411001119191",
+      "title": "普通高中教科书 语文 必修下册",
+      "subject": "语文",
+      "grade": "必修",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1411001119191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1461001139231",
+      "title": "普通高中教科书 艺术 选择性必修 影视与数字媒体艺术实践",
+      "subject": "艺术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1461001139231/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1461001139232",
+      "title": "普通高中教科书 艺术 选择性必修 戏剧创编与表演",
+      "subject": "艺术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1461001139232/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1461001139233",
+      "title": "普通高中教科书 艺术 选择性必修 舞蹈创编与表演",
+      "subject": "艺术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1461001139233/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1461001139234",
+      "title": "普通高中教科书 艺术 选择性必修 音乐情境表演",
+      "subject": "艺术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1461001139234/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1461001139235",
+      "title": "普通高中教科书 艺术 选择性必修 美术创意实践",
+      "subject": "艺术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1461001139235/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1461001116234",
+      "title": "普通高中教科书 艺术 必修 艺术与科学",
+      "subject": "艺术",
+      "grade": "必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1461001116234/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1461001116233",
+      "title": "普通高中教科书 艺术 必修 艺术与生活",
+      "subject": "艺术",
+      "grade": "必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1461001116233/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1461001116231",
+      "title": "普通高中教科书 艺术 必修 艺术与文化（上册）",
+      "subject": "艺术",
+      "grade": "必修",
+      "volume": "上册",
+      "source": "https://book.pep.com.cn/1461001116231/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1461001116232",
+      "title": "普通高中教科书 艺术 必修 艺术与文化（下册）",
+      "subject": "艺术",
+      "grade": "必修",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1461001116232/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001139231",
+      "title": "普通高中教科书 通用技术 选择性必修 科技人文融合创新专题",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001139231/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001139232",
+      "title": "普通高中教科书 通用技术 选择性必修 创造力开发与技术发明",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001139232/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001139233",
+      "title": "普通高中教科书 通用技术 选择性必修 职业技术基础",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001139233/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001139234",
+      "title": "普通高中教科书 通用技术 选择性必修 技术与职业探索",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001139234/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001139235",
+      "title": "普通高中教科书 通用技术 选择性必修 现代家政技术",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001139235/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001116231",
+      "title": "普通高中教科书 通用技术 必修 技术与设计2",
+      "subject": "通用技术",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1454001116231/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1437001116192",
+      "title": "普通高中教科书 历史 必修 中外历史纲要下",
+      "subject": "历史",
+      "grade": "必修",
+      "volume": "下册",
+      "source": "https://book.pep.com.cn/1437001116192/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001135221",
+      "title": "普通高中教科书 通用技术 选择性必修 智能家居应用设计",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001135221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001134221",
+      "title": "普通高中教科书 通用技术 选择性必修 产品三维设计与制造",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001134221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001133221",
+      "title": "普通高中教科书 通用技术 选择性必修 机器人设计与制作",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001133221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001132221",
+      "title": "普通高中教科书 通用技术 选择性必修 工程设计基础",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001132221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001131221",
+      "title": "普通高中教科书 通用技术 选择性必修 电子控制技术",
+      "subject": "通用技术",
+      "grade": "选择性必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1454001131221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1472001103221",
+      "title": "普通高中教科书体育与健康必修全一册",
+      "subject": "体育与健康",
+      "grade": "必修",
+      "volume": "全一册",
+      "source": "https://book.pep.com.cn/1472001103221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1463001136201",
+      "title": "普通高中教科书美术选择性必修6现代媒体艺术",
+      "subject": "美术",
+      "grade": "选择性必修",
+      "volume": "第六册",
+      "source": "https://book.pep.com.cn/1463001136201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1463001135201",
+      "title": "普通高中教科书美术选择性必修5工艺",
+      "subject": "美术",
+      "grade": "选择性必修",
+      "volume": "第五册",
+      "source": "https://book.pep.com.cn/1463001135201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1463001134201",
+      "title": "普通高中教科书美术选择性必修4设计",
+      "subject": "美术",
+      "grade": "选择性必修",
+      "volume": "第四册",
+      "source": "https://book.pep.com.cn/1463001134201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1463001133201",
+      "title": "普通高中教科书美术选择性必修3雕塑",
+      "subject": "美术",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1463001133201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1463001132201",
+      "title": "普通高中教科书美术选择性必修2中国书画",
+      "subject": "美术",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1463001132201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1463001131201",
+      "title": "普通高中教科书美术选择性必修1绘画",
+      "subject": "美术",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1463001131201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1463001116191",
+      "title": "普通高中教科书美术必修美术鉴赏",
+      "subject": "美术",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1463001116191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1454001111221",
+      "title": "普通高中教科书通用技术必修技术与设计1",
+      "subject": "通用技术",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1454001111221/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1452001136201",
+      "title": "普通高中教科书信息技术选择性必修6开源硬件项目设计",
+      "subject": "信息技术",
+      "grade": "选择性必修",
+      "volume": "第六册",
+      "source": "https://book.pep.com.cn/1452001136201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1452001135201",
+      "title": "普通高中教科书信息技术选择性必修5三维设计与创意",
+      "subject": "信息技术",
+      "grade": "选择性必修",
+      "volume": "第五册",
+      "source": "https://book.pep.com.cn/1452001135201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1452001134201",
+      "title": "普通高中教科书信息技术选择性必修4人工智能初步",
+      "subject": "信息技术",
+      "grade": "选择性必修",
+      "volume": "第四册",
+      "source": "https://book.pep.com.cn/1452001134201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1452001133201",
+      "title": "普通高中教科书信息技术选择性必修3数据管理与分析",
+      "subject": "信息技术",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1452001133201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1452001132201",
+      "title": "普通高中教科书信息技术选择性必修2网络基础",
+      "subject": "信息技术",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1452001132201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1452001131201",
+      "title": "普通高中教科书信息技术选择性必修1数据与数据结构",
+      "subject": "信息技术",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1452001131201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1452001112191",
+      "title": "普通高中教科书信息技术必修2信息系统与社会",
+      "subject": "信息技术",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1452001112191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1452001111191",
+      "title": "普通高中教科书信息技术必修1数据与计算",
+      "subject": "信息技术",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1452001111191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1443001133201",
+      "title": "普通高中教科书生物学选择性必修3生物技术与工程",
+      "subject": "生物学",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1443001133201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1443001132201",
+      "title": "普通高中教科书生物学选择性必修2生物与环境",
+      "subject": "生物学",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1443001132201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1443001131201",
+      "title": "普通高中教科书生物学选择性必修1稳态与调节",
+      "subject": "生物学",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1443001131201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1443001112191",
+      "title": "普通高中教科书生物学必修2遗传与进化",
+      "subject": "生物学",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1443001112191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1443001111191",
+      "title": "普通高中教科书生物学必修1分子与细胞",
+      "subject": "生物学",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1443001111191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1442001133201",
+      "title": "普通高中教科书化学选择性必修3有机化学基础",
+      "subject": "化学",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1442001133201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1442001132201",
+      "title": "普通高中教科书化学选择性必修2物质结构与性质",
+      "subject": "化学",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1442001132201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1442001131201",
+      "title": "普通高中教科书化学选择性必修1化学反应原理",
+      "subject": "化学",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1442001131201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1442001122191",
+      "title": "普通高中教科书化学必修第二册",
+      "subject": "化学",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1442001122191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1442001121191",
+      "title": "普通高中教科书化学必修第一册",
+      "subject": "化学",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1442001121191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1441001129201",
+      "title": "普通高中教科书物理选择性必修第三册",
+      "subject": "物理",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1441001129201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1441001128201",
+      "title": "普通高中教科书物理选择性必修第二册",
+      "subject": "物理",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1441001128201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1441001127201",
+      "title": "普通高中教科书物理选择性必修第一册",
+      "subject": "物理",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1441001127201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1441001123191",
+      "title": "普通高中教科书物理必修第三册",
+      "subject": "物理",
+      "grade": "必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1441001123191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1441001122191",
+      "title": "普通高中教科书物理必修第二册",
+      "subject": "物理",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1441001122191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1441001121191",
+      "title": "普通高中教科书物理必修第一册",
+      "subject": "物理",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1441001121191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1438001133201",
+      "title": "普通高中教科书地理选择性必修3资源、环境与国家安全",
+      "subject": "地理",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1438001133201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1438001132201",
+      "title": "普通高中教科书地理选择性必修2区域发展",
+      "subject": "地理",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1438001132201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1438001131201",
+      "title": "普通高中教科书地理选择性必修1自然地理基础",
+      "subject": "地理",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1438001131201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1438001122191",
+      "title": "普通高中教科书地理必修第二册",
+      "subject": "地理",
+      "grade": "必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1438001122191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1438001121191",
+      "title": "普通高中教科书地理必修第一册",
+      "subject": "地理",
+      "grade": "必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1438001121191/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1437001133201",
+      "title": "普通高中教科书历史选择性必修3文化交流与传播",
+      "subject": "历史",
+      "grade": "选择性必修",
+      "volume": "第三册",
+      "source": "https://book.pep.com.cn/1437001133201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1437001132201",
+      "title": "普通高中教科书历史选择性必修2经济与社会生活",
+      "subject": "历史",
+      "grade": "选择性必修",
+      "volume": "第二册",
+      "source": "https://book.pep.com.cn/1437001132201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    },
+    {
+      "publisher_id": "1437001131201",
+      "title": "普通高中教科书历史选择性必修1国家制度与社会治理",
+      "subject": "历史",
+      "grade": "选择性必修",
+      "volume": "第一册",
+      "source": "https://book.pep.com.cn/1437001131201/",
+      "status": "publisher_listing_verified_toc_not_crosschecked",
+      "retrieved_at": "2026-10-15"
+    }
+  ]
+}

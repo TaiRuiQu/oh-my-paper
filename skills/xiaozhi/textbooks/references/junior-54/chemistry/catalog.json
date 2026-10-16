@@ -1,0 +1,28 @@
+{
+  "stage": "初中（五•四学制）",
+  "subject": "化学",
+  "books": [
+    {
+      "id": "37bfa69c-d2af-7624-5861-dd3e9c932630",
+      "title": "初中（五•四学制）化学人教版九年级全一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chemistry/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "c895d773-83d0-1637-bf0f-637145a99ba8",
+      "title": "初中（五•四学制）化学人教版八年级全一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/chemistry/units-1.json",
+      "unit_count": 8
+    }
+  ]
+}

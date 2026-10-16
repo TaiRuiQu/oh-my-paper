@@ -1,0 +1,127 @@
+{
+  "stage": "初中",
+  "subject": "历史",
+  "books": [
+    {
+      "id": "434774b7-dc8c-41f5-80f5-8401666ba5fb",
+      "title": "初中历史统编版九年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-1.json",
+      "unit_count": 9
+    },
+    {
+      "id": "2e614cb1-c5fc-4003-9958-6295759d6bfb",
+      "title": "新教材-初中历史统编版七年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "e8c0a9e8-e8a7-4a0f-831a-4f3884f1c05f",
+      "title": "新教材- 初中历史统编版七年级下册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "7ba5afb7-18b7-4e47-b7e2-25d030d64739",
+      "title": "新教材-初中历史统编版九年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-1.json",
+      "unit_count": 9
+    },
+    {
+      "id": "2bc187c2-dfed-4c6d-89ce-4f144245f4fd",
+      "title": "新教材-初中历史统编版八年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "02c2c38b-a6d0-4277-a3de-daa458d94e75",
+      "title": "新教材-初中历史统编版八年级下册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "028a2545-11b5-4aa8-b977-2105c51f98dd",
+      "title": "初中历史统编版七年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "04dbe6df-2851-4d6c-bca0-6cc941a55945",
+      "title": "初中历史统编版七年级下册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "6dea5d20-2c57-4ae6-bf4b-0228662459aa",
+      "title": "初中历史统编版九年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-2.json",
+      "unit_count": 8
+    },
+    {
+      "id": "5f15c356-158a-4b70-bc49-e217c0b8181c",
+      "title": "初中历史统编版八年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-2.json",
+      "unit_count": 9
+    },
+    {
+      "id": "2b5fc548-5d13-493b-a07a-72f4a9675a2e",
+      "title": "初中历史统编版八年级下册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/history/units-2.json",
+      "unit_count": 7
+    }
+  ]
+}

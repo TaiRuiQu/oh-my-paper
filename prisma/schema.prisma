@@ -1,0 +1,970 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id
+  name String
+  email String @unique
+  username String? @unique
+  emailVerified Boolean @default(false)
+  image String?
+  role String @default("STUDENT")
+  permissionsVersion Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sessions Session[]
+  accounts Account[]
+  questions Question[]
+  papers Paper[]
+  classrooms Classroom[]
+  studentRecords ClassroomStudent[]
+  assessments Assessment[]
+  templates CardTemplate[]
+  submissions ScanSubmission[]
+  reviews Review[]
+  teachingAssignments TeachingAssignment[]
+  permissionChanges TeachingPermissionsEvent[] @relation("PermissionTarget")
+  permissionActions TeachingPermissionsEvent[] @relation("PermissionActor")
+  xiaozhiConversations XiaozhiConversation[]
+  xiaozhiSkills XiaozhiSkill[]
+  schoolOfferings SchoolOffering[]
+  schoolPublications SchoolPublication[]
+  schoolLessons SchoolPublishedLesson[]
+  teachingSessions TeachingSession[]
+  practiceSets PracticeSet[]
+  practiceSessions PracticeSession[]
+  @@map("users")
+}
+
+model XiaozhiConversation {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title String @default("新对话")
+  view Json @default("{}")
+  modelId String?
+  skillIds String[] @default([])
+  status String @default("IDLE")
+  workerId String?
+  heartbeatAt DateTime?
+  cancelRequested Boolean @default(false)
+  encryptedCookie String?
+  inputs XiaozhiInput[]
+  error String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId, updatedAt])
+  @@index([status, heartbeatAt])
+  @@map("xiaozhi_conversations")
+}
+
+model XiaozhiInput {
+  id String @id
+  conversationId String
+  conversation XiaozhiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  message Json
+  mode String @default("followUp")
+  status String @default("QUEUED")
+  createdAt DateTime @default(now())
+  @@index([conversationId, createdAt])
+  @@map("xiaozhi_inputs")
+}
+
+model XiaozhiSkill {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name String
+  description String
+  instructions String @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])
+  @@map("xiaozhi_skills")
+}
+
+model Session {
+  id String @id
+  expiresAt DateTime
+  token String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id String @id
+  accountId String
+  providerId String
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken String?
+  refreshToken String?
+  idToken String?
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope String?
+  password String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([providerId, accountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id String @id
+  identifier String
+  value String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([identifier])
+  @@map("verifications")
+}
+
+model AiProvider {
+  id String @id @default(uuid())
+  name String
+  apiType String
+  baseURL String
+  encryptedApiKey String
+  transportMode String @default("http")
+  structuredOutputs Boolean @default(true)
+  maxOutputTokens Int @default(16384)
+  timeoutSeconds Int @default(240)
+  maxConcurrency Int @default(3)
+  models AiModel[]
+  @@map("ai_providers")
+}
+model AiModel {
+  id String @id @default(uuid())
+  providerId String
+  provider AiProvider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  name String
+  displayName String @default("")
+  reasoningEffort String @default("provider-default")
+  reasoningEfforts String[]
+  settings AiSetting[]
+  isPublic Boolean @default(false)
+  creditMultiplier Decimal @default(1) @db.Decimal(12, 4)
+  @@unique([providerId, name])
+  @@map("ai_models")
+}
+model AiSetting {
+  id String @id
+  modelId String?
+  model AiModel? @relation(fields: [modelId], references: [id], onDelete: SetNull)
+  reasoningEffort String @default("default")
+  @@map("ai_settings")
+}
+
+model EmbeddingSetting {
+  id String @id @default("question-bank")
+  name String
+  apiType String
+  baseURL String
+  model String
+  dimensions Int
+  encryptedApiKey String
+  enabled Boolean @default(true)
+  version String @default(uuid())
+  updatedAt DateTime @updatedAt
+  @@map("embedding_settings")
+}
+
+// Durable outbox, deliberately without a Question FK so deletion tombstones survive.
+model QuestionSearchIndex {
+  questionId String @id
+  version String
+  revision String @default(uuid())
+  indexedRevision String?
+  action String @default("UPSERT")
+  status String @default("PENDING")
+  attempts Int @default(0)
+  error String?
+  updatedAt DateTime @updatedAt
+  @@index([version, status, updatedAt])
+  @@map("question_search_indexes")
+}
+
+model Question {
+  id String @id @default(uuid())
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  type String
+  subject String
+  grade String
+  difficulty Float
+  knowledgeTags String[]
+  content Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([ownerId, subject])
+  @@index([ownerId, createdAt, id])
+  @@map("questions")
+}
+model Paper {
+  id String @id @default(uuid())
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name String
+  kind String
+  subject String
+  grade String
+  instructions String @db.Text
+  layout Json
+  readingAssetUrls String[] @default([])
+  items Json @default("[]")
+  templates CardTemplate[]
+  submissions ScanSubmission[]
+  participantSubjects AssessmentParticipantSubject[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([ownerId, updatedAt(sort: Desc), id(sort: Desc)])
+  @@index([updatedAt(sort: Desc), id(sort: Desc)])
+  @@index([readingAssetUrls], type: Gin)
+  @@map("papers")
+}
+model Classroom {
+  id String @id @default(uuid())
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name String
+  stage String
+  cohort String
+  students ClassroomStudent[]
+  teachingAssignments TeachingAssignment[]
+  assessmentParticipants AssessmentParticipant[]
+  schoolOfferings SchoolOffering[]
+  schoolLessons SchoolPublishedLesson[]
+  teachingParticipants TeachingParticipant[]
+  practiceSets PracticeSet[]
+  practiceSessions PracticeSession[]
+  @@index([ownerId])
+  @@map("classrooms")
+}
+model TeachingAssignment {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role String
+  stage String @default("")
+  cohort String @default("")
+  classroomId String?
+  classroom Classroom? @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+  subject String @default("")
+  @@index([userId])
+  @@index([classroomId])
+  @@map("teaching_assignments")
+}
+model TeachingPermissionsEvent {
+  id String @id @default(uuid())
+  targetId String
+  target User @relation("PermissionTarget", fields: [targetId], references: [id], onDelete: Restrict)
+  targetName String
+  actorId String
+  actor User @relation("PermissionActor", fields: [actorId], references: [id], onDelete: Restrict)
+  actorName String
+  type String
+  version Int
+  before Json
+  after Json
+  reason String
+  createdAt DateTime @default(now())
+  @@unique([targetId, version])
+  @@index([targetId, createdAt(sort: Desc), id(sort: Desc)])
+  @@map("teaching_permissions_events")
+}
+model ClassroomStudent {
+  id String @id @default(uuid())
+  classroomId String
+  classroom Classroom @relation(fields: [classroomId], references: [id], onDelete: Cascade)
+  userId String?
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  studentNumber String
+  name String
+  submissions ScanSubmission[]
+  assessmentParticipants AssessmentParticipant[]
+  teachingParticipants TeachingParticipant[]
+  practiceSessions PracticeSession[]
+  @@unique([classroomId, studentNumber])
+  @@unique([classroomId, userId])
+  @@index([userId])
+  @@map("classroom_students")
+}
+model Assessment {
+  id String @id @default(uuid())
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name String
+  kind String
+  reviewScope String @default("CLASSROOM")
+  classroomIds String[]
+  papers Json @default("[]")
+  published Boolean @default(false)
+  rosterRevision Int @default(1)
+  rosterStatus String @default("CONFIRMED")
+  participants AssessmentParticipant[]
+  rosterEvents AssessmentRosterEvent[]
+  submissions ScanSubmission[]
+  homeworkAssignment HomeworkAssignment?
+  createdAt DateTime @default(now())
+  @@index([ownerId])
+  @@map("assessments")
+}
+model AssessmentParticipant {
+  id String @id @default(uuid())
+  assessmentId String
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  studentId String
+  student ClassroomStudent @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  classroomId String
+  classroom Classroom @relation(fields: [classroomId], references: [id], onDelete: Restrict)
+  classroomName String
+  name String
+  studentNumber String
+  stage String
+  cohort String
+  subjects AssessmentParticipantSubject[]
+  @@unique([assessmentId, studentId])
+  @@index([studentId])
+  @@map("assessment_participants")
+}
+model AssessmentParticipantSubject {
+  id String @id @default(uuid())
+  participantId String
+  participant AssessmentParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  paperId String
+  paper Paper @relation(fields: [paperId], references: [id], onDelete: Restrict)
+  status String @default("REQUIRED")
+  reason String @default("")
+  homeworkWork HomeworkWork?
+  @@unique([participantId, paperId])
+  @@map("assessment_participant_subjects")
+}
+model AssessmentRosterEvent {
+  id String @id @default(uuid())
+  assessmentId String
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  revision Int
+  actorId String
+  reason String
+  changes Json
+  createdAt DateTime @default(now())
+  @@unique([assessmentId, revision])
+  @@map("assessment_roster_events")
+}
+model CardTemplate {
+  id String @id @default(uuid())
+  ownerId String?
+  owner User? @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  paperId String?
+  paper Paper? @relation(fields: [paperId], references: [id], onDelete: Cascade)
+  name String
+  subject String
+  preset Boolean @default(false)
+  layout Json
+  submissions ScanSubmission[]
+  @@index([ownerId])
+  @@map("card_templates")
+}
+model ScanSubmission {
+  id String @id @default(uuid())
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  assessmentId String
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  paperId String
+  paper Paper @relation(fields: [paperId], references: [id], onDelete: Restrict)
+  studentId String
+  student ClassroomStudent @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  templateId String?
+  template CardTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  kind String
+  status String @default("PENDING")
+  sourceFiles String[]
+  answers Json
+  alignment Json?
+  attemptNumber Int @default(1)
+  active Boolean @default(true)
+  homeworkAttempt HomeworkAttempt?
+  reviews Review[]
+  createdAt DateTime @default(now())
+  @@unique([assessmentId, paperId, studentId, attemptNumber])
+  @@index([assessmentId, active])
+  @@index([ownerId])
+  @@map("scan_submissions")
+}
+model Review {
+  id String @id @default(uuid())
+  version Int @default(1)
+  submissionId String
+  submission ScanSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  itemId String
+  reviewerId String
+  reviewer User @relation(fields: [reviewerId], references: [id], onDelete: Restrict)
+  round String
+  score Float
+  feedback String @db.Text
+  source String @default("HUMAN")
+  aiJobId String?
+  partScores Json @default("[]")
+  createdAt DateTime @default(now())
+  @@unique([submissionId, itemId, round])
+  @@index([reviewerId])
+  @@map("reviews")
+}
+
+model PlatformAsset {
+  id String @id @default(uuid())
+  ownerId String
+  name String
+  contentType String
+  path String
+  createdAt DateTime @default(now())
+  homeworkAsset HomeworkAsset?
+  practiceAsset PracticeAsset?
+  @@index([ownerId])
+  @@map("platform_assets")
+}
+
+// Independent practice never writes formal Assessment, ScanSubmission or Review rows.
+model PracticeSet {
+  id String @id @default(uuid())
+  ownerId String
+  publishRequestId String
+  publishInput Json
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  classroomId String
+  classroom Classroom @relation(fields: [classroomId], references: [id], onDelete: Restrict)
+  classroomName String
+  paperId String
+  name String
+  subject String
+  version Int @default(1)
+  status String @default("OPEN")
+  frozenPaper Json
+  contentFingerprint String
+  promptAssetUrls String[] @default([])
+  referenceAssetUrls String[] @default([])
+  publishedAt DateTime @default(now())
+  closedAt DateTime?
+  sessions PracticeSession[]
+  events PracticeEvent[]
+  @@index([classroomId, subject, status, publishedAt(sort: Desc), id(sort: Desc)])
+  @@index([publishedAt(sort: Desc), id(sort: Desc)])
+  @@unique([ownerId, publishRequestId])
+  @@index([promptAssetUrls], type: Gin)
+  @@index([referenceAssetUrls], type: Gin)
+  @@map("practice_sets")
+}
+
+model PracticeSession {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  studentId String
+  student ClassroomStudent @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  classroomId String
+  classroom Classroom @relation(fields: [classroomId], references: [id], onDelete: Restrict)
+  identity Json
+  sourceKind String
+  setId String?
+  set PracticeSet? @relation(fields: [setId], references: [id], onDelete: Restrict)
+  sourcePaperId String
+  sourceVersion String
+  startRequestId String
+  startInput Json
+  name String
+  subject String
+  version Int @default(1)
+  status String @default("DRAFT")
+  frozenPaper Json
+  contentFingerprint String
+  sourceItems Json
+  promptAssetUrls String[] @default([])
+  referenceAssetUrls String[] @default([])
+  revealedItemIds String[] @default([])
+  draftVersion Int @default(0)
+  draftAnswers Json @default("[]")
+  draftUpdatedAt DateTime?
+  currentAttemptId String? @unique
+  currentAttempt PracticeAttempt? @relation("CurrentPracticeAttempt", fields: [currentAttemptId], references: [id], onDelete: Restrict)
+  reviewRequestedAt DateTime?
+  createdAt DateTime @default(now())
+  attempts PracticeAttempt[] @relation("PracticeAttempts")
+  exposures PracticeExposure[]
+  events PracticeEvent[]
+  assets PracticeAsset[]
+  evidence PracticeEvidence[]
+  @@unique([userId, startRequestId])
+  @@index([userId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([studentId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([classroomId, subject, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([setId, createdAt(sort: Desc), id(sort: Desc)])
+  @@index([promptAssetUrls], type: Gin)
+  @@index([referenceAssetUrls], type: Gin)
+  @@map("practice_sessions")
+}
+
+model PracticeAttempt {
+  id String @id @default(uuid())
+  sessionId String
+  session PracticeSession @relation("PracticeAttempts", fields: [sessionId], references: [id], onDelete: Restrict)
+  currentForSession PracticeSession? @relation("CurrentPracticeAttempt")
+  sequence Int
+  requestId String
+  sessionVersion Int
+  draftVersion Int
+  answers Json
+  assetUrls String[] @default([])
+  eligibility Json
+  attemptFingerprint String
+  contentFingerprint String
+  submittedAt DateTime @default(now())
+  evaluations PracticeEvaluation[]
+  @@unique([sessionId, sequence])
+  @@unique([sessionId, requestId])
+  @@index([submittedAt(sort: Desc), id(sort: Desc)])
+  @@index([assetUrls], type: Gin)
+  @@map("practice_attempts")
+}
+
+model PracticeEvaluation {
+  id String @id @default(uuid())
+  attemptId String
+  attempt PracticeAttempt @relation(fields: [attemptId], references: [id], onDelete: Restrict)
+  version Int
+  source String
+  actorId String
+  actorName String
+  candidateId String?
+  aiJobId String? @unique
+  evaluation Json
+  createdAt DateTime @default(now())
+  evidence PracticeEvidence[]
+  @@unique([attemptId, version])
+  @@map("practice_evaluations")
+}
+
+model PracticeExposure {
+  id String @id @default(uuid())
+  sessionId String
+  session PracticeSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  userId String
+  originalQuestionId String
+  promptFingerprint String
+  kind String
+  reason String
+  createdAt DateTime @default(now())
+  @@index([userId, originalQuestionId])
+  @@index([userId, promptFingerprint])
+  @@map("practice_exposures")
+}
+
+model PracticeAsset {
+  id String @id @default(uuid())
+  sessionId String
+  session PracticeSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  assetId String @unique
+  asset PlatformAsset @relation(fields: [assetId], references: [id], onDelete: Restrict)
+  uploadedBy String
+  createdAt DateTime @default(now())
+  @@index([sessionId])
+  @@map("practice_assets")
+}
+
+model PracticeEvent {
+  id String @id @default(uuid())
+  sequence Int @unique @default(autoincrement())
+  sessionId String?
+  session PracticeSession? @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  setId String?
+  set PracticeSet? @relation(fields: [setId], references: [id], onDelete: Restrict)
+  type String
+  actorId String
+  actorName String
+  reason String @default("")
+  details Json
+  createdAt DateTime @default(now())
+  @@index([sessionId, sequence])
+  @@index([setId, sequence])
+  @@map("practice_events")
+}
+
+model PracticeEvidence {
+  id String @id @default(uuid())
+  sessionId String
+  session PracticeSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  evaluationId String
+  evaluation PracticeEvaluation @relation(fields: [evaluationId], references: [id], onDelete: Restrict)
+  itemId String
+  partId String @default("")
+  originalQuestionId String
+  promptFingerprint String
+  subject String
+  knowledgeTags String[] @default([])
+  judgment String
+  source String
+  eligibility String
+  recordedAt DateTime @default(now())
+  @@unique([evaluationId, itemId, partId])
+  @@index([sessionId, recordedAt(sort: Desc), id(sort: Desc)])
+  @@index([recordedAt(sort: Desc), id(sort: Desc)])
+  @@map("practice_evidence")
+}
+
+model HomeworkAssignment {
+  id String @id @default(uuid())
+  assessmentId String @unique
+  assessment Assessment @relation(fields: [assessmentId], references: [id], onDelete: Restrict)
+  version Int @default(1)
+  status String @default("ISSUED")
+  name String
+  instructions String @db.Text
+  timezone String
+  dueLocal String
+  dueAt DateTime
+  allowLate Boolean @default(false)
+  rosterRevision Int
+  papers Json
+  promptAssetUrls String[] @default([])
+  issuedBy String
+  issuedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  works HomeworkWork[]
+  events HomeworkEvent[]
+  @@index([status, dueAt])
+  @@index([promptAssetUrls], type: Gin)
+  @@map("homework_assignments")
+}
+
+model HomeworkWork {
+  id String @id @default(uuid())
+  assignmentId String
+  assignment HomeworkAssignment @relation(fields: [assignmentId], references: [id], onDelete: Restrict)
+  participantSubjectId String @unique
+  participantSubject AssessmentParticipantSubject @relation(fields: [participantSubjectId], references: [id], onDelete: Restrict)
+  version Int @default(1)
+  draftVersion Int @default(0)
+  draftAnswers Json @default("[]")
+  draftUpdatedAt DateTime?
+  collectionStatus String @default("NOT_SUBMITTED")
+  dueAtOverride DateTime?
+  dueLocalOverride String?
+  extensionReason String @default("")
+  currentAttemptId String? @unique
+  currentAttempt HomeworkAttempt? @relation("CurrentHomeworkAttempt", fields: [currentAttemptId], references: [id], onDelete: Restrict)
+  attempts HomeworkAttempt[] @relation("HomeworkAttempts")
+  assets HomeworkAsset[]
+  updatedAt DateTime @updatedAt
+  @@index([assignmentId, collectionStatus])
+  @@map("homework_works")
+}
+
+model HomeworkAttempt {
+  id String @id @default(uuid())
+  workId String
+  work HomeworkWork @relation("HomeworkAttempts", fields: [workId], references: [id], onDelete: Restrict)
+  currentForWork HomeworkWork? @relation("CurrentHomeworkAttempt")
+  sequence Int
+  requestId String
+  submissionId String @unique
+  submission ScanSubmission @relation(fields: [submissionId], references: [id], onDelete: Restrict)
+  submittedBy String
+  submittedAt DateTime @default(now())
+  late Boolean
+  @@unique([workId, sequence])
+  @@unique([workId, requestId])
+  @@map("homework_attempts")
+}
+
+model HomeworkAsset {
+  id String @id @default(uuid())
+  workId String
+  work HomeworkWork @relation(fields: [workId], references: [id], onDelete: Restrict)
+  assetId String @unique
+  asset PlatformAsset @relation(fields: [assetId], references: [id], onDelete: Restrict)
+  uploadedBy String
+  createdAt DateTime @default(now())
+  @@index([workId])
+  @@map("homework_assets")
+}
+
+model HomeworkEvent {
+  id String @id @default(uuid())
+  sequence Int @unique @default(autoincrement())
+  assignmentId String
+  assignment HomeworkAssignment @relation(fields: [assignmentId], references: [id], onDelete: Restrict)
+  workId String?
+  type String
+  actorId String
+  reason String @default("")
+  assignmentVersion Int
+  workVersion Int?
+  details Json
+  createdAt DateTime @default(now())
+  @@index([assignmentId, sequence])
+  @@index([workId, sequence])
+  @@map("homework_events")
+}
+
+
+model AiJob {
+  id String @id @default(uuid())
+  userId String
+  kind String
+  modelId String
+  status String @default("QUEUED")
+  input Json
+  result Json?
+  events Json @default("[]")
+  cost Json?
+  error String?
+  attempts Int @default(0)
+  workerId String?
+  heartbeatAt DateTime?
+  createdAt DateTime @default(now())
+  startedAt DateTime?
+  finishedAt DateTime?
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
+  @@map("ai_jobs")
+}
+
+// Immutable snapshots of every submitted score, including revisions.
+model ReviewEvent {
+  id String @id @default(uuid())
+  version Int
+  submissionId String
+  itemId String
+  reviewerId String
+  round String
+  score Float
+  feedback String @db.Text
+  source String
+  aiJobId String?
+  partScores Json
+  createdAt DateTime @default(now())
+  @@unique([submissionId, itemId, round, version])
+  @@index([submissionId, itemId, createdAt])
+  @@map("review_events")
+}
+
+
+model SchoolYear {
+  id String @id @default(uuid())
+  version Int @default(1)
+  name String
+  startDate String
+  endDate String
+  terms SchoolTerm[]
+  @@map("school_years")
+}
+model SchoolTerm {
+  id String @id @default(uuid())
+  yearId String
+  year SchoolYear @relation(fields: [yearId], references: [id], onDelete: Restrict)
+  name String
+  startDate String
+  endDate String
+  weekOneMonday String
+  timezone String
+  archived Boolean @default(false)
+  revision Int @default(1)
+  publishedRevision Int?
+  publishedAt DateTime?
+  timetable Json @default("{\"periods\":[],\"slots\":[],\"calendar\":[],\"overrides\":[]}")
+  draftReason String @default("")
+  offerings SchoolOffering[]
+  publications SchoolPublication[]
+  teachingSessions TeachingSession[]
+  @@index([yearId])
+  @@map("school_terms")
+}
+model SchoolCourse {
+  id String @id @default(uuid())
+  version Int @default(1)
+  name String
+  subject String?
+  active Boolean @default(true)
+  offerings SchoolOffering[]
+  lessons SchoolPublishedLesson[]
+  @@map("school_courses")
+}
+model SchoolRoom {
+  id String @id @default(uuid())
+  version Int @default(1)
+  name String
+  capacity Int?
+  active Boolean @default(true)
+  lessons SchoolPublishedLesson[]
+  @@map("school_rooms")
+}
+model SchoolOffering {
+  id String @id @default(uuid())
+  termId String
+  term SchoolTerm @relation(fields: [termId], references: [id], onDelete: Restrict)
+  courseId String
+  course SchoolCourse @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  classroomId String
+  classroom Classroom @relation(fields: [classroomId], references: [id], onDelete: Restrict)
+  teacherId String
+  teacher User @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+  weeklyPeriods Int
+  active Boolean @default(true)
+  lessons SchoolPublishedLesson[]
+  @@index([termId])
+  @@index([teacherId])
+  @@index([classroomId])
+  @@map("school_offerings")
+}
+model SchoolPublication {
+  id String @id @default(uuid())
+  termId String
+  term SchoolTerm @relation(fields: [termId], references: [id], onDelete: Restrict)
+  revision Int
+  timezone String
+  startDate String
+  endDate String
+  termName String
+  weekOneMonday String
+  actorId String
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  actorName String
+  reason String
+  createdAt DateTime @default(now())
+  lessonCount Int
+  timetable Json
+  lessons SchoolPublishedLesson[]
+  @@unique([termId, revision])
+  @@map("school_publications")
+}
+model SchoolPublishedLesson {
+  id String @id @default(uuid())
+  publicationId String
+  publication SchoolPublication @relation(fields: [publicationId], references: [id], onDelete: Restrict)
+  offeringId String
+  offering SchoolOffering @relation(fields: [offeringId], references: [id], onDelete: Restrict)
+  classroomId String
+  classroom Classroom @relation(fields: [classroomId], references: [id], onDelete: Restrict)
+  teacherId String
+  teacher User @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+  courseId String
+  course SchoolCourse @relation(fields: [courseId], references: [id], onDelete: Restrict)
+  roomId String?
+  room SchoolRoom? @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  date String
+  snapshot Json
+  teachingBindings TeachingSessionLesson[]
+  @@index([publicationId, date])
+  @@index([teacherId, date])
+  @@index([classroomId, date])
+  @@map("school_published_lessons")
+}
+
+
+model TeachingSession {
+  id String @id @default(uuid())
+  termId String
+  term SchoolTerm @relation(fields: [termId], references: [id], onDelete: Restrict)
+  slotId String
+  originalDate String
+  teacherId String
+  teacher User @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+  version Int @default(1)
+  bindingVersion Int @default(1)
+  status String @default("NOT_STARTED")
+  binding Json
+  planVersion Int @default(0)
+  confirmedPlanVersion Int?
+  rosterFingerprint String?
+  rosterConfirmed Boolean @default(false)
+  summary String @default("")
+  reflection String @default("")
+  startedAt DateTime?
+  finishedAt DateTime?
+  interruptedAt DateTime?
+  createdAt DateTime @default(now())
+  lessons TeachingSessionLesson[]
+  participants TeachingParticipant[]
+  plans TeachingPlanVersion[]
+  events TeachingEvent[]
+  @@unique([termId, slotId, originalDate])
+  @@index([teacherId, originalDate])
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+  @@index([teacherId, createdAt(sort: Desc), id(sort: Desc)])
+  @@map("teaching_sessions")
+}
+model TeachingSessionLesson {
+  id String @id @default(uuid())
+  sessionId String
+  session TeachingSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  bindingVersion Int
+  lessonId String
+  lesson SchoolPublishedLesson @relation(fields: [lessonId], references: [id], onDelete: Restrict)
+  @@unique([sessionId, bindingVersion, lessonId])
+  @@map("teaching_session_lessons")
+}
+model TeachingParticipant {
+  id String @id @default(uuid())
+  sessionId String
+  session TeachingSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  studentId String
+  student ClassroomStudent @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  classroomId String
+  classroom Classroom @relation(fields: [classroomId], references: [id], onDelete: Restrict)
+  name String
+  studentNumber String
+  classroomName String
+  rosterStatus String @default("EXPECTED")
+  rosterReason String @default("")
+  attendance String @default("UNMARKED")
+  attendanceReason String @default("")
+  @@unique([sessionId, studentId])
+  @@map("teaching_participants")
+}
+model TeachingPlanVersion {
+  id String @id @default(uuid())
+  sessionId String
+  session TeachingSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  version Int
+  bindingVersion Int
+  source String
+  aiJobId String?
+  actorId String
+  actorName String
+  plan Json
+  assetUrls String[] @default([])
+  createdAt DateTime @default(now())
+  @@index([assetUrls], type: Gin)
+  @@unique([sessionId, version])
+  @@map("teaching_plan_versions")
+}
+model TeachingEvent {
+  id String @id @default(uuid())
+  sessionId String
+  session TeachingSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  version Int
+  type String
+  actorId String
+  actorName String
+  reason String
+  snapshot Json
+  createdAt DateTime @default(now())
+  @@unique([sessionId, version])
+  @@map("teaching_events")
+}

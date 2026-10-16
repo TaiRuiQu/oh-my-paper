@@ -1,0 +1,94 @@
+"use client";
+import Image from "next/image";
+import type { BankQuestion, QuestionContent } from "@/contracts/platform";
+import { PaperText } from "./document-canvas";
+import { DocumentOptions } from "./document-options";
+
+export function DocumentQuestionBody({
+  question,
+  index,
+  onChange,
+  labelPrefix = "试题",
+}: {
+  question: BankQuestion;
+  index: number;
+  labelPrefix?: string;
+  onChange?: (value: Partial<QuestionContent>) => void;
+}) {
+  const { content } = question;
+  const readOnly = !onChange;
+  const text = (label: string, value: string, change: (value: string) => void) => (
+    <PaperText
+      label={`${labelPrefix}${label}`}
+      value={value}
+      readOnly={readOnly}
+      onChange={change}
+    />
+  );
+  return (
+    <div className="p-document-question-body">
+      <div className="p-document-stem">
+        <strong className="p-document-question-number">{index + 1}.</strong>
+        {text("题干", content.stem, (stem) => onChange?.({ stem }))}
+      </div>
+      {content.images.map((url, n) => (
+        <Image
+          key={url}
+          src={url}
+          unoptimized
+          width={700}
+          height={500}
+          className="p-document-image"
+          alt={`题目材料 ${n + 1}`}
+        />
+      ))}
+      {content.options.length > 0 && (
+        <DocumentOptions>
+          {content.options.map((option, n) => (
+            <div className="p-document-option" key={option.label}>
+              <span>{option.label}.</span>
+              {text(`选项 ${option.label}`, option.text, (value) =>
+                onChange?.({
+                  options: content.options.map((o, i) => (i === n ? { ...o, text: value } : o)),
+                }),
+              )}
+            </div>
+          ))}
+        </DocumentOptions>
+      )}
+      {content.parts.map((part, n) => (
+        <div className="p-document-part" key={part.id}>
+          <div className="p-document-stem">
+            <span>（{n + 1}）</span>
+            {text(`小问 ${n + 1} 题干`, part.stem, (stem) =>
+              onChange?.({ parts: content.parts.map((p, i) => (i === n ? { ...p, stem } : p)) }),
+            )}
+          </div>
+          {part.options.length > 0 && (
+            <DocumentOptions>
+              {part.options.map((option, index) => (
+                <div className="p-document-option" key={option.label}>
+                  <span>{option.label}.</span>
+                  {text(`小问 ${n + 1} 选项 ${option.label}`, option.text, (value) =>
+                    onChange?.({
+                      parts: content.parts.map((p, i) =>
+                        i === n
+                          ? {
+                              ...p,
+                              options: p.options.map((o, j) =>
+                                j === index ? { ...o, text: value } : o,
+                              ),
+                            }
+                          : p,
+                      ),
+                    }),
+                  )}
+                </div>
+              ))}
+            </DocumentOptions>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}

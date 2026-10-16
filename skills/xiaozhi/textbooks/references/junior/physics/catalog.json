@@ -1,0 +1,72 @@
+{
+  "stage": "初中",
+  "subject": "物理",
+  "books": [
+    {
+      "id": "5a228904-f03b-404b-bff8-618361025657",
+      "title": "新教材-初中物理人教版九年级全一册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/physics/units-1.json",
+      "unit_count": 10
+    },
+    {
+      "id": "5370d999-5dd2-4c64-a9ed-089ec2694300",
+      "title": "新教材-初中物理人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/physics/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "d31ed57a-d283-498c-84d8-c587fe349b22",
+      "title": "新教材-初中物理人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/physics/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "e5053b45-7755-4017-8c2b-e7d35d307958",
+      "title": "初中物理人教版九年级全一册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "九年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/physics/units-1.json",
+      "unit_count": 12
+    },
+    {
+      "id": "2e4ddce0-ef72-479e-bc9a-415ae64966b8",
+      "title": "初中物理人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/physics/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "56e39c85-7cbc-4111-9b8c-eca52c1c548b",
+      "title": "初中物理人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/physics/units-1.json",
+      "unit_count": 6
+    }
+  ]
+}

@@ -1,0 +1,1310 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "d23f2856-629f-47e8-8d7c-e338c8da48f6",
+      "title": "新教材-小学英语人教版（精通）（主编：苗兴伟）三年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：苗兴伟）",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/d23f2856-629f-47e8-8d7c-e338c8da48f6.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-08-12T15:59:56.122+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 My classroom",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 1 My classroom",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 My class",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 2 My class",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 My family",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 3 My family",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "children": [
+            {
+              "title": "Review of Units 1-3"
+            }
+          ],
+          "topics": ["Revision 1", "Review of Units 1-3"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Clothes",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 4 Clothes",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Animals",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 5 Animals",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Colours",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 6 Colours",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "children": [
+            {
+              "title": "Review of Units 4-6"
+            }
+          ],
+          "topics": ["Revision 2", "Review of Units 4-6"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "a880af33-242a-40a6-9a4d-f6c9bc279758",
+      "title": "新教材-小学英语人教版（精通）（主编：苗兴伟）五年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：苗兴伟）",
+      "revision_label": "新教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/a880af33-242a-40a6-9a4d-f6c9bc279758.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-27T15:19:48.239+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit l Around the world",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit l Around the world",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Jobs",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": ["Unit 2 Jobs", "Lesson 1", "Lesson 2", "Lesson 3", "Fun time", "Story time"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Workplaces",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 3 Workplaces",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "topics": ["Revision 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Putting things in order",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 4 Putting things in order",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 A tidy house",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 5 A tidy house",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Be yourself",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 6 Be yourself",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "topics": ["Revision 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 1 Chants and songs in each unit",
+          "topics": ["Appendix 1 Chants and songs in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 2 Vocabulary in each unit",
+          "topics": ["Appendix 2 Vocabulary in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 3 Vocabulary A-Z",
+          "topics": ["Appendix 3 Vocabulary A-Z"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "abe330bf-61ad-4f20-a51c-cebc4c1f6ae6",
+      "title": "新教材-小学英语人教版（精通）（主编：苗兴伟）六年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：苗兴伟）",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/abe330bf-61ad-4f20-a51c-cebc4c1f6ae6.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-27T15:22:22.212+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit l Travelling",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit l Travelling",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 My feelings",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 2 My feelings",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Planting and growing",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 3 Planting and growing",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "topics": ["Revision 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Seasons",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 4 Seasons",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Celebration days",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 5 Celebration days",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Heroes",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": ["Unit 6 Heroes", "Lesson 1", "Lesson 2", "Lesson 3", "Fun time", "Story time"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "topics": ["Revision 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 1 Vocabulary in each unit",
+          "topics": ["Appendix 1 Vocabulary in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 2 Vocabulary A-Z",
+          "topics": ["Appendix 2 Vocabulary A-Z"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 3 Irregular verbs",
+          "topics": ["Appendix 3 Irregular verbs"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 4 Cardinal and ordinal numbers",
+          "topics": ["Appendix 4 Cardinal and ordinal numbers"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "5f6d405e-32a8-41b0-b5b0-276f8f8b862b",
+      "title": "新教材-小学英语人教版（精通）（主编：苗兴伟）四年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：苗兴伟）",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/5f6d405e-32a8-41b0-b5b0-276f8f8b862b.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-07-23T15:43:28.984+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Sports",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": ["Unit 1 Sports", "Lesson 1", "Lesson 2", "Lesson 3", "Fun time", "Story time"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Hobbies",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 2 Hobbies",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Weather",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 3 Weather",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "topics": ["Revision 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Fun activities",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 4 Fun activities",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Animals",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 5 Animals",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 My day",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": ["Unit 6 My day", "Lesson 1", "Lesson 2", "Lesson 3", "Fun time", "Story time"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "topics": ["Revision 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 1 Chants and songs in each unit",
+          "topics": ["Appendix 1 Chants and songs in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 2 Vocabulary in each unit",
+          "topics": ["Appendix 2 Vocabulary in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 3 Vocabulary A-Z",
+          "topics": ["Appendix 3 Vocabulary A-Z"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "e8c04d9e-0328-4a3c-8401-01dc71981297",
+      "title": "新教材-小学英语人教版（精通）（主编：苗兴伟）四年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：苗兴伟）",
+      "revision_label": "新教材",
+      "grade": "四年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/e8c04d9e-0328-4a3c-8401-01dc71981297.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-02-24T17:25:28.752+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit l Transport",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit l Transport",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 School subjects",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 2 School subjects",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 After-school activities",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 3 After-school activities",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 1",
+          "topics": ["Revision 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Weekend activities",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 4 Weekend activities",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Special days",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 5 Special days",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Asking for directions",
+          "children": [
+            {
+              "title": "Lesson 1"
+            },
+            {
+              "title": "Lesson 2"
+            },
+            {
+              "title": "Lesson 3"
+            },
+            {
+              "title": "Fun time"
+            },
+            {
+              "title": "Story time"
+            }
+          ],
+          "topics": [
+            "Unit 6 Asking for directions",
+            "Lesson 1",
+            "Lesson 2",
+            "Lesson 3",
+            "Fun time",
+            "Story time"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Revision 2",
+          "topics": ["Revision 2"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 1 Chants and songs in each unit",
+          "topics": ["Appendix 1 Chants and songs in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 2 Vocabulary in each unit",
+          "topics": ["Appendix 2 Vocabulary in each unit"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Appendix 3 Vocabulary A-Z",
+          "topics": ["Appendix 3 Vocabulary A-Z"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "0f1d3cc3-831f-43a5-e742-03c7a4ffdf8d",
+      "title": "小学英语人教版（PEP）（三年级起点）（主编：吴欣）三年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "旧教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/0f1d3cc3-831f-43a5-e742-03c7a4ffdf8d.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:26:58.643+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Hello!",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 1 Hello!", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Colours!",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 2 Colours!", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Look at me!",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 3 Look at me!", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 1",
+          "topics": ["Recycle 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 We love animals",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 4 We love animals", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Let's eat !",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 5 Let's eat !", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Happy birthday!",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 6 Happy birthday!", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 2",
+          "topics": ["Recycle 2"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "c3c26e8e-eb50-4c9b-9144-16ac9fed35ea",
+      "title": "小学英语人教版（PEP）（三年级起点）（主编：吴欣）三年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "旧教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/c3c26e8e-eb50-4c9b-9144-16ac9fed35ea.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:46.068+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 Welcome back to school!",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 1 Welcome back to school!", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 My family",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 2 My family", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 At the zoo",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 3 At the zoo", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 1",
+          "topics": ["Recycle 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 Where is my car?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 4 Where is my car?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Do you like pears?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 5 Do you like pears?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 How many?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 6 How many?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 2",
+          "topics": ["Recycle 2"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "stage": "初中",
+  "subject": "语文",
+  "books": [
+    {
+      "id": "285ab940-e8a7-4b39-972c-3d77aabd4dab",
+      "title": "初中语文统编版九年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "b24847a7-753a-4e6a-9014-05ee4b854f11",
+      "title": "新教材-初中语文统编版七年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "046c144d-0d0d-46ee-8542-3ba5cc675a20",
+      "title": "新教材-初中语文统编版七年级下册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "5088edca-5b47-4bf7-b654-fce735edff4d",
+      "title": "新教材-初中语文统编版九年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "75cc33aa-222d-4384-ad2f-204d10623ed9",
+      "title": "新教材-初中语文统编版八年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "8e0e3853-7aeb-43e8-871b-b7fe2c296e85",
+      "title": "新教材-初中语文统编版八年级下册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "0c0a0241-11f9-4b79-83d9-e8715f9c1573",
+      "title": "初中语文统编版七年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-2.json",
+      "unit_count": 7
+    },
+    {
+      "id": "94046fb8-7c74-428c-b23b-c8641a1f3331",
+      "title": "初中语文统编版七年级下册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-3.json",
+      "unit_count": 10
+    },
+    {
+      "id": "4a4aa279-8dc6-4098-b45f-dd3f7d5a61b2",
+      "title": "初中语文统编版九年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-3.json",
+      "unit_count": 6
+    },
+    {
+      "id": "c8bc2af2-6d7b-4b2a-9799-d04f9a60a187",
+      "title": "初中语文统编版八年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-3.json",
+      "unit_count": 7
+    },
+    {
+      "id": "14239ecc-23ee-474a-8cca-34dfb1d456d5",
+      "title": "初中语文统编版八年级下册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/chinese/units-4.json",
+      "unit_count": 6
+    }
+  ]
+}

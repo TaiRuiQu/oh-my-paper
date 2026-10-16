@@ -1,0 +1,105 @@
+{
+  "stage": "初中（五•四学制）",
+  "subject": "道德与法治",
+  "books": [
+    {
+      "id": "8ae7e58b-6a16-77ff-016a-2a06068303f7",
+      "title": "初中（五•四学制）道德与法治统编版七年级全一册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "七年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-ba45799a004a",
+      "title": "初中（五•四学制）道德与法治统编版九年级上册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-1effe4b8080c",
+      "title": "初中（五•四学制）道德与法治统编版九年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/ethics/units-1.json",
+      "unit_count": 3
+    },
+    {
+      "id": "2f710599-a9ff-fb2b-66f0-e36915995060",
+      "title": "初中（五•四学制）道德与法治统编版八年级下册",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ccb2fc2b-2c6b-4f1e-b112-0ce9e55575f3",
+      "title": "新教材-初中（五•四学制）道德与法治统编版八年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "53446947-807d-4095-b75e-f0f226813e3e",
+      "title": "新教材-初中（五•四学制）道德与法治统编版六年级上册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "4cf7653e-a425-4cca-bfe0-bcfbec8e0c83",
+      "title": "新教材-初中（五•四学制）道德与法治统编版六年级全一册",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/ethics/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-6a16-77ff-016a-2a0668c203f9",
+      "title": "初中（五•四学制）道德与法治统编版八年级上册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/ethics/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "5b56293a-afb5-6db9-6c48-c363a6ab7d69",
+      "title": "初中（五•四学制）道德与法治统编版六年级全一册",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "六年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/ethics/units-2.json",
+      "unit_count": 4
+    }
+  ]
+}

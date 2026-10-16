@@ -1,0 +1,276 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "cd5b8173-914b-40fd-b48c-d2bf77c00c4a",
+      "title": "高中体育与健康人教版必修 全一册",
+      "stage": "高中",
+      "subject": "体育与健康",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/cd5b8173-914b-40fd-b48c-d2bf77c00c4a.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:54.134+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一章 高中体育与健康课学习",
+          "children": [
+            {
+              "title": "第一节 上好高中体育与健康课的意义"
+            },
+            {
+              "title": "第二节 高中体育与健康课选项学习指导"
+            }
+          ],
+          "topics": [
+            "高中体育与健康课学习",
+            "上好高中体育与健康课的意义",
+            "高中体育与健康课选项学习指导"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二章 科学发展体能",
+          "children": [
+            {
+              "title": "第一节 认识体能"
+            },
+            {
+              "title": "第二节 发展肌肉力量、肌肉耐力和爆发力"
+            },
+            {
+              "title": "第三节 发展心肺耐力与改善身体成分"
+            },
+            {
+              "title": "第四节 发展柔韧性"
+            },
+            {
+              "title": "第五节 发展反应、平衡、协调、灵敏和速度"
+            },
+            {
+              "title": "第六节 形体练习与健身"
+            }
+          ],
+          "topics": [
+            "科学发展体能",
+            "认识体能",
+            "发展肌肉力量、肌肉耐力和爆发力",
+            "发展心肺耐力与改善身体成分",
+            "发展柔韧性",
+            "发展反应、平衡、协调、灵敏和速度",
+            "形体练习与健身"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三章 培养体育品德",
+          "children": [
+            {
+              "title": "第一节 体育精神"
+            },
+            {
+              "title": "第二节 体育道德"
+            },
+            {
+              "title": "第三节 体育品格"
+            }
+          ],
+          "topics": ["培养体育品德", "体育精神", "体育道德", "体育品格"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四章 塑造健康行为",
+          "children": [
+            {
+              "title": "第一节 生活方式与健康"
+            },
+            {
+              "title": "第二节 营养与健康"
+            },
+            {
+              "title": "第三节 环境与健康"
+            },
+            {
+              "title": "第四节 心理健康与社会适应"
+            },
+            {
+              "title": "第五节 运动安全"
+            },
+            {
+              "title": "第六节 紧急避险"
+            }
+          ],
+          "topics": [
+            "塑造健康行为",
+            "生活方式与健康",
+            "营养与健康",
+            "环境与健康",
+            "心理健康与社会适应",
+            "运动安全",
+            "紧急避险"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五章 体育文化",
+          "children": [
+            {
+              "title": "第一节 体育的演变与发展"
+            },
+            {
+              "title": "第二节 我国优秀传统体育文化"
+            },
+            {
+              "title": "第三节 奥林匹克运动"
+            }
+          ],
+          "topics": ["体育文化", "体育的演变与发展", "我国优秀传统体育文化", "奥林匹克运动"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六章 运动技能学习原理",
+          "children": [
+            {
+              "title": "第一节 运动技能的学习过程与分类"
+            },
+            {
+              "title": "第二节 影响运动技能学习与发挥的因素"
+            }
+          ],
+          "topics": [
+            "运动技能学习原理",
+            "运动技能的学习过程与分类",
+            "影响运动技能学习与发挥的因素"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七章 比赛战术的制订与运用",
+          "children": [
+            {
+              "title": "第一节 比赛战术的制订"
+            },
+            {
+              "title": "第二节 比赛战术的运用"
+            }
+          ],
+          "topics": ["比赛战术的制订与运用", "比赛战术的制订", "比赛战术的运用"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八章 球类运动",
+          "children": [
+            {
+              "title": "第一节 足球"
+            },
+            {
+              "title": "第二节 篮球"
+            },
+            {
+              "title": "第三节 排球"
+            },
+            {
+              "title": "第四节 乒乓球"
+            },
+            {
+              "title": "第五节 羽毛球"
+            }
+          ],
+          "topics": ["球类运动", "足球", "篮球", "排球", "乒乓球", "羽毛球"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第九章 田径类运动",
+          "children": [
+            {
+              "title": "第一节 跑"
+            },
+            {
+              "title": "第二节 跳跃"
+            },
+            {
+              "title": "第三节 投掷"
+            },
+            {
+              "title": "第四节 体能发展与自我评价"
+            }
+          ],
+          "topics": ["田径类运动", "跑", "跳跃", "投掷", "体能发展与自我评价"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十章 体操类运动",
+          "children": [
+            {
+              "title": "第一节 技巧"
+            },
+            {
+              "title": "第二节 双杠"
+            },
+            {
+              "title": "第三节 单杠"
+            },
+            {
+              "title": "第四节 支撑跳跃"
+            },
+            {
+              "title": "第五节 健身健美操"
+            }
+          ],
+          "topics": ["体操类运动", "技巧", "双杠", "单杠", "支撑跳跃", "健身健美操"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十一章 武术与民族民间传统体育类运动",
+          "children": [
+            {
+              "title": "第一节 武术"
+            },
+            {
+              "title": "第二节 民族民间传统体育"
+            }
+          ],
+          "topics": ["武术与民族民间传统体育类运动", "武术", "民族民间传统体育"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十二章 水上与冰雪类运动",
+          "children": [
+            {
+              "title": "第一节 游泳"
+            },
+            {
+              "title": "第二节 滑冰"
+            },
+            {
+              "title": "第三节 滑雪"
+            }
+          ],
+          "topics": ["水上与冰雪类运动", "游泳", "滑冰", "滑雪"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第十三章 新兴体育类运动",
+          "children": [
+            {
+              "title": "第一节 定向运动"
+            },
+            {
+              "title": "第二节 花样跳绳"
+            },
+            {
+              "title": "第三节 轮滑"
+            }
+          ],
+          "topics": ["新兴体育类运动", "定向运动", "花样跳绳", "轮滑"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,428 @@
+{
+  "schema_version": 1,
+  "scope": "统编／人教及人教合编系列；六三学制小学初中、高中为主，五四学制单列。覆盖的是来源快照可枚举的官方同步课程树，不代表全国版本全覆盖或纸质教材版次完全覆盖。",
+  "retrieved_at": "2026-10-15",
+  "coverage": {
+    "official_course_tree_books": 500,
+    "mainstream_63_and_senior_books": 433,
+    "54_books": 67,
+    "exact_print_edition_verified_books": 0,
+    "unit_topics_basis": "editorial_from_official_headings"
+  },
+  "version_rules": "新教材/旧教材均是平台原始标签；标签不能证明某册课程标准年份、2024首次版或具体印次。高中未标新旧也不能自动断言2019版。",
+  "sources": [
+    "https://basic.smartedu.cn/syncClassroom",
+    "https://s-file-2.ykt.cbern.com.cn/zxx/ndrs/national_lesson/teachingmaterials/version/data_version.json",
+    "https://jc.pep.com.cn/"
+  ],
+  "subject_catalogs": [
+    {
+      "stage": "初中（五•四学制）",
+      "subject": "化学",
+      "books": 2,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 2,
+      "catalog": "references/junior-54/chemistry/catalog.json"
+    },
+    {
+      "stage": "初中（五•四学制）",
+      "subject": "语文",
+      "books": 13,
+      "new": 5,
+      "old": 5,
+      "unlabeled": 3,
+      "catalog": "references/junior-54/chinese/catalog.json"
+    },
+    {
+      "stage": "初中（五•四学制）",
+      "subject": "道德与法治",
+      "books": 9,
+      "new": 3,
+      "old": 2,
+      "unlabeled": 4,
+      "catalog": "references/junior-54/ethics/catalog.json"
+    },
+    {
+      "stage": "初中（五•四学制）",
+      "subject": "历史",
+      "books": 9,
+      "new": 3,
+      "old": 3,
+      "unlabeled": 3,
+      "catalog": "references/junior-54/history/catalog.json"
+    },
+    {
+      "stage": "初中（五•四学制）",
+      "subject": "数学",
+      "books": 8,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 8,
+      "catalog": "references/junior-54/math/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "艺术·美术",
+      "books": 11,
+      "new": 5,
+      "old": 5,
+      "unlabeled": 1,
+      "catalog": "references/junior/art/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "生物学",
+      "books": 8,
+      "new": 4,
+      "old": 4,
+      "unlabeled": 0,
+      "catalog": "references/junior/biology/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "化学",
+      "books": 4,
+      "new": 2,
+      "old": 2,
+      "unlabeled": 0,
+      "catalog": "references/junior/chemistry/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "语文",
+      "books": 11,
+      "new": 5,
+      "old": 5,
+      "unlabeled": 1,
+      "catalog": "references/junior/chinese/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "英语",
+      "books": 10,
+      "new": 5,
+      "old": 4,
+      "unlabeled": 1,
+      "catalog": "references/junior/english/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "道德与法治",
+      "books": 11,
+      "new": 5,
+      "old": 5,
+      "unlabeled": 1,
+      "catalog": "references/junior/ethics/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "地理",
+      "books": 8,
+      "new": 4,
+      "old": 4,
+      "unlabeled": 0,
+      "catalog": "references/junior/geography/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "历史",
+      "books": 11,
+      "new": 5,
+      "old": 5,
+      "unlabeled": 1,
+      "catalog": "references/junior/history/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "日语",
+      "books": 3,
+      "new": 1,
+      "old": 0,
+      "unlabeled": 2,
+      "catalog": "references/junior/japanese/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "数学",
+      "books": 15,
+      "new": 9,
+      "old": 5,
+      "unlabeled": 1,
+      "catalog": "references/junior/math/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "艺术·音乐",
+      "books": 17,
+      "new": 5,
+      "old": 5,
+      "unlabeled": 7,
+      "catalog": "references/junior/music/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "体育与健康",
+      "books": 6,
+      "new": 3,
+      "old": 3,
+      "unlabeled": 0,
+      "catalog": "references/junior/pe/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "艺术·舞蹈/影视/戏剧",
+      "books": 12,
+      "new": 12,
+      "old": 0,
+      "unlabeled": 0,
+      "catalog": "references/junior/performing-arts/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "物理",
+      "books": 6,
+      "new": 3,
+      "old": 3,
+      "unlabeled": 0,
+      "catalog": "references/junior/physics/catalog.json"
+    },
+    {
+      "stage": "初中",
+      "subject": "俄语",
+      "books": 3,
+      "new": 3,
+      "old": 0,
+      "unlabeled": 0,
+      "catalog": "references/junior/russian/catalog.json"
+    },
+    {
+      "stage": "小学（五•四学制）",
+      "subject": "语文",
+      "books": 13,
+      "new": 3,
+      "old": 3,
+      "unlabeled": 7,
+      "catalog": "references/primary-54/chinese/catalog.json"
+    },
+    {
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "books": 13,
+      "new": 3,
+      "old": 3,
+      "unlabeled": 7,
+      "catalog": "references/primary-54/ethics/catalog.json"
+    },
+    {
+      "stage": "小学",
+      "subject": "艺术·美术",
+      "books": 21,
+      "new": 9,
+      "old": 9,
+      "unlabeled": 3,
+      "catalog": "references/primary/art/catalog.json"
+    },
+    {
+      "stage": "小学",
+      "subject": "语文",
+      "books": 21,
+      "new": 9,
+      "old": 9,
+      "unlabeled": 3,
+      "catalog": "references/primary/chinese/catalog.json"
+    },
+    {
+      "stage": "小学",
+      "subject": "英语",
+      "books": 44,
+      "new": 16,
+      "old": 6,
+      "unlabeled": 22,
+      "catalog": "references/primary/english/catalog.json"
+    },
+    {
+      "stage": "小学",
+      "subject": "道德与法治",
+      "books": 23,
+      "new": 9,
+      "old": 9,
+      "unlabeled": 5,
+      "catalog": "references/primary/ethics/catalog.json"
+    },
+    {
+      "stage": "小学",
+      "subject": "数学",
+      "books": 21,
+      "new": 9,
+      "old": 9,
+      "unlabeled": 3,
+      "catalog": "references/primary/math/catalog.json"
+    },
+    {
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "books": 31,
+      "new": 9,
+      "old": 9,
+      "unlabeled": 13,
+      "catalog": "references/primary/music/catalog.json"
+    },
+    {
+      "stage": "小学",
+      "subject": "体育与健康",
+      "books": 17,
+      "new": 6,
+      "old": 0,
+      "unlabeled": 11,
+      "catalog": "references/primary/pe/catalog.json"
+    },
+    {
+      "stage": "小学",
+      "subject": "科学",
+      "books": 21,
+      "new": 9,
+      "old": 9,
+      "unlabeled": 3,
+      "catalog": "references/primary/science/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "艺术",
+      "books": 9,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 9,
+      "catalog": "references/senior/arts/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "生物学",
+      "books": 5,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 5,
+      "catalog": "references/senior/biology/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "化学",
+      "books": 5,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 5,
+      "catalog": "references/senior/chemistry/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "语文",
+      "books": 5,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 5,
+      "catalog": "references/senior/chinese/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "英语",
+      "books": 7,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 7,
+      "catalog": "references/senior/english/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "美术",
+      "books": 7,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 7,
+      "catalog": "references/senior/fine-arts/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "通用技术",
+      "books": 12,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 12,
+      "catalog": "references/senior/general-technology/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "地理",
+      "books": 5,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 5,
+      "catalog": "references/senior/geography/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "历史",
+      "books": 5,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 5,
+      "catalog": "references/senior/history/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "信息技术",
+      "books": 8,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 8,
+      "catalog": "references/senior/information-technology/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "数学",
+      "books": 12,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 12,
+      "catalog": "references/senior/math/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "体育与健康",
+      "books": 1,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 1,
+      "catalog": "references/senior/pe/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "物理",
+      "books": 6,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 6,
+      "catalog": "references/senior/physics/catalog.json"
+    },
+    {
+      "stage": "高中",
+      "subject": "思想政治",
+      "books": 11,
+      "new": 0,
+      "old": 0,
+      "unlabeled": 11,
+      "catalog": "references/senior/politics/catalog.json"
+    }
+  ],
+  "unverified": [
+    {
+      "scope": "所有册次的纸质教材版权页、ISBN、课程标准年份、首版/修订/印刷批次",
+      "status": "not_verified",
+      "action": "由用户提供版权页与目录，与对应官方树逐项核对，确认后再引用精确年份。"
+    },
+    {
+      "scope": "劳动、综合实践活动、校本课程；小学/初中信息科技；高中音乐独立模块；未收录的日语/俄语册次等",
+      "status": "not_in_selected_course_tree_snapshot",
+      "action": "在出版社官方电子教材目录核对具体书，不能用相邻学科或泛化主题代填。"
+    }
+  ]
+}

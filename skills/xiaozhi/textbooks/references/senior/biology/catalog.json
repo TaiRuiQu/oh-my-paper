@@ -1,0 +1,61 @@
+{
+  "stage": "高中",
+  "subject": "生物学",
+  "books": [
+    {
+      "id": "020c9b9c-e695-4afb-b615-99d02f1f3cf4",
+      "title": "高中生物学人教版选择性必修3 生物技术与工程",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 生物技术与工程",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/biology/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "35801c4f-214a-4f0f-8326-f47e46f326c3",
+      "title": "高中生物学人教版高一必修1 分子与细胞",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修1 分子与细胞",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/biology/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "75867dfe-5c7f-4dac-b594-fe1e858e3e5d",
+      "title": "高中生物学人教版高一必修2 遗传与进化",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高一",
+      "volume": "必修2 遗传与进化",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/biology/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "352fef83-573f-45d0-94f3-2ce725776395",
+      "title": "高中生物学人教版高二选择性必修1 稳态与调节",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修1 稳态与调节",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/biology/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "8921e92e-3963-4230-b638-924d7954afbe",
+      "title": "高中生物学人教版高二选择性必修2 生物与环境",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修2 生物与环境",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/biology/units-1.json",
+      "unit_count": 5
+    }
+  ]
+}

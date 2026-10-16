@@ -1,0 +1,41 @@
+.cost {
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cost > summary {
+  width: fit-content;
+  padding: 10px 0;
+  cursor: pointer;
+  font-weight: 550;
+}
+
+.details {
+  padding-bottom: 10px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.details dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin: 0 0 12px;
+}
+
+.details dd {
+  margin: 3px 0 0;
+  color: var(--ink);
+}
+
+.details p + p {
+  margin-top: 6px;
+}
+
+.compact {
+  margin-top: 4px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}

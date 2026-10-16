@@ -1,0 +1,33 @@
+syntax = "proto3";
+package ohmypaper.ai;
+
+import "google/protobuf/struct.proto";
+
+message Model {
+  string id = 1;
+  string name = 2;
+}
+
+message Job {
+  string id = 1;
+  string user_id = 2;
+  string kind = 3;
+  string model_id = 4;
+  string status = 5;
+  google.protobuf.Value input = 6;
+  google.protobuf.Value result = 7;
+  google.protobuf.Value cost = 8;
+  repeated google.protobuf.Value events = 9;
+  optional string error = 10;
+  uint32 attempts = 11;
+  string created_at = 12;
+  optional string started_at = 13;
+  optional string finished_at = 14;
+  google.protobuf.Value practice = 15;
+}
+
+message ProgressSnapshot {
+  repeated Job jobs = 1;
+  repeated Model models = 2;
+  google.protobuf.Value search_configuration = 3;
+}

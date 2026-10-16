@@ -1,0 +1,61 @@
+{
+  "stage": "高中",
+  "subject": "历史",
+  "books": [
+    {
+      "id": "b0eb3867-72ff-482c-b448-86ef0b74715d",
+      "title": "高中历史统编版必修 中外历史纲要（上）",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 中外历史纲要（上）",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/history/units-1.json",
+      "unit_count": 11
+    },
+    {
+      "id": "0cd1da98-7b0a-4e95-b4df-0134b2d40e6a",
+      "title": "高中历史统编版必修 中外历史纲要（下）",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 中外历史纲要（下）",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/history/units-1.json",
+      "unit_count": 11
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0175-cf9e48c2017a",
+      "title": "高中历史统编版选择性必修2 经济与社会生活",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2 经济与社会生活",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/history/units-1.json",
+      "unit_count": 7
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0175-cfa2ac3701aa",
+      "title": "高中历史统编版选择性必修3 文化交流与传播",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 文化交流与传播",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/history/units-1.json",
+      "unit_count": 8
+    },
+    {
+      "id": "5640dc0b-6e9f-4d76-bafc-8b134409a11d",
+      "title": "高中历史统编版高二选择性必修1 国家制度与社会治理",
+      "version": "统编版",
+      "revision_label": "平台未标新旧",
+      "grade": "高二",
+      "volume": "选择性必修1 国家制度与社会治理",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/history/units-1.json",
+      "unit_count": 7
+    }
+  ]
+}

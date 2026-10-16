@@ -1,0 +1,123 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "08c775e6-83eb-7f05-ef45-3a8d03a0ceda",
+      "title": "小学（五•四学制）道德与法治统编版二年级上册",
+      "stage": "小学（五•四学制）",
+      "subject": "道德与法治",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/08c775e6-83eb-7f05-ef45-3a8d03a0ceda.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:26:54.298+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 我们的节假日",
+          "children": [
+            {
+              "title": "1 假期有收获"
+            },
+            {
+              "title": "2 周末巧安排"
+            },
+            {
+              "title": "3 欢欢喜喜庆国庆"
+            },
+            {
+              "title": "4 团团圆圆过中秋"
+            }
+          ],
+          "topics": [
+            "我们的节假日",
+            "1 假期有收获",
+            "2 周末巧安排",
+            "3 欢欢喜喜庆国庆",
+            "4 团团圆圆过中秋"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 我们的班级",
+          "children": [
+            {
+              "title": "5 我爱我们班"
+            },
+            {
+              "title": "6 班级生活有规则"
+            },
+            {
+              "title": "7 我是班级值日生"
+            },
+            {
+              "title": "8 装扮我们的教室"
+            }
+          ],
+          "topics": [
+            "我们的班级",
+            "5 我爱我们班",
+            "6 班级生活有规则",
+            "7 我是班级值日生",
+            "8 装扮我们的教室"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 我们在公共场所",
+          "children": [
+            {
+              "title": "9 这些是大家的"
+            },
+            {
+              "title": "10 我们不乱扔"
+            },
+            {
+              "title": "11 大家排好队"
+            },
+            {
+              "title": "12 我们小点儿声"
+            }
+          ],
+          "topics": [
+            "我们在公共场所",
+            "9 这些是大家的",
+            "10 我们不乱扔",
+            "11 大家排好队",
+            "12 我们小点儿声"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 我们生活的地方",
+          "children": [
+            {
+              "title": "13 我爱家乡山和水"
+            },
+            {
+              "title": "14 家乡物产养育我"
+            },
+            {
+              "title": "15 可亲可敬的家乡人"
+            },
+            {
+              "title": "16 家乡新变化"
+            }
+          ],
+          "topics": [
+            "我们生活的地方",
+            "13 我爱家乡山和水",
+            "14 家乡物产养育我",
+            "15 可亲可敬的家乡人",
+            "16 家乡新变化"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

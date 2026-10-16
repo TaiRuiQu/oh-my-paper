@@ -1,0 +1,759 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "0fb179dc-a847-9672-c0dc-9c795bec4a1c",
+      "title": "小学音乐人教版二年级下册",
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/0fb179dc-a847-9672-c0dc-9c795bec4a1c.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:26:59.015+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 到郊外去",
+          "children": [
+            {
+              "title": "欣赏 出发"
+            },
+            {
+              "title": "知识 小节、小节线、终止线"
+            },
+            {
+              "title": "唱歌 郊游"
+            },
+            {
+              "title": "唱歌 山谷回音真好听"
+            },
+            {
+              "title": "编创 山谷回音"
+            },
+            {
+              "title": "欣赏 火车咔咔咔"
+            },
+            {
+              "title": "编创 开火车"
+            }
+          ],
+          "topics": [
+            "到郊外去",
+            "欣赏 出发",
+            "知识 小节、小节线、终止线",
+            "唱歌 郊游",
+            "唱歌 山谷回音真好听",
+            "编创 山谷回音",
+            "欣赏 火车咔咔咔",
+            "编创 开火车"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 健康歌",
+          "children": [
+            {
+              "title": "歌表演 健康歌"
+            },
+            {
+              "title": "唱歌 小雪橇"
+            },
+            {
+              "title": "欣赏 乒乓变奏曲"
+            },
+            {
+              "title": "欣赏 踢毽子"
+            },
+            {
+              "title": "集体舞 哦，十分钟"
+            }
+          ],
+          "topics": [
+            "健康歌",
+            "歌表演 健康歌",
+            "唱歌 小雪橇",
+            "欣赏 乒乓变奏曲",
+            "欣赏 踢毽子",
+            "集体舞 哦，十分钟"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 音乐中的动物",
+          "children": [
+            {
+              "title": "歌表演 请来看看我们的村庄"
+            },
+            {
+              "title": "知识 换气记号"
+            },
+            {
+              "title": "欣赏 口哨与小狗"
+            },
+            {
+              "title": "唱歌 螃蟹歌"
+            },
+            {
+              "title": "欣赏 杜鹃圆舞曲"
+            },
+            {
+              "title": "唱歌 老牛和小羊"
+            },
+            {
+              "title": "活动 动物联欢会"
+            }
+          ],
+          "topics": [
+            "音乐中的动物",
+            "歌表演 请来看看我们的村庄",
+            "知识 换气记号",
+            "欣赏 口哨与小狗",
+            "唱歌 螃蟹歌",
+            "欣赏 杜鹃圆舞曲",
+            "唱歌 老牛和小羊",
+            "活动 动物联欢会"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 五十六朵花",
+          "children": [
+            {
+              "title": "唱歌 阿西里西"
+            },
+            {
+              "title": "欣赏 快乐的牧羊人"
+            },
+            {
+              "title": "欣赏 宜兰童谣（片段）"
+            },
+            {
+              "title": "欣赏 滚核桃"
+            },
+            {
+              "title": "编创 小羊过桥"
+            },
+            {
+              "title": "歌表演 我的家在日喀则"
+            }
+          ],
+          "topics": [
+            "五十六朵花",
+            "唱歌 阿西里西",
+            "欣赏 快乐的牧羊人",
+            "欣赏 宜兰童谣（片段）",
+            "欣赏 滚核桃",
+            "编创 小羊过桥",
+            "歌表演 我的家在日喀则"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 调皮的小闹钟",
+          "children": [
+            {
+              "title": "唱歌 每天"
+            },
+            {
+              "title": "欣赏 调皮的小闹钟"
+            },
+            {
+              "title": "唱歌 时间像小马车"
+            },
+            {
+              "title": "欣赏 在钟表店里"
+            },
+            {
+              "title": "唱歌 大钟和小钟"
+            },
+            {
+              "title": "编创 大钟小钟一起响"
+            }
+          ],
+          "topics": [
+            "调皮的小闹钟",
+            "唱歌 每天",
+            "欣赏 调皮的小闹钟",
+            "唱歌 时间像小马车",
+            "欣赏 在钟表店里",
+            "唱歌 大钟和小钟",
+            "编创 大钟小钟一起响"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 童年的游戏",
+          "children": [
+            {
+              "title": "唱歌 打花巴掌"
+            },
+            {
+              "title": "欣赏 陀螺"
+            },
+            {
+              "title": "欣赏 玩具交响曲（片段）"
+            },
+            {
+              "title": "唱歌 幸福拍手歌"
+            },
+            {
+              "title": "活动 童谣说唱会"
+            }
+          ],
+          "topics": [
+            "童年的游戏",
+            "唱歌 打花巴掌",
+            "欣赏 陀螺",
+            "欣赏 玩具交响曲（片段）",
+            "唱歌 幸福拍手歌",
+            "活动 童谣说唱会"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8b4fbdcc-34f3-6b80-5f15-dff37af6f323",
+      "title": "小学音乐人教版五年级上册",
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8b4fbdcc-34f3-6b80-5f15-dff37af6f323.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:08.613+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 西部风情",
+          "children": [
+            {
+              "title": "唱歌 依马呀吉松"
+            },
+            {
+              "title": "欣赏 上去高山望平川 新疆舞曲第二号"
+            },
+            {
+              "title": "演奏 四季调"
+            },
+            {
+              "title": "唱歌 三峡的孩子爱三峡"
+            },
+            {
+              "title": "音乐知识 G大调"
+            },
+            {
+              "title": "欣赏 北京喜讯到边寨"
+            }
+          ],
+          "topics": [
+            "西部风情",
+            "唱歌 依马呀吉松",
+            "欣赏 上去高山望平川 新疆舞曲第二号",
+            "演奏 四季调",
+            "唱歌 三峡的孩子爱三峡",
+            "音乐知识 G大调",
+            "欣赏 北京喜讯到边寨"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 绿色畅想",
+          "children": [
+            {
+              "title": "唱歌 手拉手，地球村 留给我"
+            },
+            {
+              "title": "欣赏 森林狂想曲"
+            }
+          ],
+          "topics": ["绿色畅想", "唱歌 手拉手，地球村 留给我", "欣赏 森林狂想曲"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 欢乐的舞步",
+          "children": [
+            {
+              "title": "欣赏 大河之舞"
+            },
+            {
+              "title": "唱歌 大家一起来"
+            },
+            {
+              "title": "欣赏 小步舞曲"
+            },
+            {
+              "title": "音乐家故事 莫扎特"
+            },
+            {
+              "title": "唱歌 小步舞曲"
+            }
+          ],
+          "topics": [
+            "欢乐的舞步",
+            "欣赏 大河之舞",
+            "唱歌 大家一起来",
+            "欣赏 小步舞曲",
+            "音乐家故事 莫扎特",
+            "唱歌 小步舞曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 音乐中的故事",
+          "children": [
+            {
+              "title": "欣赏 彼得与狼"
+            },
+            {
+              "title": "唱歌 卢沟谣"
+            }
+          ],
+          "topics": ["音乐中的故事", "欣赏 彼得与狼", "唱歌 卢沟谣"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 八音盒",
+          "children": [
+            {
+              "title": "欣赏 《威廉·退儿》序曲（片段）"
+            },
+            {
+              "title": "唱歌 森林水车"
+            },
+            {
+              "title": "欣赏 蓝色多瑙河圆舞曲"
+            },
+            {
+              "title": "唱歌 真善美的小世界"
+            },
+            {
+              "title": "欣赏 雷鸣电闪波尔卡"
+            }
+          ],
+          "topics": [
+            "八音盒",
+            "欣赏 《威廉·退儿》序曲（片段）",
+            "唱歌 森林水车",
+            "欣赏 蓝色多瑙河圆舞曲",
+            "唱歌 真善美的小世界",
+            "欣赏 雷鸣电闪波尔卡"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 新年音乐会",
+          "children": [
+            {
+              "title": "唱歌 祝愿歌"
+            },
+            {
+              "title": "欣赏 拉德茨基进行曲"
+            },
+            {
+              "title": "活动 新年音乐会"
+            }
+          ],
+          "topics": ["新年音乐会", "唱歌 祝愿歌", "欣赏 拉德茨基进行曲", "活动 新年音乐会"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "65c6a2af-ab45-0b96-6d82-6780a30d5af2",
+      "title": "小学音乐人教版六年级上册",
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/65c6a2af-ab45-0b96-6d82-6780a30d5af2.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:25.737+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 我的祖国",
+          "children": [
+            {
+              "title": "唱歌 我的中国心"
+            },
+            {
+              "title": "欣赏 春天的故事 东方之珠 “自新大陆”第二乐章"
+            },
+            {
+              "title": "编创 念故乡"
+            },
+            {
+              "title": "唱歌 一个妈妈的女儿"
+            },
+            {
+              "title": "欣赏 我的祖国 我和我的祖国"
+            }
+          ],
+          "topics": [
+            "我的祖国",
+            "唱歌 我的中国心",
+            "欣赏 春天的故事 东方之珠 “自新大陆”第二乐章",
+            "编创 念故乡",
+            "唱歌 一个妈妈的女儿",
+            "欣赏 我的祖国 我和我的祖国"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 美丽的草原",
+          "children": [
+            {
+              "title": "唱歌 美丽的夏牧场"
+            },
+            {
+              "title": "音乐知识 骨干音"
+            },
+            {
+              "title": "欣赏 赛马 天堂 金杯 牧歌"
+            },
+            {
+              "title": "编创 草原上"
+            },
+            {
+              "title": "演奏 草原牧歌"
+            }
+          ],
+          "topics": [
+            "美丽的草原",
+            "唱歌 美丽的夏牧场",
+            "音乐知识 骨干音",
+            "欣赏 赛马 天堂 金杯 牧歌",
+            "编创 草原上",
+            "演奏 草原牧歌"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 星空畅想",
+          "children": [
+            {
+              "title": "唱歌 我爱银河"
+            },
+            {
+              "title": "音乐知识 级进、跳进"
+            },
+            {
+              "title": "欣赏 木星──欢乐使者"
+            },
+            {
+              "title": "唱歌 蓝天向我们召唤"
+            },
+            {
+              "title": "欣赏 飞天 天地之间的歌"
+            }
+          ],
+          "topics": [
+            "星空畅想",
+            "唱歌 我爱银河",
+            "音乐知识 级进、跳进",
+            "欣赏 木星──欢乐使者",
+            "唱歌 蓝天向我们召唤",
+            "欣赏 飞天 天地之间的歌"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 外国影视音乐",
+          "children": [
+            {
+              "title": "唱歌 小小少年 啊，朋友"
+            },
+            {
+              "title": "欣赏 两颗小星星"
+            },
+            {
+              "title": "欣赏 照亮你的路 《天空之城》主题曲"
+            }
+          ],
+          "topics": [
+            "外国影视音乐",
+            "唱歌 小小少年 啊，朋友",
+            "欣赏 两颗小星星",
+            "欣赏 照亮你的路 《天空之城》主题曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 八音盒",
+          "children": [
+            {
+              "title": "活动 雪绒花"
+            },
+            {
+              "title": "欣赏 《图画展览会》选曲"
+            },
+            {
+              "title": "唱歌 苏珊娜"
+            }
+          ],
+          "topics": ["八音盒", "活动 雪绒花", "欣赏 《图画展览会》选曲", "唱歌 苏珊娜"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 奥林匹克风",
+          "children": [
+            {
+              "title": "唱歌 我和你"
+            },
+            {
+              "title": "欣赏 手拉手"
+            },
+            {
+              "title": "欣赏 奥林匹克号角"
+            },
+            {
+              "title": "唱歌 阳光体育之歌"
+            },
+            {
+              "title": "欣赏 奥运会会歌 意大利之夏 巴塞罗那 圣火"
+            }
+          ],
+          "topics": [
+            "奥林匹克风",
+            "唱歌 我和你",
+            "欣赏 手拉手",
+            "欣赏 奥林匹克号角",
+            "唱歌 阳光体育之歌",
+            "欣赏 奥运会会歌 意大利之夏 巴塞罗那 圣火"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "1e5ae823-74c0-e127-577c-25206d504d1a",
+      "title": "小学音乐人教版四年级上册",
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/1e5ae823-74c0-e127-577c-25206d504d1a.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:09.714+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元 东海渔歌",
+          "children": [
+            {
+              "title": "唱歌 赶海的小姑娘"
+            },
+            {
+              "title": "音乐知识 F大调 降记号 还原记号"
+            },
+            {
+              "title": "欣赏 大海啊，故乡"
+            },
+            {
+              "title": "音乐知识 附点四分音符"
+            },
+            {
+              "title": "唱歌 小螺号"
+            },
+            {
+              "title": "音乐知识 反复记号"
+            },
+            {
+              "title": "欣赏 丰收欢乐而归"
+            },
+            {
+              "title": "活动 捕鱼归来"
+            },
+            {
+              "title": "音乐实践"
+            }
+          ],
+          "topics": [
+            "东海渔歌",
+            "唱歌 赶海的小姑娘",
+            "音乐知识 F大调 降记号 还原记号",
+            "欣赏 大海啊，故乡",
+            "音乐知识 附点四分音符",
+            "唱歌 小螺号",
+            "音乐知识 反复记号",
+            "欣赏 丰收欢乐而归",
+            "活动 捕鱼归来",
+            "音乐实践"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 音乐中的故事",
+          "children": [
+            {
+              "title": "欣赏 草原放牧"
+            },
+            {
+              "title": "歌表演 老鼠和大象"
+            },
+            {
+              "title": "欣赏 哪吒再生"
+            },
+            {
+              "title": "唱歌 守株待兔的老农夫"
+            },
+            {
+              "title": "音乐知识 倚音记号"
+            }
+          ],
+          "topics": [
+            "音乐中的故事",
+            "欣赏 草原放牧",
+            "歌表演 老鼠和大象",
+            "欣赏 哪吒再生",
+            "唱歌 守株待兔的老农夫",
+            "音乐知识 倚音记号"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 我们的田野",
+          "children": [
+            {
+              "title": "唱歌 我们的田野"
+            },
+            {
+              "title": "音乐知识 连线"
+            },
+            {
+              "title": "唱歌 田野在召唤"
+            },
+            {
+              "title": "音乐知识 力度记号"
+            },
+            {
+              "title": "活动 田园随想"
+            },
+            {
+              "title": "音乐实践"
+            }
+          ],
+          "topics": [
+            "我们的田野",
+            "唱歌 我们的田野",
+            "音乐知识 连线",
+            "唱歌 田野在召唤",
+            "音乐知识 力度记号",
+            "活动 田园随想",
+            "音乐实践"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 山乡牧童",
+          "children": [
+            {
+              "title": "唱歌 村晚"
+            },
+            {
+              "title": "音乐知识 反复跳跃几号"
+            },
+            {
+              "title": "欣赏 牧童短笛"
+            },
+            {
+              "title": "音乐家故事 贺渌汀《牧童短笛》"
+            },
+            {
+              "title": "唱歌 牧童"
+            },
+            {
+              "title": "音乐知识 升记号"
+            },
+            {
+              "title": "欣赏 牧羊姑娘 山童"
+            }
+          ],
+          "topics": [
+            "山乡牧童",
+            "唱歌 村晚",
+            "音乐知识 反复跳跃几号",
+            "欣赏 牧童短笛",
+            "音乐家故事 贺渌汀《牧童短笛》",
+            "唱歌 牧童",
+            "音乐知识 升记号",
+            "欣赏 牧羊姑娘 山童"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 欢腾的节目",
+          "children": [
+            {
+              "title": "唱歌 快乐的泼水节"
+            },
+            {
+              "title": "欣赏 金蛇狂舞 火把节之夜"
+            },
+            {
+              "title": "唱歌 那达慕之歌"
+            },
+            {
+              "title": "活动 欢腾的那达慕"
+            }
+          ],
+          "topics": [
+            "欢腾的节目",
+            "唱歌 快乐的泼水节",
+            "欣赏 金蛇狂舞 火把节之夜",
+            "唱歌 那达慕之歌",
+            "活动 欢腾的那达慕"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 八音盒",
+          "children": [
+            {
+              "title": "唱歌 侗家儿童多快乐"
+            },
+            {
+              "title": "唱歌 愉快的梦"
+            },
+            {
+              "title": "音乐知识 八六拍"
+            },
+            {
+              "title": "欣赏 匈牙利舞曲第五号 马刀舞曲"
+            },
+            {
+              "title": "音乐实践"
+            }
+          ],
+          "topics": [
+            "八音盒",
+            "唱歌 侗家儿童多快乐",
+            "唱歌 愉快的梦",
+            "音乐知识 八六拍",
+            "欣赏 匈牙利舞曲第五号 马刀舞曲",
+            "音乐实践"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

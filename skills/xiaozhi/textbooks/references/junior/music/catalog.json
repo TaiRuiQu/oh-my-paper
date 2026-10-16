@@ -1,0 +1,193 @@
+{
+  "stage": "初中",
+  "subject": "艺术·音乐",
+  "books": [
+    {
+      "id": "4ce02aa0-d54c-547f-9593-2da3d752e652",
+      "title": "初中音乐人教版九年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "a03d16ff-2595-2970-cf3a-aee8512f25fe",
+      "title": "初中音乐人教版（五线谱）七年级上册",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "dc3cb74f-793c-2517-f43f-6f50b78ab419",
+      "title": "初中音乐人教版（五线谱）七年级下册",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "36288018-49f8-b679-0149-f9cc3bbc0422",
+      "title": "初中音乐人教版（五线谱）九年级上册",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "ff808081-549f-28cb-0154-9fdd2af40391",
+      "title": "初中音乐人教版（五线谱）九年级下册",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "ff808081-4371-757b-0143-9462e6b13beb",
+      "title": "初中音乐人教版（五线谱）八年级上册",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "1c19108e-a6b2-18cf-4724-16e470e7be47",
+      "title": "初中音乐人教版（五线谱）八年级下册",
+      "version": "人教版（五线谱）",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "1dfa8dd7-b0e3-4bf5-81f6-c53793d718f5",
+      "title": "新教材-初中艺术·音乐人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-2.json",
+      "unit_count": 5
+    },
+    {
+      "id": "4359cfcc-916c-42ed-8253-d57d8c72275c",
+      "title": "新教材-初中艺术·音乐人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-2.json",
+      "unit_count": 5
+    },
+    {
+      "id": "d16cfb59-065a-4e78-abac-489176972457",
+      "title": "新教材-初中艺术·音乐人教版九年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "b7f10fc1-1760-4413-8cea-904106d682c3",
+      "title": "新教材-初中艺术·音乐人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "6033e03b-c59f-4b2f-8fb3-0e5d038dcaa8",
+      "title": "新教材-初中艺术·音乐人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "c20cd1e6-5260-8f35-ee49-0c975a746cfb",
+      "title": "初中音乐人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-3.json",
+      "unit_count": 6
+    },
+    {
+      "id": "d43e417a-ba0a-5bf7-3a09-9a8553adbf2f",
+      "title": "初中音乐人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-3.json",
+      "unit_count": 6
+    },
+    {
+      "id": "36288018-49f8-b679-0149-f9fc10f10562",
+      "title": "初中音乐人教版九年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-3.json",
+      "unit_count": 6
+    },
+    {
+      "id": "1e5f2337-44d8-c9bd-28ea-215cf5831378",
+      "title": "初中音乐人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-3.json",
+      "unit_count": 6
+    },
+    {
+      "id": "e51bb45d-93dd-6fc3-04dd-35807ab422e4",
+      "title": "初中音乐人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "旧教材",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/music/units-4.json",
+      "unit_count": 6
+    }
+  ]
+}

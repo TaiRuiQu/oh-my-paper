@@ -1,0 +1,1295 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "2a1a47f3-372a-4b72-842b-2682fb4ff1ba",
+      "title": "新教材-小学艺术·音乐人教版一年级下册",
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "一年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/2a1a47f3-372a-4b72-842b-2682fb4ff1ba.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:07:14.823+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "聂耳与《义勇军进行曲》",
+          "topics": ["聂耳与《义勇军进行曲》"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一单元 爱的摇篮",
+          "children": [
+            {
+              "title": "音乐万花筒 音乐礼盒开开开"
+            },
+            {
+              "title": "游戏乐翻天 小松鼠藏果实"
+            },
+            {
+              "title": "小小歌唱家 摇篮曲"
+            },
+            {
+              "title": "趣味乐理 力度与速度"
+            },
+            {
+              "title": "游戏乐翻天 爱的传递"
+            },
+            {
+              "title": "小小演奏家 手指游戏"
+            }
+          ],
+          "topics": [
+            "爱的摇篮",
+            "音乐万花筒 音乐礼盒开开开",
+            "游戏乐翻天 小松鼠藏果实",
+            "小小歌唱家 摇篮曲",
+            "趣味乐理 力度与速度",
+            "游戏乐翻天 爱的传递",
+            "小小演奏家 手指游戏"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 你是我的好朋友",
+          "children": [
+            {
+              "title": "小小歌唱家 找朋友"
+            },
+            {
+              "title": "游戏乐翻天 碰碰车"
+            },
+            {
+              "title": "音乐万花筒 龟兔赛跑"
+            },
+            {
+              "title": "小小演奏家 找到键盘上的“朋友”"
+            }
+          ],
+          "topics": [
+            "你是我的好朋友",
+            "小小歌唱家 找朋友",
+            "游戏乐翻天 碰碰车",
+            "音乐万花筒 龟兔赛跑",
+            "小小演奏家 找到键盘上的“朋友”"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 绿色家园",
+          "children": [
+            {
+              "title": "音乐万花筒 森林与小鸟"
+            },
+            {
+              "title": "情境表演 春天里的植树节"
+            },
+            {
+              "title": "小小歌唱家 绿色的祖国"
+            },
+            {
+              "title": "趣味乐理 升号与降号"
+            },
+            {
+              "title": "游戏乐翻天 眼力大比拼"
+            },
+            {
+              "title": "小小演奏家 小松树"
+            },
+            {
+              "title": "音乐万花筒 致春天"
+            }
+          ],
+          "topics": [
+            "绿色家园",
+            "音乐万花筒 森林与小鸟",
+            "情境表演 春天里的植树节",
+            "小小歌唱家 绿色的祖国",
+            "趣味乐理 升号与降号",
+            "游戏乐翻天 眼力大比拼",
+            "小小演奏家 小松树",
+            "音乐万花筒 致春天"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 一二三，转转转",
+          "children": [
+            {
+              "title": "音乐万花筒 舞会上的小指挥"
+            },
+            {
+              "title": "小小舞蹈家 儿童圆舞曲"
+            },
+            {
+              "title": "小小歌唱家 请你唱首歌吧"
+            },
+            {
+              "title": "小小演奏家 唱唱名，手弹琴"
+            }
+          ],
+          "topics": [
+            "一二三，转转转",
+            "音乐万花筒 舞会上的小指挥",
+            "小小舞蹈家 儿童圆舞曲",
+            "小小歌唱家 请你唱首歌吧",
+            "小小演奏家 唱唱名，手弹琴"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 劳动最光荣",
+          "children": [
+            {
+              "title": "音乐万花筒 劳动最光荣"
+            },
+            {
+              "title": "小小歌唱家 勤快人和懒惰人"
+            },
+            {
+              "title": "小小歌唱家 打麦号子"
+            },
+            {
+              "title": "游戏乐翻天 劳动集体舞"
+            },
+            {
+              "title": "创乐工坊 勤劳的小蜜蜂"
+            },
+            {
+              "title": "小小演奏家 牧童谣"
+            }
+          ],
+          "topics": [
+            "劳动最光荣",
+            "音乐万花筒 劳动最光荣",
+            "小小歌唱家 勤快人和懒惰人",
+            "小小歌唱家 打麦号子",
+            "游戏乐翻天 劳动集体舞",
+            "创乐工坊 勤劳的小蜜蜂",
+            "小小演奏家 牧童谣"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 生活中的音乐",
+          "children": [
+            {
+              "title": "音乐万花筒 我的每日音乐"
+            },
+            {
+              "title": "小小歌唱家 老爷爷赶鹅"
+            },
+            {
+              "title": "小小歌唱家 观灯"
+            },
+            {
+              "title": "音乐万花筒 在钟表店里"
+            },
+            {
+              "title": "创乐工坊 雨来啦"
+            },
+            {
+              "title": "游戏乐翻天 音乐让我们更快乐"
+            }
+          ],
+          "topics": [
+            "生活中的音乐",
+            "音乐万花筒 我的每日音乐",
+            "小小歌唱家 老爷爷赶鹅",
+            "小小歌唱家 观灯",
+            "音乐万花筒 在钟表店里",
+            "创乐工坊 雨来啦",
+            "游戏乐翻天 音乐让我们更快乐"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元 动画城",
+          "children": [
+            {
+              "title": "音乐万花筒 动画音乐会"
+            },
+            {
+              "title": "游戏乐翻天 拉洋片"
+            },
+            {
+              "title": "小小歌唱家 邋遢大王"
+            },
+            {
+              "title": "小小歌唱家 大风车"
+            },
+            {
+              "title": "创乐工坊 唐僧骑马咚嘚咚"
+            }
+          ],
+          "topics": [
+            "动画城",
+            "音乐万花筒 动画音乐会",
+            "游戏乐翻天 拉洋片",
+            "小小歌唱家 邋遢大王",
+            "小小歌唱家 大风车",
+            "创乐工坊 唐僧骑马咚嘚咚"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元 两只老虎与小兔乖乖",
+          "children": [
+            {
+              "title": "小小音乐剧 两只老虎与小兔乖乖"
+            }
+          ],
+          "topics": ["两只老虎与小兔乖乖", "小小音乐剧 两只老虎与小兔乖乖"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "音乐测评",
+          "topics": ["音乐测评"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "aa77b3a0-98fb-410b-851c-f5e8fc6e3e85",
+      "title": "新教材-小学艺术·音乐人教版三年级上册",
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/aa77b3a0-98fb-410b-851c-f5e8fc6e3e85.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:10:15.817+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "中国音乐故事",
+          "children": [
+            {
+              "title": "冼星海与《黄河大合唱》"
+            }
+          ],
+          "topics": ["中国音乐故事", "冼星海与《黄河大合唱》"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一单元 谢谢您，亲爱的老师",
+          "children": [
+            {
+              "title": "小小歌唱家 我爱米兰"
+            },
+            {
+              "title": "趣味乐理 乐音叠罗汉 和弦翻跟头"
+            },
+            {
+              "title": "音乐万花筒 飞来的花瓣 每当我走过老师窗前"
+            },
+            {
+              "title": "小小演奏家 甜甜的秘密"
+            },
+            {
+              "title": "情境表演 老师的一天"
+            },
+            {
+              "title": "综合探索 “唱给老师的歌”音乐会"
+            }
+          ],
+          "topics": [
+            "谢谢您，亲爱的老师",
+            "小小歌唱家 我爱米兰",
+            "趣味乐理 乐音叠罗汉 和弦翻跟头",
+            "音乐万花筒 飞来的花瓣 每当我走过老师窗前",
+            "小小演奏家 甜甜的秘密",
+            "情境表演 老师的一天",
+            "综合探索 “唱给老师的歌”音乐会"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 德奥音乐之旅",
+          "children": [
+            {
+              "title": "音乐万花筒 德奥之声"
+            },
+            {
+              "title": "趣味乐理 你进我出花样多"
+            },
+            {
+              "title": "小小歌唱家 乘着歌声的翅膀"
+            },
+            {
+              "title": "小小演奏家 献给爱丽丝（片段）"
+            }
+          ],
+          "topics": [
+            "德奥音乐之旅",
+            "音乐万花筒 德奥之声",
+            "趣味乐理 你进我出花样多",
+            "小小歌唱家 乘着歌声的翅膀",
+            "小小演奏家 献给爱丽丝（片段）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 人说山西好风光",
+          "children": [
+            {
+              "title": "音乐万花筒 山西音乐汇"
+            },
+            {
+              "title": "小小歌唱家 交城山"
+            },
+            {
+              "title": "创业工坊 加花"
+            },
+            {
+              "title": "小小演奏家 滚核桃"
+            },
+            {
+              "title": "音乐考古 埙的故事"
+            }
+          ],
+          "topics": [
+            "人说山西好风光",
+            "音乐万花筒 山西音乐汇",
+            "小小歌唱家 交城山",
+            "创业工坊 加花",
+            "小小演奏家 滚核桃",
+            "音乐考古 埙的故事"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 走进三秦颂延安",
+          "children": [
+            {
+              "title": "音乐万花筒 秦川乐风"
+            },
+            {
+              "title": "小小演奏家 鸭子拌嘴"
+            },
+            {
+              "title": "综合探索 红领巾寻访革命圣地 山丹丹开花红艳艳 军民大生产"
+            },
+            {
+              "title": "小小歌唱家 延安的故事"
+            },
+            {
+              "title": "音乐考古 西安乐忆"
+            }
+          ],
+          "topics": [
+            "走进三秦颂延安",
+            "音乐万花筒 秦川乐风",
+            "小小演奏家 鸭子拌嘴",
+            "综合探索 红领巾寻访革命圣地 山丹丹开花红艳艳 军民大生产",
+            "小小歌唱家 延安的故事",
+            "音乐考古 西安乐忆"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 西北高原唱花儿",
+          "children": [
+            {
+              "title": "小小歌唱家 花儿与少年"
+            },
+            {
+              "title": "音乐万花筒 花儿会"
+            },
+            {
+              "title": "小小歌唱家 可可西里"
+            },
+            {
+              "title": "创乐工坊 可可西里(片段)"
+            },
+            {
+              "title": "音乐万花筒 丝绸之路驼铃声"
+            },
+            {
+              "title": "音乐考古 丝绸之路敦煌舞"
+            },
+            {
+              "title": "小小舞蹈家 学跳敦煌舞"
+            }
+          ],
+          "topics": [
+            "西北高原唱花儿",
+            "小小歌唱家 花儿与少年",
+            "音乐万花筒 花儿会",
+            "小小歌唱家 可可西里",
+            "创乐工坊 可可西里(片段)",
+            "音乐万花筒 丝绸之路驼铃声",
+            "音乐考古 丝绸之路敦煌舞",
+            "小小舞蹈家 学跳敦煌舞"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 东郭先生与狼",
+          "children": [
+            {
+              "title": "小小音乐剧 东郭先生与狼"
+            }
+          ],
+          "topics": ["东郭先生与狼", "小小音乐剧 东郭先生与狼"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "音乐测评",
+          "topics": ["音乐测评"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "bb2b1606-cd21-4694-852b-f7c6c75542ce",
+      "title": "新教材-小学艺术·音乐人教版三年级下册",
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/bb2b1606-cd21-4694-852b-f7c6c75542ce.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:10:42.389+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "中国音乐故事 文成公主",
+          "topics": ["中国音乐故事 文成公主"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一单元 美丽的草原我的家",
+          "children": [
+            {
+              "title": "小小歌唱家 美丽的草原我的家"
+            },
+            {
+              "title": "小小歌唱家 春天来了"
+            },
+            {
+              "title": "音乐万花筒 长调与短调"
+            },
+            {
+              "title": "音乐万花筒 草原上的歌"
+            },
+            {
+              "title": "小小演奏家 酒歌"
+            }
+          ],
+          "topics": [
+            "美丽的草原我的家",
+            "小小歌唱家 美丽的草原我的家",
+            "小小歌唱家 春天来了",
+            "音乐万花筒 长调与短调",
+            "音乐万花筒 草原上的歌",
+            "小小演奏家 酒歌"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 乐品东北亚",
+          "children": [
+            {
+              "title": "小小歌唱家 赤诚花"
+            },
+            {
+              "title": "小小歌唱家 四季歌"
+            },
+            {
+              "title": "音乐万花筒 东北亚音声"
+            },
+            {
+              "title": "小小演奏家 樱花 卖花姑娘"
+            },
+            {
+              "title": "小小演奏家 牧羊人的歌"
+            },
+            {
+              "title": "趣味乐理 半音距离与音程协和度"
+            }
+          ],
+          "topics": [
+            "乐品东北亚",
+            "小小歌唱家 赤诚花",
+            "小小歌唱家 四季歌",
+            "音乐万花筒 东北亚音声",
+            "小小演奏家 樱花 卖花姑娘",
+            "小小演奏家 牧羊人的歌",
+            "趣味乐理 半音距离与音程协和度"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 天山南北，美丽新疆",
+          "children": [
+            {
+              "title": "音乐万花筒 新疆之声"
+            },
+            {
+              "title": "小小歌唱家 美丽的夏牧场"
+            },
+            {
+              "title": "小小演麦家 幸福花儿开心上"
+            },
+            {
+              "title": "综合探索 歌舞新疆"
+            }
+          ],
+          "topics": [
+            "天山南北，美丽新疆",
+            "音乐万花筒 新疆之声",
+            "小小歌唱家 美丽的夏牧场",
+            "小小演麦家 幸福花儿开心上",
+            "综合探索 歌舞新疆"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 雪域高原之声",
+          "children": [
+            {
+              "title": "小小歌唱家 北京的金山上"
+            },
+            {
+              "title": "小小歌唱家 次仁拉索"
+            },
+            {
+              "title": "创乐工坊 紧缩与放大"
+            },
+            {
+              "title": "音乐万花筒 珠峰脚下乐声扬"
+            },
+            {
+              "title": "音乐考古 远古回声，眺望青藏"
+            },
+            {
+              "title": "小小演奏家 格桑拉"
+            }
+          ],
+          "topics": [
+            "雪域高原之声",
+            "小小歌唱家 北京的金山上",
+            "小小歌唱家 次仁拉索",
+            "创乐工坊 紧缩与放大",
+            "音乐万花筒 珠峰脚下乐声扬",
+            "音乐考古 远古回声，眺望青藏",
+            "小小演奏家 格桑拉"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 丝绸之路出天山",
+          "children": [
+            {
+              "title": "小小歌唱家 月亮叔叔住得远"
+            },
+            {
+              "title": "音乐万花筒 音响南亚"
+            },
+            {
+              "title": "小小舞蹈家 学跳印度舞"
+            },
+            {
+              "title": "音乐万花筒 一千零一夜"
+            }
+          ],
+          "topics": [
+            "丝绸之路出天山",
+            "小小歌唱家 月亮叔叔住得远",
+            "音乐万花筒 音响南亚",
+            "小小舞蹈家 学跳印度舞",
+            "音乐万花筒 一千零一夜"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 彼得与狼",
+          "children": [
+            {
+              "title": "小小音乐剧 彼得与狼"
+            }
+          ],
+          "topics": ["彼得与狼", "小小音乐剧 彼得与狼"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "音乐测评",
+          "topics": ["音乐测评"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ac5d2f7f-9a37-4612-8e83-59bd6c45475c",
+      "title": "新教材-小学艺术·音乐人教版二年级上册",
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ac5d2f7f-9a37-4612-8e83-59bd6c45475c.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:08:08.871+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "中国音乐故事",
+          "children": [
+            {
+              "title": "八音之乐"
+            }
+          ],
+          "topics": ["中国音乐故事", "八音之乐"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一单元 京腔京味儿",
+          "children": [
+            {
+              "title": "音乐万花筒 生旦净丑荟精粹"
+            },
+            {
+              "title": "小小歌唱家 报灯名"
+            },
+            {
+              "title": "小小歌唱家 龙里格龙"
+            },
+            {
+              "title": "音乐万花筒 京剧的伴奏乐器"
+            },
+            {
+              "title": "创业工坊 锣鼓经"
+            },
+            {
+              "title": "音乐万花筒 京味儿绕京城"
+            }
+          ],
+          "topics": [
+            "京腔京味儿",
+            "音乐万花筒 生旦净丑荟精粹",
+            "小小歌唱家 报灯名",
+            "小小歌唱家 龙里格龙",
+            "音乐万花筒 京剧的伴奏乐器",
+            "创业工坊 锣鼓经",
+            "音乐万花筒 京味儿绕京城"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 燕赵大地连津门",
+          "children": [
+            {
+              "title": "游戏乐翻天 我们一起打快板"
+            },
+            {
+              "title": "音乐万花筒 津冀之声"
+            },
+            {
+              "title": "小小歌唱家 小放牛"
+            },
+            {
+              "title": "小小歌唱家 大逛灯"
+            },
+            {
+              "title": "小小演奏家 小放驴"
+            }
+          ],
+          "topics": [
+            "燕赵大地连津门",
+            "游戏乐翻天 我们一起打快板",
+            "音乐万花筒 津冀之声",
+            "小小歌唱家 小放牛",
+            "小小歌唱家 大逛灯",
+            "小小演奏家 小放驴"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 八月十五月儿圆",
+          "children": [
+            {
+              "title": "游戏乐翻天 中秋大观园"
+            },
+            {
+              "title": "创业工坊 中秋的舞步"
+            },
+            {
+              "title": "小小歌唱家 爷爷为我打月饼"
+            },
+            {
+              "title": "音乐万花筒 听乐·赏月"
+            },
+            {
+              "title": "小小演奏家 彩云追月"
+            }
+          ],
+          "topics": [
+            "八月十五月儿圆",
+            "游戏乐翻天 中秋大观园",
+            "创业工坊 中秋的舞步",
+            "小小歌唱家 爷爷为我打月饼",
+            "音乐万花筒 听乐·赏月",
+            "小小演奏家 彩云追月"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 中州之声",
+          "children": [
+            {
+              "title": "音乐万花筒 多彩豫风"
+            },
+            {
+              "title": "小小歌唱家 编花篮"
+            },
+            {
+              "title": "音乐考古 中州古乐"
+            },
+            {
+              "title": "小小演奏家 十枝花"
+            }
+          ],
+          "topics": [
+            "中州之声",
+            "音乐万花筒 多彩豫风",
+            "小小歌唱家 编花篮",
+            "音乐考古 中州古乐",
+            "小小演奏家 十枝花"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 齐风鲁韵",
+          "children": [
+            {
+              "title": "音乐万花筒 沂蒙山小调"
+            },
+            {
+              "title": "小小歌唱家 花蛤蟆"
+            },
+            {
+              "title": "情境表演 武松打虎"
+            },
+            {
+              "title": "音乐万花筒 谁不说俺家乡好"
+            },
+            {
+              "title": "综合探索 孔子与音乐"
+            }
+          ],
+          "topics": [
+            "齐风鲁韵",
+            "音乐万花筒 沂蒙山小调",
+            "小小歌唱家 花蛤蟆",
+            "情境表演 武松打虎",
+            "音乐万花筒 谁不说俺家乡好",
+            "综合探索 孔子与音乐"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 摇曳的律动",
+          "children": [
+            {
+              "title": "趣味乐理 荡漾的节拍"
+            },
+            {
+              "title": "游戏乐翻天 泛舟凤鸣河"
+            },
+            {
+              "title": "小小歌唱家 愉快的梦"
+            },
+            {
+              "title": "小小歌唱家 春游"
+            },
+            {
+              "title": "创乐工坊 重复与对比"
+            },
+            {
+              "title": "小小演奏家 船歌"
+            }
+          ],
+          "topics": [
+            "摇曳的律动",
+            "趣味乐理 荡漾的节拍",
+            "游戏乐翻天 泛舟凤鸣河",
+            "小小歌唱家 愉快的梦",
+            "小小歌唱家 春游",
+            "创乐工坊 重复与对比",
+            "小小演奏家 船歌"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元 四季的颜色",
+          "children": [
+            {
+              "title": "小小歌唱家 嘀哩嘀哩"
+            },
+            {
+              "title": "音乐万花筒 音乐中的四季"
+            },
+            {
+              "title": "小小歌唱家 梅花"
+            },
+            {
+              "title": "小小舞蹈家 小池"
+            },
+            {
+              "title": "趣味乐理 乐句与乐段"
+            }
+          ],
+          "topics": [
+            "四季的颜色",
+            "小小歌唱家 嘀哩嘀哩",
+            "音乐万花筒 音乐中的四季",
+            "小小歌唱家 梅花",
+            "小小舞蹈家 小池",
+            "趣味乐理 乐句与乐段"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元 蜗牛与黄鹂鸟",
+          "children": [
+            {
+              "title": "小小音乐剧 蜗牛与黄鹂鸟"
+            }
+          ],
+          "topics": ["蜗牛与黄鹂鸟", "小小音乐剧 蜗牛与黄鹂鸟"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "音乐测评",
+          "topics": ["音乐测评"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "47406a7b-b4a8-4e60-a5bb-ef67c36329f6",
+      "title": "新教材-小学艺术·音乐人教版二年级下册",
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/47406a7b-b4a8-4e60-a5bb-ef67c36329f6.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:09:30.371+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "中国音乐故事 王麻奴与尉迟青",
+          "topics": ["中国音乐故事 王麻奴与尉迟青"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一单元 美妙的和声",
+          "children": [
+            {
+              "title": "音乐万花筒 合唱的魅力"
+            },
+            {
+              "title": "趣味乐理 音程"
+            },
+            {
+              "title": "小小歌唱家 送别"
+            },
+            {
+              "title": "创乐工坊 送别"
+            }
+          ],
+          "topics": [
+            "美妙的和声",
+            "音乐万花筒 合唱的魅力",
+            "趣味乐理 音程",
+            "小小歌唱家 送别",
+            "创乐工坊 送别"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 高高的兴安岭",
+          "children": [
+            {
+              "title": "音乐万花筒 北方森林之声"
+            },
+            {
+              "title": "小小歌唱家 美丽的家乡"
+            },
+            {
+              "title": "小小歌唱家 月亮，月亮"
+            },
+            {
+              "title": "游戏乐翻天 欢迎你来做客"
+            },
+            {
+              "title": "小小演奏家 勇敢的鄂伦春"
+            }
+          ],
+          "topics": [
+            "高高的兴安岭",
+            "音乐万花筒 北方森林之声",
+            "小小歌唱家 美丽的家乡",
+            "小小歌唱家 月亮，月亮",
+            "游戏乐翻天 欢迎你来做客",
+            "小小演奏家 勇敢的鄂伦春"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 水态万千",
+          "children": [
+            {
+              "title": "音乐万花筒 水之歌"
+            },
+            {
+              "title": "小小歌唱家 泉水叮咚响"
+            },
+            {
+              "title": "创乐工坊 一滴水的旅行"
+            },
+            {
+              "title": "小小演奏家 伏尔塔瓦河(片段)"
+            }
+          ],
+          "topics": [
+            "水态万千",
+            "音乐万花筒 水之歌",
+            "小小歌唱家 泉水叮咚响",
+            "创乐工坊 一滴水的旅行",
+            "小小演奏家 伏尔塔瓦河(片段)"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 长白山下",
+          "children": [
+            {
+              "title": "小小舞蹈家 象帽舞"
+            },
+            {
+              "title": "音乐万花筒 白山黑土歌舞汇"
+            },
+            {
+              "title": "小小歌唱家 新东北风"
+            },
+            {
+              "title": "小小歌唱家 桔梗谣"
+            },
+            {
+              "title": "小小演奏家 四物乐"
+            }
+          ],
+          "topics": [
+            "长白山下",
+            "小小舞蹈家 象帽舞",
+            "音乐万花筒 白山黑土歌舞汇",
+            "小小歌唱家 新东北风",
+            "小小歌唱家 桔梗谣",
+            "小小演奏家 四物乐"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 辽沈风情",
+          "children": [
+            {
+              "title": "游戏乐翻天 辽西民谣变变变"
+            },
+            {
+              "title": "音乐万花筒 辽沈风情"
+            },
+            {
+              "title": "小小歌唱家 正对花"
+            },
+            {
+              "title": "创乐工坊 多样的重复"
+            },
+            {
+              "title": "小小演奏家 杨靖宇大摆口袋阵(前奏)"
+            }
+          ],
+          "topics": [
+            "辽沈风情",
+            "游戏乐翻天 辽西民谣变变变",
+            "音乐万花筒 辽沈风情",
+            "小小歌唱家 正对花",
+            "创乐工坊 多样的重复",
+            "小小演奏家 杨靖宇大摆口袋阵(前奏)"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 音乐大比拼",
+          "children": [
+            {
+              "title": "音乐万花筒 炫技的艺术"
+            },
+            {
+              "title": "游戏乐翻天 鼓圈"
+            },
+            {
+              "title": "趣味乐理 调号"
+            },
+            {
+              "title": "小小演奏家 吃到葡萄的狐狸 毛毛虫进行曲"
+            }
+          ],
+          "topics": [
+            "音乐大比拼",
+            "音乐万花筒 炫技的艺术",
+            "游戏乐翻天 鼓圈",
+            "趣味乐理 调号",
+            "小小演奏家 吃到葡萄的狐狸 毛毛虫进行曲"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元 奥林匹克风",
+          "children": [
+            {
+              "title": "小小歌唱家 我和你"
+            },
+            {
+              "title": "小小歌唱家 雪花"
+            },
+            {
+              "title": "音乐万花筒 奥林匹克号角"
+            },
+            {
+              "title": "音乐万花筒 一起向未来"
+            },
+            {
+              "title": "游戏乐翻天 校园运动会"
+            },
+            {
+              "title": "小小演奏家 歌唱祖国"
+            }
+          ],
+          "topics": [
+            "奥林匹克风",
+            "小小歌唱家 我和你",
+            "小小歌唱家 雪花",
+            "音乐万花筒 奥林匹克号角",
+            "音乐万花筒 一起向未来",
+            "游戏乐翻天 校园运动会",
+            "小小演奏家 歌唱祖国"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第八单元 爷爷为我打月饼",
+          "children": [
+            {
+              "title": "小小音乐剧 爷爷为我打月饼"
+            }
+          ],
+          "topics": ["爷爷为我打月饼", "小小音乐剧 爷爷为我打月饼"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "音乐测评",
+          "topics": ["音乐测评"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "ad362283-6ade-4e5e-822c-854e753d47fe",
+      "title": "新教材-小学艺术·音乐人教版五年级上册",
+      "stage": "小学",
+      "subject": "艺术·音乐",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/ad362283-6ade-4e5e-822c-854e753d47fe.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-07T14:12:52.104+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "中国音乐故事 阳关三叠",
+          "topics": ["中国音乐故事 阳关三叠"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第一单元 岭南之声",
+          "children": [
+            {
+              "title": "音乐考古 南越古声 岭南琴音"
+            },
+            {
+              "title": "音乐万花筒 粤海潮音"
+            },
+            {
+              "title": "小小歌唱家 月光光"
+            },
+            {
+              "title": "小小演奏家 赛龙夺锦"
+            },
+            {
+              "title": "小小歌唱家 落水天"
+            }
+          ],
+          "topics": [
+            "岭南之声",
+            "音乐考古 南越古声 岭南琴音",
+            "音乐万花筒 粤海潮音",
+            "小小歌唱家 月光光",
+            "小小演奏家 赛龙夺锦",
+            "小小歌唱家 落水天"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元 舞动非洲与爵士蓝调",
+          "children": [
+            {
+              "title": "音乐万花筒 听见非洲"
+            },
+            {
+              "title": "小小歌唱家 巴加女孩"
+            },
+            {
+              "title": "综合探索 音乐跨大洋"
+            },
+            {
+              "title": "小小演奏家 夏日时光"
+            },
+            {
+              "title": "创乐工坊 五拍"
+            }
+          ],
+          "topics": [
+            "舞动非洲与爵士蓝调",
+            "音乐万花筒 听见非洲",
+            "小小歌唱家 巴加女孩",
+            "综合探索 音乐跨大洋",
+            "小小演奏家 夏日时光",
+            "创乐工坊 五拍"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元 闽乐回响",
+          "children": [
+            {
+              "title": "音乐万花筒 土楼音声"
+            },
+            {
+              "title": "小小歌唱家 鱼歌 采茶灯"
+            },
+            {
+              "title": "小小舞蹈家 采茶"
+            },
+            {
+              "title": "综合探索 品茗听韵"
+            },
+            {
+              "title": "音乐万花筒 南音探源"
+            }
+          ],
+          "topics": [
+            "闽乐回响",
+            "音乐万花筒 土楼音声",
+            "小小歌唱家 鱼歌 采茶灯",
+            "小小舞蹈家 采茶",
+            "综合探索 品茗听韵",
+            "音乐万花筒 南音探源"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元 港澳之声",
+          "children": [
+            {
+              "title": "小小歌唱家 东方之珠 七子之歌——澳门"
+            },
+            {
+              "title": "综合探索 港澳流行歌曲"
+            },
+            {
+              "title": "小小演奏家 香蕉船"
+            }
+          ],
+          "topics": [
+            "港澳之声",
+            "小小歌唱家 东方之珠 七子之歌——澳门",
+            "综合探索 港澳流行歌曲",
+            "小小演奏家 香蕉船"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元 祖国的宝岛台湾",
+          "children": [
+            {
+              "title": "音乐万花筒 宝岛上的歌声"
+            },
+            {
+              "title": "小小歌唱家 童年 月亮月光光"
+            },
+            {
+              "title": "小小演奏家 一只鸟仔"
+            },
+            {
+              "title": "综合探索 台湾校园歌曲"
+            },
+            {
+              "title": "创乐工坊 起、承、转、合"
+            }
+          ],
+          "topics": [
+            "祖国的宝岛台湾",
+            "音乐万花筒 宝岛上的歌声",
+            "小小歌唱家 童年 月亮月光光",
+            "小小演奏家 一只鸟仔",
+            "综合探索 台湾校园歌曲",
+            "创乐工坊 起、承、转、合"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元 听妈妈讲那过去的事情",
+          "children": [
+            {
+              "title": "小小音乐剧 听妈妈讲那过去的事情"
+            }
+          ],
+          "topics": ["听妈妈讲那过去的事情", "小小音乐剧 听妈妈讲那过去的事情"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "音乐测评",
+          "topics": ["音乐测评"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

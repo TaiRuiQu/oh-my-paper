@@ -1,0 +1,1160 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "f5fa5387-6c48-462b-9e39-990478083091",
+      "title": "新教材-初中（五•四学制）语文统编版六年级下册",
+      "stage": "初中（五•四学制）",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/f5fa5387-6c48-462b-9e39-990478083091.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-01-05T16:51:16.501+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "1 北京的春"
+                },
+                {
+                  "title": "2 腊八粥"
+                },
+                {
+                  "title": "3* 藏戏"
+                },
+                {
+                  "title": "4 古代诗歌三首",
+                  "children": [
+                    {
+                      "title": "迢迢牵牛"
+                    },
+                    {
+                      "title": "寒食"
+                    },
+                    {
+                      "title": "十五夜望月"
+                    }
+                  ]
+                },
+                {
+                  "title": "写作",
+                  "children": [
+                    {
+                      "title": "家乡的风俗"
+                    }
+                  ]
+                },
+                {
+                  "title": "语文园地一"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "1 北京的春",
+            "2 腊八粥",
+            "3* 藏戏",
+            "4 古代诗歌三首",
+            "迢迢牵牛",
+            "寒食",
+            "十五夜望月",
+            "写作",
+            "家乡的风俗",
+            "语文园地一"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "5 为人民服务"
+                },
+                {
+                  "title": "6 十六年前的回忆"
+                },
+                {
+                  "title": "7 董存瑞舍身炸暗堡"
+                },
+                {
+                  "title": "8 古代诗歌三首",
+                  "children": [
+                    {
+                      "title": "蝉"
+                    },
+                    {
+                      "title": "马诗（其五）"
+                    },
+                    {
+                      "title": "竹石"
+                    }
+                  ]
+                },
+                {
+                  "title": "写作",
+                  "children": [
+                    {
+                      "title": "心愿"
+                    }
+                  ]
+                },
+                {
+                  "title": "语文园地二"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "5 为人民服务",
+            "6 十六年前的回忆",
+            "7 董存瑞舍身炸暗堡",
+            "8 古代诗歌三首",
+            "蝉",
+            "马诗（其五）",
+            "竹石",
+            "写作",
+            "心愿",
+            "语文园地二"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "9 匆匆"
+                },
+                {
+                  "title": "10 那个星期天"
+                },
+                {
+                  "title": "11* 别了，语文课"
+                },
+                {
+                  "title": "12 文言文二则",
+                  "children": [
+                    {
+                      "title": "学弈"
+                    },
+                    {
+                      "title": "关尹子教射"
+                    }
+                  ]
+                },
+                {
+                  "title": "写作",
+                  "children": [
+                    {
+                      "title": "让真情自然流露"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "9 匆匆",
+            "10 那个星期天",
+            "11* 别了，语文课",
+            "12 文言文二则",
+            "学弈",
+            "关尹子教射",
+            "写作",
+            "让真情自然流露"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "活动·探究"
+            },
+            {
+              "title": "任务一 阅读课文，了解名著",
+              "children": [
+                {
+                  "title": "13 万卡"
+                },
+                {
+                  "title": "14 小抄写员"
+                },
+                {
+                  "title": "15 骑鹅旅行记（节选）"
+                }
+              ]
+            },
+            {
+              "title": "任务二 拓展阅读整本书"
+            },
+            {
+              "title": "任务三 交流思考，撰写感悟"
+            },
+            {
+              "title": "整本书阅读",
+              "children": [
+                {
+                  "title": "《林海雪原》 培养良好的阅读习惯"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "活动·探究",
+            "任务一 阅读课文，了解名著",
+            "13 万卡",
+            "14 小抄写员",
+            "15 骑鹅旅行记（节选）",
+            "任务二 拓展阅读整本书",
+            "任务三 交流思考，撰写感悟",
+            "整本书阅读",
+            "《林海雪原》 培养良好的阅读习惯"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "16 詹天佑"
+                },
+                {
+                  "title": "17 中国有能力解决好吃饭问题"
+                },
+                {
+                  "title": "18* 绚丽的“彩虹”"
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "有你，真好"
+                }
+              ]
+            },
+            {
+              "title": "语文园地五"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "16 詹天佑",
+            "17 中国有能力解决好吃饭问题",
+            "18* 绚丽的“彩虹”",
+            "写作",
+            "有你，真好",
+            "语文园地五"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "19 只有一个地球"
+                },
+                {
+                  "title": "20* 青山不老"
+                },
+                {
+                  "title": "21* 三黑和土地"
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "学写倡议书"
+                }
+              ]
+            },
+            {
+              "title": "语文园地六"
+            }
+          ],
+          "topics": [
+            "阅读",
+            "19 只有一个地球",
+            "20* 青山不老",
+            "21* 三黑和土地",
+            "写作",
+            "学写倡议书",
+            "语文园地六"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第七单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "22 好的故事"
+                },
+                {
+                  "title": "23* 我的伯父鲁迅先"
+                },
+                {
+                  "title": "24* 有的人——纪念鲁迅有"
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "传承好家风"
+                }
+              ]
+            },
+            {
+              "title": "语文园地七"
+            },
+            {
+              "title": "专题学习活动",
+              "children": [
+                {
+                  "title": "遨游汉字王国"
+                }
+              ]
+            },
+            {
+              "title": "课外古诗词诵读",
+              "children": [
+                {
+                  "title": "长歌行"
+                },
+                {
+                  "title": "绝句（其二）"
+                },
+                {
+                  "title": "淮中晚泊犊"
+                },
+                {
+                  "title": "观书有感（其二）"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "22 好的故事",
+            "23* 我的伯父鲁迅先",
+            "24* 有的人——纪念鲁迅有",
+            "写作",
+            "传承好家风",
+            "语文园地七",
+            "专题学习活动",
+            "遨游汉字王国",
+            "课外古诗词诵读",
+            "长歌行",
+            "绝句（其二）",
+            "淮中晚泊犊",
+            "观书有感（其二）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-bb099c4e0259",
+      "title": "初中（五•四学制）语文统编版七年级上册",
+      "stage": "初中（五•四学制）",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58c-6e16-b92e-016e-bb099c4e0259.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:07.339+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "1 春"
+                },
+                {
+                  "title": "2 济南的冬天"
+                },
+                {
+                  "title": "3* 雨的四季"
+                },
+                {
+                  "title": "4 古代诗歌四首",
+                  "children": [
+                    {
+                      "title": "观沧海"
+                    },
+                    {
+                      "title": "闻王昌龄左迁龙标遥有此寄"
+                    },
+                    {
+                      "title": "次北固山下"
+                    },
+                    {
+                      "title": "天净沙•秋思"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "学会观察生活"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "1 春",
+            "2 济南的冬天",
+            "3* 雨的四季",
+            "4 古代诗歌四首",
+            "观沧海",
+            "闻王昌龄左迁龙标遥有此寄",
+            "次北固山下",
+            "天净沙•秋思",
+            "写作",
+            "学会观察生活"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "5 秋天的怀念"
+                },
+                {
+                  "title": "6 散步"
+                },
+                {
+                  "title": "7* 散文诗二首",
+                  "children": [
+                    {
+                      "title": "金色花"
+                    },
+                    {
+                      "title": "荷叶•母亲"
+                    }
+                  ]
+                },
+                {
+                  "title": "8 《世说新语》二则",
+                  "children": [
+                    {
+                      "title": "咏雪"
+                    },
+                    {
+                      "title": "陈太丘与友期行"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "学会记事"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "5 秋天的怀念",
+            "6 散步",
+            "7* 散文诗二首",
+            "金色花",
+            "荷叶•母亲",
+            "8 《世说新语》二则",
+            "咏雪",
+            "陈太丘与友期行",
+            "写作",
+            "学会记事"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "9 从百草园到三味书屋"
+                },
+                {
+                  "title": "10* 再塑生命的人"
+                },
+                {
+                  "title": "11 《论语》十二章"
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "写人要抓住特点"
+                }
+              ]
+            },
+            {
+              "title": "名著导读",
+              "children": [
+                {
+                  "title": "《朝花夕拾》消除与经典的隔膜"
+                }
+              ]
+            },
+            {
+              "title": "课外古诗词诵读",
+              "children": [
+                {
+                  "title": "峨眉山月歌"
+                },
+                {
+                  "title": "江南逢李龟年"
+                },
+                {
+                  "title": "行军九日思长安故园"
+                },
+                {
+                  "title": "夜上受降城闻笛"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "9 从百草园到三味书屋",
+            "10* 再塑生命的人",
+            "11 《论语》十二章",
+            "写作",
+            "写人要抓住特点",
+            "名著导读",
+            "《朝花夕拾》消除与经典的隔膜",
+            "课外古诗词诵读",
+            "峨眉山月歌",
+            "江南逢李龟年",
+            "行军九日思长安故园",
+            "夜上受降城闻笛"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "12 纪念白求恩"
+                },
+                {
+                  "title": "13 植树的牧羊人"
+                },
+                {
+                  "title": "14* 走一步，再走一步"
+                },
+                {
+                  "title": "15 诫子书"
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "思路要清晰"
+                }
+              ]
+            },
+            {
+              "title": "综合性学习",
+              "children": [
+                {
+                  "title": "少年正是读书时"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "12 纪念白求恩",
+            "13 植树的牧羊人",
+            "14* 走一步，再走一步",
+            "15 诫子书",
+            "写作",
+            "思路要清晰",
+            "综合性学习",
+            "少年正是读书时"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "16 猫"
+                },
+                {
+                  "title": "17* 动物笑谈"
+                },
+                {
+                  "title": "18 狼"
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "如何突出中心"
+                }
+              ]
+            }
+          ],
+          "topics": ["阅读", "16 猫", "17* 动物笑谈", "18 狼", "写作", "如何突出中心"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "19 皇帝的新装"
+                },
+                {
+                  "title": "20 天上的街市"
+                },
+                {
+                  "title": "21* 女娲造人"
+                },
+                {
+                  "title": "22 寓言四则",
+                  "children": [
+                    {
+                      "title": "赫耳墨斯和雕像者"
+                    },
+                    {
+                      "title": "蚊子和狮子"
+                    },
+                    {
+                      "title": "穿井得一人"
+                    },
+                    {
+                      "title": "杞人忧天"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "发挥联想和想象"
+                }
+              ]
+            },
+            {
+              "title": "综合性学习",
+              "children": [
+                {
+                  "title": "文学部落"
+                }
+              ]
+            },
+            {
+              "title": "名著导读",
+              "children": [
+                {
+                  "title": "《西游记》精读和跳读"
+                }
+              ]
+            },
+            {
+              "title": "课外古诗词诵读",
+              "children": [
+                {
+                  "title": "秋词(其一)"
+                },
+                {
+                  "title": "夜雨寄北"
+                },
+                {
+                  "title": "十一月四日风雨大作(其二)"
+                },
+                {
+                  "title": "潼关"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "19 皇帝的新装",
+            "20 天上的街市",
+            "21* 女娲造人",
+            "22 寓言四则",
+            "赫耳墨斯和雕像者",
+            "蚊子和狮子",
+            "穿井得一人",
+            "杞人忧天",
+            "写作",
+            "发挥联想和想象",
+            "综合性学习",
+            "文学部落",
+            "名著导读",
+            "《西游记》精读和跳读",
+            "课外古诗词诵读",
+            "秋词(其一)",
+            "夜雨寄北",
+            "十一月四日风雨大作(其二)",
+            "潼关"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "8ae7e58c-6e16-b92e-016e-bb0b58f3025b",
+      "title": "初中（五•四学制）语文统编版七年级下册",
+      "stage": "初中（五•四学制）",
+      "subject": "语文",
+      "version": "统编版",
+      "revision_label": "旧教材",
+      "grade": "七年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/8ae7e58c-6e16-b92e-016e-bb0b58f3025b.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:29:07.463+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "1 邓稼先"
+                },
+                {
+                  "title": "2 说和做——记闻一多先生言行片段"
+                },
+                {
+                  "title": "3* 回忆鲁迅先生（节选）"
+                },
+                {
+                  "title": "4 孙权劝学"
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "写出人物的精神"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "1 邓稼先",
+            "2 说和做——记闻一多先生言行片段",
+            "3* 回忆鲁迅先生（节选）",
+            "4 孙权劝学",
+            "写作",
+            "写出人物的精神"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "5 黄河颂"
+                },
+                {
+                  "title": "6 老山界"
+                },
+                {
+                  "title": "7 谁是最可爱的人"
+                },
+                {
+                  "title": "8* 土地的誓言"
+                },
+                {
+                  "title": "9 木兰诗"
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "学习抒情"
+                }
+              ]
+            },
+            {
+              "title": "综合性学习",
+              "children": [
+                {
+                  "title": "天下国家"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "5 黄河颂",
+            "6 老山界",
+            "7 谁是最可爱的人",
+            "8* 土地的誓言",
+            "9 木兰诗",
+            "写作",
+            "学习抒情",
+            "综合性学习",
+            "天下国家"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "10 阿长与《山海经》"
+                },
+                {
+                  "title": "11 老王"
+                },
+                {
+                  "title": "12* 台阶"
+                },
+                {
+                  "title": "13 卖油翁"
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "抓住细节"
+                }
+              ]
+            },
+            {
+              "title": "名著导读",
+              "children": [
+                {
+                  "title": "《骆驼祥子》 圈点与批注"
+                }
+              ]
+            },
+            {
+              "title": "课外古诗词诵读",
+              "children": [
+                {
+                  "title": "竹里馆"
+                },
+                {
+                  "title": "春夜洛城闻笛"
+                },
+                {
+                  "title": "逢入京使"
+                },
+                {
+                  "title": "晚春"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "10 阿长与《山海经》",
+            "11 老王",
+            "12* 台阶",
+            "13 卖油翁",
+            "写作",
+            "抓住细节",
+            "名著导读",
+            "《骆驼祥子》 圈点与批注",
+            "课外古诗词诵读",
+            "竹里馆",
+            "春夜洛城闻笛",
+            "逢入京使",
+            "晚春"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "14 叶圣陶先生二三事"
+                },
+                {
+                  "title": "15 驿路梨花"
+                },
+                {
+                  "title": "16* 最苦与最乐"
+                },
+                {
+                  "title": "17 短文两篇",
+                  "children": [
+                    {
+                      "title": "陋室铭"
+                    },
+                    {
+                      "title": "爱莲说"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "怎样选材"
+                }
+              ]
+            },
+            {
+              "title": "综合性学习",
+              "children": [
+                {
+                  "title": "孝亲敬老，从我做起"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "14 叶圣陶先生二三事",
+            "15 驿路梨花",
+            "16* 最苦与最乐",
+            "17 短文两篇",
+            "陋室铭",
+            "爱莲说",
+            "写作",
+            "怎样选材",
+            "综合性学习",
+            "孝亲敬老，从我做起"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第五单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "18 紫藤萝瀑布"
+                },
+                {
+                  "title": "19* 一棵小桃树"
+                },
+                {
+                  "title": "20* 外国诗二首",
+                  "children": [
+                    {
+                      "title": "假如生活欺骗了你"
+                    },
+                    {
+                      "title": "未选择的路"
+                    }
+                  ]
+                },
+                {
+                  "title": "21 古代诗歌五首",
+                  "children": [
+                    {
+                      "title": "登幽州台歌"
+                    },
+                    {
+                      "title": "望岳"
+                    },
+                    {
+                      "title": "登飞来峰"
+                    },
+                    {
+                      "title": "游山西村"
+                    },
+                    {
+                      "title": "己亥杂诗（其五）"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "文从字顺"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "18 紫藤萝瀑布",
+            "19* 一棵小桃树",
+            "20* 外国诗二首",
+            "假如生活欺骗了你",
+            "未选择的路",
+            "21 古代诗歌五首",
+            "登幽州台歌",
+            "望岳",
+            "登飞来峰",
+            "游山西村",
+            "己亥杂诗（其五）",
+            "写作",
+            "文从字顺"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第六单元",
+          "children": [
+            {
+              "title": "阅读",
+              "children": [
+                {
+                  "title": "22 伟大的悲剧"
+                },
+                {
+                  "title": "23 太空一日"
+                },
+                {
+                  "title": "24* 带上她的眼睛"
+                },
+                {
+                  "title": "25 活板"
+                }
+              ]
+            },
+            {
+              "title": "写作",
+              "children": [
+                {
+                  "title": "语言简明"
+                }
+              ]
+            },
+            {
+              "title": "名著导读",
+              "children": [
+                {
+                  "title": "《海底两万里》 快速阅读"
+                }
+              ]
+            },
+            {
+              "title": "课外古诗词诵读",
+              "children": [
+                {
+                  "title": "泊秦淮"
+                },
+                {
+                  "title": "贾生"
+                },
+                {
+                  "title": "过松源晨炊漆公店（其五）"
+                },
+                {
+                  "title": "约客"
+                }
+              ]
+            }
+          ],
+          "topics": [
+            "阅读",
+            "22 伟大的悲剧",
+            "23 太空一日",
+            "24* 带上她的眼睛",
+            "25 活板",
+            "写作",
+            "语言简明",
+            "名著导读",
+            "《海底两万里》 快速阅读",
+            "课外古诗词诵读",
+            "泊秦淮",
+            "贾生",
+            "过松源晨炊漆公店（其五）",
+            "约客"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

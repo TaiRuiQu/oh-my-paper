@@ -1,0 +1,138 @@
+{
+  "stage": "高中",
+  "subject": "数学",
+  "books": [
+    {
+      "id": "85c19ef2-23a4-43b6-94dd-8c7898639b5d",
+      "title": "高中数学人教A版必修 第一册",
+      "version": "人教A版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "e6cee4d7-9cb8-4475-b851-a1059302cd50",
+      "title": "高中数学人教A版必修 第二册",
+      "version": "人教A版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-1.json",
+      "unit_count": 6
+    },
+    {
+      "id": "18153545-1540-4a4b-9ebe-d266ddf1ab18",
+      "title": "高中数学人教A版选择性必修 第一册",
+      "version": "人教A版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-1.json",
+      "unit_count": 3
+    },
+    {
+      "id": "0670472a-8dc5-4cad-aeaa-d7b0afecd222",
+      "title": "高中数学人教A版选择性必修 第三册",
+      "version": "人教A版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第三册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-2.json",
+      "unit_count": 7
+    },
+    {
+      "id": "fa45aaae-30d3-4132-a041-0ea0c59fa4b3",
+      "title": "高中数学人教A版选择性必修 第二册",
+      "version": "人教A版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-2.json",
+      "unit_count": 2
+    },
+    {
+      "id": "8ae7e58b-6f18-3fe2-016f-643b19be000c",
+      "title": "高中数学人教版（B版）（主编：高存明）必修 第一册",
+      "version": "人教版（B版）（主编：高存明）",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-6f18-3fe2-016f-643bc0250010",
+      "title": "高中数学人教版（B版）（主编：高存明）必修 第三册",
+      "version": "人教版（B版）（主编：高存明）",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 第三册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-2.json",
+      "unit_count": 3
+    },
+    {
+      "id": "8ae7e58b-6f18-3fe2-016f-643b64d6000e",
+      "title": "高中数学人教版（B版）（主编：高存明）必修 第二册",
+      "version": "人教版（B版）（主编：高存明）",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-6f18-3fe2-016f-643c0ac90012",
+      "title": "高中数学人教版（B版）（主编：高存明）必修 第四册",
+      "version": "人教版（B版）（主编：高存明）",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修 第四册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0176-170b6bf60669",
+      "title": "高中数学人教版（B版）（主编：高存明）选择性必修 第一册",
+      "version": "人教版（B版）（主编：高存明）",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-3.json",
+      "unit_count": 3
+    },
+    {
+      "id": "8ae7e58b-77b3-bac9-0178-155e0c810274",
+      "title": "高中数学人教版（B版）（主编：高存明）选择性必修 第三册",
+      "version": "人教版（B版）（主编：高存明）",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第三册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-3.json",
+      "unit_count": 3
+    },
+    {
+      "id": "8ae7e58b-759c-c8e1-0176-17141df306b3",
+      "title": "高中数学人教版（B版）（主编：高存明）选择性必修 第二册",
+      "version": "人教版（B版）（主编：高存明）",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修 第二册",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/math/units-3.json",
+      "unit_count": 3
+    }
+  ]
+}

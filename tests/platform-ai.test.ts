@@ -1,0 +1,1429 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { withConfirmedRosters } from "./assessment-roster-fixture";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { MockLanguageModelV4 } from "ai/test";
+import { aiInputSchemas } from "@/contracts/platform-ai";
+import { questionInputSchema } from "@/server/platform/schemas";
+import type { BankQuestion, PlatformState } from "@/contracts/platform";
+const mocked = vi.hoisted(() => ({
+  loadState: vi.fn(),
+  executeCommand: vi.fn(),
+  transaction: vi.fn(),
+  query: vi.fn(),
+  jobFind: vi.fn(),
+  jobUpdate: vi.fn(),
+  questionFind: vi.fn(),
+  submissionFind: vi.fn(),
+  reviewCount: vi.fn(),
+  accessibleAsset: vi.fn(),
+  readOwnedAsset: vi.fn(),
+  saveImage: vi.fn(),
+  loadAiModel: vi.fn(),
+  costAdd: vi.fn(),
+  createSandboxSession: vi.fn(),
+  sandboxRun: vi.fn(),
+  sandboxDispose: vi.fn(),
+  storagePaths: { temp: "", storage: "" },
+}));
+vi.mock("@/server/platform/service", () => ({
+  loadState: mocked.loadState,
+  executeCommand: mocked.executeCommand,
+}));
+vi.mock("@/server/db/client", () => ({
+  getDb: () => ({ $transaction: mocked.transaction, question: { findMany: mocked.questionFind } }),
+}));
+vi.mock("@/server/platform/assets", () => ({
+  accessibleAsset: mocked.accessibleAsset,
+  readOwnedAsset: mocked.readOwnedAsset,
+  saveImage: mocked.saveImage,
+  assetId: (u: string) => u.split("/").at(-1),
+}));
+vi.mock("@/server/platform/ai/model", () => ({ loadAiModel: mocked.loadAiModel }));
+vi.mock("@/server/platform/ai/cost", () => ({
+  createTaskCostTracker: async () => ({
+    add: mocked.costAdd,
+    snapshot: () => ({ status: "unavailable", reason: "price_unavailable", cny: null }),
+  }),
+}));
+vi.mock("@/server/ai/sandbox", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/server/ai/sandbox")>()),
+  createSandboxSession: mocked.createSandboxSession,
+}));
+vi.mock("@/server/config/env", () => ({ getStoragePaths: () => mocked.storagePaths }));
+import {
+  createTaskFeatures as createFeatures,
+  validateAssembly,
+} from "@/server/platform/ai/features";
+import { runAiTask, chatToolImages } from "@/server/platform/ai/runner";
+const tasks: Awaited<ReturnType<typeof createFeatures>>[] = [];
+const sandboxImages = new Map<string, Buffer>();
+async function createTaskFeatures(options: Parameters<typeof createFeatures>[0]) {
+  const features = await createFeatures(options);
+  tasks.push(features);
+  return features;
+}
+function imageCode(url: string, name: string, crop?: [number, number, number, number]) {
+  return [
+    "import json",
+    "from PIL import Image",
+    "with open('/inputs/context.json') as file: manifest = json.load(file)",
+    `source = next(asset['path'] for asset in manifest['assets'] if asset['url'] == ${JSON.stringify(url)})`,
+    "image = Image.open(source)",
+    ...(crop ? [`image = image.crop((${crop.join(", ")}))`] : []),
+    `image.save('/workspace/output/${name}')`,
+  ].join("\n");
+}
+async function viewImage(features: Awaited<ReturnType<typeof createFeatures>>, url: string) {
+  return call(features, "python", {
+    code: imageCode(url, "source.png"),
+    assets: [url],
+    images: ["source.png"],
+  });
+}
+const question: BankQuestion = {
+  id: "q",
+  ownerId: "teacher",
+  type: "BLANK",
+  subject: "数学",
+  grade: "高一",
+  difficulty: 0.5,
+  knowledgeTags: ["代数"],
+  content: {
+    stem: "1+1=___",
+    options: [],
+    answers: ["2"],
+    explanation: "加法",
+    rubric: "答案2得满分",
+    parts: [],
+    images: [],
+  },
+  createdAt: "2026-01-01T00:00:00.000Z",
+  updatedAt: "2026-01-01T00:00:00.000Z",
+};
+function state(): PlatformState {
+  return withConfirmedRosters({
+    actor: { id: "teacher", name: "教师", role: "TEACHER" },
+    questions: [question],
+    papers: [
+      {
+        id: "paper",
+        ownerId: "teacher",
+        name: "测验",
+        subject: "数学",
+        grade: "高一",
+        kind: "EXAM",
+        instructions: "",
+        layout: { paperSize: "A4", columns: 1 },
+        items: [
+          {
+            id: "item",
+            questionId: "q",
+            position: 0,
+            score: 10,
+            section: "填空",
+            snapshot: question,
+          },
+        ],
+        createdAt: "",
+        updatedAt: "",
+      },
+    ],
+    classrooms: [
+      {
+        id: "class",
+        ownerId: "teacher",
+        name: "班级",
+        stage: "高中",
+        cohort: "2027届",
+        students: [
+          {
+            id: "student",
+            classroomId: "class",
+            userId: "account",
+            studentNumber: "000001",
+            name: "学生",
+          },
+        ],
+      },
+    ],
+    assessments: [
+      {
+        id: "exam",
+        ownerId: "teacher",
+        name: "测验",
+        kind: "EXAM",
+        reviewScope: "CLASSROOM",
+        classroomIds: ["class"],
+        papers: [
+          {
+            paperId: "paper",
+            subject: "数学",
+            gradingMode: "DOUBLE",
+            arbitrationThreshold: 2,
+            conversion: { enabled: false, bands: [] },
+          },
+        ],
+        published: false,
+        createdAt: "",
+      },
+    ],
+    templates: [],
+    submissions: [
+      {
+        id: "submission",
+        ownerId: "teacher",
+        assessmentId: "exam",
+        paperId: "paper",
+        studentId: "student",
+        templateId: null,
+        kind: "WORKBOOK",
+        status: "PENDING",
+        sourceFiles: [],
+        answers: [{ itemId: "item", text: "2", images: [] }],
+        alignment: null,
+        createdAt: "",
+      },
+    ],
+    reviews: [],
+    analytics: {
+      results: [],
+      knowledge: [],
+      classrooms: [],
+      students: [
+        {
+          studentId: "student",
+          subjects: [],
+          knowledge: [{ tag: "代数", earned: 0, maximum: 10, accuracy: 0, attempts: 1 }],
+          wrongQuestions: [
+            {
+              assessmentId: "exam",
+              paperId: "paper",
+              itemId: "item",
+              question,
+              score: 0,
+              maximum: 10,
+              answer: { itemId: "item", text: "3", images: [] },
+              feedback: "加法错误",
+            },
+          ],
+          recommendations: [],
+        },
+      ],
+    },
+    users: [],
+  });
+}
+async function call(
+  features: Awaited<ReturnType<typeof createTaskFeatures>>,
+  name: string,
+  input: unknown,
+) {
+  const t = features.tools[name];
+  if (!t?.execute) throw new Error(`Missing tool ${name}`);
+  const output = await t.execute(input, { toolCallId: "call", messages: [], context: undefined });
+  if (output && typeof output === "object" && "results" in output) {
+    const entry = (
+      output as { results: { success: boolean; output?: unknown; error?: { message: string } }[] }
+    ).results[0];
+    if (!entry.success) throw new Error(entry.error!.message);
+    return entry.output;
+  }
+  return output;
+}
+beforeEach(async () => {
+  vi.clearAllMocks();
+  mocked.saveImage.mockImplementation(async (_ownerId: string, buffer: Buffer) => {
+    const id = (await import("node:crypto")).randomUUID();
+    return { id, url: `/api/platform/assets/${id}`, buffer };
+  });
+  mocked.storagePaths.temp = await mkdtemp(join(tmpdir(), "omp-ai-unit-"));
+  mocked.storagePaths.storage = mocked.storagePaths.temp;
+  sandboxImages.clear();
+  mocked.createSandboxSession.mockImplementation(({ directory }: { directory: string }) => ({
+    run: (request: { code?: string; command?: string; images: string[] }) =>
+      mocked.sandboxRun(directory, request),
+    dispose: mocked.sandboxDispose,
+  }));
+  mocked.sandboxRun.mockImplementation(
+    async (directory: string, request: { code?: string; command?: string; images: string[] }) => {
+      const manifest = JSON.parse(
+        await readFile(join(directory, "inputs", "context.json"), "utf8"),
+      ) as {
+        task: unknown;
+        assets: { url: string; path: string }[];
+      };
+      expect(manifest.task).toBeDefined();
+      const source =
+        manifest.assets.find((asset) => request.code?.includes(JSON.stringify(asset.url))) ??
+        manifest.assets[0];
+      return {
+        exitCode: 0,
+        stdout: "",
+        stderr: "",
+        images: await Promise.all(
+          request.images.map(async (name) => ({
+            name,
+            data: (
+              sandboxImages.get(name) ?? (await readFile(join(directory, source.path)))
+            ).toString("base64"),
+          })),
+        ),
+      };
+    },
+  );
+  mocked.loadState.mockResolvedValue(state());
+  mocked.executeCommand.mockResolvedValue({ id: "saved" });
+  const tx = {
+    $queryRaw: mocked.query,
+    aiJob: { findUnique: mocked.jobFind, update: mocked.jobUpdate },
+    question: { findUnique: mocked.questionFind, findMany: mocked.questionFind },
+    scanSubmission: { findUnique: mocked.submissionFind },
+    review: { count: mocked.reviewCount },
+  };
+  mocked.transaction.mockImplementation(async (action: (db: typeof tx) => Promise<unknown>) =>
+    action(tx),
+  );
+  mocked.jobFind.mockResolvedValue({
+    id: "job",
+    userId: "teacher",
+    kind: "ASSEMBLE",
+    status: "RUNNING",
+  });
+  mocked.questionFind.mockResolvedValue({ ...question, updatedAt: new Date(question.updatedAt) });
+  mocked.submissionFind.mockResolvedValue(state().submissions[0]);
+  mocked.reviewCount.mockResolvedValue(0);
+  mocked.jobUpdate.mockResolvedValue({});
+});
+afterEach(async () => {
+  try {
+    await Promise.all(tasks.splice(0).map((features) => features.dispose()));
+  } finally {
+    await rm(mocked.storagePaths.temp, { recursive: true, force: true });
+  }
+});
+const assemble = () =>
+  aiInputSchemas.ASSEMBLE.parse({
+    name: "AI卷",
+    subject: "数学",
+    grade: "高一",
+    difficulty: 0.5,
+    counts: [{ type: "BLANK", count: 1, score: 10 }],
+    knowledgeDistribution: [{ tag: "代数", percent: 100 }],
+  });
+describe("AI autonomous tools and constraints", () => {
+  it("mounts a compressed JPEG and rejects a resized full page as a question illustration", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 2700, height: 3600, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    const source = "/api/platform/assets/source";
+    mocked.readOwnedAsset.mockResolvedValue({ buffer });
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    const features = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: { assetUrls: [source] },
+      jobId: "job",
+    });
+    const output = (await viewImage(features, source)) as {
+      assets: { path: string }[];
+      images: { url: string; image: string }[];
+      previews: { image: string }[];
+    };
+    const directory = mocked.createSandboxSession.mock.calls[0][0].directory;
+    const mounted = await readFile(join(directory, output.assets[0].path));
+    expect(output.assets[0].path).toMatch(/\.jpg$/);
+    expect(mounted.length).toBeLessThanOrEqual(1024 * 1024);
+    expect(await sharp(mounted).metadata()).toMatchObject({
+      format: "jpeg",
+      width: 1800,
+      height: 2400,
+    });
+    for (const preview of [...output.images, ...output.previews]) {
+      const image = Buffer.from(preview.image, "base64");
+      expect(image.length).toBeLessThanOrEqual(512 * 1024);
+      expect(await sharp(image).metadata()).toMatchObject({
+        format: "jpeg",
+        width: 1350,
+        height: 1800,
+      });
+    }
+    await expect(
+      call(features, "propose_question", {
+        items: [
+          {
+            sourceKey: "q1",
+            question: {
+              ...question,
+              content: { ...question.content, images: [output.images[0].url] },
+            },
+          },
+        ],
+      }),
+    ).rejects.toThrow(/裁切/);
+  });
+
+  it("imports complete image evidence directly into an editable homework without manual assembly", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 120, height: 160, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    mocked.readOwnedAsset.mockResolvedValue({ buffer });
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "IMPORT",
+      status: "RUNNING",
+    });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: {
+        assetUrls: ["/api/platform/assets/source"],
+        kind: "HOMEWORK",
+        name: "图片作业",
+        subject: "数学",
+        grade: "高一",
+      },
+      jobId: "job",
+    });
+    await expect(call(f, "finish", { summary: "完成" })).rejects.toThrow(/全部导入/);
+    const fullPage = (await viewImage(f, "/api/platform/assets/source")) as {
+      images: { image: string; url?: string }[];
+      previews: { url: string; image: string }[];
+    };
+    expect(fullPage.images[0].url).toMatch(/^\/api\/platform\/assets\//);
+    await expect(
+      call(f, "propose_question", {
+        items: [
+          {
+            sourceKey: "p1-q1",
+            question: {
+              ...question,
+              content: { ...question.content, images: [fullPage.images[0].url] },
+            },
+          },
+        ],
+      }),
+    ).rejects.toThrow(/裁切/);
+    expect(fullPage.previews).toEqual([
+      expect.objectContaining({ url: "/api/platform/assets/source", image: expect.any(String) }),
+    ]);
+    const draft = questionInputSchema.parse({ ...question, id: undefined });
+    await call(f, "propose_question", {
+      items: [{ sourceKey: "p1-q1", score: 7, question: draft }],
+    });
+    await call(f, "record_source_inventory", {
+      sources: [{ url: "/api/platform/assets/source", totalQuestions: 2 }],
+    });
+    await expect(call(f, "finish", { summary: "完成" })).rejects.toThrow(/完整覆盖/);
+    await call(f, "propose_question", {
+      items: [
+        {
+          sourceKey: "p1-q2",
+          score: 3,
+          question: { ...draft, content: { ...draft.content, stem: "2+2=___", answers: ["4"] } },
+        },
+      ],
+    });
+    await call(f, "finish", { summary: "已识别两题", name: "AI 识别标题" });
+    const output = await f.commit();
+    expect(mocked.executeCommand).toHaveBeenCalledTimes(1);
+    expect(mocked.executeCommand.mock.calls[0][1]).toMatchObject({
+      type: "paper.save",
+      paper: {
+        kind: "HOMEWORK",
+        name: "图片作业",
+        layout: { paperSize: "A4", columns: 2 },
+        items: [
+          { score: 7, question: { content: { answers: ["2"] } } },
+          { score: 3, question: { content: { answers: ["4"] } } },
+        ],
+      },
+    });
+    expect(output.result).toMatchObject({ paperId: "saved", paperKind: "HOMEWORK" });
+  });
+  it.each(["HOMEWORK", "EXAM"] as const)(
+    "saves an AI title, subject and grade for an automatic %s import",
+    async (kind) => {
+      const sharp = (await import("sharp")).default;
+      const buffer = await sharp({
+        create: { width: 120, height: 160, channels: 3, background: "white" },
+      })
+        .png()
+        .toBuffer();
+      mocked.readOwnedAsset.mockResolvedValue({ buffer });
+      mocked.accessibleAsset.mockResolvedValue({ buffer });
+      mocked.jobFind.mockResolvedValue({
+        id: "job",
+        userId: "teacher",
+        kind: "IMPORT",
+        status: "RUNNING",
+      });
+      const page = "/api/platform/assets/source";
+      const f = await createTaskFeatures({
+        userId: "teacher",
+        kind: "IMPORT",
+        input: { assetUrls: [page], kind },
+        jobId: "job",
+      });
+      await viewImage(f, page);
+      await call(f, "record_source_inventory", { sources: [{ url: page, totalQuestions: 1 }] });
+      await call(f, "propose_question", {
+        items: [
+          {
+            sourceKey: "p1-q1",
+            question: questionInputSchema.parse({
+              ...question,
+              id: undefined,
+              subject: "英语",
+              grade: "小学三年级",
+            }),
+          },
+        ],
+      });
+      await expect(call(f, "finish", { summary: "完成" })).rejects.toThrow(/标题/);
+      expect(f.isComplete()).toBe(false);
+      await expect(call(f, "finish", { summary: "完成", name: "  " })).rejects.toThrow();
+      await call(f, "finish", { summary: "完成", name: "  英语单元练习  " });
+      await f.commit();
+      expect(mocked.executeCommand.mock.calls[0][1]).toMatchObject({
+        type: "paper.save",
+        paper: {
+          name: "英语单元练习",
+          kind,
+          subject: "英语",
+          grade: "小学三年级",
+        },
+      });
+    },
+  );
+  it("preserves an established one-answer-per-blank count during enrichment", async () => {
+    const s = state();
+    s.questions[0] = { ...question, content: { ...question.content, answers: ["2", "4"] } };
+    mocked.loadState.mockResolvedValue(s);
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "ENRICH",
+      input: { questionIds: ["q"] },
+      jobId: "job",
+    });
+    await call(f, "read_question", { items: [{ questionId: "q" }] });
+    await expect(
+      call(f, "propose_enrichment", {
+        items: [
+          {
+            questionId: "q",
+            knowledgeTags: ["代数"],
+            answers: ["2、4"],
+            explanation: "两空",
+            rubric: "每空给分",
+            parts: [],
+          },
+        ],
+      }),
+    ).rejects.toThrow(/答案数量/);
+    await call(f, "propose_enrichment", {
+      items: [
+        {
+          questionId: "q",
+          knowledgeTags: ["代数"],
+          answers: ["2", "4"],
+          explanation: "两空分别对应答案",
+          rubric: "每空给分",
+          parts: [],
+        },
+      ],
+    });
+  });
+  it("revalidates recommendation permissions at commit after a teacher's shared class access is revoked", async () => {
+    const s = state();
+    s.questions.push({ ...question, id: "candidate" });
+    mocked.loadState.mockResolvedValue(s);
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "RECOMMEND",
+      status: "RUNNING",
+    });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "RECOMMEND",
+      input: { studentId: "student", count: 1 },
+      jobId: "job",
+    });
+    await call(f, "read_learning", { offset: 0, limit: 10 });
+    await call(f, "read_candidate", { items: [{ questionId: "candidate" }] });
+    await call(f, "propose_recommendations", {
+      recommendations: [{ questionId: "candidate", reason: "练习代数" }],
+    });
+    await call(f, "finish", { summary: "候选完成" });
+    mocked.loadState.mockResolvedValue({
+      ...state(),
+      classrooms: [],
+      submissions: [],
+      analytics: { results: [], students: [], classrooms: [], knowledge: [] },
+    });
+    await expect(f.commit()).rejects.toThrow(/权限已改变/);
+    expect(mocked.jobUpdate).not.toHaveBeenCalled();
+  });
+
+  it("stages sandbox-produced illustration pixels and rejects full-page source references", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 200, height: 300, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    mocked.readOwnedAsset.mockResolvedValue({ buffer });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: { assetUrls: ["/api/platform/assets/source"] },
+      jobId: "job",
+    });
+    await viewImage(f, "/api/platform/assets/source");
+    await expect(
+      call(f, "propose_question", {
+        items: [
+          {
+            sourceKey: "q1",
+            question: {
+              ...question,
+              content: { ...question.content, images: ["/api/platform/assets/source"] },
+            },
+          },
+        ],
+      }),
+    ).rejects.toThrow(/裁切/);
+    sandboxImages.set(
+      "diagram.png",
+      await sharp(buffer).extract({ left: 20, top: 60, width: 60, height: 60 }).png().toBuffer(),
+    );
+    const output = (await call(f, "python", {
+      code: imageCode("/api/platform/assets/source", "diagram.png", [20, 60, 80, 120]),
+      assets: ["/api/platform/assets/source"],
+      images: ["diagram.png"],
+    })) as { images: { url: string; image: string }[] };
+    const crop = output.images[0];
+    expect(crop.url).toMatch(/^\/api\/platform\/assets\//);
+    const meta = await sharp(Buffer.from(crop.image, "base64")).metadata();
+    expect(meta.width).toBe(60);
+    expect(meta.height).toBe(60);
+    await viewImage(f, crop.url);
+    const directory = mocked.createSandboxSession.mock.calls[0][0].directory;
+    const manifest = JSON.parse(await readFile(join(directory, "inputs", "context.json"), "utf8"));
+    expect(manifest.assets).toContainEqual(expect.objectContaining({ url: crop.url }));
+    await call(f, "propose_question", {
+      items: [
+        {
+          sourceKey: "q1",
+          question: { ...question, content: { ...question.content, images: [crop.url] } },
+        },
+      ],
+    });
+    expect(mocked.executeCommand).not.toHaveBeenCalled();
+  });
+  it("does not treat a previously mounted failed source as viewed when another source succeeds", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 60, height: 90, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    const source1 = "/api/platform/assets/source1",
+      source2 = "/api/platform/assets/source2";
+    mocked.readOwnedAsset.mockResolvedValue({ buffer });
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    const features = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: { assetUrls: [source1, source2] },
+      jobId: "job",
+    });
+    mocked.sandboxRun.mockResolvedValueOnce({
+      exitCode: 1,
+      stdout: "",
+      stderr: "cannot process this page",
+      images: [],
+    });
+    await call(features, "python", { code: "print('first page')", assets: [source1], images: [] });
+    const output = (await call(features, "python", {
+      code: "print('second page')",
+      assets: [source2],
+      images: [],
+    })) as { previews: { url: string }[] };
+    expect(output.previews.map((preview) => preview.url)).toEqual([source2]);
+    await expect(
+      call(features, "propose_question", {
+        items: [{ sourceKey: "p1:q1", sourceUrl: source1, question }],
+      }),
+    ).rejects.toThrow(/已查看/);
+    await call(features, "propose_question", {
+      items: [{ sourceKey: "p2:q1", sourceUrl: source2, question }],
+    });
+    await expect(
+      call(features, "record_source_inventory", {
+        sources: [
+          { url: source1, totalQuestions: 0 },
+          { url: source2, totalQuestions: 1 },
+        ],
+      }),
+    ).rejects.toThrow(/先查看每页/);
+    await call(features, "python", {
+      code: "print('retry first page')",
+      assets: [source1],
+      images: [],
+    });
+    await call(features, "record_source_inventory", {
+      sources: [
+        { url: source1, totalQuestions: 0 },
+        { url: source2, totalQuestions: 1 },
+      ],
+    });
+  });
+  it("requires meaningful answers, explanations and scoring rubrics when enriching", async () => {
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "ENRICH",
+      input: { questionIds: ["q"] },
+      jobId: "job",
+    });
+    await call(f, "read_question", { items: [{ questionId: "q" }] });
+    await expect(
+      call(f, "propose_enrichment", {
+        items: [
+          {
+            questionId: "q",
+            knowledgeTags: [],
+            answers: [],
+            explanation: "",
+            rubric: "",
+            parts: [],
+          },
+        ],
+      }),
+    ).rejects.toThrow(/知识点/);
+    await expect(
+      call(f, "propose_enrichment", {
+        items: [
+          {
+            questionId: "q",
+            knowledgeTags: ["代数"],
+            answers: [],
+            explanation: "解析",
+            rubric: "",
+            parts: [],
+          },
+        ],
+      }),
+    ).rejects.toThrow(/标准答案/);
+  });
+  it("recommendations include unused paper questions and mixed-part tags but reject a different subject's shared tag", async () => {
+    const s = state();
+    s.analytics.students[0].wrongQuestions[0].question = {
+      ...question,
+      type: "MIXED",
+      knowledgeTags: [],
+      content: {
+        ...question.content,
+        parts: [
+          {
+            id: "1",
+            type: "BLANK",
+            stem: "",
+            options: [],
+            answers: ["2"],
+            explanation: "",
+            rubric: "",
+            knowledgeTags: ["函数"],
+            score: 10,
+          },
+        ],
+      },
+    };
+    s.questions.push(
+      { ...question, id: "candidate", knowledgeTags: ["函数"] },
+      { ...question, id: "wrong-subject", subject: "物理", knowledgeTags: ["函数"] },
+    );
+    s.papers.push({
+      ...s.papers[0],
+      id: "unused",
+      items: [{ ...s.papers[0].items[0], id: "unused-item", questionId: "candidate" }],
+    });
+    mocked.loadState.mockResolvedValue(s);
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "RECOMMEND",
+      input: { studentId: "student", count: 1 },
+      jobId: "job",
+    });
+    expect(await call(f, "search_candidates", { offset: 0, limit: 50 })).toEqual([
+      expect.objectContaining({ id: "candidate" }),
+    ]);
+    await expect(
+      call(f, "read_candidate", { items: [{ questionId: "wrong-subject" }] }),
+    ).rejects.toThrow(/候选/);
+  });
+
+  it("imports multiple independently identified questions only after seeing every source image", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 200, height: 300, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    mocked.readOwnedAsset.mockResolvedValue({ buffer });
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "IMPORT",
+      status: "RUNNING",
+    });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: { assetUrls: ["/api/platform/assets/source"], subject: "数学", grade: "高一" },
+      jobId: "job",
+    });
+    expect(f.tools).not.toHaveProperty("propose_paper");
+    await expect(
+      call(f, "propose_question", { items: [{ sourceKey: "page1:q1", question }] }),
+    ).rejects.toThrow(/查看/);
+    await viewImage(f, "/api/platform/assets/source");
+    await call(f, "propose_question", { items: [{ sourceKey: "page1:q1", question }] });
+    await call(f, "propose_question", {
+      items: [
+        {
+          sourceKey: "page1:q2",
+          question: {
+            ...question,
+            content: { ...question.content, stem: "2+2=___", answers: ["4"] },
+          },
+        },
+      ],
+    });
+    await expect(call(f, "finish", { summary: "过早完成" })).rejects.toThrow(/题数/);
+    await call(f, "record_source_inventory", {
+      sources: [{ url: "/api/platform/assets/source", totalQuestions: 2 }],
+    });
+    await call(f, "finish", { summary: "识别导入2题" });
+    await f.commit();
+    expect(mocked.executeCommand).toHaveBeenCalledTimes(2);
+  });
+  it("autonomously reads the paper, generates and saves a validated editable answer-card draft", async () => {
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "TEMPLATE",
+      status: "RUNNING",
+    });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "TEMPLATE",
+      input: { paperId: "paper" },
+      jobId: "job",
+    });
+    await expect(call(f, "generate_layout", {})).rejects.toThrow(/读取试卷/);
+    await call(f, "read_paper", {});
+    const template = await call(f, "generate_layout", {});
+    await expect(
+      call(f, "propose_template", { layout: (template as { layout: unknown }).layout }),
+    ).rejects.toThrow(/预览/);
+    const previewInput = { layout: (template as { layout: unknown }).layout, pages: [1] };
+    const preview = await call(f, "render_template", previewInput);
+    await f.tools.render_template.toModelOutput!({
+      input: previewInput,
+      output: preview,
+      toolCallId: "preview",
+    });
+    await call(f, "propose_template", { layout: (template as { layout: unknown }).layout });
+    await call(f, "finish", { summary: "卡片完成" });
+    await f.commit();
+    expect(mocked.executeCommand.mock.calls[0][1]).toMatchObject({
+      type: "template.save",
+      template: { paperId: "paper", layout: { pageCount: 1 } },
+    });
+  });
+  it("turns tool images into actual chat user image messages without repeating base64 text", () => {
+    const messages = chatToolImages([
+      {
+        role: "tool",
+        content: [
+          {
+            type: "tool-result",
+            toolCallId: "call",
+            toolName: "python",
+            output: {
+              type: "content",
+              value: [
+                { type: "text", text: "source" },
+                { type: "file", mediaType: "image/png", data: { type: "data", data: "BASE64" } },
+              ],
+            },
+          },
+        ],
+      },
+    ]);
+    expect(messages).toHaveLength(2);
+    expect(JSON.stringify(messages[0])).not.toContain("BASE64");
+    expect(messages[1]).toMatchObject({
+      role: "user",
+      content: [
+        { type: "text" },
+        { type: "file", mediaType: "image/png", data: { data: "BASE64" } },
+      ],
+    });
+    expect(chatToolImages(messages)).toEqual(messages);
+  });
+
+  it("validates real selection counts, difficulty and apportioned overlapping knowledge tags", () => {
+    expect(validateAssembly(assemble(), [question])).toMatchObject({
+      total: 1,
+      averageDifficulty: 0.5,
+      knowledgeCounts: [{ tag: "代数", count: 1 }],
+    });
+    expect(() => validateAssembly(assemble(), [])).toThrow(/题数不足/);
+    expect(() => validateAssembly(assemble(), [{ ...question, difficulty: 1 }])).toThrow(/难度/);
+    expect(() => validateAssembly(assemble(), [{ ...question, knowledgeTags: ["几何"] }])).toThrow(
+      /占比/,
+    );
+    const input = aiInputSchemas.ASSEMBLE.parse({
+      ...assemble(),
+      counts: [{ type: "BLANK", count: 2, score: 10 }],
+      knowledgeDistribution: [
+        { tag: "代数", percent: 50 },
+        { tag: "几何", percent: 50 },
+      ],
+    });
+    expect(
+      validateAssembly(input, [
+        { ...question, id: "a", knowledgeTags: ["代数", "几何"] },
+        { ...question, id: "b", knowledgeTags: ["代数"] },
+      ]).total,
+    ).toBe(2);
+  });
+  it("rejects premature finish and unread selections then atomically commits a valid paper and completion", async () => {
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "ASSEMBLE",
+      input: assemble(),
+      jobId: "job",
+    });
+    expect(f.tools).not.toHaveProperty("propose_grade");
+    await expect(call(f, "finish", { summary: "done" })).rejects.toThrow(/有效候选/);
+    await expect(call(f, "propose_paper", { questionIds: ["q"] })).rejects.toThrow(/读取/);
+    await call(f, "read_question", { items: [{ questionId: "q" }] });
+    await call(f, "propose_paper", { questionIds: ["q"] });
+    await call(f, "finish", { summary: "已组卷" });
+    expect(mocked.executeCommand).not.toHaveBeenCalled();
+    expect(await f.commit()).toMatchObject({ summary: "已组卷", result: { ids: ["saved"] } });
+    expect(mocked.executeCommand).toHaveBeenCalledWith(
+      { id: "teacher" },
+      expect.objectContaining({ type: "paper.save" }),
+      expect.objectContaining({ source: "AI", jobId: "job" }),
+    );
+    expect(mocked.jobUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ status: "COMPLETED" }) }),
+    );
+  });
+  it("limits enrichment scope, preserves stems and requires all requested questions", async () => {
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "ENRICH",
+      status: "RUNNING",
+    });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "ENRICH",
+      input: { questionIds: ["q"] },
+      jobId: "job",
+    });
+    await call(f, "read_question", { items: [{ questionId: "q" }] });
+    await call(f, "propose_enrichment", {
+      items: [
+        {
+          questionId: "q",
+          knowledgeTags: ["整数加法"],
+          answers: ["2"],
+          explanation: "1+1=2",
+          rubric: "答案正确10分",
+          parts: [],
+        },
+      ],
+    });
+    await call(f, "finish", { summary: "已补答案" });
+    await f.commit();
+    expect(mocked.executeCommand.mock.calls[0][1].question.content.stem).toBe(
+      question.content.stem,
+    );
+    expect(mocked.executeCommand.mock.calls[0][1].question.knowledgeTags).toEqual(["整数加法"]);
+  });
+  it("refuses student mutations and another student's recommendations", async () => {
+    const s = state();
+    s.actor = { id: "account", name: "学生", role: "STUDENT" };
+    mocked.loadState.mockResolvedValue(s);
+    await expect(
+      createTaskFeatures({ userId: "account", kind: "ENRICH", input: { questionIds: ["q"] } }),
+    ).rejects.toThrow(/学生只可/);
+    await expect(
+      createTaskFeatures({
+        userId: "account",
+        kind: "RECOMMEND",
+        input: { studentId: "someone", count: 1 },
+      }),
+    ).rejects.toThrow(/本人/);
+  });
+  it("lets a student inspect a newly discovered matching candidate image before any recommendation is saved", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 80, height: 60, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    const candidateUrl = "/api/platform/assets/candidate-image";
+    const candidate = {
+      ...question,
+      id: "candidate",
+      content: { ...question.content, images: [candidateUrl] },
+    };
+    const studentState = state();
+    studentState.actor = { id: "account", name: "学生", role: "STUDENT" };
+    studentState.questions = [];
+    mocked.loadState.mockResolvedValue(studentState);
+    mocked.questionFind.mockResolvedValue([
+      {
+        ...candidate,
+        createdAt: new Date(candidate.createdAt),
+        updatedAt: new Date(candidate.updatedAt),
+      },
+    ]);
+    mocked.accessibleAsset.mockImplementation(async (userId: string, id: string) => {
+      if (userId !== "teacher" || id !== "candidate-image")
+        throw new Error("Student cannot ordinarily read this asset");
+      return { buffer };
+    });
+    const features = await createTaskFeatures({
+      userId: "account",
+      kind: "RECOMMEND",
+      input: { studentId: "student", count: 1 },
+      jobId: "job",
+    });
+    expect(studentState.analytics.students[0].recommendations).toEqual([]);
+    expect(features.getResult().result).toBeNull();
+    const output = (await viewImage(features, candidateUrl)) as {
+      exitCode: number;
+      previews: { url: string; image: string }[];
+    };
+    expect(output.exitCode).toBe(0);
+    expect(output.previews).toEqual([
+      expect.objectContaining({ url: candidateUrl, image: expect.any(String) }),
+    ]);
+    expect(mocked.accessibleAsset).toHaveBeenCalledWith("teacher", "candidate-image");
+    expect(mocked.questionFind).toHaveBeenLastCalledWith(
+      expect.objectContaining({ where: { id: "candidate", ownerId: "teacher" } }),
+    );
+    await expect(
+      call(features, "python", {
+        code: "print('foreign')",
+        assets: ["/api/platform/assets/foreign"],
+        images: [],
+      }),
+    ).rejects.toThrow(/不属于/);
+    expect(features.getResult().result).toBeNull();
+    expect(mocked.executeCommand).not.toHaveBeenCalled();
+  });
+  it("recommends only real unused matching questions with reasons, never a repeated or invented ID", async () => {
+    const s = state();
+    s.questions.push({
+      ...question,
+      id: "candidate",
+      content: { ...question.content, stem: "2+2=___" },
+    });
+    mocked.loadState.mockResolvedValue(s);
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "RECOMMEND",
+      status: "RUNNING",
+    });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "RECOMMEND",
+      input: { studentId: "student", count: 1 },
+      jobId: "job",
+    });
+    await call(f, "read_learning", {});
+    await expect(
+      call(f, "propose_recommendations", {
+        recommendations: [{ questionId: "q", reason: "same" }],
+      }),
+    ).rejects.toThrow(/真实候选/);
+    await call(f, "read_candidate", { items: [{ questionId: "candidate" }] });
+    await call(f, "propose_recommendations", {
+      recommendations: [{ questionId: "candidate", reason: "练习代数加法" }],
+    });
+    await call(f, "finish", { summary: "推荐已准备" });
+    mocked.questionFind.mockResolvedValue([
+      {
+        ...s.questions.find((q) => q.id === "candidate")!,
+        createdAt: new Date(question.createdAt),
+        updatedAt: new Date(question.updatedAt),
+      },
+    ]);
+    const output = await f.commit();
+    expect(output.result).toMatchObject({
+      studentId: "student",
+      recommendations: [{ questionId: "candidate", reason: "练习代数加法" }],
+    });
+    expect(mocked.executeCommand).not.toHaveBeenCalled();
+  });
+  it("keeps failed or stale tasks from committing any draft", async () => {
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "ASSEMBLE",
+      input: assemble(),
+      jobId: "job",
+    });
+    await call(f, "report_failure", { reason: "题库只有一题，无法满足条件" });
+    await expect(f.commit()).rejects.toThrow(/题库只有/);
+    expect(mocked.executeCommand).not.toHaveBeenCalled();
+    const next = await createTaskFeatures({
+      userId: "teacher",
+      kind: "ASSEMBLE",
+      input: assemble(),
+      jobId: "job",
+    });
+    await call(next, "read_question", { items: [{ questionId: "q" }] });
+    await call(next, "propose_paper", { questionIds: ["q"] });
+    await call(next, "finish", { summary: "done" });
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "ASSEMBLE",
+      status: "FAILED",
+    });
+    await expect(next.commit()).rejects.toThrow(/状态已改变/);
+    expect(mocked.executeCommand).not.toHaveBeenCalled();
+  });
+});
+describe("SDK 7 autonomous agent loop", () => {
+  it("uses tool calls to read, propose and finish across separate model steps before committing", async () => {
+    const sequence = [
+      { name: "python", args: { code: "print(1 + 1)", assets: [], images: [] } },
+      { name: "read_question", args: { items: [{ questionId: "q" }] } },
+      { name: "propose_paper", args: { questionIds: ["q"] } },
+      { name: "finish", args: { summary: "自主组卷完成" } },
+    ];
+    let index = 0;
+    const model = new MockLanguageModelV4({
+      doGenerate: async () => {
+        const step = sequence[index++];
+        return {
+          content: [
+            {
+              type: "tool-call",
+              toolCallId: `call-${index}`,
+              toolName: step.name,
+              input: JSON.stringify(step.args),
+            },
+          ],
+          finishReason: { unified: "tool-calls", raw: undefined },
+          usage: {
+            inputTokens: { total: 10, noCache: 10, cacheRead: undefined, cacheWrite: undefined },
+            outputTokens: { total: 20, text: 20, reasoning: undefined },
+          },
+          warnings: [],
+        };
+      },
+    });
+    mocked.loadAiModel.mockResolvedValue({
+      createSession: () => ({ model, close: vi.fn() }),
+      reasoning: "high",
+      identity: {
+        providerId: "provider",
+        providerName: "fixture",
+        modelId: "model",
+        model: "fixture",
+        apiType: "openai_chat",
+      },
+      maxOutputTokens: 16000,
+      timeoutMs: 30000,
+      maxConcurrency: 3,
+    });
+    const events: unknown[] = [];
+    const result = await runAiTask({
+      userId: "teacher",
+      kind: "ASSEMBLE",
+      input: assemble(),
+      modelId: "model",
+      jobId: "job",
+      onEvent: async (e) => {
+        events.push(e);
+      },
+    });
+    expect(result.summary).toBe("自主组卷完成");
+    expect(model.doGenerateCalls).toHaveLength(4);
+    expect(model.doGenerateCalls.every((call) => call.reasoning === "high")).toBe(true);
+    expect(mocked.costAdd).toHaveBeenCalledTimes(4);
+    expect(events).toContainEqual(
+      expect.objectContaining({
+        type: "step",
+        cost: expect.objectContaining({ reason: "price_unavailable" }),
+      }),
+    );
+    expect(events.filter((e) => (e as { type: string }).type === "step")).toHaveLength(4);
+    expect(events).toContainEqual(
+      expect.objectContaining({ type: "tool", name: "python", status: "ended" }),
+    );
+    expect(mocked.sandboxRun).toHaveBeenCalledOnce();
+    expect(mocked.sandboxDispose).toHaveBeenCalledOnce();
+    expect(JSON.stringify(events)).not.toContain("apiKey");
+    expect(mocked.executeCommand).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("batched question processing and unreadable evidence", () => {
+  async function batch(
+    f: Awaited<ReturnType<typeof createFeatures>>,
+    name: string,
+    items: unknown[],
+  ) {
+    return (await f.tools[name].execute!(
+      { items },
+      { toolCallId: "batch", messages: [], context: undefined },
+    )) as {
+      results: {
+        index: number;
+        success: boolean;
+        output?: unknown;
+        error?: { message: string; code?: string };
+      }[];
+    };
+  }
+  it("reads and enriches multiple questions while retaining successful reports after another item fails", async () => {
+    const s = state();
+    s.questions.push({ ...question, id: "q2" });
+    mocked.loadState.mockResolvedValue(s);
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "ENRICH",
+      status: "RUNNING",
+    });
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "ENRICH",
+      input: { questionIds: ["q", "q2"] },
+      jobId: "job",
+    });
+    const read = await batch(f, "read_question", [
+      { questionId: "q" },
+      { questionId: "q2" },
+      { questionId: "unrelated" },
+    ]);
+    expect(read.results.map((r) => r.success)).toEqual([true, true, false]);
+    expect(read.results[2].error).toMatchObject({
+      message: "题目不属于本次任务。",
+      code: "ACCESS_403",
+    });
+    const report = {
+      knowledgeTags: ["代数"],
+      answers: ["2"],
+      explanation: "加法",
+      rubric: "答案正确得分",
+      parts: [],
+    };
+    const reports = await batch(f, "propose_enrichment", [
+      { ...report, questionId: "q" },
+      { ...report, questionId: "q2", answers: [] },
+    ]);
+    expect(reports.results.map((r) => r.success)).toEqual([true, false]);
+    expect(reports.results[1].error?.message).toContain("完整标准答案");
+    await batch(f, "skip_questions", [{ id: "q2", reason: "题图模糊，无法确认条件" }]);
+    await call(f, "finish", { summary: "完成1题，跳过模糊题1题" });
+    const output = await f.commit();
+    expect(mocked.executeCommand).toHaveBeenCalledOnce();
+    expect(output.result).toMatchObject({
+      skipped: [{ id: "q2", reason: "题图模糊，无法确认条件" }],
+    });
+  });
+  it("imports multiple reports, counts skips against inventory and can finish an entirely unreadable paper", async () => {
+    const sharp = (await import("sharp")).default;
+    const buffer = await sharp({
+      create: { width: 120, height: 160, channels: 3, background: "white" },
+    })
+      .png()
+      .toBuffer();
+    mocked.readOwnedAsset.mockResolvedValue({ buffer });
+    mocked.accessibleAsset.mockResolvedValue({ buffer });
+    mocked.jobFind.mockResolvedValue({
+      id: "job",
+      userId: "teacher",
+      kind: "IMPORT",
+      status: "RUNNING",
+    });
+    const page = "/api/platform/assets/source";
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: { assetUrls: [page], kind: "EXAM" },
+      jobId: "job",
+    });
+    await viewImage(f, page);
+    await call(f, "record_source_inventory", { sources: [{ url: page, totalQuestions: 3 }] });
+    const draft = questionInputSchema.parse({ ...question, id: undefined });
+    const reports = await batch(f, "propose_question", [
+      { sourceKey: "p1:q1", question: draft },
+      { sourceKey: "p1:q2", question: draft },
+    ]);
+    expect(reports.results.every((r) => r.success)).toBe(true);
+    await batch(f, "skip_questions", [{ id: "p1:q3", sourceUrl: page, reason: "题目被遮挡" }]);
+    await call(f, "finish", { summary: "识别2题，跳过遮挡题1题", name: "代数练习" });
+    const output = await f.commit();
+    expect(mocked.executeCommand.mock.calls[0][1].paper.items).toHaveLength(2);
+    expect(output.result).toMatchObject({ skipped: [{ id: "p1:q3", sourceUrl: page }] });
+
+    mocked.executeCommand.mockClear();
+    const empty = await createTaskFeatures({
+      userId: "teacher",
+      kind: "IMPORT",
+      input: { assetUrls: [page], kind: "EXAM" },
+      jobId: "job",
+    });
+    await viewImage(empty, page);
+    await call(empty, "record_source_inventory", { sources: [{ url: page, totalQuestions: 2 }] });
+    await batch(empty, "skip_questions", [
+      { id: "p1:q1", sourceUrl: page, reason: "看不清题干" },
+      { id: "p1:q2", sourceUrl: page, reason: "图像模糊" },
+    ]);
+    await call(empty, "finish", { summary: "全部2题无法辨认，已跳过" });
+    const skippedOutput = await empty.commit();
+    expect(mocked.executeCommand).not.toHaveBeenCalled();
+    expect(skippedOutput.result).toMatchObject({ skipped: [{ id: "p1:q1" }, { id: "p1:q2" }] });
+    expect(skippedOutput.result).not.toHaveProperty("paperId");
+    expect(mocked.jobUpdate).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ status: "COMPLETED", error: null }),
+      }),
+    );
+  });
+  it("replaces a draft with a skip, and replaces that skip when a corrected report succeeds", async () => {
+    const f = await createTaskFeatures({
+      userId: "teacher",
+      kind: "ENRICH",
+      input: { questionIds: ["q"] },
+      jobId: "job",
+    });
+    await batch(f, "read_question", [{ questionId: "q" }]);
+    const report = {
+      questionId: "q",
+      knowledgeTags: ["代数"],
+      answers: ["2"],
+      explanation: "加法",
+      rubric: "正确得分",
+      parts: [],
+    };
+    await batch(f, "propose_enrichment", [report]);
+    await batch(f, "skip_questions", [{ id: "q", reason: "图像不清" }]);
+    expect(f.getResult().skipped).toHaveLength(1);
+    await batch(f, "propose_enrichment", [report]);
+    expect(f.getResult().skipped).toHaveLength(0);
+    await call(f, "finish", { summary: "完成" });
+  });
+});
+
+it.each(["http", "websocket"])(
+  "returns tool errors and retains complete history in %s mode",
+  async (transportMode) => {
+    const sequence = [
+      [
+        { name: "finish", input: JSON.stringify({ summary: "过早完成" }) },
+        { name: "not_a_tool", input: "{}" },
+        { name: "read_question", input: "{broken-json" },
+        { name: "read_question", input: JSON.stringify({ items: [{ questionId: 123 }] }) },
+      ],
+      [
+        { name: "read_question", input: JSON.stringify({ items: [{ questionId: "q" }] }) },
+        { name: "search_questions", input: JSON.stringify({ query: "1+1" }) },
+      ],
+      [{ name: "propose_paper", input: JSON.stringify({ questionIds: ["q"] }) }],
+      [{ name: "finish", input: JSON.stringify({ summary: "修正后完成" }) }],
+    ];
+    let index = 0;
+    const model = new MockLanguageModelV4({
+      doGenerate: async () => {
+        const step = sequence[index++];
+        return {
+          providerMetadata: { openai: { responseId: `resp_${index}` } },
+          content: step.map((c, n) => ({
+            type: "tool-call" as const,
+            toolCallId: `call-${index}-${n}`,
+            toolName: c.name,
+            input: c.input,
+          })),
+          finishReason: { unified: "tool-calls" as const, raw: undefined },
+          usage: {
+            inputTokens: { total: 10, noCache: 10, cacheRead: undefined, cacheWrite: undefined },
+            outputTokens: { total: 20, text: 20, reasoning: undefined },
+          },
+          warnings: [],
+        };
+      },
+    });
+    mocked.loadAiModel.mockResolvedValue({
+      createSession: () => ({ model, close: vi.fn() }),
+      identity: { providerId: "provider", apiType: "openai_responses", transportMode },
+      maxOutputTokens: 16000,
+      timeoutMs: 30000,
+      maxConcurrency: 3,
+    });
+    const events: unknown[] = [];
+    const output = await runAiTask({
+      userId: "teacher",
+      kind: "ASSEMBLE",
+      input: assemble(),
+      jobId: "job",
+      onEvent: async (event) => {
+        events.push(event);
+      },
+    });
+    expect(output.summary).toBe("修正后完成");
+    expect(model.doGenerateCalls).toHaveLength(4);
+    const feedback = JSON.stringify(model.doGenerateCalls[1].prompt);
+    expect(feedback).toContain("尚未提供有效候选结果");
+    expect(feedback).toContain("REQUEST_422");
+    expect(feedback).toContain("not_a_tool");
+    expect(feedback).toContain("Available tools");
+    expect(feedback).toContain("JSON parsing failed");
+    expect(feedback).toContain("questionId");
+    expect(feedback).toContain("expected string");
+    expect(model.doGenerateCalls[0].providerOptions).toMatchObject({
+      openai: { store: false, parallelToolCalls: true },
+    });
+    for (const [index, request] of model.doGenerateCalls.entries()) {
+      if (!index) continue;
+      expect(request.providerOptions?.openai?.previousResponseId).toBeUndefined();
+      expect(
+        request.prompt
+          .filter((message) => message.role !== "system")
+          .every((message) => message.role === "tool"),
+      ).toBe(false);
+      expect(JSON.stringify(request.prompt)).toContain("call-1-0");
+    }
+    expect(JSON.stringify(events)).toContain("尚未提供有效候选结果");
+    expect(events).toContainEqual(
+      expect.objectContaining({ type: "step", toolNames: ["read_question", "search_questions"] }),
+    );
+  },
+);

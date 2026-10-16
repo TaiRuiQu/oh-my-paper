@@ -1,0 +1,39 @@
+{
+  "stage": "初中",
+  "subject": "日语",
+  "books": [
+    {
+      "id": "e7f1d9af-7567-7573-12c5-16f8b8539d85",
+      "title": "初中日语人教版七年级全一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "七年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/japanese/units-1.json",
+      "unit_count": 1
+    },
+    {
+      "id": "e2347a74-2c63-2627-06bd-532d76d23931",
+      "title": "初中日语人教版八年级全一册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/japanese/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "9bef37c4-af35-47b8-8818-812101293cbc",
+      "title": "新教材-初中日语人教版八年级全一册",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "全一册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior/japanese/units-1.json",
+      "unit_count": 4
+    }
+  ]
+}

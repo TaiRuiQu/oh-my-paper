@@ -1,0 +1,1292 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "89ad4d7b-facf-4b17-93d6-00b1e32362db",
+      "title": "新教材-小学数学人教版三年级下册",
+      "stage": "小学",
+      "subject": "数学",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "三年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/89ad4d7b-facf-4b17-93d6-00b1e32362db.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-07-01T11:05:29.956+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "一 生活中的运动现象",
+          "children": [
+            {
+              "title": "对称"
+            },
+            {
+              "title": "平移"
+            },
+            {
+              "title": "旋转"
+            },
+            {
+              "title": "剪纸"
+            }
+          ],
+          "topics": ["一 生活中的运动现象", "对称", "平移", "旋转", "剪纸"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "二 除数是一位数的除法",
+          "children": [
+            {
+              "title": "口算除法"
+            },
+            {
+              "title": "口算除法（估算）"
+            },
+            {
+              "title": "一位数除两位数"
+            },
+            {
+              "title": "三位数除以一位数"
+            },
+            {
+              "title": "三位数除以一位数（首位不够除）"
+            },
+            {
+              "title": "商中间有0的除法"
+            },
+            {
+              "title": "笔算除法（商末尾有0）"
+            },
+            {
+              "title": "解决问题（连乘）"
+            },
+            {
+              "title": "解决问题（连除）"
+            },
+            {
+              "title": "解决问题（归一）"
+            },
+            {
+              "title": "解决问题（归总）"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "二 除数是一位数的除法",
+            "口算除法",
+            "口算除法（估算）",
+            "一位数除两位数",
+            "三位数除以一位数",
+            "三位数除以一位数（首位不够除）",
+            "商中间有0的除法",
+            "笔算除法（商末尾有0）",
+            "解决问题（连乘）",
+            "解决问题（连除）",
+            "解决问题（归一）",
+            "解决问题（归总）",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "三 长方形和正方形",
+          "children": [
+            {
+              "title": "多边形的认识"
+            },
+            {
+              "title": "长方形和正方形的认识"
+            },
+            {
+              "title": "认识周长"
+            },
+            {
+              "title": "长方形和正方形的周长"
+            },
+            {
+              "title": "解决问题（怎样拼周长最短）"
+            },
+            {
+              "title": "拼图游戏"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "三 长方形和正方形",
+            "多边形的认识",
+            "长方形和正方形的认识",
+            "认识周长",
+            "长方形和正方形的周长",
+            "解决问题（怎样拼周长最短）",
+            "拼图游戏",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "四 图形的面积",
+          "children": [
+            {
+              "title": "面积的概念"
+            },
+            {
+              "title": "面积单位"
+            },
+            {
+              "title": "长方形和正方形的面积计算"
+            },
+            {
+              "title": "估测面积"
+            },
+            {
+              "title": "面积单位间的进率"
+            },
+            {
+              "title": "面积单位的换算"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "四 图形的面积",
+            "面积的概念",
+            "面积单位",
+            "长方形和正方形的面积计算",
+            "估测面积",
+            "面积单位间的进率",
+            "面积单位的换算",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "五 数据的收集与整理",
+          "children": [
+            {
+              "title": "收集并记录数据"
+            },
+            {
+              "title": "复式统计表"
+            },
+            {
+              "title": "分段整理数据"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "五 数据的收集与整理",
+            "收集并记录数据",
+            "复式统计表",
+            "分段整理数据",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "年、月、日的秘密",
+          "children": [
+            {
+              "title": "年历中的秘密"
+            },
+            {
+              "title": "作息时间表中的秘密"
+            },
+            {
+              "title": "年历设计师"
+            },
+            {
+              "title": "小讲堂"
+            }
+          ],
+          "topics": [
+            "年、月、日的秘密",
+            "年历中的秘密",
+            "作息时间表中的秘密",
+            "年历设计师",
+            "小讲堂"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "六 小数的初步认识",
+          "children": [
+            {
+              "title": "认识小数"
+            },
+            {
+              "title": "小数的大小比较"
+            },
+            {
+              "title": "简单的小数加、减法"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "六 小数的初步认识",
+            "认识小数",
+            "小数的大小比较",
+            "简单的小数加、减法",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "七 复习与关联",
+          "children": [
+            {
+              "title": "数与运算"
+            },
+            {
+              "title": "数量关系"
+            },
+            {
+              "title": "图形的认识与测量、位置与运动"
+            },
+            {
+              "title": "数据的收集、整理与表达以及常见的量"
+            },
+            {
+              "title": "*数学广角：重叠问题"
+            }
+          ],
+          "topics": [
+            "七 复习与关联",
+            "数与运算",
+            "数量关系",
+            "图形的认识与测量、位置与运动",
+            "数据的收集、整理与表达以及常见的量",
+            "*数学广角：重叠问题"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "f547036d-8c1a-4dca-b8ef-b148a180bac8",
+      "title": "新教材-小学数学人教版二年级上册",
+      "stage": "小学",
+      "subject": "数学",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/f547036d-8c1a-4dca-b8ef-b148a180bac8.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-07-29T16:23:55.400+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "一、分类与整理",
+          "children": [
+            {
+              "title": "按给定标准分类"
+            },
+            {
+              "title": "自选标准分类"
+            },
+            {
+              "title": "逐层分类"
+            }
+          ],
+          "topics": ["一、分类与整理", "按给定标准分类", "自选标准分类", "逐层分类"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "二、1~6的表内乘法",
+          "children": [
+            {
+              "title": "乘法的初步认识 例1"
+            },
+            {
+              "title": "乘法的初步认识 例2"
+            },
+            {
+              "title": "5的乘法口诀"
+            },
+            {
+              "title": "2、3、4的乘法口诀"
+            },
+            {
+              "title": "乘加、乘减"
+            },
+            {
+              "title": "6的乘法口诀"
+            },
+            {
+              "title": "选择一种运算解决问题"
+            },
+            {
+              "title": "用乘法解决购物问题"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "二、1~6的表内乘法",
+            "乘法的初步认识 例1",
+            "乘法的初步认识 例2",
+            "5的乘法口诀",
+            "2、3、4的乘法口诀",
+            "乘加、乘减",
+            "6的乘法口诀",
+            "选择一种运算解决问题",
+            "用乘法解决购物问题",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "三、1～6的表内除法",
+          "children": [
+            {
+              "title": "平均分——包含"
+            },
+            {
+              "title": "平均分——等分"
+            },
+            {
+              "title": "除法（包含）及算式读法"
+            },
+            {
+              "title": "除法（均分）及算式各部分名称"
+            },
+            {
+              "title": "用2～6的乘法口诀求商（1）"
+            },
+            {
+              "title": "用2～6的乘法口诀求商（2）"
+            },
+            {
+              "title": "除法的基本应用"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "三、1～6的表内除法",
+            "平均分——包含",
+            "平均分——等分",
+            "除法（包含）及算式读法",
+            "除法（均分）及算式各部分名称",
+            "用2～6的乘法口诀求商（1）",
+            "用2～6的乘法口诀求商（2）",
+            "除法的基本应用",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "校园小导游",
+          "children": [
+            {
+              "title": "认识东、南、西、北"
+            },
+            {
+              "title": "设计导游路线"
+            }
+          ],
+          "topics": ["校园小导游", "认识东、南、西、北", "设计导游路线"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "四、厘米和米",
+          "children": [
+            {
+              "title": "认识厘米及用厘米量"
+            },
+            {
+              "title": "认识米及用米量"
+            },
+            {
+              "title": "认识线段"
+            },
+            {
+              "title": "用估量解决问题"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "四、厘米和米",
+            "认识厘米及用厘米量",
+            "认识米及用米量",
+            "认识线段",
+            "用估量解决问题",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "身体上的尺子",
+          "children": [
+            {
+              "title": "测量一些身体上的长度"
+            },
+            {
+              "title": "寻找、测量、运用身体尺"
+            }
+          ],
+          "topics": ["身体上的尺子", "测量一些身体上的长度", "寻找、测量、运用身体尺"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "五、7～9的表内乘、除法",
+          "children": [
+            {
+              "title": "7的乘法口诀"
+            },
+            {
+              "title": "8的乘法口诀"
+            },
+            {
+              "title": "9的乘法口诀"
+            },
+            {
+              "title": "用7、8的乘法口诀求商"
+            },
+            {
+              "title": "用9的乘法口诀求商"
+            },
+            {
+              "title": "解决连续两问的问题"
+            },
+            {
+              "title": "整理和复习（表内乘法）"
+            },
+            {
+              "title": "整理和复习（表内除法）"
+            }
+          ],
+          "topics": [
+            "五、7～9的表内乘、除法",
+            "7的乘法口诀",
+            "8的乘法口诀",
+            "9的乘法口诀",
+            "用7、8的乘法口诀求商",
+            "用9的乘法口诀求商",
+            "解决连续两问的问题",
+            "整理和复习（表内乘法）",
+            "整理和复习（表内除法）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "六、复习与关联",
+          "children": [
+            {
+              "title": "数与运算"
+            },
+            {
+              "title": "数量关系"
+            },
+            {
+              "title": "图形的位置和与测量"
+            }
+          ],
+          "topics": ["六、复习与关联", "数与运算", "数量关系", "图形的位置和与测量"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "397e9ca4-1930-4f30-8698-8244f870d9eb",
+      "title": "新教材-小学数学人教版二年级下册",
+      "stage": "小学",
+      "subject": "数学",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "二年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/397e9ca4-1930-4f30-8698-8244f870d9eb.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-06-25T10:19:18.966+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "时间在哪里",
+          "children": [
+            {
+              "title": "认识时间"
+            },
+            {
+              "title": "我与时间的故事"
+            },
+            {
+              "title": "我的时间小书"
+            },
+            {
+              "title": "小讲堂"
+            }
+          ],
+          "topics": ["时间在哪里", "认识时间", "我与时间的故事", "我的时间小书", "小讲堂"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "一 有余数的除法",
+          "children": [
+            {
+              "title": "有余数的除法及余数的含义"
+            },
+            {
+              "title": "余数与除数关系"
+            },
+            {
+              "title": "除法竖式及各部分名称"
+            },
+            {
+              "title": "有余数除法的试商"
+            },
+            {
+              "title": "用“进一法”或“去尾法”解决问题"
+            },
+            {
+              "title": "用有余数的除法解决周期问题"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "一 有余数的除法",
+            "有余数的除法及余数的含义",
+            "余数与除数关系",
+            "除法竖式及各部分名称",
+            "有余数除法的试商",
+            "用“进一法”或“去尾法”解决问题",
+            "用有余数的除法解决周期问题",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "二 数量间的乘除关系",
+          "children": [
+            {
+              "title": "数量间的乘除关系、倍的认识"
+            },
+            {
+              "title": "求一个数是另一个数的几倍"
+            },
+            {
+              "title": "求一个数的几倍是多少"
+            },
+            {
+              "title": "已知一个数的几倍是多少，求这个数"
+            },
+            {
+              "title": "连续两问的实际问题"
+            },
+            {
+              "title": "提问题、补条件"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "二 数量间的乘除关系",
+            "数量间的乘除关系、倍的认识",
+            "求一个数是另一个数的几倍",
+            "求一个数的几倍是多少",
+            "已知一个数的几倍是多少，求这个数",
+            "连续两问的实际问题",
+            "提问题、补条件",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "三 万以内数的认识",
+          "children": [
+            {
+              "title": "认识几百几十几的数"
+            },
+            {
+              "title": "认识1000"
+            },
+            {
+              "title": "认识几千几百几十几的数"
+            },
+            {
+              "title": "认识算盘"
+            },
+            {
+              "title": "认识计数单位“万”和数位顺序表"
+            },
+            {
+              "title": "万以内数的读法"
+            },
+            {
+              "title": "万以内数的写法"
+            },
+            {
+              "title": "万以内数的大小比较"
+            },
+            {
+              "title": "万以内的简单加、减法"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "三 万以内数的认识",
+            "认识几百几十几的数",
+            "认识1000",
+            "认识几千几百几十几的数",
+            "认识算盘",
+            "认识计数单位“万”和数位顺序表",
+            "万以内数的读法",
+            "万以内数的写法",
+            "万以内数的大小比较",
+            "万以内的简单加、减法",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "四 万以内的加法和减法",
+          "children": [
+            {
+              "title": "万以内的加法（一次进位）"
+            },
+            {
+              "title": "万以内的加法（连续进位）"
+            },
+            {
+              "title": "万以内的减法（一次退位、连续退位）"
+            },
+            {
+              "title": "万以内的减法（被减数中间有0）"
+            },
+            {
+              "title": "加、减法的意义及加法各部分间的关系"
+            },
+            {
+              "title": "减法各部分间的关系"
+            },
+            {
+              "title": "用加减法估算解决实际问题"
+            },
+            {
+              "title": "数独游戏"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "四 万以内的加法和减法",
+            "万以内的加法（一次进位）",
+            "万以内的加法（连续进位）",
+            "万以内的减法（一次退位、连续退位）",
+            "万以内的减法（被减数中间有0）",
+            "加、减法的意义及加法各部分间的关系",
+            "减法各部分间的关系",
+            "用加减法估算解决实际问题",
+            "数独游戏",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "数学连环画",
+          "children": [
+            {
+              "title": "连环画分享会"
+            },
+            {
+              "title": "我是小画家"
+            },
+            {
+              "title": "小小故事会"
+            }
+          ],
+          "topics": ["数学连环画", "连环画分享会", "我是小画家", "小小故事会"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "五 复习与关联",
+          "children": [
+            {
+              "title": "数与运算"
+            },
+            {
+              "title": "数量关系"
+            }
+          ],
+          "topics": ["五 复习与关联", "数与运算", "数量关系"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "513c534a-9f5d-4880-8a6b-2bbb069040fe",
+      "title": "新教材-人教版小学数学五年级上册目录",
+      "stage": "小学",
+      "subject": "数学",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/513c534a-9f5d-4880-8a6b-2bbb069040fe.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-08-28T14:46:21.150+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "一 观察简单组合体",
+          "children": [
+            {
+              "title": "观察简单组合体"
+            },
+            {
+              "title": "还原简单组合体"
+            }
+          ],
+          "topics": ["一 观察简单组合体", "观察简单组合体", "还原简单组合体"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "二 小数乘法",
+          "children": [
+            {
+              "title": "小数乘整数"
+            },
+            {
+              "title": "小数乘小数"
+            },
+            {
+              "title": "小数乘小数的法则及特殊情形"
+            },
+            {
+              "title": "小数倍"
+            },
+            {
+              "title": "整数乘法运算律推广到小数"
+            },
+            {
+              "title": "估算"
+            },
+            {
+              "title": "分段计费"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "二 小数乘法",
+            "小数乘整数",
+            "小数乘小数",
+            "小数乘小数的法则及特殊情形",
+            "小数倍",
+            "整数乘法运算律推广到小数",
+            "估算",
+            "分段计费",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "三 小数除法",
+          "children": [
+            {
+              "title": "除数是整数的除法"
+            },
+            {
+              "title": "除数是整数的除法特殊情形"
+            },
+            {
+              "title": "循环小数"
+            },
+            {
+              "title": "一个数除以小数"
+            },
+            {
+              "title": "一个数除以小数特殊情形及算法"
+            },
+            {
+              "title": "取近似数的应用"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "三 小数除法",
+            "除数是整数的除法",
+            "除数是整数的除法特殊情形",
+            "循环小数",
+            "一个数除以小数",
+            "一个数除以小数特殊情形及算法",
+            "取近似数的应用",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "四 图形的运动",
+          "children": [
+            {
+              "title": "轴对称的特征及画法"
+            },
+            {
+              "title": "平移的特征及画法"
+            },
+            {
+              "title": "平移的应用"
+            },
+            {
+              "title": "旋转的特征及画法"
+            },
+            {
+              "title": "旋转的应用"
+            },
+            {
+              "title": "设计图案"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "四 图形的运动",
+            "轴对称的特征及画法",
+            "平移的特征及画法",
+            "平移的应用",
+            "旋转的特征及画法",
+            "旋转的应用",
+            "设计图案",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "五 用字母表示数和数量关系",
+          "children": [
+            {
+              "title": "用字母表示加减关系"
+            },
+            {
+              "title": "用字母表示乘除关系"
+            },
+            {
+              "title": "用字母表示运算律、公式、数量关系等"
+            },
+            {
+              "title": "用字母表示ax+b的数量关系"
+            },
+            {
+              "title": "用字母表示ax+bx的数量关系"
+            },
+            {
+              "title": "探秘百数表"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "五 用字母表示数和数量关系",
+            "用字母表示加减关系",
+            "用字母表示乘除关系",
+            "用字母表示运算律、公式、数量关系等",
+            "用字母表示ax+b的数量关系",
+            "用字母表示ax+bx的数量关系",
+            "探秘百数表",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "六 多边形的面积",
+          "children": [
+            {
+              "title": "平行四边形的面积（认识底和高）"
+            },
+            {
+              "title": "公顷和平方千米的认识"
+            },
+            {
+              "title": "三角形的面积"
+            },
+            {
+              "title": "梯形的面积"
+            },
+            {
+              "title": "组合图形的面积"
+            },
+            {
+              "title": "不规则图形的面积"
+            },
+            {
+              "title": "格点多边形的面积（选学）"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "六 多边形的面积",
+            "平行四边形的面积（认识底和高）",
+            "公顷和平方千米的认识",
+            "三角形的面积",
+            "梯形的面积",
+            "组合图形的面积",
+            "不规则图形的面积",
+            "格点多边形的面积（选学）",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "有趣的密铺",
+          "children": [
+            {
+              "title": "密铺"
+            },
+            {
+              "title": "设计密铺图案"
+            },
+            {
+              "title": "小讲堂"
+            }
+          ],
+          "topics": ["有趣的密铺", "密铺", "设计密铺图案", "小讲堂"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "七 可能性",
+          "children": [
+            {
+              "title": "认识可能性"
+            },
+            {
+              "title": "实验体会可能性的大小"
+            },
+            {
+              "title": "可能性的逆向实验"
+            },
+            {
+              "title": "掷一掷（选学）"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "七 可能性",
+            "认识可能性",
+            "实验体会可能性的大小",
+            "可能性的逆向实验",
+            "掷一掷（选学）",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "八 复习与关联",
+          "children": [
+            {
+              "title": "数与代数"
+            },
+            {
+              "title": "图形与几何"
+            },
+            {
+              "title": "概率与统计"
+            },
+            {
+              "title": "综合实践"
+            },
+            {
+              "title": "数学广角：植树问题（选学）"
+            }
+          ],
+          "topics": [
+            "八 复习与关联",
+            "数与代数",
+            "图形与几何",
+            "概率与统计",
+            "综合实践",
+            "数学广角：植树问题（选学）"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "31b6e70f-46d8-43b2-8ca6-2ebb6f010cbc",
+      "title": "新教材-人教版小学数学六年级上册目录",
+      "stage": "小学",
+      "subject": "数学",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/31b6e70f-46d8-43b2-8ca6-2ebb6f010cbc.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2026-09-01T10:51:01.678+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "一 确定位置",
+          "children": [
+            {
+              "title": "用有序数对确定位置"
+            },
+            {
+              "title": "用方向和距离确定位置"
+            },
+            {
+              "title": "描述简单的物体的运动路线"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "一 确定位置",
+            "用有序数对确定位置",
+            "用方向和距离确定位置",
+            "描述简单的物体的运动路线",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "二 分数乘法",
+          "children": [
+            {
+              "title": "分数乘整数（意义及计算）"
+            },
+            {
+              "title": "一个数乘分数"
+            },
+            {
+              "title": "小数乘分数"
+            },
+            {
+              "title": "分数混合运算及运算律"
+            },
+            {
+              "title": "连续求一个数的几分之几是多少"
+            },
+            {
+              "title": "求比一个数多几分之几的数是多少"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "二 分数乘法",
+            "分数乘整数（意义及计算）",
+            "一个数乘分数",
+            "小数乘分数",
+            "分数混合运算及运算律",
+            "连续求一个数的几分之几是多少",
+            "求比一个数多几分之几的数是多少",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "三 分数除法",
+          "children": [
+            {
+              "title": "倒数的概念及求法"
+            },
+            {
+              "title": "分数除以整数"
+            },
+            {
+              "title": "一个数除以分数"
+            },
+            {
+              "title": "涉及抽象1的工程问题"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "三 分数除法",
+            "倒数的概念及求法",
+            "分数除以整数",
+            "一个数除以分数",
+            "涉及抽象1的工程问题",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "生活中的负数",
+          "children": [
+            {
+              "title": "认识负数"
+            },
+            {
+              "title": "应用负数"
+            }
+          ],
+          "topics": ["生活中的负数", "认识负数", "应用负数"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "四 圆",
+          "children": [
+            {
+              "title": "圆的认识"
+            },
+            {
+              "title": "扇形的认识"
+            },
+            {
+              "title": "圆的周长推导及简单应用"
+            },
+            {
+              "title": "圆的面积推导及简单应用"
+            },
+            {
+              "title": "圆的面积的稍复杂的应用（圆环、变形）"
+            },
+            {
+              "title": "问题解决（圆中方、方中圆）"
+            },
+            {
+              "title": "*数学活动：利用圆设计图案"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "四 圆",
+            "圆的认识",
+            "扇形的认识",
+            "圆的周长推导及简单应用",
+            "圆的面积推导及简单应用",
+            "圆的面积的稍复杂的应用（圆环、变形）",
+            "问题解决（圆中方、方中圆）",
+            "*数学活动：利用圆设计图案",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "体育中的数学",
+          "topics": ["体育中的数学"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "五 百分数",
+          "children": [
+            {
+              "title": "百分数的意义"
+            },
+            {
+              "title": "求百分率（分数、小数化为百分数）"
+            },
+            {
+              "title": "求一个数的百分之几是多少 （百分数化为分数、小数）"
+            },
+            {
+              "title": "折扣"
+            },
+            {
+              "title": "利率"
+            },
+            {
+              "title": "求增长率"
+            },
+            {
+              "title": "已知比一个数多百分之几的数是多少求这个数"
+            },
+            {
+              "title": "价格连续变化带来的价格变化幅度"
+            },
+            {
+              "title": "确定达标线"
+            },
+            {
+              "title": "整理和复习"
+            }
+          ],
+          "topics": [
+            "五 百分数",
+            "百分数的意义",
+            "求百分率（分数、小数化为百分数）",
+            "求一个数的百分之几是多少 （百分数化为分数、小数）",
+            "折扣",
+            "利率",
+            "求增长率",
+            "已知比一个数多百分之几的数是多少求这个数",
+            "价格连续变化带来的价格变化幅度",
+            "确定达标线",
+            "整理和复习"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "水是生命之源",
+          "topics": ["水是生命之源"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "六 复习与关联",
+          "children": [
+            {
+              "title": "分数乘除法"
+            },
+            {
+              "title": "图形的认识与测量"
+            },
+            {
+              "title": "图形的位置与运动"
+            },
+            {
+              "title": "数据的收集、整理与表达"
+            },
+            {
+              "title": "数学广角：鸽巢问题"
+            }
+          ],
+          "topics": [
+            "六 复习与关联",
+            "分数乘除法",
+            "图形的认识与测量",
+            "图形的位置与运动",
+            "数据的收集、整理与表达",
+            "数学广角：鸽巢问题"
+          ],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

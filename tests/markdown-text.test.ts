@@ -1,0 +1,164 @@
+// @vitest-environment jsdom
+
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { act, createElement } from "react";
+import { createRoot, hydrateRoot, type Root } from "react-dom/client";
+import { renderToString } from "react-dom/server";
+import katex from "katex";
+import { MarkdownText } from "@/components/markdown-text";
+import { MathFormula } from "@/components/math-formula";
+
+let container: HTMLDivElement;
+let root: Root | undefined;
+
+beforeEach(() => {
+  Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
+  container = document.createElement("div");
+  document.body.append(container);
+});
+
+afterEach(async () => {
+  await act(async () => root?.unmount());
+  root = undefined;
+  container.remove();
+  vi.restoreAllMocks();
+});
+
+async function render(text: string) {
+  root = createRoot(container);
+  await act(async () => root!.render(createElement(MarkdownText, { text })));
+}
+
+describe("browser Markdown and KaTeX presentation", () => {
+  it("renders compact multiline display equations without swallowing the rest of the solution", async () => {
+    await render(String.raw`先观察
+$$f(x)+f(-x)=\frac1{\mathrm e^x+1}+x+\frac1{\mathrm e^{-x}+1}-x
+=\frac1{\mathrm e^x+1}+\frac{\mathrm e^x}{\mathrm e^x+1}=1.$$
+所以 $1-f(a)=f(-a)$。
+又
+$$f'(x)=-\frac{\mathrm e^x}{(\mathrm e^x+1)^2}+1
+=\frac{(\mathrm e^x+1)^2-\mathrm e^x}{(\mathrm e^x+1)^2}>0,$$
+故 $f(x)$ 在 $\mathbf R$ 上单调递增。
+由 $f(3a+2)+f(a)<1$ 得
+$$f(3a+2)<1-f(a)=f(-a).$$
+因为 $f$ 递增，所以
+$$3a+2<-a,$$
+即 $a<-\dfrac12$。
+答案：C。`);
+    expect(container.querySelector(".katex-error")).toBeNull();
+    expect(container.querySelectorAll(".katex-display")).toHaveLength(4);
+    expect(container.querySelectorAll(".katex")).toHaveLength(10);
+    expect(container.querySelector("annotation")?.textContent).toContain("f(x)+f(-x)");
+    expect(container.textContent).toContain("答案：C。");
+    expect(container.querySelectorAll(".math-formula")[0].textContent).not.toContain("所以");
+  });
+  it("preserves LaTeX on the server and renders it only after browser hydration", async () => {
+    const latex = "\\frac{x_1}{2}";
+    const props = { text: `**已知** $${latex}$。\n\n| 数值 |\n| --- |\n| \\(${latex}\\) |` };
+    const renderMath = vi.spyOn(katex, "render");
+    const html = renderToString(createElement(MarkdownText, props));
+
+    expect(renderMath).not.toHaveBeenCalled();
+    expect(html).not.toContain('class="katex"');
+    expect(html).toContain(latex);
+    container.innerHTML = html;
+    const onRecoverableError = vi.fn();
+    await act(async () => {
+      root = hydrateRoot(container, createElement(MarkdownText, props), { onRecoverableError });
+    });
+
+    expect(onRecoverableError).not.toHaveBeenCalled();
+    expect(container.querySelector("strong")?.textContent).toBe("已知");
+    expect(container.querySelector("td .katex")).not.toBeNull();
+    expect(container.querySelectorAll(".katex")).toHaveLength(2);
+    expect(container.querySelectorAll("math")).toHaveLength(2);
+    expect(container.querySelector("annotation")?.textContent).toBe(latex);
+    expect(container.querySelector("img")).toBeNull();
+  });
+
+  it("uses display mode for block equations and keeps malformed formulas readable", async () => {
+    await render("$$\na^2+b^2=c^2\n$$\n\n$\\frac{1}{$\n\n$x^2$");
+
+    expect(container.querySelectorAll(".katex-display")).toHaveLength(1);
+    expect(container.querySelector('math[display="block"]')).not.toBeNull();
+    expect(container.querySelector(".katex-error")?.textContent).toBe("\\frac{1}{");
+    expect(container.querySelectorAll(".katex")).toHaveLength(2);
+  });
+
+  it("renders parenthetical and dollar formulas together without interpreting TeX as Markdown", async () => {
+    await render(String.raw`已知\(x_1^2 + \frac{1}{2}\)，则 $y=2x$，且 \(\text{price: \$5}\)。`);
+    expect(container.querySelectorAll(".katex")).toHaveLength(3);
+    expect(
+      Array.from(container.querySelectorAll("annotation")).map((node) => node.textContent),
+    ).toEqual([String.raw`x_1^2 + \frac{1}{2}`, "y=2x", String.raw`\text{price: \$5}`]);
+    expect(container.querySelector("em")).toBeNull();
+    expect(container.querySelector(".katex-display")).toBeNull();
+  });
+
+  it("keeps TeX line breaks and multiline parenthetical formulas intact", async () => {
+    const latex = String.raw`\begin{matrix}1 & 2 \\ 3 & 4\end{matrix}`;
+    await render(`\\(${latex}\\)\n\n\\(x +\ny\\)`);
+    expect(container.querySelectorAll(".katex")).toHaveLength(2);
+    expect(container.querySelector("annotation")?.textContent).toBe(latex);
+    expect(container.querySelectorAll("annotation")[1].textContent).toBe("x +\ny");
+  });
+
+  it("leaves escaped delimiters, code samples and unclosed parentheses as ordinary Markdown", async () => {
+    const formula = String.raw`\(x^2\)`;
+    await render(
+      [
+        `\`${formula}\``,
+        `\`\`\`text\n${formula}\n\`\`\``,
+        `    ${formula}`,
+        String.raw`\\(literal\\)`,
+        String.raw`未闭合 \(x+1`,
+      ].join("\n\n"),
+    );
+    expect(container.querySelectorAll(".math-formula")).toHaveLength(0);
+    expect(container.querySelectorAll("code")).toHaveLength(3);
+    expect(container.querySelector("code")?.textContent).toBe(formula);
+    expect(container.textContent).toContain(String.raw`\(literal\)`);
+    expect(container.textContent).toContain("未闭合 (x+1");
+  });
+
+  it("keeps malformed parenthetical formulas readable and disables unsafe commands", async () => {
+    await render(String.raw`\(\frac{1}{\) 与 \(\href{javascript:alert(1)}{x}\) 与 \(x^2\)。`);
+    expect(container.querySelector(".katex-error")?.textContent).toBe(String.raw`\frac{1}{`);
+    expect(container.querySelectorAll(".math-formula")).toHaveLength(3);
+    expect(container.querySelectorAll(".katex")).toHaveLength(2);
+    expect(container.querySelector("a, img, script")).toBeNull();
+  });
+
+  it("updates an existing formula when its text or display mode changes", async () => {
+    root = createRoot(container);
+    await act(async () => {
+      root!.render(createElement(MathFormula, { latex: "x^2", displayMode: false }));
+    });
+    expect(container.querySelector("annotation")?.textContent).toBe("x^2");
+    await act(async () => {
+      root!.render(createElement(MathFormula, { latex: "\\sqrt{y}", displayMode: true }));
+    });
+    expect(container.querySelector("annotation")?.textContent).toBe("\\sqrt{y}");
+    expect(container.querySelectorAll(".katex-display")).toHaveLength(1);
+    expect(container.querySelectorAll(".katex")).toHaveLength(1);
+  });
+
+  it("leaves formulas in code untouched and keeps raw HTML and unsafe math commands disabled", async () => {
+    await render(
+      '`$x^2$`\n\n```text\n$x^2$\n```\n\n<img src="https://example.com/track">\n\n$\\href{javascript:alert(1)}{x}$\n\n$\\includegraphics{https://example.com/track}$',
+    );
+
+    expect(container.querySelector("code")?.textContent).toBe("$x^2$");
+    expect(container.querySelector("pre code")?.textContent).toBe("$x^2$\n");
+    expect(container.querySelectorAll(".math-formula")).toHaveLength(2);
+    expect(container.querySelector("a, img, script")).toBeNull();
+  });
+
+  it("keeps oversized formulas as text without blocking other formulas", async () => {
+    const latex = "x".repeat(10001);
+    await render(`$${latex}$\n\n$x^2$`);
+
+    expect(container.querySelector(".math-formula")?.textContent).toBe(latex);
+    expect(container.querySelectorAll(".katex")).toHaveLength(1);
+  });
+});

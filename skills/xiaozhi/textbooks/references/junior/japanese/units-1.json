@@ -1,0 +1,234 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "e7f1d9af-7567-7573-12c5-16f8b8539d85",
+      "title": "初中日语人教版七年级全一册",
+      "stage": "初中",
+      "subject": "日语",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "七年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/e7f1d9af-7567-7573-12c5-16f8b8539d85.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:13.073+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "3课",
+              "children": [
+                {
+                  "title": "假名：「a美月さんのかぞく」「ｂデパート」"
+                }
+              ]
+            },
+            {
+              "title": "4课",
+              "children": [
+                {
+                  "title": "会话：「はじめまして」"
+                }
+              ]
+            }
+          ],
+          "topics": ["假名：「a美月さんのかぞく」「ｂデパート」", "会话：「はじめまして」"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "e2347a74-2c63-2627-06bd-532d76d23931",
+      "title": "初中日语人教版八年级全一册",
+      "stage": "初中",
+      "subject": "日语",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/e2347a74-2c63-2627-06bd-532d76d23931.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:08.419+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "第1课"
+            },
+            {
+              "title": "第2课"
+            },
+            {
+              "title": "第3课"
+            },
+            {
+              "title": "综合练习"
+            }
+          ],
+          "topics": ["综合练习"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "第4课"
+            },
+            {
+              "title": "第5课"
+            },
+            {
+              "title": "第6课"
+            },
+            {
+              "title": "综合练习"
+            }
+          ],
+          "topics": ["综合练习"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "第7课"
+            },
+            {
+              "title": "第8课"
+            },
+            {
+              "title": "第9课"
+            },
+            {
+              "title": "综合练习"
+            }
+          ],
+          "topics": ["综合练习"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "第10课"
+            },
+            {
+              "title": "第11课"
+            },
+            {
+              "title": "第12课"
+            },
+            {
+              "title": "综合练习"
+            }
+          ],
+          "topics": ["综合练习"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "9bef37c4-af35-47b8-8818-812101293cbc",
+      "title": "新教材-初中日语人教版八年级全一册",
+      "stage": "初中",
+      "subject": "日语",
+      "version": "人教版",
+      "revision_label": "新教材",
+      "grade": "八年级",
+      "volume": "全一册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/9bef37c4-af35-47b8-8818-812101293cbc.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2025-08-25T17:06:46.373+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "第一单元",
+          "children": [
+            {
+              "title": "第1课"
+            },
+            {
+              "title": "第2课"
+            },
+            {
+              "title": "第3课"
+            },
+            {
+              "title": "综合练习"
+            }
+          ],
+          "topics": ["综合练习"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第二单元",
+          "children": [
+            {
+              "title": "第4课"
+            },
+            {
+              "title": "第5课"
+            },
+            {
+              "title": "第6课"
+            },
+            {
+              "title": "综合练习"
+            }
+          ],
+          "topics": ["综合练习"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第三单元",
+          "children": [
+            {
+              "title": "第7课"
+            },
+            {
+              "title": "第8课"
+            },
+            {
+              "title": "第9课"
+            },
+            {
+              "title": "综合练习"
+            }
+          ],
+          "topics": ["综合练习"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "第四单元",
+          "children": [
+            {
+              "title": "第10课"
+            },
+            {
+              "title": "第11课"
+            },
+            {
+              "title": "第12课"
+            },
+            {
+              "title": "综合练习"
+            }
+          ],
+          "topics": ["综合练习"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

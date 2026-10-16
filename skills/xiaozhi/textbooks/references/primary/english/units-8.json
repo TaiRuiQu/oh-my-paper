@@ -1,0 +1,501 @@
+{
+  "note": "官方同步课程树，保留单元层级；topics 为根据同节点及下级标题编写的范围概括，不能作为课标逐条要求。非出版教材目录逐页一致性声明。",
+  "books": [
+    {
+      "id": "755ed193-6bd9-b5a4-7022-df5ccfd38a1f",
+      "title": "小学英语人教版（PEP）（三年级起点）（主编：吴欣）五年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "旧教材",
+      "grade": "五年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/755ed193-6bd9-b5a4-7022-df5ccfd38a1f.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:28:38.776+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 What's he like?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 1 What's he like?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 My week",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 2 My week", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 What would you like?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 3 What would you like?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 1",
+          "topics": ["Recycle 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 What can you do?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 4 What can you do?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 There is a big bed",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 5 There is a big bed", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 In a nature park",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 6 In a nature park", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 2",
+          "topics": ["Recycle 2"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "3dd0836b-749b-fe34-588c-29e553010f49",
+      "title": "小学英语人教版（PEP）（三年级起点）（主编：吴欣）六年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "旧教材",
+      "grade": "六年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/3dd0836b-749b-fe34-588c-29e553010f49.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:40.196+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 How can I get there?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 1 How can I get there?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 Ways to go to school",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 2 Ways to go to school", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 My weekend plan",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 3 My weekend plan", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 1",
+          "topics": ["Recycle 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 I have a pen pal",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 4 I have a pen pal", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 What does he do?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 5 What does he do?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 How do you feel?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 6 How do you feel?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 2",
+          "topics": ["Recycle 2"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "42ffa88d-2543-40d0-d69c-e5b5f065eae3",
+      "title": "小学英语人教版（PEP）（三年级起点）（主编：吴欣）四年级上册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "旧教材",
+      "grade": "四年级",
+      "volume": "上册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/42ffa88d-2543-40d0-d69c-e5b5f065eae3.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:27:43.400+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 My classroom",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 1 My classroom", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 My schoolbag",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 2 My schoolbag", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 My friends",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 3 My friends", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 1",
+          "topics": ["Recycle 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 My home",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 4 My home", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 Dinner's ready",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 5 Dinner's ready", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Meet my family!",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 6 Meet my family!", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 2",
+          "topics": ["Recycle 2"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    },
+    {
+      "id": "f978773f-2b18-49a1-b86c-7f0bbb892a07",
+      "title": "小学英语人教版（PEP）（三年级起点）（主编：吴欣）四年级下册",
+      "stage": "小学",
+      "subject": "英语",
+      "version": "人教版（主编：吴欣）（PEP）",
+      "revision_label": "旧教材",
+      "grade": "四年级",
+      "volume": "下册",
+      "edition_status": "版权页版次与课标年份未逐册核实；按平台版本、新旧标签和实际目录匹配",
+      "source_kind": "official_course_tree",
+      "source": "https://s-file-1.ykt.cbern.com.cn/zxx/ndrv2/national_lesson/trees/f978773f-2b18-49a1-b86c-7f0bbb892a07.json",
+      "retrieved_at": "2026-10-15",
+      "source_updated_at": "2024-03-15T14:30:25.278+0800",
+      "coverage": "official_tree_complete",
+      "units": [
+        {
+          "title": "Unit 1 My School",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 1 My School", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 2 What time is it?",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 2 What time is it?", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 3 Weather",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 3 Weather", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 1",
+          "topics": ["Recycle 1"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 4 At the farm",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 4 At the farm", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 5 My clothes",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 5 My clothes", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Unit 6 Shopping",
+          "children": [
+            {
+              "title": "A"
+            },
+            {
+              "title": "B"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "topics": ["Unit 6 Shopping", "A", "B", "C"],
+          "topics_kind": "editorial_from_official_headings"
+        },
+        {
+          "title": "Recycle 2",
+          "topics": ["Recycle 2"],
+          "topics_kind": "editorial_from_official_headings"
+        }
+      ]
+    }
+  ]
+}

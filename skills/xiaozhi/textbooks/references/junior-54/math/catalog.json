@@ -1,0 +1,94 @@
+{
+  "stage": "初中（五•四学制）",
+  "subject": "数学",
+  "books": [
+    {
+      "id": "e2337b05-1b64-8d79-334f-1c7d71df7afc",
+      "title": "初中（五•四学制）数学人教版七年级上册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "七年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/math/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "31167038-607b-bdb6-aab6-f6686c1b38bd",
+      "title": "初中（五•四学制）数学人教版七年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "七年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/math/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "6a396ce7-366e-e173-d06d-4697bdbbb7f4",
+      "title": "初中（五•四学制）数学人教版九年级上册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/math/units-1.json",
+      "unit_count": 5
+    },
+    {
+      "id": "2385aef7-d3a2-5399-8a30-2eac70e200f8",
+      "title": "初中（五•四学制）数学人教版九年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "九年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/math/units-1.json",
+      "unit_count": 3
+    },
+    {
+      "id": "f1d35712-7e7b-f973-0806-9ac220a36ecd",
+      "title": "初中（五•四学制）数学人教版八年级上册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/math/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "cca3f763-f1d8-e957-2cd0-d00e5884fb10",
+      "title": "初中（五•四学制）数学人教版八年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "八年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/math/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "fdb1baaf-64f4-5455-0022-a9755671c8f4",
+      "title": "初中（五•四学制）数学人教版六年级上册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "上册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/math/units-2.json",
+      "unit_count": 6
+    },
+    {
+      "id": "ddf25226-1e0c-9b47-5e07-f65bf9dd6e2d",
+      "title": "初中（五•四学制）数学人教版六年级下册",
+      "version": "人教版",
+      "revision_label": "平台未标新旧",
+      "grade": "六年级",
+      "volume": "下册",
+      "coverage": "official_tree_complete",
+      "resource": "references/junior-54/math/units-2.json",
+      "unit_count": 4
+    }
+  ]
+}

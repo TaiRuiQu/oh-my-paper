@@ -1,0 +1,94 @@
+{
+  "stage": "高中",
+  "subject": "信息技术",
+  "books": [
+    {
+      "id": "d4ae07f2-f5f2-4b42-82cd-eebcadbf9304",
+      "title": "高中信息技术人教中图版必修1 数据与计算",
+      "version": "人教中图版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修1 数据与计算",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/information-technology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ff808081-7b0a-8395-017b-109f0cff05ee",
+      "title": "高中信息技术人教中图版必修2 信息系统与社会",
+      "version": "人教中图版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "必修2 信息系统与社会",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/information-technology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ff808081-7b0a-8395-017b-0ed77e4500a1",
+      "title": "高中信息技术人教中图版选择性必修1 数据与数据结构",
+      "version": "人教中图版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修1 数据与数据结构",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/information-technology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ff808081-7b0a-8395-017b-0effb860018e",
+      "title": "高中信息技术人教中图版选择性必修2 网络基础",
+      "version": "人教中图版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修2 网络基础",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/information-technology/units-1.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ff808081-7b0a-8395-017b-0f27531d02b6",
+      "title": "高中信息技术人教中图版选择性必修3 数据管理与分析",
+      "version": "人教中图版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修3 数据管理与分析",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/information-technology/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ff808081-7b0a-8395-017b-0f3d2dd90340",
+      "title": "高中信息技术人教中图版选择性必修4 人工智能初步",
+      "version": "人教中图版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修4 人工智能初步",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/information-technology/units-2.json",
+      "unit_count": 4
+    },
+    {
+      "id": "ff808081-7b0a-8395-017b-0f4c055203ce",
+      "title": "高中信息技术人教中图版选择性必修5 三维设计与创意",
+      "version": "人教中图版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修5 三维设计与创意",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/information-technology/units-2.json",
+      "unit_count": 3
+    },
+    {
+      "id": "ff808081-7b0a-8395-017b-0f650a730457",
+      "title": "高中信息技术人教中图版选择性必修6 开源硬件项目设计",
+      "version": "人教中图版",
+      "revision_label": "平台未标新旧",
+      "grade": "模块教学，年级以学校安排为准",
+      "volume": "选择性必修6 开源硬件项目设计",
+      "coverage": "official_tree_complete",
+      "resource": "references/senior/information-technology/units-2.json",
+      "unit_count": 4
+    }
+  ]
+}
